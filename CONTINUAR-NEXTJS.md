@@ -93,3 +93,9 @@ Verificação Chromium: 1440/1024/768px sem hambúrguer, logo central, navegaç�
 ## Ajuste dos indicadores
 
 A pedido do usuário, o fundo branco da paginação foi removido (agora transparente), assim como o botão de pausa. Permanecem a barra de progresso, pontos clicáveis, avanço automático e suspensão por interação, aba oculta e preferência de movimento reduzido.
+
+## Reservas no celular
+
+Corrigido o overflow do formulário público: colunas minmax com min-width zero, campos de data contidos, uma coluna até 600px, campos de texto com 16px no celular e botão dentro do painel. Cabeçalho pode quebrar linha em telas pequenas. Alterações CSS restritas a `.reservas-page`; painel e home não foram alterados. Somente o subtítulo da marca em reservas agora é `Itacaré-Bahia`.
+
+Layout verificado em Chromium nas larguras 320,375,390,430,768,1024,1440px: sem overflow, sem sobreposição do cabeçalho e controles dentro do painel. Consulta com datas exercitada com mock somente de leitura. WebKit/Safari nativo não está instalado neste ambiente; regras específicas para dimensionamento de date no WebKit foram incluídas.
