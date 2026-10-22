@@ -52,7 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // =========================
     // MÁSCARA TELEFONE
     // =========================
-    $('#telefone').inputmask('(99) 9 9999-9999');
+    if (document.getElementById('telefone') && typeof window.jQuery !== 'undefined' && window.jQuery.fn.inputmask) {
+        window.jQuery('#telefone').inputmask('(99) 9 9999-9999');
+    }
 
     // =========================
     // FORMULÁRIO WHATSAPP
@@ -219,63 +221,14 @@ Poderiam me passar informações sobre disponibilidade, valores e formas de paga
 });
 
 function enviarReservaFinal() {
-
-    const checkin = document.getElementById("checkin-final").value;
-    const checkout = document.getElementById("checkout-final").value;
-    const adultos = document.getElementById("adultos-final").value;
-    const criancas = document.getElementById("criancas-final").value;
-    const pet = document.getElementById("pet-final").value;
-
-    /* =========================
-        VALIDAÇÕES
-    ========================== */
-    if (!checkin || !checkout) {
-        alert("Preencha as datas da hospedagem.");
+    const start = document.getElementById('checkin-final').value;
+    const end = document.getElementById('checkout-final').value;
+    const guests = Number(document.getElementById('adultos-final').value) + Number(document.getElementById('criancas-final').value);
+    if (!start || !end || end <= start || guests < 1) {
+        alert('Informe uma entrada, uma saída posterior e pelo menos um hóspede.');
         return;
     }
-
-    if (checkout < checkin) {
-        alert("A data de check-out não pode ser menor que o check-in.");
-        return;
-    }
-
-    if (adultos <= 0) {
-        alert("Informe pelo menos 1 adulto.");
-        return;
-    }
-
-    /* =========================
-        MENSAGEM PROFISSIONAL
-    ========================== */
-    const mensagem =
-        "✨ *Nova Solicitação de Reserva* ✨%0A%0A" +
-
-        "Olá! Tudo bem? Gostaria de consultar disponibilidade para hospedagem.%0A%0A" +
-
-        "📅 *Período da Hóspedes*%0A" +
-        "➤ Check-in: " + checkin + "%0A" +
-        "➤ Check-out: " + checkout + "%0A%0A" +
-
-        "👥 *Informações dos Hóspedes*%0A" +
-        "➤ Adultos: " + adultos + "%0A" +
-        "➤ Crianças: " + criancas + "%0A" +
-        "➤ Pet pequeno porte: " + pet + "%0A%0A" +
-
-        "💎 *Gostaria de receber informações sobre:*%0A" +
-        "➤ Disponibilidade%0A" +
-        "➤ Valores das diárias%0A" +
-        "➤ Formas de pagamento%0A%0A"
-    /* =========================
-        NÚMERO WHATSAPP
-    ========================== */
-    const numero = "557399728505";
-    /* =========================
-        LINK WHATSAPP
-    ========================== */
-    const url =
-        `https://api.whatsapp.com/send?phone=${numero}&text=${mensagem}`;
-
-    window.open(url, "_blank");
+    location.href = 'reservas.html?' + new URLSearchParams({start, end, guests});
 }
 
 /* =========================
@@ -378,36 +331,13 @@ function openLightbox(imgSrc) {
    ========================= */
 
 function enviarReservaQuartos() {
-    // Pega os valores do novo formulário
-    const quarto = document.getElementById("quarto-selecionado").value;
-    const checkin = document.getElementById("data-checkin-global").value;
-    const checkout = document.getElementById("data-checkout-global").value;
-
-    // Validação básica
-    if (!checkin || !checkout) {
-        alert("Por favor, selecione as datas de check-in e check-out.");
+    const start = document.getElementById('data-checkin-global').value;
+    const end = document.getElementById('data-checkout-global').value;
+    if (!start || !end || end <= start) {
+        alert('Informe uma entrada e uma saída posterior.');
         return;
     }
-
-    if (checkout <= checkin) {
-        alert("A data de check-out deve ser maior que a data de check-in.");
-        return;
-    }
-
-    // Monta a mensagem para o WhatsApp
-    const mensagem =
-        "🛎️ *Nova Solicitação de Reserva* 🛎️%0A%0A" +
-        "Olá! Gostaria de consultar a disponibilidade para o seguinte quarto:%0A%0A" +
-        "🛏️ *Quarto Escolhido:* " + quarto + "%0A" +
-        "📅 *Check-in:* " + checkin + "%0A" +
-        "📅 *Check-out:* " + checkout + "%0A%0A" +
-        "Poderiam me passar informações sobre valores e formas de pagamento?";
-
-    const numeroWhatsApp = "557399728505"; // Teu número
-    const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${mensagem}`;
-
-    // Abre o WhatsApp numa nova aba
-    window.open(url, "_blank");
+    location.href = 'reservas.html?' + new URLSearchParams({start, end});
 }
 
 /* =========================
@@ -624,29 +554,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // Inicia e escuta redimensionamento
     atualizarPaginacao();
     window.addEventListener('resize', atualizarPaginacao);
-});
-
-document.querySelectorAll('.btn-close-card').forEach(botao => {
-
-    botao.addEventListener('click', function (e) {
-
-        // impede propagação
-        e.preventDefault();
-        e.stopPropagation();
-
-        // pega o card
-        const card =
-            this.closest('.lazer-click-card');
-
-        // fecha
-        card.classList.remove('active');
-    });
-
-});
-card.addEventListener('click', function (e) {
-
-    // ignora clique no botão X
-    if (e.target.closest('.btn-close-card')) {
-        return;
-    }
 });
