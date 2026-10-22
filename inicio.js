@@ -15,7 +15,17 @@
     const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
-    menuToggle.addEventListener('click', () => {
+    document.addEventListener('pointerdown', () => { document.body.dataset.navInput = 'pointer'; }, { passive: true });
+    document.addEventListener('keydown', () => { document.body.dataset.navInput = 'keyboard'; });
+    const mobileMenu = window.matchMedia('(max-width: 767px)');
+    mobileMenu.addEventListener('change', event => {
+        if (!event.matches && menu.open) {
+            menu.close();
+            document.querySelector('.home-brand').focus({ preventScroll: true });
+        }
+    });
+    menuToggle.addEventListener('click', event => {
+        document.body.dataset.navInput = event.detail === 0 ? 'keyboard' : 'pointer';
         root.classList.add('intro-complete');
         menu.showModal();
         menuToggle.setAttribute('aria-expanded', 'true');
@@ -45,7 +55,8 @@
         });
     });
     const slides = Array.from(document.querySelectorAll('.hero-frame'));
-    const current = document.getElementById('hero-current');
+    const dots = Array.from(document.querySelectorAll('.hero-dot'));
+    const interval = 6500;
     const pause = document.getElementById('hero-pause');
     const status = document.getElementById('hero-status');
     let index = 0;
@@ -53,27 +64,59 @@
     let hovering = false;
     let focused = false;
     let timer;
+    let remaining = interval;
+    let startedAt = 0;
+    let progress;
+    function stopClock() {
+        if (timer !== undefined) {
+            window.clearTimeout(timer);
+            timer = undefined;
+            remaining = Math.max(0, remaining - (performance.now() - startedAt));
+        }
+        progress?.pause();
+    }
+    function resetProgress() {
+        progress?.cancel();
+        progress = undefined;
+        if (!reducedMotion.matches) {
+            progress = dots[index].querySelector('.hero-dot-fill').animate(
+                [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+                { duration: interval, fill: 'both' }
+            );
+            progress.pause();
+        }
+    }
     function updatePause() {
         pause.setAttribute('aria-pressed', String(userPaused));
         pause.setAttribute('aria-label', userPaused ? 'Reproduzir carrossel' : 'Pausar carrossel');
     }
     function show(next, manual = false) {
+        stopClock();
         const previous = index;
         index = (next + slides.length) % slides.length;
         slides[previous].classList.remove('is-active');
         slides[previous].setAttribute('aria-hidden', 'true');
         slides[index].classList.add('is-active');
         slides[index].removeAttribute('aria-hidden');
-        current.textContent = String(index + 1).padStart(2, '0');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('is-active', i === index);
+            if (i === index) dot.setAttribute('aria-current', 'true');
+            else dot.removeAttribute('aria-current');
+        });
+        remaining = interval;
+        resetProgress();
         if (manual) status.textContent = slides[index].getAttribute('aria-label');
         schedule();
     }
     function schedule() {
-        window.clearTimeout(timer);
-        if (!userPaused && !hovering && !focused && !document.hidden && !menu.open) timer = window.setTimeout(() => show(index + 1), 6500);
+        stopClock();
+        if (!userPaused && !hovering && !focused && !document.hidden && !menu.open) {
+            startedAt = performance.now();
+            progress?.play();
+            timer = window.setTimeout(() => { timer = undefined; show(index + 1); }, remaining);
+        }
     }
-    document.getElementById('hero-prev').addEventListener('click', () => show(index - 1, true));
-    document.getElementById('hero-next').addEventListener('click', () => show(index + 1, true));
+    dots.forEach((dot, i) => dot.addEventListener('click', () => show(i, true)));
     pause.addEventListener('click', () => { userPaused = !userPaused; updatePause(); schedule(); });
     hero.addEventListener('mouseenter', () => { hovering = true; schedule(); });
     hero.addEventListener('mouseleave', () => { hovering = false; schedule(); });
@@ -92,7 +135,8 @@
         touch = undefined;
     }, { passive: true });
     document.addEventListener('visibilitychange', schedule);
-    reducedMotion.addEventListener('change', () => { userPaused = reducedMotion.matches; updatePause(); schedule(); });
+    reducedMotion.addEventListener('change', () => { stopClock(); userPaused = reducedMotion.matches; remaining = interval; resetProgress(); updatePause(); schedule(); });
+    resetProgress();
     updatePause();
     schedule();
 })();

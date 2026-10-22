@@ -80,3 +80,11 @@ Referência: vídeo WhatsApp de 15 segundos enviado pelo usuário. Página inici
 `inicio.css` e `inicio.js` são específicos da home e preparados em `public/` pelo script de assets. O menu usa dialog nativo em tela cheia, com fechamento por Escape, contenção de foco e links de seções. Hero tem controles anterior/próximo, pausa, contador e swipe horizontal. Autoplay para em aba oculta, durante interação e com menu aberto. Respeita movimento reduzido. Sem JavaScript, a primeira imagem, título e link de reserva permanecem visíveis; intro tem fallback para nunca cobrir indefinidamente a página. Animação GSAP antiga que encolhia o hero foi removida; galerias internas preservadas.
 
 Verificado em Chromium: intro e hero desktop 1440px, menu mobile 390px, setas/contador/pausa, Escape, navegação de âncoras, swipe por eventos de toque, crossfade automático, movimento reduzido e conteúdo básico sem JavaScript. Sem erros JS ou overflow horizontal nos caminhos testados. Screenshots e script de QA em `work/video-intro` e `work/check-intro.py` (ignorados).
+
+## Refinamentos de navegação e paginação do carrossel
+
+Hambúrguer visível somente até 767px; em notebook/desktop, marca centralizada e links abaixo dela. Menu móvel com tipografia menor e sem contorno no botão ao abrir por toque; foco de teclado continua visível. Ao redimensionar para desktop, um menu aberto fecha e libera a rolagem.
+
+Paginação do hero substitui setas/contador por barra verde no slide ativo e pontos para os demais, conforme imagem do usuário. Pontos são botões acessíveis; pausa explícita permanece. Progresso usa Web Animations e relógio com tempo restante, pausando/retomando com hover, foco, menu e visibilidade da aba. Movimento reduzido mantém indicador estático. Em telas menores que 360px, a localização duplicada no rodapé do hero é ocultada para manter os controles centralizados.
+
+Verificação Chromium: 1440/1024/768px sem hambúrguer, logo central, navegação abaixo; celular 390/320px sem overflow dos controles; toque sem contorno e Tab com indicador; fechamento ao redimensionar; progresso, pausa/retomada, avanço automático e escolha por pontos. Sem erros JS nos caminhos testados.
