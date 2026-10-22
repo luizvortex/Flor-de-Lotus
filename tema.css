@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+/* Paleta compartilhada pelo site, reservas e administração. */
+:root {
+    --ink: #263d38;
+    --green: #28584b;
+    --green-hover: #1f473c;
+    --muted: #627169;
+    --cream: #f7f7f2;
+    --surface: #ffffff;
+    --soft: #eaf0e8;
+    --line: #e3e7df;
+    --gold: #bd955c;
+}

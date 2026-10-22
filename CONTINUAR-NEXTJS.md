@@ -66,3 +66,9 @@ Conta inicial solicitada: `zilterpacheoni17@gmail.com`, com senha gerada privada
 Migrações remotas via MCP: `20261022200433_lotus_reservations` e `20261022201313_lotus_explicit_deny_direct_access`. Fonte final em `database/lotus-schema.sql`. Regras verificadas em Postgres com rollback por `database/test-reservations.sql`; concorrência real verificada por duas chamadas MCP e dados sintéticos limpos. Dados reais em `.local/` não foram importados.
 
 Pendente: validar login real/deploy em rede com acesso HTTPS aos domínios Supabase/Vercel; configurar Site URL e redirects de confirmação do Auth (instruções no README); proteção contra senhas vazadas está desativada no projeto. O projeto Vercel não apareceu na conta MCP conectada. A conversão dos templates HTML para componentes React continua pendente.
+
+## Paleta visual unificada
+
+O usuário aprovou as cores do painel/reservas e pediu o mesmo tom para o site público. `tema.css` centraliza a paleta (creme, verde profundo, texto escuro, bordas claras) e as fontes DM Sans/Playfair Display. `main.css` e `painel.css` importam esse arquivo; `prepare-public.mjs` precisa copiá-lo para `public/`. Site principal e avaliações usam cabeçalhos claros, botões verdes, cards brancos e sombras suaves. Imagens, conteúdo e fluxos de reserva foram preservados. Fundos e ondas inline usam variáveis; o CSS próprio de avaliações é carregado após o Bootstrap.
+
+Verificação no Chromium: desktop 1440px e celular 390px sem overflow horizontal; menu móvel abre; Bootstrap e fontes carregam, sem erros JavaScript na página principal. Cores computadas do site e reservas coincidem. Screenshots de revisão ficam em `work/`, fora do Git.

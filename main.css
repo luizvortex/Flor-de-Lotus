@@ -1,13 +1,15 @@
+@import url('./tema.css');
+
 :root {
-    --verde-oliva: #6B8E6B;
-    --areia: #FAF8F3;
-    --bege: #F5EBDD;
-    --dourado: #C8A96B;
-    --dourado-escuro: #A67C3D;
-    --azul-profundo: #1F3C4D;
-    --azul-medio: #2E5B6E;
+    --verde-oliva: var(--green);
+    --areia: var(--cream);
+    --bege: var(--soft);
+    --dourado: var(--gold);
+    --dourado-escuro: #98743e;
+    --azul-profundo: var(--ink);
+    --azul-medio: var(--green);
     --branco: #ffffff;
-    --sombra: 0 10px 30px rgba(0, 0, 0, 0.12);
+    --sombra: 0 8px 24px rgba(38, 61, 56, 0.07);
 }
 
 html,
@@ -18,7 +20,7 @@ body {
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     background-color: var(--areia);
     color: var(--azul-profundo);
     line-height: 1.7;
@@ -28,17 +30,18 @@ body {
     HEADER (MENU PRINCIPAL)
    ========================================= */
 #cabecalho {
-    background: rgba(31, 60, 77, 0.95);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+    background: rgba(247, 247, 242, 0.98);
+    box-shadow: 0 2px 14px rgba(38, 61, 56, 0.05);
     padding-top: 10px;
     padding-bottom: 10px;
     position: fixed;
     width: 100%;
     z-index: 1050;
+    border-bottom: 1px solid var(--line);
 }
 
 header img {
-    width: 220px;
+    width: 180px;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
@@ -48,39 +51,40 @@ header img:hover {
 }
 
 .navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: var(--soft);
     border: none;
 }
 
 #cabecalho .nav .nav-link {
-    color: var(--branco);
+    color: var(--ink);
     font-weight: 500;
-    border-radius: 30px;
-    padding: 10px 18px;
+    border-radius: 7px;
+    padding: 10px 12px;
     transition: transform 0.3s ease,
         opacity 0.3s ease;
+    font-size: 0.9rem;
 }
 
 #cabecalho .nav .nav-link:hover {
-    color: var(--dourado);
-    background: rgba(255, 255, 255, 0.08);
+    color: var(--green);
+    background: var(--soft);
 }
 
 #cabecalho .nav .nav-link.active {
-    background: var(--dourado);
-    color: var(--azul-profundo);
+    background: var(--green);
+    color: var(--surface);
 }
 
 /* =========================================
    HEADER PÁGINA INTERNA (AVALIAÇÕES)
    ========================================= */
 body.pag-interna {
-    background-color: #F5EBDD;
+    background-color: var(--cream);
 }
 
 .pag-interna #cabecalho {
-    background: rgba(31, 60, 77, 0.98) !important;
-    border-bottom: 1px solid rgba(200, 169, 107, 0.2);
+    background: rgba(247, 247, 242, 0.98) !important;
+    border-bottom: 1px solid var(--line);
 }
 
 .pag-interna #cabecalho.navbar-scroll {
@@ -89,20 +93,20 @@ body.pag-interna {
 }
 
 .pag-interna #cabecalho .nav-link {
-    color: var(--branco) !important;
+    color: var(--ink) !important;
 }
 
 .pag-interna #cabecalho .nav-link:hover {
-    color: var(--dourado) !important;
+    color: var(--green) !important;
 }
 
 .pag-interna #cabecalho .nav-pills .nav-link.active {
-    background-color: var(--dourado) !important;
-    color: var(--azul-profundo) !important;
+    background-color: var(--green) !important;
+    color: var(--surface) !important;
 }
 
 .pag-interna #cabecalho .nav-pills .nav-link.active i {
-    color: var(--azul-profundo) !important;
+    color: var(--surface) !important;
 }
 
 /* =========================================
@@ -175,20 +179,22 @@ body.pag-interna {
 }
 
 .btn-luxo {
-    background: linear-gradient(135deg, var(--dourado), var(--dourado-escuro));
-    color: white;
+    background: var(--green);
+    color: var(--surface);
     padding: 14px 34px;
-    border-radius: 40px;
+    border-radius: 7px;
     text-decoration: none;
     font-weight: 600;
-    box-shadow: var(--sombra);
+    box-shadow: none;
     transition: all 0.3s ease;
     display: inline-block;
 }
 
 .btn-luxo:hover {
     transform: translateY(-3px);
-    color: white;
+    color: var(--surface);
+    background: var(--green-hover);
+    box-shadow: var(--sombra);
 }
 
 /* =========================================
@@ -197,13 +203,13 @@ body.pag-interna {
 .section-tittle {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.2rem, 4vw, 3.5rem);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--azul-profundo);
     margin-bottom: 25px;
 }
 
 .section-tittle span {
-    color: var(--dourado);
+    color: var(--green);
 }
 
 .text-colored {
@@ -248,13 +254,13 @@ img {
    ========================================= */
 #sobre-a-pousada {
     padding-top: 0 !important;
-    background: linear-gradient(rgba(250, 248, 243, 0.72), rgba(245, 235, 221, 0.82)), url('./img Pousada/interiorpousada.jpg');
+    background: var(--cream);
     background-size: cover;
     background-position: center;
 }
 
 #praias {
-    background: linear-gradient(180deg, #f8f4eb, #fdfbf7);
+    background: var(--cream);
 }
 
 #quartos,
@@ -263,7 +269,7 @@ img {
 }
 
 #avaliacoes {
-    background: linear-gradient(180deg, #fdfbf7, #f5ebdd);
+    background: var(--soft);
 }
 
 #avaliacoes::before,
@@ -281,11 +287,11 @@ img {
     object-fit: cover;
     display: block;
     margin: 0 auto;
-    border-radius: 22px;
+    border-radius: 12px;
     padding: 6px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(200, 169, 107, 0.45));
-    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.16);
-    border: 1px solid rgba(200, 169, 107, 0.35);
+    background: var(--surface);
+    box-shadow: var(--sombra);
+    border: 1px solid var(--line);
 }
 
 @media (min-width: 1200px) {
@@ -410,40 +416,45 @@ img {
    RESERVA GERAL
    ========================================= */
 .reserva-box {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(10px);
+    background: var(--surface);
+    backdrop-filter: none;
     padding: 22px;
-    border-radius: 20px;
+    border-radius: 12px;
     box-shadow: var(--sombra);
-    border: 1px solid rgba(200, 169, 107, 0.25);
+    border: 1px solid var(--line);
 }
 
 .form-control,
 .form-select {
-    border-radius: 14px;
+    border-radius: 7px;
     padding: 12px;
-    border: 1px solid rgba(31, 60, 77, 0.15);
+    border: 1px solid #d7dfd6;
+    color: var(--ink);
+    background-color: var(--surface);
 }
 
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--dourado);
-    box-shadow: 0 0 10px rgba(200, 169, 107, 0.25);
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(40, 88, 75, 0.15);
 }
 
 .btn-reservar {
-    background: linear-gradient(135deg, var(--dourado), var(--dourado-escuro));
+    background: var(--green);
     border: none;
-    color: white;
+    color: var(--surface);
     font-weight: 600;
-    border-radius: 30px;
+    border-radius: 7px;
     padding: 12px 24px;
     transition: all 0.3s ease;
+    box-shadow: none;
 }
 
 .btn-reservar:hover {
     transform: translateY(-2px);
-    color: white;
+    color: var(--surface);
+    background: var(--green-hover);
+    box-shadow: var(--sombra);
 }
 
 .campo-tamanho-igual {
@@ -469,18 +480,19 @@ img {
    PRAIAS
    ========================================= */
 .nav-praias .nav-link {
-    border-radius: 14px;
+    border-radius: 7px;
     margin-bottom: 8px;
     transition: all 0.3s ease;
+    color: var(--green);
 }
 
 .nav-praias .nav-link.active {
-    background: linear-gradient(135deg, var(--dourado), var(--dourado-escuro));
+    background: var(--green);
     color: white;
 }
 
 .nav-praias .nav-link:hover {
-    background: rgba(200, 169, 107, 0.12);
+    background: var(--soft);
 }
 
 .col-md-3 img {
@@ -492,29 +504,30 @@ img {
 .praias-dropdown-box {
     background: white;
     padding: 18px;
-    border-radius: 18px;
+    border-radius: 12px;
     box-shadow: var(--sombra);
-    border: 1px solid rgba(200, 169, 107, 0.35);
+    border: 1px solid var(--line);
 }
 
 .praias-dropdown {
-    border-radius: 14px;
+    border-radius: 7px;
     padding: 12px;
-    border: 1px solid var(--dourado);
+    border: 1px solid #d7dfd6;
 }
 
 /* =========================================
    FALE CONOSCO E MAPA
    ========================================= */
 #fale-conosco .btn-enviar {
-    background-color: #157347;
+    background-color: var(--green);
     color: white;
     border: none;
     transition: 0.3s;
+    border-radius: 7px;
 }
 
 #fale-conosco .btn-enviar:hover {
-    background-color: #198754 !important;
+    background-color: var(--green-hover) !important;
     transform: translateY(-2px);
 }
 
@@ -532,7 +545,7 @@ img {
 }
 
 .social-links a:hover {
-    color: var(--dourado);
+    color: var(--green);
 }
 
 .mapa-container iframe {
@@ -577,7 +590,7 @@ img {
 .lazer-hover-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(31, 60, 77, 0.4);
+    background: rgba(38, 61, 56, 0.4);
     backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
@@ -609,7 +622,7 @@ img {
     left: 0;
     width: 100%;
     padding: 60px 20px 25px;
-    background: linear-gradient(to top, rgba(31, 60, 77, 0.95) 15%, transparent 100%);
+    background: linear-gradient(to top, rgba(38, 61, 56, 0.95) 15%, transparent 100%);
     z-index: 10;
     transition: background 0.5s ease;
 }
@@ -628,7 +641,7 @@ img {
 }
 
 .lazer-click-card.is-open .lazer-card-content {
-    background: rgba(31, 60, 77, 0.92);
+    background: rgba(38, 61, 56, 0.92);
     padding-top: 25px;
 }
 
@@ -681,10 +694,10 @@ img {
    AVALIAÇÕES (INDEX E PÁGINA INTERNA)
    ========================================= */
 .card-avaliacao {
-    background: linear-gradient(145deg, #ffffff, #f8f8f8);
+    background: var(--surface);
     padding: 28px;
-    border-radius: 22px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
     transition: transform 0.18s ease, box-shadow 0.25s ease;
     height: 100%;
     position: relative;
@@ -692,6 +705,7 @@ img {
     transform-style: preserve-3d;
     will-change: transform;
     cursor: pointer;
+    border: 1px solid var(--line);
 }
 
 .avaliacao-topo {
@@ -708,29 +722,32 @@ img {
 }
 
 .card-avaliacao p {
-    color: #555;
+    color: var(--muted);
     line-height: 1.7;
 }
 
 .card-avaliacao small {
-    color: var(--dourado-escuro);
+    color: var(--green);
     font-weight: 600;
 }
 
 .btn-avaliacoes {
     display: inline-block;
     padding: 14px 30px;
-    border-radius: 30px;
-    background: linear-gradient(135deg, var(--dourado), var(--dourado-escuro));
-    color: white;
+    border-radius: 7px;
+    background: var(--green);
+    color: var(--surface);
     text-decoration: none;
     font-weight: 600;
     transition: 0.3s ease;
+    box-shadow: none;
 }
 
 .btn-avaliacoes:hover {
     transform: translateY(-3px);
-    color: white;
+    color: var(--surface);
+    background: var(--green-hover);
+    box-shadow: var(--sombra);
 }
 
 /* Efeito Hover 3D (Desktop) */
@@ -738,7 +755,7 @@ img {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(212, 175, 55, 0.22), rgba(212, 175, 55, 0.08) 18%, transparent 42%);
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(40, 88, 75, 0.22), rgba(40, 88, 75, 0.08) 18%, transparent 42%);
     opacity: 0;
     transition: opacity 0.25s ease;
     pointer-events: none;
@@ -763,7 +780,7 @@ img {
 
 @media (min-width: 992px) {
     .card-avaliacao:hover {
-        box-shadow: 0 18px 35px rgba(0, 0, 0, 0.14), 0 8px 18px rgba(212, 175, 55, 0.18);
+        box-shadow: 0 12px 28px rgba(38, 61, 56, 0.10);
     }
 
     .card-avaliacao:hover::before {
@@ -786,15 +803,16 @@ img {
 }
 
 .nota-geral-box {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.318);
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--line);
     border-radius: 15px;
     display: inline-flex;
     align-items: center;
     padding: 20px 30px;
     gap: 20px;
+    color: var(--ink);
 }
 
 .nota-numero {
@@ -803,7 +821,7 @@ img {
     font-size: 1.5rem;
     padding: 10px 15px;
     border-radius: 10px;
-    background: linear-gradient(135deg, var(--dourado), var(--dourado-escuro));
+    background: var(--green);
 }
 
 .nota-card {
@@ -825,16 +843,17 @@ img {
 }
 
 .nota-card.borda-personalizada {
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: var(--surface) !important;
     backdrop-filter: blur(10px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: var(--sombra) !important;
+    border: 1px solid var(--line);
 }
 
 .secao-avaliacoes-premium {
     position: relative;
     overflow: hidden;
-    border-top: 1px solid rgba(212, 175, 55, 0.15);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    border-top: 1px solid rgba(40, 88, 75, 0.15);
+    border-bottom: 1px solid rgba(40, 88, 75, 0.15);
 }
 
 .secao-avaliacoes-premium::before,
@@ -846,7 +865,7 @@ img {
     left: 0;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0) 20%, rgba(212, 175, 55, 0.8) 50%, rgba(212, 175, 55, 0) 80%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(40, 88, 75, 0) 20%, rgba(40, 88, 75, 0.8) 50%, rgba(40, 88, 75, 0) 80%, transparent 100%);
     background-size: 200% 100%;
     animation: linhaDeLuz 6s linear infinite;
     z-index: 10;
@@ -873,12 +892,12 @@ img {
 }
 
 .section-notas-fundo {
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('FotoPraia.jpg');
+    background: var(--cream);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    color: #ffffff;
-    border-bottom: 2px solid #d4af37 !important;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line) !important;
     position: relative;
     z-index: 10;
     padding-top: 140px !important;
@@ -888,14 +907,15 @@ img {
 
 .section-notas-fundo p {
     font-weight: 500;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    text-shadow: none;
     max-width: 700px;
     margin: 0 auto;
+    color: var(--muted);
 }
 
 .section-reserva-fundo {
     position: relative;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url('FotoNoite.jpg');
+    background-image: linear-gradient(rgba(247, 247, 242, 0.92), rgba(247, 247, 242, 0.96)), url('FotoNoite.jpg');
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
@@ -907,12 +927,14 @@ img {
    CAIXA DE RESERVA FINAL (WHATSAPP)
    ========================================= */
 .box-reserva-final {
-    background: white;
+    background: var(--surface);
     padding: 35px;
-    border-radius: 24px;
+    border-radius: 12px;
     box-shadow: var(--sombra);
     max-width: 900px;
     margin: 0 auto;
+    border: 1px solid var(--line);
+    color: var(--ink);
 }
 
 .box-reserva-final h3 {
@@ -933,38 +955,39 @@ img {
 
 .box-reserva-final .form-control,
 .box-reserva-final .form-select {
-    border: 2px solid #f1f1f1;
-    border-radius: 12px;
+    border: 1px solid #d7dfd6;
+    border-radius: 7px;
     padding: 12px 15px;
-    background-color: #fcfcfc;
+    background-color: var(--surface);
     transition: all 0.3s ease;
     color: var(--azul-profundo);
 }
 
 .btn-reserva-final {
-    background: linear-gradient(135deg, #198754, #157347);
-    color: white;
+    background: var(--green);
+    color: var(--surface);
     border: none;
     padding: 16px 40px;
-    border-radius: 50px;
+    border-radius: 7px;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    text-transform: none;
+    letter-spacing: normal;
     transition: all 0.4s ease;
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    box-shadow: 0 10px 20px rgba(25, 135, 84, 0.2);
+    box-shadow: none;
     cursor: pointer;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .btn-reserva-final:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(25, 135, 84, 0.3);
-    filter: brightness(1.1);
-    color: white;
+    box-shadow: var(--sombra);
+    filter: none;
+    color: var(--surface);
+    background: var(--green-hover);
 }
 
 
@@ -973,11 +996,12 @@ img {
    ========================================= */
 footer {
     text-align: center;
-    background: var(--azul-profundo);
-    color: white;
+    background: var(--soft);
+    color: var(--ink);
     padding: 30px 15px;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
+    border-top: 1px solid var(--line);
 }
 
 @keyframes fadeUp {
@@ -1011,8 +1035,8 @@ footer {
     }
 
     .pag-interna #menu-navegacao {
-        background-color: var(--azul-profundo) !important;
-        border: 1px solid rgba(200, 169, 107, 0.2);
+        background-color: var(--cream) !important;
+        border: 1px solid rgba(40, 88, 75, 0.2);
         margin-top: 10px;
         border-radius: 12px;
         padding: 15px;
@@ -1115,7 +1139,7 @@ footer {
         border-radius: inherit;
         pointer-events: none;
         animation: notificationGlow 0.8s ease;
-        background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.18), transparent 45%);
+        background: radial-gradient(circle at top right, rgba(40, 88, 75, 0.18), transparent 45%);
     }
 
     @keyframes notificationGlow {
@@ -1294,88 +1318,9 @@ footer {
     /* Dá um efeito de destaque 3D */
 }
 
-/* O card com efeito Blur SUTIL e MAIS TRANSPARENTE */
-.box-reserva-final {
-    /* MUDANÇA: Fundo branco MUITO MAIS TRANSPARENTE (de 0.15 para 0.05) */
-    background: rgba(255, 255, 255, 0);
-
-    /* MUDANÇA: O efeito de desfoque MUITO MAIS FRACO (de 15px para 5px) */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    /* Suporte para Safari */
-
-    /* Borda ainda mais sutil e clara para definir o card */
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-
-    /* Sombra mais suave para não pesar no visual transparente */
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.751);
-
-    padding: 40px;
-    max-width: 900px;
-    margin: 0 auto;
-
-    /* Garante que os textos de label e título sejam brancos para contraste */
-    color: rgba(255, 255, 255, 0);
-}
-
-/* Garantindo que o título e labels fiquem brancos dentro do card */
-.box-reserva-final h3,
-.box-reserva-final label {
-    color: #ffffff !important;
-}
-
-/* MUDANÇA: Os inputs também ficam mais transparentes e integrados */
-.box-reserva-final .form-control,
-.box-reserva-final .form-select {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    /* Texto digitado em branco */
-    transition: all 0.3s ease;
-}
-
-/* Cor do placeholder nos inputs */
-.box-reserva-final .form-control::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.box-reserva-final .form-control:focus,
-.box-reserva-final .form-select:focus {
-    background-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-    color: white;
-}
-
-/* 1. Estilo para o campo principal (quando fechado) */
-/* Mantém o visual Glassmorphism/blur e texto branco para estética */
-.box-reserva-final select.form-select {
-    background-color: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: white !important;
-    /* Texto branco no estado normal */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 10px 15px;
-}
-
-/* 2. Estilo para o menu dropdown (quando você clica e ele abre) */
-/* Isso segmenta as tags <option> para corrigir o bug */
-.box-reserva-final select.form-select option {
-    /* Força o fundo a ser branco para o menu suspenso */
-    background-color: #ffffff !important;
-
-    /* Força o texto a ser preto para garantir legibilidade completa */
-    color: #000000 !important;
-
-    /* Remove o blur apenas das opções para evitar problemas de renderização */
-    backdrop-filter: none;
-}
-
 /* 1. MANTÉM OS TÍTULOS VISÍVEIS (Escuros e Fortes) */
 .nota-card h5 {
-    color: #2c3e50 !important;
+    color: var(--ink) !important;
     /* Cor escura para contraste */
     font-weight: 700 !important;
     /* Negrito para não "sumir" */
@@ -1387,7 +1332,7 @@ footer {
 /* 2. VOLTA OS NÚMEROS AO ESTILO ORIGINAL */
 .nota-card span {
     /* Removemos o negrito pesado e o tamanho exagerado */
-    color: #d4af37 !important;
+    color: var(--green) !important;
     /* Cor dourada original */
     font-weight: 500 !important;
     /* Peso médio/fino, como estava antes */
@@ -1407,8 +1352,8 @@ footer {
 }
 
 #btn-ver-mais {
-    border-color: #d4af37;
-    color: #d4af37;
+    border-color: var(--green);
+    color: var(--green);
     font-weight: bold;
     transition: all 0.3s ease;
 }
@@ -1416,8 +1361,8 @@ footer {
 /* Efeito de passar o cursor (Dourado) */
 #btn-ver-mais:hover,
 #btn-ver-mais:active {
-    background-color: #d4af37 !important;
-    border-color: #d4af37 !important;
+    background-color: var(--green) !important;
+    border-color: var(--green) !important;
     color: #ffffff !important;
 }
 
@@ -1564,4 +1509,18 @@ footer {
     .container-do-mapa iframe {
         min-height: 250px;
     }
+}
+/* States and accents shared with the booking experience. */
+a { color: var(--green); }
+a:hover { color: var(--green-hover); }
+.text-muted { color: var(--muted) !important; }
+.reserva-eyebrow { color: var(--muted); letter-spacing: 2px; font-size: 0.75rem; }
+footer a { color: var(--green); text-underline-offset: 3px; }
+:where(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid var(--green);
+    outline-offset: 4px;
+}
+.nav-praias .nav-link.active:hover { background: var(--green-hover); color: white; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
