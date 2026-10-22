@@ -54,3 +54,15 @@ Os arquivos novos e modificados ainda podem estar sem commit. O rascunho de conf
 Implementada a primeira etapa no checkout: projeto Next.js/TypeScript com lockfile, scripts e rotas App Router. Os Route Handlers atendem temporariamente os quatro templates HTML originais, incluindo URLs `.html`. A API Next.js encaminha requisições ao Python por loopback, validando origem e preservando cookies. Fotos e scripts são preparados em `public/` por uma seleção explícita.
 
 **Ainda pendente:** componentes React, API TypeScript e definição da hospedagem/banco de produção. O Python continua necessário nesta etapa; `.local/` não foi migrado nem substituído. Consulte os comandos em README.md. `npm run test:next` aplica os testes de contrato do legado através do Next.js com banco temporário.
+
+## Supabase integrado em 22/10/2026
+
+O usuário autorizou o projeto `asojfispuomhbfapqdmi` (`database-projetos`) pela conexão MCP **Zilter2**. A API padrão agora é Next.js/TypeScript + Supabase Postgres/Auth, sem dependência do Python em produção. O legado permanece apenas para referência e testes com `LOTUS_BACKEND=legacy` (desabilitado na Vercel).
+
+Schema privado `lotus_private`: quartos, pacotes, reservas, autorização administrativa. RLS, negação de acesso direto e RPC com verificação de sessão/administrador. Constraint de exclusão impede sobreposição inclusive concorrente. A chave publishable versionada é pública e não concede acesso privilegiado. Não é necessária service-role key na aplicação.
+
+Conta inicial solicitada: `zilterpacheoni17@gmail.com`, com senha gerada privadamente em `work/acesso-inicial-admin.txt` (fora do Git). O usuário pediu transferência futura ao proprietário: opção **E-mail e senha** implementada no painel, com senha atual obrigatória e confirmação de troca de e-mail pelo Auth. Não divulgar senha no chat/logs.
+
+Migrações remotas via MCP: `20261022200433_lotus_reservations` e `20261022201313_lotus_explicit_deny_direct_access`. Fonte final em `database/lotus-schema.sql`. Regras verificadas em Postgres com rollback por `database/test-reservations.sql`; concorrência real verificada por duas chamadas MCP e dados sintéticos limpos. Dados reais em `.local/` não foram importados.
+
+Pendente: validar login real/deploy em rede com acesso HTTPS aos domínios Supabase/Vercel; configurar Site URL e redirects de confirmação do Auth (instruções no README); proteção contra senhas vazadas está desativada no projeto. O projeto Vercel não apareceu na conta MCP conectada. A conversão dos templates HTML para componentes React continua pendente.

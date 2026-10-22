@@ -11,7 +11,8 @@
     "prebuild": "node scripts/prepare-public.mjs",
     "test": "python3 -m unittest discover -s tests -v",
     "dev:api": "HOST=127.0.0.1 python3 server.py",
-    "test:next": "python3 scripts/test-next.py"
+    "test:next": "python3 scripts/test-next.py",
+    "test:supabase-api": "node scripts/test-supabase-next.mjs"
   },
   "engines": {
     "node": ">=24 <25"

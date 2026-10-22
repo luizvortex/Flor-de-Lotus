@@ -1,77 +1,75 @@
 # Pousada Flor de Lótus
 
-Site da pousada, reservas e painel administrativo em português. Requer **Python 3.10+**, sem pacotes externos. O servidor Python substitui o servidor estático: as páginas agora precisam da API para reservas compartilhadas.
+Site, reservas e painel em português brasileiro. A API agora roda em **Next.js 16.4.2 / TypeScript 7.0.2**, com **Supabase Postgres e Auth**. Não precisa do Python para o deploy na Vercel. As telas ainda usam os templates HTML/JavaScript preservados; a conversão visual para componentes React continua pendente.
 
-## Next.js — primeira etapa da migração
+## Executar e publicar
 
-A entrada do site agora pode ser executada em **Next.js 16.4.2, TypeScript 7.0.2 e App Router**, com Node.js 24. As rotas `/`, `/reservas`, `/admin` e `/avaliacoes` preservam temporariamente o HTML e JavaScript existentes; os endereços `.html` continuam funcionando. Ainda não são componentes React. Esta é uma ponte de compatibilidade, não a migração completa.
+Requer Node.js 24:
 
 ```bash
 npm --cache /workspace/shared/npm-cache ci --no-audit --no-fund
-# Terminal 1, com ADMIN_PASSWORD configurada conforme abaixo:
-npm run dev:api
-# Terminal 2:
 npm run dev
+# Produção:
+npm run build
+npm run start
 ```
 
-O Next.js usa a porta 3000; a API Python usa 8000, ligada apenas a `127.0.0.1` pelo script acima. A API é encaminhada pelo Next.js na mesma origem, incluindo cookies de sessão e proteção contra requisições de outra origem. `LEGACY_API_ORIGIN` é uma variável exclusiva do servidor, opcional (padrão `http://127.0.0.1:8000`). Não exponha a porta da API.
+Rotas: `/`, `/reservas`, `/admin` e `/avaliacoes`; URLs `.html` também funcionam. Em desenvolvimento, Next.js usa a porta 3000. `predev`/`prebuild` preparam `public/` selecionando somente fotos, CSS e JavaScript; edite os originais, não a pasta gerada.
 
-`predev` e `prebuild` preparam `public/` com uma seleção de fotos, CSS e JavaScript. Esse diretório é gerado e ignorado pelo Git; edite os arquivos originais. HTML, banco, fontes de servidor e segredos não são copiados. O Next.js lê somente os quatro templates HTML permitidos.
+O projeto Supabase escolhido é `asojfispuomhbfapqdmi` (`database-projetos`, conexão MCP Zilter2). URL e chave **publishable**, sem privilégios administrativos, estão em `src/lib/supabase-config.ts`. Podem ser substituídas por `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` no servidor. Nenhuma service-role key ou senha de banco é necessária na aplicação. Não use uma chave secreta como publishable.
+
+`vercel.json` seleciona Next.js; `next.config.ts` inclui os quatro templates nas funções. Um push na branch de produção dispara o deploy se a integração Git estiver ativa. A aplicação acessa diretamente as APIs HTTPS Supabase, sem depender de `127.0.0.1`, SQLite ou processo Python. O deploy da Vercel precisa conseguir alcançar o Supabase.
+
+## Acesso administrativo e transferência
+
+A conta inicial autorizada é `zilterpacheoni17@gmail.com`. A senha temporária foi gerada e guardada somente no arquivo privado `work/acesso-inicial-admin.txt`, ignorado pelo Git. Não publique esse arquivo nem mostre a senha em logs. Após entrar, use **E-mail e senha** no painel para trocar a senha ou transferir o e-mail ao proprietário. A alteração exige a senha atual. Novas senhas devem ter pelo menos 12 caracteres. A troca de e-mail segue a confirmação do Supabase Auth; até confirmar, o endereço atual continua válido.
+
+Em Supabase → Authentication → URL Configuration, configure Site URL como `https://flor-de-lotus-three.vercel.app` e permita `https://flor-de-lotus-three.vercel.app/admin` entre os redirects. `APP_URL` pode substituir esse endereço na aplicação. O envio/confirmação de troca de e-mail também depende da configuração de e-mail e dos limites do projeto Supabase. O app não envia mensagens ao configurar a conta inicial.
+
+A autorização está em `lotus_private.admin_users`, vinculada ao UUID do usuário Auth. Ela acompanha a troca do e-mail da mesma conta. Cadastrar outro usuário Auth não concede acesso administrativo. Para conceder acesso a uma conta adicional, um operador autorizado deve inserir seu UUID nesta tabela pelo SQL Editor/MCP. Metadados editáveis de usuários não conferem permissão.
+
+Tokens Auth ficam em cookies HttpOnly, SameSite=Strict e Secure em produção. O servidor renova tokens expirados; o banco exige uma sessão Auth existente e verifica seu prazo, além da autorização administrativa. Logout revoga a sessão corrente e limpa os cookies. O Supabase Auth aplica os limites de tentativas; configure-os e habilite proteções adicionais conforme a hospedagem.
+
+## Reservas e dados
+
+- Cadastre cada quarto físico com nome/número único, tipo, capacidade, diária em reais e disponibilidade para venda. Tipos: solteiro, casal, casal + 1 e família. A quantidade deriva dos cadastros; não há quartos ou tarifas fictícias.
+- Pacotes têm janela de datas, quantidade de **noites** e preço total por quarto. Por exemplo, 5 dias podem corresponder a 4 noites. A estadia deve ter exatamente as noites do pacote e caber na janela.
+- Solicitações públicas ficam **pendentes** e bloqueiam imediatamente as noites. Só o administrador confirma ou cancela. Cancelamento libera as noites. Não há pagamento nem confirmação automática; pendências não expiram sozinhas.
+- Entrada inclusiva e saída exclusiva: uma saída e uma entrada podem ocorrer no mesmo dia. A constraint de exclusão PostgreSQL impede sobreposição de reservas pendentes, confirmadas e bloqueios, inclusive sob concorrência e reconfirmação de reservas canceladas.
+- O banco calcula o total em centavos e preserva o valor na reserva após alterações de tarifas. A criação trava o quarto durante a transação, serializando alterações de capacidade e preço. Datas são validadas no fuso de Itacaré (`America/Bahia`).
+- Reservas de WhatsApp/telefone precisam ser registradas no painel; mensagens não são reservas automáticas. Bloqueios de manutenção são cadastrados pela gestão e têm total zero.
+- Dados de hóspedes ficam no schema privado `lotus_private`, com RLS e políticas explícitas de negação de acesso direto. `anon` e `authenticated` não recebem privilégios nas tabelas. A RPC pública `lotus_api` é um wrapper invoker; a função privilegiada no schema privado valida todos os dados e a autorização de cada operação. Catálogo/disponibilidade públicos não retornam nomes ou contatos de hóspedes. A chave publishable não permite ignorar essas verificações.
+
+As tabelas locais `.local/lotus.db` foram preservadas. **Seus registros não foram importados para o Supabase**. A importação de dados reais exige mapeamento de IDs e verificação de conflitos; não reutilize bancos de teste como dados da pousada.
+
+## Schema e verificação
+
+As migrações foram aplicadas via MCP ao projeto autorizado:
+
+- `20261022200433_lotus_reservations`
+- `20261022201313_lotus_explicit_deny_direct_access`
+
+`database/lotus-schema.sql` é uma cópia reproduzível do schema final para um banco novo, não uma migração idempotente para reaplicar neste projeto. O provisionamento inicial da conta não está no schema nem contém senha versionada. A CLI Supabase não instalou neste ambiente; o histórico remoto foi verificado pelo MCP.
 
 ```bash
 npm run build
 npm run typecheck
+npm run test:supabase-api
+# Contrato do legado, com bancos temporários:
 npm test
 npm run test:next
-# Após o build, mantendo a API em execução:
-npm run start
 ```
 
-`test:next` executa o contrato de reservas através do servidor Next.js de produção na porta 3107, com API interna, senha gerada e banco temporário. Não altera `.local/`. A execução atual requer os templates e o servidor Python no checkout; não é um pacote standalone nem uma aplicação pronta para hospedagem serverless. As restrições de persistência e instância única abaixo continuam válidas.
+`test:supabase-api` executa um servidor Next.js real na porta 3108, conectado a um mock HTTP local de Auth/PostgREST. Verifica cookies, autenticação, renovação, logout, troca de acesso, CSRF e validação do transporte. Não equivale a um login real no Supabase.
 
-Próximas etapas: converter cada tela para componentes React/TypeScript; substituir a API Python com testes equivalentes; definir hospedagem e persistência de produção antes de trocar o banco. Nenhum serviço pago, pagamento ou confirmação automática foi introduzido.
+`database/test-reservations.sql` foi executado pelo MCP no PostgreSQL real e verifica valores, pacotes, capacidade, cancelamento, checkout, bloqueios, autorização e privacidade. Fixtures, inclusive usuários/sessões sintéticos, ficam numa transação com rollback. Um teste adicional com duas transações simultâneas confirmou uma única reserva criada e uma rejeição PT409; seus registros foram removidos pela identificação única do teste.
 
-## Executar o legado diretamente
+O build, o TypeScript e os testes não confirmam o deploy remoto. A política de rede deste ambiente bloqueia chamadas HTTP diretas ao Supabase e ao domínio Vercel; o login real e a confirmação de e-mail precisam de validação em uma rede permitida. O MCP continua acessível.
 
-Configure `ADMIN_PASSWORD` com uma senha forte no ambiente do processo. Não coloque a senha no Git, no JavaScript, em URLs ou nas instruções de inicialização. Em um terminal local, sem mostrar a senha:
+O advisor não encontrou problemas nas permissões das tabelas/funções. Resta o aviso de [proteção contra senhas vazadas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection), configuração do Auth. O índice de pacotes ainda sem uso é esperado num banco novo.
 
-```bash
-cd /workspace/Flor-de-Lotus
-read -rsp 'Senha do administrador: ' ADMIN_PASSWORD
-export ADMIN_PASSWORD
-python3 server.py
-```
+## Legado preservado
 
-Acesse `/` para o site, `/reservas.html` para reservas e `/admin.html` para gestão. Sem `ADMIN_PASSWORD`, o servidor funciona, mas o login administrativo fica desabilitado. Não existe uma senha padrão. Alterar a senha requer reiniciar o processo e encerra as sessões. A sessão dura oito horas. O login tem limitação de tentativas.
+`server.py`, os testes Python, fotos e arquivos originais continuam como referência. Para executar somente o legado: configure `ADMIN_PASSWORD` de forma privada e rode `python3 server.py`. Ele usa `.local/lotus.db` e não compartilha dados nem autenticação com Supabase.
 
-Variáveis opcionais: `PORT` (8000), `HOST` (0.0.0.0), `LOTUS_DB` (caminho do banco; padrão `.local/lotus.db`), `COOKIE_SECURE=1` (obrigatório ao publicar com HTTPS). Use apenas **um processo servidor**: sessões e limites de login são mantidos em memória. A senha precisa ser uma variável real do processo, não um placeholder de credencial de proxy HTTPS.
-
-## Configuração inicial e uso
-
-1. Entre no painel e cadastre **cada quarto físico**: nome/número único, tipo (solteiro, casal, casal + 1, família), capacidade e diária. A quantidade total de quartos é calculada pelos cadastros; não há estoque fictício pré-cadastrado. Desative um quarto para retirar da venda, preservando o histórico.
-2. Cadastre pacotes com nome, tipo de quarto, janela de datas, quantidade de noites e preço total **por quarto**. Por exemplo: 5 dias / 4 noites. O hóspede deve reservar exatamente a quantidade de noites dentro dessa janela. Sem pacote selecionado, vale a diária padrão. Pacotes não substituem automaticamente a tarifa padrão e não garantem vagas.
-3. Na página pública, o hóspede consulta as datas e informa nome e telefone. A solicitação fica **pendente**, bloqueando imediatamente as noites. O administrador confirma ou cancela; cancelar libera as noites. Não há cobrança, e-mail nem confirmação automática.
-4. Registre também reservas recebidas pelo WhatsApp/telefone no painel. Mensagens externas não atualizam o calendário sozinhas. Use **Disponibilidade → Bloquear período** para manutenção ou indisponibilidade; cancele o bloqueio em Reservas para liberar as noites.
-
-A entrada está incluída e a saída não ocupa uma noite. É possível uma saída e uma nova entrada no mesmo dia. Pendências **não expiram automaticamente**; cancele as que não forem concluídas. A disponibilidade atualiza a cada 15 segundos nas páginas abertas e é verificada novamente, dentro de uma transação SQLite, ao reservar. Duas solicitações simultâneas não podem ocupar o mesmo quarto/período. Valores são calculados no servidor em centavos e preservados na reserva mesmo depois de alterar tarifas. O calendário público não expõe nomes/telefones dos hóspedes.
-
-## Dados e publicação
-
-O SQLite fica em `.local/lotus.db`, ignorado pelo Git. Esse diretório deve ficar em um **volume persistente compartilhado pelo único servidor**. Todos os visitantes precisam acessar essa mesma instância; GitHub Pages e hospedagens somente estáticas não executam esta API. Em produção, use um proxy HTTPS, `COOKIE_SECURE=1`, restrinja acesso ao banco e configure backups consistentes (API de backup do SQLite; não copie apenas o `.db` enquanto o WAL estiver ativo). A publicação do ambiente Codex não é a publicação pública do site. Dados novos gravados depois de um snapshot exigem persistência/backups próprios.
-
-As páginas públicas e o painel funcionam com o mesmo servidor; fontes Google são opcionais. O site original usa Bootstrap, jQuery e GSAP via cdn.jsdelivr.net. Não rode `python3 -m http.server`: ele não protege os arquivos internos nem oferece a API. Não exponha este servidor em produção antes de configurar senha, HTTPS, armazenamento persistente e backups. O servidor stdlib é para desenvolvimento/instância pequena; para uso público de maior escala, migre o transporte para um servidor de aplicação apropriado.
-
-## Validação
-
-```bash
-python3 -m unittest discover -s tests -v
-node --check main.js
-node --check admin.js
-node --check reservas.js
-```
-
-## Deploy na Vercel
-
-O repositório inclui `vercel.json` para usar Next.js e `next.config.ts` para incluir os templates HTML nas funções. Um push na branch de produção dispara o deploy se a integração Git estiver conectada.
-
-**O push sozinho não habilita a administração e reservas em produção.** Esta etapa depende de uma API Python externa com armazenamento persistente; `127.0.0.1:8000` na Vercel não aponta para o ambiente Codex. Configure `LEGACY_API_ORIGIN` no servidor Vercel apenas quando houver uma API hospedada. A API precisa usar HTTPS, `COOKIE_SECURE=1`, senha administrativa e armazenamento persistente conforme os requisitos acima. Alternativamente, conclua a migração da API e banco para uma arquitetura compatível com a Vercel. Não use SQLite no filesystem efêmero das funções para reservas reais.
+A ponte HTTP antiga só é ativada explicitamente com `LOTUS_BACKEND=legacy` fora da Vercel, usando `LEGACY_API_ORIGIN` (padrão `http://127.0.0.1:8000`). `test:next` usa esse modo com senha e banco temporários, sem tocar em `.local/`. Não configure o modo legado para produção Vercel.

@@ -17,7 +17,7 @@ class NextReservationTests(ReservationTests):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        env = dict(os.environ, LEGACY_API_ORIGIN=cls.url, NEXT_TELEMETRY_DISABLED='1')
+        env = dict(os.environ, LEGACY_API_ORIGIN=cls.url, LOTUS_BACKEND='legacy', NEXT_TELEMETRY_DISABLED='1')
         cls.next = subprocess.Popen(
             ['node', 'node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1', '--port', '3107'],
             env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

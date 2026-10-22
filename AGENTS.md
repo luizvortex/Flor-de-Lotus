@@ -27,3 +27,7 @@ Uma aplicação de verificação **separada do site** está em `/workspace/share
 No projeto migrado, use versões explícitas e lockfile, `npm ci` para reprodução e scripts de desenvolvimento, build e typecheck. Não use instalação global como dependência do projeto. Não introduza um provedor de banco ou autenticação pago/external sem necessidade; escolha e documente persistência conforme a hospedagem real, sem inventar credenciais.
 
 Nunca publique segredos em código, logs ou chat. `ADMIN_PASSWORD` é requisito somente do servidor Python legado enquanto ele for usado. Não use `NEXT_PUBLIC_` para segredos. Publicar o ambiente Codex não publica um site na internet.
+
+## Atualização: Supabase autorizado
+
+O usuário escolheu o projeto Supabase `asojfispuomhbfapqdmi` na conexão MCP Zilter2. A API padrão agora usa Supabase Postgres/Auth; não retorne à ponte Python como backend de produção. Leia o estado mais recente em README.md e CONTINUAR-NEXTJS.md. A conta administrativa inicial é autorizada pelo UUID em `lotus_private.admin_users`; a senha não está versionada. Preserve os dados locais e remotos. Não trate o Supabase Auth como permissão administrativa automática. Execute as verificações de banco com rollback ou dados sintéticos identificados, sem limpar tabelas inteiras de produção.
