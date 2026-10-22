@@ -13,108 +13,54 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./inicio.css">
+    <link rel="preload" as="image" href="./img Pousada/FlordeLotus1.jpg" fetchpriority="high">
+    <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},3600)}</script>
     <link rel="icon" type="image" href="img Pousada/flordelotuslogo.png">
 </head>
 
-<body>
-    <header class="navbar navbar-expand-lg fixed-top pt-1 pb-1" id="cabecalho">
-        <div class="container">
-            <a href="#sobre-a-pousada">
-                <img src="./img Pousada/flordelotuslogo.png" alt="logo da pousada">
-            </a>
-            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu-navegacao">
-                <span class="navbar-toggler-icon"></span>
+<body class="home-page">
+    <a class="skip-home" href="#conteudo-principal">Pular para o conteúdo</a>
+    <div class="intro-screen" aria-hidden="true">
+        <div class="intro-signature"><span>Itacaré</span><img src="./img Pousada/flordelotuslogo.png" alt="" width="180" height="75"><span>Bahia · Brasil</span></div>
+    </div>
+    <header id="cabecalho" class="home-header">
+        <div class="home-header-top">
+            <button type="button" class="home-menu-toggle" aria-controls="home-menu" aria-expanded="false" aria-haspopup="dialog">
+                <span class="hamburger-lines" aria-hidden="true"><span></span><span></span></span><span>Menu</span>
             </button>
-            <nav class="navbar-collapse collapse justify-content-end" id="menu-navegacao">
-                <ul class="nav nav-pills d-block d-md-flex">
-                    <li class="nav-item fw-bold">
-                        <a href="#sobre-a-pousada" class="nav-link">
-                            <i class="bi bi-house-door me-1"></i>
-                            Sobre nós
-                        </a>
-                    </li>
-                    <li class="nav-item fw-bold">
-                        <a href="#quartos" class="nav-link">
-                            <i class="bi bi-moon-stars me-1"></i>
-                            Nossos Quartos
-                        </a>
-                    </li>
-                    <li class="nav-item fw-bold">
-                        <a href="#area-de-lazer" class="nav-link">
-                            <i class="bi bi-sun me-1"></i>
-                            Área de Lazer
-                        </a>
-                    </li>
-                    <li class="nav-item fw-bold">
-                        <a href="#praias" class="nav-link">
-                            <i class="bi bi-water"></i>
-                            Praias
-                        </a>
-                    </li>
-                    <li class="nav-item fw-bold">
-                        <a href="#avaliacoes" class="nav-link">
-                            <i class="bi bi-chat-dots"></i>
-                            Feedback
-                        </a>
-                    </li>
-                    <li class="nav-item fw-bold">
-                        <a href="#fale-conosco" class="nav-link">
-                            <i class="bi bi-telephone-inbound me-1"></i>
-                            Fale Conosco
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <a href="#inicio" class="home-brand" aria-label="Flor de Lótus — início"><span>Itacaré</span><img src="./img Pousada/flordelotuslogo.png" alt="Flor de Lótus" width="140" height="58"><span>Bahia</span></a>
+            <a href="/reservas" class="home-booking">Reservar <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4" y="6" width="16" height="15" rx="1"/><path d="M8 3v6M16 3v6M4 11h16"/></svg></a>
         </div>
+        <nav class="home-quick-nav" aria-label="Navegação principal">
+            <a href="#sobre-a-pousada">A pousada</a><a href="#quartos">Acomodações</a><a href="#area-de-lazer">Lazer</a><a href="#praias">Itacaré</a><a href="#avaliacoes">Avaliações</a><a href="#fale-conosco">Contato</a>
+        </nav>
     </header>
-    <div data-bs-spy="scroll" data-bs-target="#cabecalho" data-bs-smooth-scroll="true">
-        <section id="sobre-a-pousada">
-            <div class="hero-wrapper">
-                <div class="carousel slide" data-bs-ride="carousel" id="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="8000">
-                            <img src="./img Pousada/FlordeLotus1.jpg" class="img-custom" alt="Logo da pousada">
-                            <div class="hero-overlay">
-                                <div class="hero-content">
-                                    <h1>Pousada Flor de Lótus</h1>
-                                    <p>Seu refúgio boutique em Itacaré entre praias paradisíacas, natureza e conforto.
-                                    </p>
-                                    <a href="#quartos" class="btn btn-luxo">Explorar Quartos</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <img src="./img Pousada/interiorpousada.jpg" class="img-custom" alt="Foto entrada">
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <img src="./img Pousada/FlordeLotus3.jpg" class="img-custom" alt="Café da Manhã">
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <img src="./img Pousada/FlordeLotus4.jpg" class="img-custom" alt="Quarto">
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <img src="./img Pousada/FlordeLotus5.jpg" class="img-custom" alt="Sinuca">
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3000">
-                            <img src="./img Pousada/FlordeLotus6.jpg" class="img-custom" alt="Piscina">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carousel" class="active" data-bs-slide-to="0"></button>
-                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="1"></button>
-                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="2"></button>
-                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="3"></button>
-                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="4"></button>
-                        <button type="button" data-bs-target="#carousel" data-bs-slide-to="5"></button>
-                    </div>
-                </div>
+    <dialog id="home-menu" class="home-menu" aria-labelledby="home-menu-title">
+        <div class="home-menu-top"><button type="button" class="home-menu-close"><span aria-hidden="true">×</span> Fechar menu</button><a href="/reservas" class="menu-reserve">Reservar sua estadia <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10"/></svg></a></div>
+        <div class="home-menu-body">
+            <div class="home-menu-main"><p class="menu-eyebrow" id="home-menu-title">Pousada Flor de Lótus</p><nav aria-label="Explore a pousada" class="home-menu-links">
+                <a href="#sobre-a-pousada"><span>01</span>A pousada</a><a href="#quartos"><span>02</span>Acomodações</a><a href="#area-de-lazer"><span>03</span>Momentos de lazer</a><a href="#praias"><span>04</span>Descubra Itacaré</a><a href="#avaliacoes"><span>05</span>Avaliações</a><a href="#fale-conosco"><span>06</span>Fale conosco</a>
+            </nav><div class="home-menu-address">Rua Hibisco, 33 · Praia da Concha<br>Itacaré, Bahia · Brasil</div></div>
+            <div class="home-menu-image"><img src="./img Pousada/FlordeLotus6.jpg" alt="Piscina da Pousada Flor de Lótus" loading="lazy"><div><p>Entre o mar e a natureza.</p><span>Encontre seus dias de descanso.</span></div></div>
+        </div>
+    </dialog>
+    <main id="conteudo-principal">
+        <section id="inicio" class="home-hero" aria-label="Bem-vindo à Flor de Lótus">
+            <div id="hero-carousel" class="hero-slideshow" role="region" aria-roledescription="carrossel" aria-label="Fotos da pousada">
+                <div class="hero-frame is-active" role="group" aria-roledescription="slide" aria-label="1 de 6: entrada da pousada"><img src="./img Pousada/FlordeLotus1.jpg" alt="Entrada e jardim da Pousada Flor de Lótus" width="1600" height="1000" fetchpriority="high"></div>
+                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="2 de 6: piscina" aria-hidden="true"><img src="./img Pousada/FlordeLotus6.jpg" alt="Piscina e área externa da pousada" width="1600" height="1000" loading="lazy"></div>
+                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="3 de 6: café da manhã" aria-hidden="true"><img src="./img Pousada/FlordeLotus3.jpg" alt="Café da manhã da pousada" width="1600" height="1000" loading="lazy"></div>
+                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="4 de 6: acomodações" aria-hidden="true"><img src="./img Pousada/FlordeLotus4.jpg" alt="Acomodações da Flor de Lótus" width="1600" height="1000" loading="lazy"></div>
+                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="5 de 6: interior da pousada" aria-hidden="true"><img src="./img Pousada/interiorpousada.jpg" alt="Interior e área de convivência da pousada" width="1600" height="1000" loading="lazy"></div>
+                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="6 de 6: lazer" aria-hidden="true"><img src="./img Pousada/FlordeLotus5.jpg" alt="Mesa de sinuca da pousada" width="1600" height="1000" loading="lazy"></div>
             </div>
+            <div class="home-hero-shade"></div>
+            <div class="home-hero-copy"><p class="home-hero-eyebrow">Pousada · Itacaré, Bahia</p><h1>Flor de Lótus</h1><p class="home-hero-tagline">Seu refúgio entre o mar e a natureza.</p></div>
+            <div class="home-hero-bottom"><span class="hero-location">Praia da Concha<br><span>Itacaré · Bahia</span></span><a href="#sobre-a-pousada" class="hero-discover">Descubra a pousada<span aria-hidden="true">↓</span></a><div class="hero-controls"><button type="button" id="hero-pause" aria-label="Pausar carrossel" aria-pressed="false"><span class="hero-play-state" aria-hidden="true"></span></button><button type="button" id="hero-prev" aria-label="Foto anterior">←</button><span class="hero-count" aria-hidden="true"><span id="hero-current">01</span><span class="hero-count-line"></span>06</span><button type="button" id="hero-next" aria-label="Próxima foto">→</button></div></div>
+            <p id="hero-status" class="visually-hidden" role="status" aria-live="polite"></p>
+        </section>
+        <section id="sobre-a-pousada">
             <div class="pt-5 pb-5">
                 <div class="container">
                     <div class="row align-items-center">
@@ -932,7 +878,8 @@
                 </p>
             </div>
         </footer>
-    </div>
+    </main>
+    <script src="./inicio.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/jquery.inputmask.min.js"></script>

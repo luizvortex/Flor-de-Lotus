@@ -465,53 +465,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-/* =========================
-   GSAP SCROLL: ANIMAÇÃO HERO (CORRIGIDA)
-   ========================= */
-document.addEventListener("DOMContentLoaded", function () {
-    if (typeof gsap !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
-
-        let mm = gsap.matchMedia();
-
-        // --- DESKTOP ---
-        mm.add("(min-width: 992px)", () => {
-            gsap.to("#carousel", {
-                width: "92%",
-                height: "80svh",      // Encolhe de forma harmoniosa
-                marginTop: "12svh",   // Desce para fugir do menu
-                borderRadius: "24px",
-                borderWidth: 6,
-                borderColor: "rgba(255, 255, 255, 0.45)",
-                scrollTrigger: {
-                    trigger: ".hero-wrapper",
-                    start: "top top",
-                    end: "+=450",
-                    scrub: 1
-                }
-            });
-        });
-
-        // --- MOBILE / TABLET ---
-        mm.add("(max-width: 991px)", () => {
-            gsap.to("#carousel", {
-                width: "92%",
-                height: "75svh",      // Ajustado perfeitamente para telemóveis
-                marginTop: "12svh",
-                borderRadius: "24px",
-                borderWidth: 4,
-                borderColor: "rgba(255, 255, 255, 0.45)",
-                scrollTrigger: {
-                    trigger: ".hero-wrapper",
-                    start: "top top",
-                    end: "+=300",
-                    scrub: 1
-                }
-            });
-        });
-    }
-});
-
 document.addEventListener("DOMContentLoaded", function () {
     const lista = document.getElementById("lista-comentarios");
     const btnVerMais = document.getElementById("btn-ver-mais");
