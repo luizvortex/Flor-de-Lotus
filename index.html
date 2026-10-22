@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="./inicio.css">
+    <link rel="stylesheet" href="./quartos.css">
     <link rel="preload" as="image" href="./img Pousada/FlordeLotus1.jpg" fetchpriority="high">
     <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},3600)}</script>
     <link rel="icon" type="image" href="img Pousada/flordelotuslogo.png">
@@ -101,249 +102,67 @@
                 </div>
             </div>
         </section>
-        <section id="quartos" class="pt-5">
-            <div class="container mb-5">
-                <div class="row">
-                    <h2 class="section-tittle text-center">Nossos <span>Quartos</span></h2>
-                    <p class="text-center text-muted">Conheça nossas acomodações e escolha o seu refúgio perfeito.</p>
-                </div>
-            </div>
-            <div class="quarto-wrapper position-relative" style="background-color: var(--soft); padding: 60px 0 0 0;">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-5 mb-4 mb-lg-0">
-                            <div class="quarto-gallery">
-                                <div id="carousel-duplo" class="carousel slide carousel-fade img-main-container"
-                                    data-bs-ride="carousel" data-bs-interval="3500">
-                                    <div class="carousel-inner h-100">
-                                        <div class="carousel-item active h-100">
-                                            <img src="img casal/casal.jpg" class="quarto-img-main d-block w-100"
-                                                alt="Quarto Duplo" onclick="openLightbox(this.src)">
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="img casal/casal1.jpg" class="quarto-img-main d-block w-100"
-                                                alt="Quarto Duplo" onclick="openLightbox(this.src)">
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="img casal/casal2.jpg" class="quarto-img-main d-block w-100"
-                                                alt="Quarto Duplo" onclick="openLightbox(this.src)">
-                                        </div>
-                                    </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-duplo"
-                                        data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carousel-duplo"
-                                        data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                                <div class="img-thumbs-container">
-                                    <img src="img casal/casal1.jpg" class="quarto-img-thumb" alt="Detalhe 1"
-                                        onclick="openLightbox(this.src)">
-                                    <img src="img casal/casal2.jpg" class="quarto-img-thumb" alt="Detalhe 2"
-                                        onclick="openLightbox(this.src)">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-7 ps-lg-5">
-                            <h3 class="text-colored fs-3">Duplo Twin</h3>
-                            <p>Perfeito para amigos ou casais que buscam praticidade. Este quarto oferece o conforto
-                                essencial com um toque de charme baiano, garantindo noites tranquilas após um longo dia
-                                de praia e passeios em Itacaré.</p>
-                            <h5 class="mt-4 fs-6 fw-bold">O que este quarto oferece:</h5>
-                            <ul class="quarto-amenities">
-                                <li><i class="bi bi-wifi"></i> Wi-Fi de alta velocidade</li>
-                                <li><i class="bi bi-tv"></i> Smart TV com acesso a streaming</li>
-                                <li><i class="bi bi-snow"></i> Ar-condicionado Split silencioso</li>
-                                <li><i class="bi bi-door-open"></i> Varanda privativa com rede</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="wave-divider" style="margin-top: 50px;">
-                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
-                        preserveAspectRatio="none" style="width: 100%; height: 60px; display: block;">
-                        <path
-                            d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z"
-                            style="fill: var(--cream);"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="quarto-wrapper position-relative" style="background-color: var(--cream); padding: 60px 0 0 0;">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-7 pe-lg-5 order-2 order-lg-1">
-                            <h3 class="text-colored fs-3 text-lg-end">Quarto Triplo</h3>
-                            <p class="text-lg-end">Acomodação espaçosa ideal para pequenos grupos ou famílias. Desfrute
-                                de um ambiente arejado e bem iluminado, decorado para proporcionar a máxima sensação de
-                                relaxamento e acolhimento.</p>
-                            <div class="d-flex flex-column align-items-lg-end mt-4">
-                                <h5 class="fs-6 fw-bold">O que este quarto oferece:</h5>
-                                <ul class="quarto-amenities text-lg-end">
-                                    <li><i class="bi bi-wifi"></i> Wi-Fi de alta velocidade</li>
-                                    <li><i class="bi bi-tv"></i> Smart TV de ecrã plano</li>
-                                    <li><i class="bi bi-snow"></i> Ar-condicionado Split</li>
-                                    <li><i class="bi bi-cup-hot"></i> Frigobar abastecido</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 mb-4 mb-lg-0 order-1 order-lg-2">
-                            <div class="quarto-gallery">
-                                <div id="carousel-triplo" class="carousel slide carousel-fade img-main-container"
-                                    data-bs-ride="carousel" data-bs-interval="3500">
-                                    <div class="carousel-inner h-100">
-                                        <div class="carousel-item active h-100">
-                                            <img src="./img Pousada/quartotriplo.jpg"
-                                                class="quarto-img-main d-block w-100" alt="Quarto Triplo"
-                                                onclick="openLightbox(this.src)">
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="img casal/triplo.jpg" class="quarto-img-main d-block w-100"
-                                                alt="Quarto Triplo" onclick="openLightbox(this.src)">
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="img casal/triplo1.jpg" class="quarto-img-main d-block w-100"
-                                                alt="Quarto Triplo" onclick="openLightbox(this.src)">
-                                        </div>
-                                    </div>
-                                    <button class="carousel-control-prev" type="button"
-                                        data-bs-target="#carousel-triplo" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button"
-                                        data-bs-target="#carousel-triplo" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                                <div class="img-thumbs-container">
-                                    <img src="img casal/triplo.jpg" class="quarto-img-thumb" alt="Detalhe 1"
-                                        onclick="openLightbox(this.src)">
-                                    <img src="img casal/triplo1.jpg" class="quarto-img-thumb" alt="Detalhe 2"
-                                        onclick="openLightbox(this.src)">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="wave-divider" style="margin-top: 50px;">
-                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
-                        preserveAspectRatio="none"
-                        style="width: 100%; height: 60px; display: block; transform: rotate(180deg);">
-                        <path
-                            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-                            style="fill: var(--soft);"></path>
-                    </svg>
-                </div>
-            </div>
-            <div class="quarto-wrapper position-relative" style="background-color: var(--soft); padding: 60px 0;">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-5 mb-4 mb-lg-0">
-                            <div class="quarto-gallery">
-                                <div id="carousel-familia" class="carousel slide carousel-fade img-main-container"
-                                    data-bs-ride="carousel" data-bs-interval="3500">
-                                    <div class="carousel-inner h-100">
-                                        <div class="carousel-item active h-100">
-                                            <img src="./img Pousada/FlordeLotus8.jpg"
-                                                class="quarto-img-main d-block w-100" alt="Quarto Família"
-                                                onclick="openLightbox(this.src)">
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="./img Pousada/FlordeLotus8.jpg"
-                                                class="quarto-img-main d-block w-100" alt="Quarto Família"
-                                                onclick="openLightbox(this.src)">
-                                        </div>
-                                        <div class="carousel-item h-100">
-                                            <img src="./img Pousada/FlordeLotus8.jpg"
-                                                class="quarto-img-main d-block w-100" alt="Quarto Família"
-                                                onclick="openLightbox(this.src)">
-                                        </div>
-                                    </div>
-                                    <button class="carousel-control-prev" type="button"
-                                        data-bs-target="#carousel-familia" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button"
-                                        data-bs-target="#carousel-familia" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                                <div class="img-thumbs-container">
-                                    <img src="./img Pousada/FlordeLotus8.jpg" class="quarto-img-thumb" alt="Detalhe 1"
-                                        onclick="openLightbox(this.src)">
-                                    <img src="./img Pousada/FlordeLotus8.jpg" class="quarto-img-thumb" alt="Detalhe 2"
-                                        onclick="openLightbox(this.src)">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-7 ps-lg-5">
-                            <h3 class="text-colored fs-3">Quarto Família</h3>
-                            <p>A melhor escolha para quem viaja com toda a família. Amplo espaço interno garantindo
-                                conforto para adultos e crianças, com todas as comodidades necessárias para se sentirem
-                                em casa.</p>
-                            <h5 class="mt-4 fs-6 fw-bold">O que este quarto oferece:</h5>
-                            <ul class="quarto-amenities">
-                                <li><i class="bi bi-wifi"></i> Wi-Fi de alta velocidade</li>
-                                <li><i class="bi bi-tv"></i> Smart TV com canais infantis</li>
-                                <li><i class="bi bi-snow"></i> Ar-condicionado Split potente</li>
-                                <li><i class="bi bi-shield-check"></i> Cofre eletrônico</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container mt-4 mb-5">
-                <div class="row pt-4 justify-content-center">
-                    <div class="col-lg-10">
-                        <div class="reserva-box text-center shadow-sm">
-                            <h4 class="mb-4 text-colored"><i class="bi bi-calendar-check me-2"></i>Escolha seu quarto e
-                                faça sua reserva</h4>
-                            <form class="row g-3 justify-content-center align-items-end">
-                                <div class="col-md-4 text-start">
-                                    <label class="form-label fw-bold">Selecione o Quarto:</label>
-                                    <select id="quarto-selecionado"
-                                        class="form-select border-success campo-tamanho-igual">
-                                        <option value="Duplo Twin" selected>Duplo Twin</option>
-                                        <option value="Quarto Triplo">Quarto Triplo</option>
-                                        <option value="Quarto Família">Quarto Família</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 text-start">
-                                    <label class="form-label fw-bold">Check-in:</label>
-                                    <input type="date" id="data-checkin-global"
-                                        class="form-control border-success campo-tamanho-igual">
-                                </div>
-                                <div class="col-md-3 text-start">
-                                    <label class="form-label fw-bold">Check-out:</label>
-                                    <input type="date" id="data-checkout-global"
-                                        class="form-control border-success campo-tamanho-igual">
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-success btn-reservar w-100 btn-tamanho-igual"
-                                        onclick="enviarReservaQuartos()">
-                                        <i class="bi bi-whatsapp"></i> Reservar
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+        <section id="quartos" class="room-showcases">
+            <div class="showcase-container">
+                <div class="showcase-heading"><h2>Nossos Quartos</h2><p>Conheça nossas acomodações e escolha o seu refúgio perfeito.</p></div>
+                <!--ROOM_SHOWCASES_START--><article class="room-showcase" aria-labelledby="room-title-duplo">
+    <div class="room-showcase-gallery" data-title="Duplo Twin" data-photos="[{&quot;url&quot;:&quot;/img casal/casal.jpg&quot;,&quot;alt&quot;:&quot;Duplo Twin — foto 1&quot;},{&quot;url&quot;:&quot;/img casal/casal1.jpg&quot;,&quot;alt&quot;:&quot;Duplo Twin — foto 2&quot;},{&quot;url&quot;:&quot;/img casal/casal2.jpg&quot;,&quot;alt&quot;:&quot;Duplo Twin — foto 3&quot;}]">
+      <div class="showcase-main">
+        <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de Duplo Twin"><img class="showcase-main-image" src="/img casal/casal.jpg" alt="Duplo Twin — foto 1" loading="lazy" width="900" height="700"></button>
+        <button type="button" class="showcase-view-photos"><i class="bi bi-images" aria-hidden="true"></i> Ver 3 fotos</button>
+        <button type="button" class="showcase-arrow showcase-prev" aria-label="Foto anterior de Duplo Twin"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m13 5-7 7 7 7M6 12h13"/></svg></button>
+        <button type="button" class="showcase-arrow showcase-next" aria-label="Próxima foto de Duplo Twin"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m11 5 7 7-7 7M18 12H5"/></svg></button>
+      </div>
+      <div class="showcase-thumbs"><button type="button" class="showcase-thumb" data-photo-index="1" aria-label="Destacar Duplo Twin — foto 2"><img src="/img casal/casal1.jpg" alt="Duplo Twin — foto 2" loading="lazy" width="300" height="350"></button><button type="button" class="showcase-thumb" data-photo-index="2" aria-label="Destacar Duplo Twin — foto 3"><img src="/img casal/casal2.jpg" alt="Duplo Twin — foto 3" loading="lazy" width="300" height="350"></button></div>
+      <span class="visually-hidden showcase-photo-status" aria-live="polite"></span>
+    </div>
+    <div class="showcase-copy"><h3 id="room-title-duplo">Duplo Twin</h3>
+      <p class="showcase-description">Perfeito para amigos ou casais que buscam praticidade. Este quarto oferece o conforto essencial com um toque de charme baiano, garantindo noites tranquilas após um longo dia de praia e passeios em Itacaré.</p>
+      <ul class="showcase-features" aria-label="Comodidades"><li><i class="bi bi-wifi" aria-hidden="true"></i><span>Wi-Fi de alta velocidade</span></li><li><i class="bi bi-tv" aria-hidden="true"></i><span>Smart TV com acesso a streaming</span></li><li><i class="bi bi-snow" aria-hidden="true"></i><span>Ar-condicionado Split silencioso</span></li><li><i class="bi bi-door-open" aria-hidden="true"></i><span>Varanda privativa com rede</span></li></ul>
+      <a class="showcase-rates" href="/reservas">Ver tarifas</a>
+    </div>
+  </article>
+<article class="room-showcase" aria-labelledby="room-title-triplo">
+    <div class="room-showcase-gallery" data-title="Quarto Triplo" data-photos="[{&quot;url&quot;:&quot;/img Pousada/quartotriplo.jpg&quot;,&quot;alt&quot;:&quot;Quarto Triplo — foto 1&quot;},{&quot;url&quot;:&quot;/img casal/triplo.jpg&quot;,&quot;alt&quot;:&quot;Quarto Triplo — foto 2&quot;},{&quot;url&quot;:&quot;/img casal/triplo1.jpg&quot;,&quot;alt&quot;:&quot;Quarto Triplo — foto 3&quot;}]">
+      <div class="showcase-main">
+        <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de Quarto Triplo"><img class="showcase-main-image" src="/img Pousada/quartotriplo.jpg" alt="Quarto Triplo — foto 1" loading="lazy" width="900" height="700"></button>
+        <button type="button" class="showcase-view-photos"><i class="bi bi-images" aria-hidden="true"></i> Ver 3 fotos</button>
+        <button type="button" class="showcase-arrow showcase-prev" aria-label="Foto anterior de Quarto Triplo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m13 5-7 7 7 7M6 12h13"/></svg></button>
+        <button type="button" class="showcase-arrow showcase-next" aria-label="Próxima foto de Quarto Triplo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m11 5 7 7-7 7M18 12H5"/></svg></button>
+      </div>
+      <div class="showcase-thumbs"><button type="button" class="showcase-thumb" data-photo-index="1" aria-label="Destacar Quarto Triplo — foto 2"><img src="/img casal/triplo.jpg" alt="Quarto Triplo — foto 2" loading="lazy" width="300" height="350"></button><button type="button" class="showcase-thumb" data-photo-index="2" aria-label="Destacar Quarto Triplo — foto 3"><img src="/img casal/triplo1.jpg" alt="Quarto Triplo — foto 3" loading="lazy" width="300" height="350"></button></div>
+      <span class="visually-hidden showcase-photo-status" aria-live="polite"></span>
+    </div>
+    <div class="showcase-copy"><h3 id="room-title-triplo">Quarto Triplo</h3>
+      <p class="showcase-description">Acomodação espaçosa ideal para pequenos grupos ou famílias. Desfrute de um ambiente arejado e bem iluminado, decorado para proporcionar a máxima sensação de relaxamento e acolhimento.</p>
+      <ul class="showcase-features" aria-label="Comodidades"><li><i class="bi bi-wifi" aria-hidden="true"></i><span>Wi-Fi de alta velocidade</span></li><li><i class="bi bi-tv" aria-hidden="true"></i><span>Smart TV de ecrã plano</span></li><li><i class="bi bi-snow" aria-hidden="true"></i><span>Ar-condicionado Split</span></li><li><i class="bi bi-cup-hot" aria-hidden="true"></i><span>Frigobar abastecido</span></li></ul>
+      <a class="showcase-rates" href="/reservas">Ver tarifas</a>
+    </div>
+  </article>
+<article class="room-showcase" aria-labelledby="room-title-familia">
+    <div class="room-showcase-gallery" data-title="Quarto Família" data-photos="[{&quot;url&quot;:&quot;/img Pousada/FlordeLotus8.jpg&quot;,&quot;alt&quot;:&quot;Quarto Família — foto 1&quot;},{&quot;url&quot;:&quot;/img Pousada/FlordeLotus8.jpg&quot;,&quot;alt&quot;:&quot;Quarto Família — foto 2&quot;},{&quot;url&quot;:&quot;/img Pousada/FlordeLotus8.jpg&quot;,&quot;alt&quot;:&quot;Quarto Família — foto 3&quot;}]">
+      <div class="showcase-main">
+        <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de Quarto Família"><img class="showcase-main-image" src="/img Pousada/FlordeLotus8.jpg" alt="Quarto Família — foto 1" loading="lazy" width="900" height="700"></button>
+        <button type="button" class="showcase-view-photos"><i class="bi bi-images" aria-hidden="true"></i> Ver 3 fotos</button>
+        <button type="button" class="showcase-arrow showcase-prev" aria-label="Foto anterior de Quarto Família"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m13 5-7 7 7 7M6 12h13"/></svg></button>
+        <button type="button" class="showcase-arrow showcase-next" aria-label="Próxima foto de Quarto Família"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m11 5 7 7-7 7M18 12H5"/></svg></button>
+      </div>
+      <div class="showcase-thumbs"><button type="button" class="showcase-thumb" data-photo-index="1" aria-label="Destacar Quarto Família — foto 2"><img src="/img Pousada/FlordeLotus8.jpg" alt="Quarto Família — foto 2" loading="lazy" width="300" height="350"></button><button type="button" class="showcase-thumb" data-photo-index="2" aria-label="Destacar Quarto Família — foto 3"><img src="/img Pousada/FlordeLotus8.jpg" alt="Quarto Família — foto 3" loading="lazy" width="300" height="350"></button></div>
+      <span class="visually-hidden showcase-photo-status" aria-live="polite"></span>
+    </div>
+    <div class="showcase-copy"><h3 id="room-title-familia">Quarto Família</h3>
+      <p class="showcase-description">A melhor escolha para quem viaja com toda a família. Amplo espaço interno garantindo conforto para adultos e crianças, com todas as comodidades necessárias para se sentirem em casa.</p>
+      <ul class="showcase-features" aria-label="Comodidades"><li><i class="bi bi-wifi" aria-hidden="true"></i><span>Wi-Fi de alta velocidade</span></li><li><i class="bi bi-tv" aria-hidden="true"></i><span>Smart TV com canais infantis</span></li><li><i class="bi bi-snow" aria-hidden="true"></i><span>Ar-condicionado Split potente</span></li><li><i class="bi bi-shield-check" aria-hidden="true"></i><span>Cofre eletrônico</span></li></ul>
+      <a class="showcase-rates" href="/reservas">Ver tarifas</a>
+    </div>
+  </article><!--ROOM_SHOWCASES_END-->
             </div>
         </section>
-        <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl">
-                <div class="modal-content bg-transparent border-0">
-                    <div class="modal-body text-center position-relative p-0">
-                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3"
-                            data-bs-dismiss="modal" aria-label="Close"
-                            style="z-index: 1055; filter: invert(1); background-color: rgba(255,255,255,0.5); border-radius: 50%; padding: 10px;"></button>
-                        <img id="lightboxImage" src="" class="img-fluid rounded shadow-lg" alt="Imagem ampliada"
-                            style="max-height: 90vh; width: auto; object-fit: contain;">
-                    </div>
-                </div>
-            </div>
-        </div>
+        <dialog id="showcase-album" class="showcase-album" aria-labelledby="showcase-album-title">
+            <div class="showcase-album-header"><h2 id="showcase-album-title">Fotos do quarto</h2><button type="button" class="showcase-album-close" aria-label="Fechar fotos">×</button></div>
+            <div class="showcase-album-stage"><button type="button" data-album-prev aria-label="Foto anterior">←</button><img class="showcase-album-image" alt=""><button type="button" data-album-next aria-label="Próxima foto">→</button></div>
+            <div class="showcase-album-footer"><p class="showcase-album-count" role="status" aria-live="polite"></p><div class="showcase-album-thumbs" role="group" aria-label="Escolher foto"></div></div>
+        </dialog>
         <section id="area-de-lazer" class="pt-5 pb-5 position-relative">
             <div class="container pb-4">
                 <div class="row text-center mb-">
@@ -880,6 +699,7 @@
         </footer>
     </main>
     <script src="./inicio.js"></script>
+    <script src="./quartos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/jquery.inputmask.min.js"></script>

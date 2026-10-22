@@ -25,3 +25,30 @@
     .reservas-page .search .btn { width: 100%; }
     .reservas-page .public-header { margin-bottom: 32px; }
 }
+
+/* Edição dos blocos públicos de acomodações. */
+.showcase-editor { max-width: 900px; width: calc(100% - 30px); }
+.showcase-editor-heading { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin: 28px 0 15px; }
+.showcase-editor-heading h3 { margin: 0; }
+.showcase-editor-heading .btn { font-size: 12px; }
+.showcase-photo-edit { display: grid; grid-template-columns: 110px minmax(0,1fr) auto; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.showcase-photo-edit>img { width: 110px; height: 100px; object-fit: cover; border-radius: 7px; }
+.showcase-photo-edit input[type=file] { font-size: 12px; padding: 8px; margin-bottom: 12px; }
+.showcase-photo-actions { display: flex; gap: 6px; }
+.showcase-photo-actions button { font-size: 11px; padding: 9px; }
+.showcase-feature-edit { display: grid; grid-template-columns: 24px minmax(110px,1fr) minmax(0,2fr) auto; gap: 12px; align-items: end; margin-bottom: 14px; }
+.showcase-feature-edit>i { font-size: 20px; align-self: center; }
+.showcase-feature-edit .btn { padding: 11px; }
+.showcase-admin-preview { width: 100%; height: 190px; object-fit: cover; }
+.showcase-admin-features { display: flex; flex-direction: column; gap: 9px; font-size: 12px; margin: 22px 0; color: var(--muted); }
+.showcase-preview-link { display: inline-block; margin-top: 12px; font-size: 13px; }
+@media(max-width:700px) {
+ .showcase-editor { padding: 20px 16px; }
+ .showcase-photo-edit { grid-template-columns: 70px minmax(0,1fr); gap: 10px; }
+ .showcase-photo-edit>img { width: 70px; height: 80px; }
+ .showcase-photo-actions { grid-column: 2; }
+ .showcase-feature-edit { grid-template-columns: 20px minmax(0,1fr) auto; gap: 9px; }
+ .showcase-feature-edit>div:nth-of-type(2) { grid-row: 2; grid-column: 2/4; }
+ .showcase-feature-edit>.btn { grid-column: 3; grid-row: 1; }
+ .showcase-editor input,.showcase-editor textarea,.showcase-editor select { font-size: 16px; min-width: 0; }
+}

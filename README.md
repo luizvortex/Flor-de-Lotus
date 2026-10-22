@@ -73,3 +73,12 @@ O advisor não encontrou problemas nas permissões das tabelas/funções. Resta 
 `server.py`, os testes Python, fotos e arquivos originais continuam como referência. Para executar somente o legado: configure `ADMIN_PASSWORD` de forma privada e rode `python3 server.py`. Ele usa `.local/lotus.db` e não compartilha dados nem autenticação com Supabase.
 
 A ponte HTTP antiga só é ativada explicitamente com `LOTUS_BACKEND=legacy` fora da Vercel, usando `LEGACY_API_ORIGIN` (padrão `http://127.0.0.1:8000`). `test:next` usa esse modo com senha e banco temporários, sem tocar em `.local/`. Não configure o modo legado para produção Vercel.
+
+
+## Blocos públicos de quartos editáveis
+
+A home renderiza os três blocos de `lotus_private.room_showcases` via RPC `lotus_showcase_api`, com fallback para os textos/fotos originais em `src/lib/showcase-defaults.ts` se o serviço falhar. A seção mantém foto principal e duas miniaturas, álbum “Ver fotos”, descrição original, comodidades e link para tarifas. CSS/JS específicos: `quartos.css` e `quartos.js`.
+
+Em `/admin`, a aba **Conteúdo dos quartos** edita título, tópico opcional, descrição, fotos (3–12), ordem e ícones/textos das comodidades. Fotos JPG/PNG/WebP até 3 MB são enviadas ao bucket público `lotus-showcase`, somente para administradores autorizados. Fotos enviadas são públicas; não usar documentos ou dados de hóspedes. A revisão impede sobrescrita silenciosa entre editores. Cadastro físico, preços e reservas são independentes.
+
+Fonte da alteração remota aplicada: `database/room-showcases.sql`. Contrato real de banco validado com rollback em `database/test-room-showcases.sql`: leitura pública, escrita restrita, revisão e validação de conteúdo. API HTTP validada com backend simulado pelo `npm run test:supabase-api`, incluindo envio de imagem e bloqueio de arquivo inválido. Layout/álbum/editor conferidos em Chromium em 320/390/1024/1440px; chamadas do painel simuladas para não alterar conteúdo real. Upload HTTPS direto ao Supabase não pôde ser exercitado neste ambiente, cujo proxy bloqueia esse domínio.

@@ -4,13 +4,15 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+let showcaseTitle = 'Duplo Twin';
+
 
 let revoked = false;
 let adminSignIns = 0;
 const received = [];
 const mock = createServer(async (req, res) => {
   let body = ''; for await (const chunk of req) body += chunk;
-  const data = body ? JSON.parse(body) : {};
+  const data = body && !req.url.startsWith('/storage/') ? JSON.parse(body) : {};
   const token = req.headers.authorization?.replace('Bearer ', '');
   received.push({ path: req.url, method: req.method, data, token });
   const json = (status, value) => { res.writeHead(status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(value)); };
@@ -22,6 +24,12 @@ const mock = createServer(async (req, res) => {
   }
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
   if (req.url.startsWith('/auth/v1/user')) return json(200, { email: 'admin@example.invalid' });
+  if (req.url.startsWith('/storage/v1/object/lotus-showcase/')) return json(token === 'access-admin' ? 200 : 403, {});
+  if (req.url === '/rest/v1/rpc/lotus_showcase_api') {
+    if (data.p_operation === 'read') return json(200, { showcases: [{ slug: 'duplo', title: showcaseTitle, photos: [] }] });
+    if (token !== 'access-admin') return json(401, { code: 'PT401' });
+    showcaseTitle = data.p_data.title; return json(200, { ok: true });
+  }
   if (req.url !== '/rest/v1/rpc/lotus_api') return json(404, {});
   if (token === 'expired') return json(401, { code: 'PGRST303' });
   const admin = token === 'access-admin' && !revoked;
@@ -78,10 +86,23 @@ try {
   r = await request('bookings', { guest: 'x'.repeat(17000) }); assert.equal(r.status, 413);
   r = await fetch(base + '/api/bookings', { method: 'POST', body: '{}' }); assert.equal(r.status, 415);
   r = await fetch(base + '/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '[' }); assert.equal(r.status, 400);
+  r = await request('showcases'); assert.equal(r.status, 200);
+  r = await request('showcases/duplo', { title: 'Novo título' }, { method: 'PUT' }); assert.equal(r.status, 401);
+  r = await request('showcases/duplo', { title: 'Novo título' }, { method: 'PUT', headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  r = await request('showcases'); assert.equal((await r.json()).showcases[0].title, 'Novo título');
+  const upload = async (contents, type, authenticated = true) => {
+    const form = new FormData(); form.append('photo', new Blob([contents], { type }), 'foto.jpg');
+    return fetch(base + '/api/showcase-upload', { method: 'POST', body: form, headers: authenticated ? { Cookie: cookies } : {} });
+  };
+  r = await upload('not-a-photo', 'image/jpeg', false); assert.equal(r.status, 401);
+  r = await upload('not-a-photo', 'image/jpeg'); assert.equal(r.status, 415);
+  r = await upload(new Uint8Array([255,216,255,224,0,0,0,0]), 'image/jpeg'); assert.equal(r.status, 201);
+  assert.match((await r.json()).url, /\/lotus-showcase\/[0-9a-f-]+\.jpg$/);
+  assert.equal(received.findLast(x => x.path.startsWith('/storage/')).token, 'access-admin');
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 16 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: 24 scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }

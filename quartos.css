@@ -1,0 +1,69 @@
+/* Vitrine de acomodações: conteúdo editorial, separado do estoque físico. */
+.home-page #quartos.room-showcases { padding: 72px 0 50px; background: var(--cream); }
+.showcase-container { max-width: 1536px; padding: 0 clamp(20px,5vw,88px); margin: auto; }
+.showcase-heading { margin-bottom: 44px; }
+.showcase-heading h2 { font: 500 clamp(38px,4vw,56px)/1.2 'Playfair Display',serif; color: var(--ink); margin: 0 0 18px; }
+.showcase-heading p { color: var(--muted); margin: 0; font-size: 15px; }
+.room-showcase { display: grid; grid-template-columns: minmax(0,1.08fr) minmax(0,1fr); align-items: center; gap: clamp(32px,5vw,88px); padding: 0 0 64px; margin-bottom: 64px; border-bottom: 1px solid var(--line); }
+.room-showcase:last-child { margin-bottom: 0; border: 0; }
+.room-showcase-gallery { display: grid; grid-template-columns: minmax(0,3fr) minmax(0,1fr); gap: 12px; height: clamp(350px,32vw,460px); min-width: 0; }
+.showcase-main { position: relative; min-width: 0; min-height: 0; overflow: hidden; border-radius: 8px; }
+.showcase-main-open, .showcase-thumb { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: var(--soft); cursor: pointer; overflow: hidden; }
+.showcase-main-open img, .showcase-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
+.showcase-main-open:hover img { transform: scale(1.025); }
+.showcase-thumbs { display: grid; grid-template-rows: repeat(2,minmax(0,1fr)); gap: 12px; min-width: 0; min-height: 0; }
+.showcase-thumb { border-radius: 8px; }
+.showcase-view-photos { position: absolute; top: 12px; left: 12px; z-index: 2; display: flex; align-items: center; gap: 8px; border: 0; padding: 7px 11px; background: var(--cream); color: var(--ink); font-size: 13px; cursor: pointer; }
+.showcase-view-photos i { color: #89714f; }
+.showcase-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: 0; border-radius: 50%; background: var(--cream); color: var(--ink); cursor: pointer; }
+.showcase-prev { left: 14px; }.showcase-next { right: 14px; }
+.showcase-copy { text-align: center; min-width: 0; }
+.showcase-eyebrow { font-size: 13px; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; }
+.showcase-copy h3 { font: 500 clamp(30px,3.2vw,46px)/1.2 'Playfair Display',serif; margin: 0 0 22px; color: var(--ink); }
+.showcase-description { font-size: 14px; line-height: 1.8; color: var(--muted); max-width: 580px; margin: 0 auto 24px; white-space: pre-line; }
+.showcase-features { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 22px; list-style: none; padding: 0; margin: 0 0 32px; }
+.showcase-features li { display: flex; align-items: center; gap: 9px; font-size: 13px; line-height: 1.5; text-align: left; max-width: 220px; color: var(--ink); }
+.showcase-features i { color: #7c8882; font-size: 19px; flex-shrink: 0; }
+.showcase-rates { display: inline-block; width: min(100%,350px); padding: 16px 25px; background: #89714f; color: white; font-size: 14px; font-weight: 600; text-decoration: none; transition: background .2s; }
+.showcase-rates:hover { background: #705b3e; color: white; }
+.showcase-album { position: fixed; inset: 0; max-width: none; max-height: none; width: 100%; height: 100dvh; margin: 0; padding: 0; border: 0; background: #14201df7; color: var(--cream); }
+.showcase-album[open] { display: grid; grid-template-rows: auto minmax(0,1fr) auto; }
+.showcase-album::backdrop { background: #14201d; }
+.showcase-album-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 28px; }
+.showcase-album-header h2 { font: 24px 'Playfair Display',serif; margin: 0; }
+.showcase-album button { color: inherit; cursor: pointer; }
+.showcase-album-close { min-width: 44px; min-height: 44px; background: none; border: 0; font-size: 32px; }
+.showcase-album-stage { display: grid; grid-template-columns: 58px minmax(0,1fr) 58px; align-items: center; min-height: 0; padding: 0 18px; }
+.showcase-album-stage img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.showcase-album-stage button { height: 50px; width: 44px; border: 1px solid #ffffff40; background: none; border-radius: 50%; font-size: 24px; }
+.showcase-album-footer { padding: 14px 20px 22px; text-align: center; }
+.showcase-album-count { margin: 0 0 12px; font-size: 12px; }
+.showcase-album-thumbs { display: flex; gap: 10px; overflow-x: auto; justify-content: safe center; padding: 4px; }
+.showcase-album-thumbs button { flex-shrink: 0; width: 70px; height: 50px; background: none; padding: 0; border: 2px solid transparent; }
+.showcase-album-thumbs button[aria-current="true"] { border-color: var(--cream); }
+.showcase-album-thumbs img { width: 100%; height: 100%; object-fit: cover; }
+.showcase-album :focus-visible { outline-color: var(--cream); }
+body.showcase-album-open { overflow: hidden; }
+@media(max-width:1000px) {
+ .room-showcase { grid-template-columns: minmax(0,1fr); gap: 30px; padding-bottom: 45px; margin-bottom: 45px; }
+ .room-showcase-gallery { height: clamp(320px,55vw,500px); }
+ .showcase-copy { max-width: 700px; margin: auto; }
+}
+@media(max-width:600px) {
+ .home-page #quartos.room-showcases { padding-top: 45px; }
+ .showcase-heading { margin-bottom: 28px; }
+ .showcase-heading p { font-size: 13px; }
+ .room-showcase-gallery { grid-template-columns: minmax(0,3fr) minmax(0,1fr); height: clamp(250px,72vw,360px); gap: 8px; }
+ .showcase-thumbs { gap: 8px; }
+ .showcase-arrow { width: 36px; height: 36px; }.showcase-prev{left:8px}.showcase-next{right:8px}
+ .showcase-view-photos { top: 8px; left: 8px; font-size: 11px; padding: 7px 8px; }
+ .showcase-copy h3 { font-size: 32px; }
+ .showcase-description { font-size: 13px; }
+ .showcase-features { gap: 12px 15px; }
+ .showcase-features li { font-size: 12px; max-width: calc(50% - 10px); }
+ .showcase-rates { width: 100%; }
+ .showcase-album-header { padding: 12px 16px; }
+ .showcase-album-header h2 { font-size: 20px; }
+ .showcase-album-stage { grid-template-columns: 34px minmax(0,1fr) 34px; padding: 0 6px; }
+ .showcase-album-stage button { width: 30px; height: 42px; }
+}

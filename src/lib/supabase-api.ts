@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { randomUUID } from 'node:crypto';
 import { supabaseKey, supabaseUrl } from './supabase-config';
 
 const ACCESS = 'lotus_access';
@@ -47,8 +48,7 @@ function requiredText(data: Json, key: string, max: number): string {
   if (typeof value !== 'string' || !value.trim() || value.length > max) throw new ApiError(400, `Preencha corretamente: ${key}`);
   return value;
 }
-async function body(request: NextRequest): Promise<Json> {
-  if (request.headers.get('content-type')?.split(';')[0].trim() !== 'application/json') throw new ApiError(415, 'Use application/json.');
+async function readBytes(request: NextRequest, limit: number): Promise<Buffer> {
   const reader = request.body?.getReader();
   if (!reader) throw new ApiError(400, 'Dados inválidos.');
   const chunks: Uint8Array[] = []; let size = 0;
@@ -56,14 +56,40 @@ async function body(request: NextRequest): Promise<Json> {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.byteLength;
-    if (size > 16384) { await reader.cancel(); throw new ApiError(413, 'Requisição muito grande.'); }
+    if (size > limit) { await reader.cancel(); throw new ApiError(413, 'Requisição muito grande.'); }
     chunks.push(value);
   }
+  return Buffer.concat(chunks);
+}
+async function body(request: NextRequest): Promise<Json> {
+  if (request.headers.get('content-type')?.split(';')[0].trim() !== 'application/json') throw new ApiError(415, 'Use application/json.');
+  const bytes = await readBytes(request, 16384);
   try {
-    const value: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+    const value: unknown = JSON.parse(bytes.toString('utf8'));
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error();
     return value as Json;
   } catch { throw new ApiError(400, 'JSON inválido.'); }
+}
+async function uploadShowcasePhoto(request: NextRequest, token: string): Promise<Json> {
+  const contentType = request.headers.get('content-type') || '';
+  if (!contentType.startsWith('multipart/form-data;')) throw new ApiError(415, 'Envie uma foto pelo formulário.');
+  const bytes = await readBytes(request, 3 * 1024 * 1024 + 65536);
+  let form: FormData;
+  try { form = await new Response(new Uint8Array(bytes), { headers: { 'Content-Type': contentType } }).formData(); }
+  catch { throw new ApiError(400, 'Arquivo inválido.'); }
+  const file = form.get('photo');
+  if (!(file instanceof File) || !file.size || file.size > 3 * 1024 * 1024) throw new ApiError(400, 'Use uma foto de até 3 MB.');
+  const image = Buffer.from(await file.arrayBuffer());
+  const type = image.subarray(0,3).equals(Buffer.from([255,216,255])) ? 'image/jpeg' : image.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])) ? 'image/png' : image.toString('ascii',0,4) === 'RIFF' && image.toString('ascii',8,12) === 'WEBP' ? 'image/webp' : '';
+  if (!type || file.type !== type) throw new ApiError(415, 'Formato inválido. Use JPG, PNG ou WebP.');
+  const extension = type === 'image/jpeg' ? 'jpg' : type === 'image/png' ? 'png' : 'webp';
+  const name = `${randomUUID()}.${extension}`;
+  const response = await fetch(`${supabaseUrl}/storage/v1/object/lotus-showcase/${name}`, {
+    method: 'POST', headers: { apikey: supabaseKey, Authorization: `Bearer ${token}`, 'Content-Type': type, 'Cache-Control': 'max-age=31536000' },
+    body: image, signal: AbortSignal.timeout(20_000),
+  });
+  if (!response.ok) throw new ApiError(response.status === 401 || response.status === 403 ? 403 : 503, 'Não foi possível enviar a foto. Verifique sua sessão e tente novamente.');
+  return { url: `${supabaseUrl}/storage/v1/object/public/lotus-showcase/${name}` };
 }
 
 export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
@@ -87,7 +113,8 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
         throw new ApiError(403, 'Origem não permitida.');
       }
     }
-    const data = method === 'GET' ? {} : await body(request);
+    const isUpload = path === 'showcase-upload' && method === 'POST';
+    const data = method === 'GET' || isUpload ? {} : await body(request);
     if (path === 'login' && method === 'POST') {
       const email = requiredText(data, 'email', 254).trim();
       const password = requiredText(data, 'password', 256);
@@ -126,6 +153,19 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
       if (token) await call('/auth/v1/logout?scope=local', 'POST', {}, token);
       clear = true;
       return finish({ ok: true });
+    }
+    if (isUpload) {
+      if (!token) throw new ApiError(401, 'Entre no painel para enviar fotos.');
+      return finish(await uploadShowcasePhoto(request, token), 201);
+    }
+    if (path === 'showcases' && method === 'GET') {
+      return finish(await call('/rest/v1/rpc/lotus_showcase_api', 'POST', { p_operation: 'read', p_data: {} }, token));
+    }
+    const showcaseMatch = /^showcases\/(duplo|triplo|familia)$/.exec(path);
+    if (showcaseMatch && method === 'PUT') {
+      if (!token) throw new ApiError(401, 'Entre no painel para editar o site.');
+      data.slug = showcaseMatch[1];
+      return finish(await call('/rest/v1/rpc/lotus_showcase_api', 'POST', { p_operation: 'save', p_data: data }, token));
     }
     if (path === 'account' && method === 'GET') {
       if (!token) throw new ApiError(401, 'Entre no painel para continuar.');
