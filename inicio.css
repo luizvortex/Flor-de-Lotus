@@ -53,8 +53,7 @@
 .hero-discover span { font-size: 27px; line-height: 1; }
 .hero-controls { justify-self: end; display: flex; align-items: center; gap: 16px; }
 .hero-controls button { background: transparent; color: inherit; border: 0; width: 34px; height: 44px; font-size: 23px; padding: 0; }
-.hero-controls #hero-pause { font-size: 15px; opacity: .8; }
-.hero-pagination { display: flex; align-items: center; gap: 0; padding: 0 8px; border-radius: 30px; background: var(--hero-white); }
+.hero-pagination { display: flex; align-items: center; gap: 0; padding: 0 8px; border-radius: 30px; background: transparent; }
 .hero-pagination .hero-dot { display: grid; place-items: center; width: 24px; height: 36px; border-radius: 20px; transition: width .25s ease; }
 .hero-pagination .hero-dot.is-active { width: 44px; }
 .hero-dot-track { display: block; position: relative; width: 6px; height: 6px; overflow: hidden; border-radius: 8px; background: #dce3df; }
@@ -101,7 +100,6 @@ body.home-menu-open { overflow: hidden; }
     .hero-discover { grid-column: 1/-1; grid-row: 1; }
     .hero-location { font-size: 14px; }
     .hero-controls { gap: 6px; }
-    .hero-controls #hero-pause { width: 28px; }
     .intro-signature { gap: 15px; }
     .intro-signature span { font-size: 8px; letter-spacing: 2px; }
     .intro-signature img { width: 144px; height: 64px; }
@@ -119,8 +117,6 @@ body.home-menu-open { overflow: hidden; }
     .hero-frame, .home-menu[open], .hero-frame.is-active img, .home-hero-copy { animation: none !important; transition: none !important; }
 }
 
-.hero-play-state { display: inline-block; width: 10px; height: 12px; border-left: 2px solid currentColor; border-right: 2px solid currentColor; }
-[aria-pressed="true"] .hero-play-state { width: 0; height: 0; border: 6px solid transparent; border-left: 10px solid currentColor; border-right: 0; }
 .menu-reserve { display: inline-flex; align-items: center; gap: 6px; }
 
 /* Touch opens the dialog without a focus rectangle; keyboard focus stays visible. */

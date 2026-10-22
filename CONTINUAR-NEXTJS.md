@@ -88,3 +88,8 @@ Hambúrguer visível somente até 767px; em notebook/desktop, marca centralizada
 Paginação do hero substitui setas/contador por barra verde no slide ativo e pontos para os demais, conforme imagem do usuário. Pontos são botões acessíveis; pausa explícita permanece. Progresso usa Web Animations e relógio com tempo restante, pausando/retomando com hover, foco, menu e visibilidade da aba. Movimento reduzido mantém indicador estático. Em telas menores que 360px, a localização duplicada no rodapé do hero é ocultada para manter os controles centralizados.
 
 Verificação Chromium: 1440/1024/768px sem hambúrguer, logo central, navegação abaixo; celular 390/320px sem overflow dos controles; toque sem contorno e Tab com indicador; fechamento ao redimensionar; progresso, pausa/retomada, avanço automático e escolha por pontos. Sem erros JS nos caminhos testados.
+
+
+## Ajuste dos indicadores
+
+A pedido do usuário, o fundo branco da paginação foi removido (agora transparente), assim como o botão de pausa. Permanecem a barra de progresso, pontos clicáveis, avanço automático e suspensão por interação, aba oculta e preferência de movimento reduzido.

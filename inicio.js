@@ -57,10 +57,9 @@
     const slides = Array.from(document.querySelectorAll('.hero-frame'));
     const dots = Array.from(document.querySelectorAll('.hero-dot'));
     const interval = 6500;
-    const pause = document.getElementById('hero-pause');
     const status = document.getElementById('hero-status');
     let index = 0;
-    let userPaused = reducedMotion.matches;
+    let motionPaused = reducedMotion.matches;
     let hovering = false;
     let focused = false;
     let timer;
@@ -86,10 +85,6 @@
             progress.pause();
         }
     }
-    function updatePause() {
-        pause.setAttribute('aria-pressed', String(userPaused));
-        pause.setAttribute('aria-label', userPaused ? 'Reproduzir carrossel' : 'Pausar carrossel');
-    }
     function show(next, manual = false) {
         stopClock();
         const previous = index;
@@ -110,14 +105,13 @@
     }
     function schedule() {
         stopClock();
-        if (!userPaused && !hovering && !focused && !document.hidden && !menu.open) {
+        if (!motionPaused && !hovering && !focused && !document.hidden && !menu.open) {
             startedAt = performance.now();
             progress?.play();
             timer = window.setTimeout(() => { timer = undefined; show(index + 1); }, remaining);
         }
     }
     dots.forEach((dot, i) => dot.addEventListener('click', () => show(i, true)));
-    pause.addEventListener('click', () => { userPaused = !userPaused; updatePause(); schedule(); });
     hero.addEventListener('mouseenter', () => { hovering = true; schedule(); });
     hero.addEventListener('mouseleave', () => { hovering = false; schedule(); });
     hero.addEventListener('focusin', () => { focused = true; schedule(); });
@@ -135,8 +129,7 @@
         touch = undefined;
     }, { passive: true });
     document.addEventListener('visibilitychange', schedule);
-    reducedMotion.addEventListener('change', () => { stopClock(); userPaused = reducedMotion.matches; remaining = interval; resetProgress(); updatePause(); schedule(); });
+    reducedMotion.addEventListener('change', () => { stopClock(); motionPaused = reducedMotion.matches; remaining = interval; resetProgress(); schedule(); });
     resetProgress();
-    updatePause();
     schedule();
 })();
