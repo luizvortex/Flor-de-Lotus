@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="./disponibilidade.css">
     <link rel="stylesheet" href="./galeria-pousada.css">
     <link rel="stylesheet" href="./conta.css">
+    <link rel="stylesheet" href="./lazer.css">
     <link rel="preload" as="image" href="./img Pousada/FlordeLotus1.jpg" fetchpriority="high">
     <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},3600)}</script>
     <link rel="icon" type="image" href="img Pousada/flordelotuslogo.png">
@@ -227,127 +228,19 @@
             </div>
             <div class="showcase-album-footer"><p>Encontre as tarifas para a sua estadia.</p><a href="/reservas" class="showcase-rates">Ver tarifas</a></div>
         </dialog>
-        <section id="area-de-lazer" class="pt-5 pb-5 position-relative">
-            <div class="container pb-4">
-                <div class="row text-center mb-">
-                    <div class="col-12">
-                        <h2 class="section-tittle">Área de <span>Lazer</span></h2>
-                        <p class="text-muted">Momentos de diversão e relaxamento para sua estadia.</p>
-                    </div>
+        <section id="area-de-lazer" class="leisure-experience" aria-labelledby="leisure-title">
+            <div class="leisure-inner">
+                <div class="leisure-heading"><p class="leisure-eyebrow">SEUS DIAS, NO SEU RITMO</p><h2 id="leisure-title">Área de Lazer</h2><p>Momentos de diversão e relaxamento para sua estadia.</p></div>
+                <div class="leisure-choices" aria-label="Explore a área de lazer">
+                    <button type="button" class="leisure-choice" data-leisure="sinuca" aria-expanded="false" aria-controls="leisure-panel-sinuca"><img class="leisure-preview" src="/img Pousada/FlordeLotus5.jpg" alt="" width="600" height="650" loading="lazy"><span class="leisure-name">Sinuca</span><span class="leisure-indicator" aria-hidden="true">+</span></button>
+                    <button type="button" class="leisure-choice" data-leisure="churrasqueira" aria-expanded="false" aria-controls="leisure-panel-churrasqueira"><img class="leisure-preview" src="/img Pousada/FlordeLotus9.jpg" alt="" width="600" height="650" loading="lazy"><span class="leisure-name">Churrasqueira</span><span class="leisure-indicator" aria-hidden="true">+</span></button>
+                    <button type="button" class="leisure-choice" data-leisure="piscina" aria-expanded="false" aria-controls="leisure-panel-piscina"><img class="leisure-preview" src="/img Pousada/FlordeLotus6.jpg" alt="" width="600" height="650" loading="lazy"><span class="leisure-name">Piscina</span><span class="leisure-indicator" aria-hidden="true">+</span></button>
                 </div>
-                <div class="row g-4">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="lazer-click-card shadow-sm">
-                            <button class="btn-close-card" title="Fechar detalhes"><i class="bi bi-x-lg"></i></button>
-                            <div id="carousel-sinuca" class="carousel slide h-100" data-bs-ride="false">
-                                <div class="carousel-inner h-100">
-                                    <div class="carousel-item active h-100">
-                                        <img src="./img Pousada/FlordeLotus5.jpg" class="d-block w-100 h-100"
-                                            alt="Sinuca">
-                                    </div>
-                                    <div class="carousel-item h-100">
-                                        <img src="./img Pousada/FlordeLotus5.jpg" class="d-block w-100 h-100"
-                                            alt="Sinuca 2">
-                                    </div>
-                                </div>
-                                <button class="carousel-control-prev d-none" type="button"
-                                    data-bs-target="#carousel-sinuca" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon"></span>
-                                </button>
-                                <button class="carousel-control-next d-none" type="button"
-                                    data-bs-target="#carousel-sinuca" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon"></span>
-                                </button>
-                            </div>
-                            <div class="lazer-hover-overlay">
-                                <span><i class="bi bi-plus-circle me-2"></i>Clique para detalhes</span>
-                            </div>
-                            <div class="lazer-card-content">
-                                <h3 class="mb-0 text-white fs-4"><i
-                                        class="bi bi-controller text-dourado me-2"></i>Sinuca</h3>
-                                <div class="lazer-description">
-                                    <p class="text-light mt-2 mb-0" style="font-size: 0.95rem;">Desafie seus amigos ou
-                                        familiares para uma partida descontraída. O ambiente perfeito para fechar a
-                                        noite com boas risadas após os passeios maravilhosos por Itacaré.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="lazer-click-card shadow-sm">
-                            <button class="btn-close-card" title="Fechar detalhes"><i class="bi bi-x-lg"></i></button>
-                            <div id="carousel-churrasco" class="carousel slide h-100" data-bs-ride="false">
-                                <div class="carousel-inner h-100">
-                                    <div class="carousel-item active h-100">
-                                        <img src="./img Pousada/FlordeLotus9.jpg" class="d-block w-100 h-100"
-                                            alt="Churrasqueira">
-                                    </div>
-                                    <div class="carousel-item active h-100">
-                                        <img src="./img Pousada/FlordeLotus9.jpg" class="d-block w-100 h-100"
-                                            alt="Churrasqueira">
-                                    </div>
-                                </div>
-                                <button class="carousel-control-prev d-none" type="button"
-                                    data-bs-target="#carousel-churrasco" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon"></span>
-                                </button>
-                                <button class="carousel-control-next d-none" type="button"
-                                    data-bs-target="#carousel-churrasco" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon"></span>
-                                </button>
-                            </div>
-                            <div class="lazer-hover-overlay">
-                                <span><i class="bi bi-plus-circle me-2"></i>Clique para detalhes</span>
-                            </div>
-                            <div class="lazer-card-content">
-                                <h3 class="mb-0 text-white fs-4"><i
-                                        class="bi bi-fire text-dourado me-2"></i>Churrasqueira</h3>
-                                <div class="lazer-description">
-                                    <p class="text-light mt-2 mb-0" style="font-size: 0.95rem;">Aproveite nossa área
-                                        gourmet equipada para preparar aquele churrasco especial. Um espaço amplo,
-                                        rústico e muito acolhedor para confraternizar com quem você ama.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="lazer-click-card shadow-sm">
-                            <button class="btn-close-card" title="Fechar detalhes"><i class="bi bi-x-lg"></i></button>
-                            <div id="carousel-piscina" class="carousel slide h-100" data-bs-ride="false">
-                                <div class="carousel-inner h-100">
-                                    <div class="carousel-item active h-100">
-                                        <img src="./img Pousada/FlordeLotus6.jpg" class="d-block w-100 h-100"
-                                            alt="Piscina">
-                                    </div>
-                                    <div class="carousel-item active h-100">
-                                        <img src="./img Pousada/FlordeLotus6.jpg" class="d-block w-100 h-100"
-                                            alt="Piscina">
-                                    </div>
-                                </div>
-                                <button class="carousel-control-prev d-none" type="button"
-                                    data-bs-target="#carousel-piscina" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon"></span>
-                                </button>
-                                <button class="carousel-control-next d-none" type="button"
-                                    data-bs-target="#carousel-piscina" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon"></span>
-                                </button>
-                            </div>
-                            <div class="lazer-hover-overlay">
-                                <span><i class="bi bi-plus-circle me-2"></i>Clique para detalhes</span>
-                            </div>
-                            <div class="lazer-card-content">
-                                <h3 class="mb-0 text-white fs-4"><i class="bi bi-water text-dourado me-2"></i>Piscina
-                                </h3>
-                                <div class="lazer-description">
-                                    <p class="text-light mt-2 mb-0" style="font-size: 0.95rem;">Refresque-se em nossa
-                                        piscina ao ar livre. Cercada por muito verde e com confortáveis
-                                        espreguiçadeiras, é o local ideal para relaxar, ler um livro e tomar um banho de
-                                        sol.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <p class="leisure-hint">Escolha um momento para descobrir mais.</p>
+                <div class="leisure-panels">
+                    <div id="leisure-panel-sinuca" class="leisure-panel" role="region" aria-label="Sobre Sinuca" aria-hidden="true" inert><div class="leisure-panel-clip"><div class="leisure-panel-content"><div><p class="leisure-eyebrow">Sinuca</p><h3>Uma partida, boas histórias.</h3></div><p>Desafie seus amigos ou familiares para uma partida descontraída. O ambiente perfeito para fechar a noite com boas risadas após os passeios por Itacaré.</p><button type="button" data-leisure-close aria-label="Fechar detalhes de Sinuca"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div></div></div>
+                    <div id="leisure-panel-churrasqueira" class="leisure-panel" role="region" aria-label="Sobre Churrasqueira" aria-hidden="true" inert><div class="leisure-panel-clip"><div class="leisure-panel-content"><div><p class="leisure-eyebrow">Churrasqueira</p><h3>Tempo para estar junto.</h3></div><p>Aproveite nossa área gourmet equipada para preparar aquele churrasco especial. Um espaço amplo, rústico e acolhedor para confraternizar com quem você ama.</p><button type="button" data-leisure-close aria-label="Fechar detalhes de Churrasqueira"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div></div></div>
+                    <div id="leisure-panel-piscina" class="leisure-panel" role="region" aria-label="Sobre Piscina" aria-hidden="true" inert><div class="leisure-panel-clip"><div class="leisure-panel-content"><div><p class="leisure-eyebrow">Piscina</p><h3>Desacelere ao ar livre.</h3></div><p>Refresque-se em nossa piscina ao ar livre. Cercada por muito verde e com espreguiçadeiras, é o local ideal para relaxar, ler um livro e tomar um banho de sol.</p><button type="button" data-leisure-close aria-label="Fechar detalhes de Piscina"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></div></div></div>
                 </div>
             </div>
             <div class="lazer-wave-bottom">
@@ -767,6 +660,7 @@
     <script src="./disponibilidade.js"></script>
     <script src="./galeria-pousada.js"></script>
     <script src="./conta.js"></script>
+    <script src="./lazer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/jquery.inputmask.min.js"></script>
