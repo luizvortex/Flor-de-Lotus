@@ -1,0 +1,6 @@
+-- Requested copy and area update for the public room blocks. Preserve photos.
+begin;
+update lotus_private.room_showcases set eyebrow='17 m²', features='[{"icon": "wifi", "label": "Wi-Fi rápido para ficar conectado"}, {"icon": "tv", "label": "Seus streamings favoritos na Smart TV"}, {"icon": "snow", "label": "Split silencioso para noites tranquilas"}, {"icon": "door-open", "label": "Sua varanda, sua rede, seu descanso"}]'::jsonb, revision=revision+1, updated_at=now() where slug='duplo' and revision=1;
+update lotus_private.room_showcases set eyebrow='17 m²', features='[{"icon": "wifi", "label": "Conexão Wi-Fi de alta velocidade"}, {"icon": "tv", "label": "Smart TV para curtir seus streamings"}, {"icon": "snow", "label": "Clima agradável com Split silencioso"}, {"icon": "door-open", "label": "Varanda privativa com rede para relaxar"}]'::jsonb, revision=revision+1, updated_at=now() where slug='triplo' and revision=1;
+update lotus_private.room_showcases set eyebrow='17 m²', features='[{"icon": "wifi", "label": "Wi-Fi veloz para toda a família"}, {"icon": "tv", "label": "Smart TV com acesso aos seus streamings"}, {"icon": "snow", "label": "Conforto e silêncio com ar Split"}, {"icon": "door-open", "label": "Uma rede na varanda só de vocês"}]'::jsonb, revision=revision+1, updated_at=now() where slug='familia' and revision=1;
+commit;

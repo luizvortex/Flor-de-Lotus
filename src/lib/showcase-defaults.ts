@@ -5,7 +5,7 @@ export const showcaseDefaults: Showcase[] = [
     "slug": "duplo",
     "position": 1,
     "title": "Duplo Twin",
-    "eyebrow": "",
+    "eyebrow": "17 m²",
     "description": "Perfeito para amigos ou casais que buscam praticidade. Este quarto oferece o conforto essencial com um toque de charme baiano, garantindo noites tranquilas após um longo dia de praia e passeios em Itacaré.",
     "photos": [
       {
@@ -24,28 +24,28 @@ export const showcaseDefaults: Showcase[] = [
     "features": [
       {
         "icon": "wifi",
-        "label": "Wi-Fi de alta velocidade"
+        "label": "Wi-Fi rápido para ficar conectado"
       },
       {
         "icon": "tv",
-        "label": "Smart TV com acesso a streaming"
+        "label": "Seus streamings favoritos na Smart TV"
       },
       {
         "icon": "snow",
-        "label": "Ar-condicionado Split silencioso"
+        "label": "Split silencioso para noites tranquilas"
       },
       {
         "icon": "door-open",
-        "label": "Varanda privativa com rede"
+        "label": "Sua varanda, sua rede, seu descanso"
       }
     ],
-    "revision": 1
+    "revision": 2
   },
   {
     "slug": "triplo",
     "position": 2,
     "title": "Quarto Triplo",
-    "eyebrow": "",
+    "eyebrow": "17 m²",
     "description": "Acomodação espaçosa ideal para pequenos grupos ou famílias. Desfrute de um ambiente arejado e bem iluminado, decorado para proporcionar a máxima sensação de relaxamento e acolhimento.",
     "photos": [
       {
@@ -64,28 +64,28 @@ export const showcaseDefaults: Showcase[] = [
     "features": [
       {
         "icon": "wifi",
-        "label": "Wi-Fi de alta velocidade"
+        "label": "Conexão Wi-Fi de alta velocidade"
       },
       {
         "icon": "tv",
-        "label": "Smart TV de ecrã plano"
+        "label": "Smart TV para curtir seus streamings"
       },
       {
         "icon": "snow",
-        "label": "Ar-condicionado Split"
+        "label": "Clima agradável com Split silencioso"
       },
       {
-        "icon": "cup-hot",
-        "label": "Frigobar abastecido"
+        "icon": "door-open",
+        "label": "Varanda privativa com rede para relaxar"
       }
     ],
-    "revision": 1
+    "revision": 2
   },
   {
     "slug": "familia",
     "position": 3,
     "title": "Quarto Família",
-    "eyebrow": "",
+    "eyebrow": "17 m²",
     "description": "A melhor escolha para quem viaja com toda a família. Amplo espaço interno garantindo conforto para adultos e crianças, com todas as comodidades necessárias para se sentirem em casa.",
     "photos": [
       {
@@ -104,21 +104,21 @@ export const showcaseDefaults: Showcase[] = [
     "features": [
       {
         "icon": "wifi",
-        "label": "Wi-Fi de alta velocidade"
+        "label": "Wi-Fi veloz para toda a família"
       },
       {
         "icon": "tv",
-        "label": "Smart TV com canais infantis"
+        "label": "Smart TV com acesso aos seus streamings"
       },
       {
         "icon": "snow",
-        "label": "Ar-condicionado Split potente"
+        "label": "Conforto e silêncio com ar Split"
       },
       {
-        "icon": "shield-check",
-        "label": "Cofre eletrônico"
+        "icon": "door-open",
+        "label": "Uma rede na varanda só de vocês"
       }
     ],
-    "revision": 1
+    "revision": 2
   }
 ];
