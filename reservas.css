@@ -125,3 +125,12 @@ dialog::backdrop { background: #14201d80; }
 #search input[type="date"]::-webkit-date-and-time-value { min-width:0; text-align:left; }
 .location-copy .gold-button svg { flex-shrink:0; }
 @media(max-width:600px) { #search input,#search select { font-size:16px; padding-inline:8px; } }
+
+.photo-arrow,.details-stage button { display:grid; place-items:center; text-shadow:none; }
+.photo-arrow svg,.details-stage button svg { display:block; filter:drop-shadow(0 1px 2px #0008); pointer-events:none; }
+@media(min-width:1024px) {
+ .location-copy .eyebrow { font-size:12px; }
+ .catalog-location h2 { font-size:42px; }
+ .location-copy > p:not(.eyebrow) { font-size:17px; }
+ .location-copy .gold-button { font-size:15px; }
+}
