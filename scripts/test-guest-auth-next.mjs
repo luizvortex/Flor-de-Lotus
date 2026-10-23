@@ -52,7 +52,7 @@ try{
  challenge=authorize.searchParams.get('code_challenge');assert(challenge);assert.equal(authorize.searchParams.get('redirect_to'),base+'/auth/callback');
  assert(r.headers.getSetCookie().some(c=>/lotus_guest_auth-code-verifier/.test(c)&&/HttpOnly/i.test(c)&&/SameSite=lax/i.test(c)&&/Secure/i.test(c)));
  r=await fetch(base+'/auth/callback?code=valid-code',{redirect:'manual'});assert.match(r.headers.get('Location'),/conta=erro/);
- r=await call('/auth/callback?code=valid-code&next=https://malicious.invalid');assert.match(r.headers.get('Location'),new RegExp('^'+base.replaceAll('.','\\.')+'/\\?conta=conectada$'));absorb(r);
+ r=await call('/auth/callback?code=valid-code&next=https://malicious.invalid');assert.match(r.headers.get('Location'),new RegExp('^'+base.replaceAll('.','\\.')+'/minha-conta\\?conta=conectada$'));absorb(r);
  assert(r.headers.getSetCookie().some(c=>c.startsWith('lotus_guest_auth=')&&/HttpOnly/i.test(c)));assert(!r.headers.getSetCookie().some(c=>c.startsWith('lotus_access=')));
  r=await call('/api/guest/session');let result=await r.json();assert.equal(result.user.name,'Hóspede de teste');assert.equal(result.user.email,'guest@example.invalid');assert.equal(result.user.avatar_url,'https://lh3.googleusercontent.com/mock-avatar');assert(!JSON.stringify(result).includes(token));
  unsafeAvatar=true;r=await call('/api/guest/session');assert.equal((await r.json()).user.avatar_url,null);unsafeAvatar=false;

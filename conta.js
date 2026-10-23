@@ -1,7 +1,16 @@
 'use strict';
 (() => {
  const dialog=document.getElementById('guest-account');
- if(!dialog)return;
+ if(!dialog){
+  const refreshHeader=()=>fetch('/api/guest/session',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(result=>{
+   document.querySelectorAll('[data-guest-account]').forEach(link=>{const img=link.querySelector('img');if(img)paintAvatar(img,result.user?.avatar_url);link.classList.toggle('has-guest-profile',Boolean(result.user));});
+   document.dispatchEvent(new CustomEvent('lotus:guest-session',{detail:{authenticated:Boolean(result.user),name:result.user?.name||''}}));
+  }).catch(()=>{});
+  document.querySelectorAll('[data-guest-account]').forEach(link=>link.addEventListener('click',()=>{const menu=document.getElementById('home-menu');if(menu?.open)menu.close();}));
+  refreshHeader();document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHeader();});
+  const state=new URL(location.href).searchParams.get('conta');if(state)location.replace('/minha-conta?'+new URLSearchParams({conta:state}));
+  return;
+ }
  const triggers=document.querySelectorAll('[data-guest-account]');
  const loading=dialog.querySelector('[data-account-loading]');
  const login=dialog.querySelector('[data-account-login]');
@@ -9,12 +18,12 @@
  const message=dialog.querySelector('[data-account-message]');
  const google=dialog.querySelector('[data-google-login]');
  const avatar=dialog.querySelector('[data-account-avatar]');
- const reservations=document.createElement('section');reservations.className='guest-reservations';reservations.setAttribute('aria-label','Suas reservas e avisos');profile.querySelector('[data-account-logout]').before(reservations);
+ const reservations=document.createElement('section');reservations.className='guest-reservations';reservations.setAttribute('aria-label','Suas reservas e avisos');profile.append(reservations);
  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const date=value=>new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'short',year:'numeric',timeZone:'America/Bahia'}).format(new Date(value+'T12:00:00Z'));
  const money=value=>(Number(value)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  const states={pendente:'Aguardando confirmação',confirmada:'Confirmada',cancelada:'Cancelada'};
- let requestId=0, pendingSession, opener,bookingRequest;
+ let requestId=0, pendingSession,bookingRequest;
  function bookingCard(booking){
   const completed=new Date(booking.checkout_at||booking.end+'T12:00:00-03:00').getTime()<=accountNow&&booking.status!=='cancelada';
   return `<article class="guest-booking"><div class="guest-booking-heading"><div><span class="guest-booking-number">Reserva #${esc(booking.id)}</span><h4>${esc(booking.presentation||booking.room_name)}</h4></div><span class="guest-booking-status ${esc(booking.status)}">${completed?'Estadia concluída':esc(states[booking.status]||booking.status)}</span></div><dl><div><dt>Entrada</dt><dd>${esc(date(booking.start))}<small>A partir das 14h · horário da Bahia</small></dd></div><div><dt>Saída</dt><dd>${esc(date(booking.end))}<small>Até as 12h · horário da Bahia</small></dd></div><div><dt>Estadia</dt><dd>${esc(booking.nights)} noite(s) · ${esc(booking.guests)} hóspede(s)</dd></div><div><dt>Quarto</dt><dd>${esc(booking.room_name)}</dd></div><div><dt>Hóspede</dt><dd>${esc(booking.guest)}</dd></div><div><dt>Contato</dt><dd>${esc(booking.phone)}</dd></div><div><dt>Total da reserva</dt><dd>${esc(money(booking.total))}</dd></div>${booking.package_name?`<div><dt>Tarifa</dt><dd>${esc(booking.package_name)}</dd></div>`:''}</dl>${booking.status==='pendente'?'<p class="guest-booking-note">Aguarde a confirmação da equipe da pousada. Sua solicitação já bloqueia essas datas.</p>':''}<a class="guest-booking-contact" href="/#fale-conosco">Falar com a pousada sobre esta reserva</a></article>`;
@@ -76,18 +85,6 @@
   }catch(e){if(id===requestId){message.textContent=e.message;login.hidden=false;google.disabled=true;}}
   finally{if(id===requestId)loading.hidden=true;}
  }
- triggers.forEach(button=>button.addEventListener('click',()=>{
-  opener=button;
-  const menu=document.getElementById('home-menu');if(menu?.open)menu.close();
-  dialog.showModal();document.body.classList.add('guest-account-open');load();
- }));
- dialog.addEventListener('click',event=>{if(event.target.closest('a'))dialog.close();});
- dialog.querySelector('[data-account-close]').addEventListener('click',()=>dialog.close());
- dialog.addEventListener('close',()=>{
-  bookingRequest?.abort();requestId++;
-  document.body.classList.remove('guest-account-open');
-  if(opener?.closest('#home-menu'))document.querySelector('.home-menu-toggle')?.focus({preventScroll:true});
- });
  dialog.querySelector('[data-account-logout]').addEventListener('click',async event=>{
   const button=event.currentTarget;button.disabled=true;message.textContent='';
   try{
@@ -96,16 +93,12 @@
    showUser(null);await load();
   }catch(e){message.textContent=e.message;}finally{button.disabled=false;}
  });
- setInterval(()=>{if(dialog.open&&!profile.hidden&&!document.hidden)loadBookings(requestId);},60000);
- document.addEventListener('lotus:booking-created',()=>{if(dialog.open&&!profile.hidden)loadBookings(requestId);});
- // Read the validated profile once; neither tokens nor email are stored in localStorage.
- session().then(result=>{if(result?.user)showUser(result.user);}).catch(()=>{});
+ setInterval(()=>{if(!profile.hidden&&!document.hidden)loadBookings(requestId);},60000);
+ document.addEventListener('lotus:booking-created',()=>{if(!profile.hidden)loadBookings(requestId);});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)load();else bookingRequest?.abort();});
  const url=new URL(location.href),state=url.searchParams.get('conta');
- if(state){
-  triggers[0]?.click();
-  if(state==='erro'||state==='indisponivel'){
-   message.textContent=state==='erro'?'O login não foi concluído. Abra sua conta e tente novamente.':'O login com Google ainda não está disponível.';
-  }
-  url.searchParams.delete('conta');history.replaceState(null,'',url.pathname+url.search+url.hash);
- }
+ load().then(()=>{
+  if(state==='erro'||state==='indisponivel')message.textContent=state==='erro'?'O login não foi concluído. Tente novamente.':'O login com Google ainda não está disponível.';
+ });
+ if(state){url.searchParams.delete('conta');history.replaceState(null,'',url.pathname+url.search+url.hash);}
 })();

@@ -36,7 +36,7 @@
             </button>
             <a href="#inicio" class="home-brand" aria-label="Flor de Lótus — início"><span>Itacaré</span><img src="./img Pousada/flordelotuslogo.png" alt="Flor de Lótus" width="140" height="58"><span>Bahia</span></a>
             <a href="/reservas" class="home-booking">Reservar <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="4" y="6" width="16" height="15" rx="1"/><path d="M8 3v6M16 3v6M4 11h16"/></svg></a>
-            <button type="button" class="home-account" data-guest-account aria-haspopup="dialog" aria-controls="guest-account"><span>Minha Conta</span><span class="home-account-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg><img alt="Foto da sua conta Google" referrerpolicy="no-referrer" hidden></span></button>
+            <a href="/minha-conta" target="_blank" rel="noopener" class="home-account" data-guest-account><span>Minha Conta</span><span class="home-account-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg><img alt="Foto da sua conta Google" referrerpolicy="no-referrer" hidden></span></a>
         </div>
         <nav class="home-quick-nav" aria-label="Navegação principal">
             <div class="home-nav-links"><a href="#sobre-a-pousada">A pousada</a><a href="#quartos">Acomodações</a><a href="#area-de-lazer">Lazer</a><a href="#praias">Itacaré</a><a href="#avaliacoes">Avaliações</a><a href="#fale-conosco">Contato</a></div>
@@ -47,27 +47,9 @@
         <div class="home-menu-body">
             <div class="home-menu-main"><p class="menu-eyebrow" id="home-menu-title">Pousada Flor de Lótus</p><nav aria-label="Explore a pousada" class="home-menu-links">
                 <a href="#sobre-a-pousada"><span>01</span>A pousada</a><a href="#quartos"><span>02</span>Acomodações</a><a href="#area-de-lazer"><span>03</span>Momentos de lazer</a><a href="#praias"><span>04</span>Descubra Itacaré</a><a href="#avaliacoes"><span>05</span>Avaliações</a><a href="#fale-conosco"><span>06</span>Fale conosco</a>
-            </nav><button type="button" class="home-menu-account" data-guest-account aria-haspopup="dialog" aria-controls="guest-account"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg>Minha Conta</button><div class="home-menu-address">Rua Hibisco, 33 · Praia da Concha<br>Itacaré, Bahia · Brasil</div></div>
+            </nav><a href="/minha-conta" target="_blank" rel="noopener" class="home-menu-account" data-guest-account><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg>Minha Conta</a><div class="home-menu-address">Rua Hibisco, 33 · Praia da Concha<br>Itacaré, Bahia · Brasil</div></div>
             <div class="home-menu-image"><img src="./img Pousada/FlordeLotus6.jpg" alt="Piscina da Pousada Flor de Lótus" loading="lazy"><div><p>Entre o mar e a natureza.</p><span>Encontre seus dias de descanso.</span></div></div>
         </div>
-    </dialog>
-    <dialog id="guest-account" class="guest-account" aria-labelledby="guest-account-title">
-        <button type="button" class="guest-account-close" data-account-close aria-label="Fechar minha conta">×</button>
-        <div class="guest-account-heading-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21v-2a7.5 7.5 0 0 1 15 0v2"/></svg></div>
-        <h2 id="guest-account-title">Minha Conta</h2>
-        <p data-account-loading role="status">Consultando sua conta…</p>
-        <div data-account-login hidden>
-            <p>Entre com sua conta Google e sinta-se em casa.</p>
-            <form action="/auth/google" method="post">
-                <button type="submit" class="google-login" data-google-login disabled><svg viewBox="0 0 48 48" width="20" height="20" aria-hidden="true"><path fill="#4285F4" d="M43.61 24.46c0-1.36-.12-2.66-.35-3.92H24v7.43h11a9.4 9.4 0 0 1-4.08 6.18v5.14h6.61c3.87-3.56 6.08-8.8 6.08-14.83Z"/><path fill="#34A853" d="M24 44c5.51 0 10.13-1.83 13.51-4.71l-6.61-5.14c-1.83 1.23-4.17 1.98-6.9 1.98-5.32 0-9.84-3.59-11.45-8.43H5.73v5.3A20 20 0 0 0 24 44Z"/><path fill="#FBBC05" d="M12.55 27.7a12 12 0 0 1 0-7.4V15H5.73a20 20 0 0 0 0 18l6.82-5.3Z"/><path fill="#EA4335" d="M24 11.87c3.01 0 5.69 1.04 7.82 3.08l5.86-5.86C34.12 5.78 29.51 4 24 4A20 20 0 0 0 5.73 15l6.82 5.3c1.61-4.84 6.13-8.43 11.45-8.43Z"/></svg>Continuar com Google</button>
-            </form>
-        </div>
-        <div data-account-profile hidden>
-            <img class="guest-profile-avatar" data-account-avatar alt="Sua foto do Google" referrerpolicy="no-referrer" hidden>
-            <p data-account-name></p><p data-account-email></p>
-            <button type="button" class="guest-logout" data-account-logout>Sair da conta</button>
-        </div>
-        <p data-account-message role="status"></p>
     </dialog>
     <main id="conteudo-principal">
         <section id="inicio" class="home-hero" aria-label="Bem-vindo à Flor de Lótus">

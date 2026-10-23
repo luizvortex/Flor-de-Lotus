@@ -4,7 +4,7 @@
  document.addEventListener('lotus:guest-session',event=>{
   const note=$('[data-booking-account-note]');if(!note)return;
   if(event.detail.authenticated){note.textContent='Sua reserva ficará vinculada à conta Google. Acompanhe datas, status e avisos em Minha conta.';if(!$('#guest').value)$('#guest').value=event.detail.name;}
-  else note.innerHTML='<a href="/?conta=entrar">Entre com Google</a> antes de reservar para acompanhar sua estadia em Minha conta.';
+  else note.innerHTML='<a href="/minha-conta">Entre com Google</a> antes de reservar para acompanhar sua estadia em Minha conta.';
  });
  let shareTimer;
  const shareDialog=$('#share-dialog'),shareInput=$('#share-url');

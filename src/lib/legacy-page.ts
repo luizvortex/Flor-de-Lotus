@@ -5,6 +5,7 @@ import { getShowcases, renderShowcases } from './room-showcases';
 // Temporary compatibility layer. Only these checked-in templates can be read.
 const pages: Record<string, string> = {
   index: 'index.html', reservas: 'reservas.html', quartos: 'reservas.html',
+  'minha-conta': 'minha-conta.html',
   admin: 'admin.html', avaliacoes: 'avaliacoes.html',
 };
 export async function legacyPage(name: string): Promise<Response> {

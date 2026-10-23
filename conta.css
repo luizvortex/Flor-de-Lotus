@@ -54,3 +54,41 @@
 
 .catalog-account { display:inline-flex; align-items:center; gap:7px; }
 @media(max-width:600px) { .catalog-top { padding-inline:16px; gap:8px; }.catalog-brand img { width:100px; }.catalog-account { min-width:36px; min-height:44px; justify-content:center; }.catalog-account span { display:none; }.catalog-top .catalog-reserve { padding:10px; font-size:11px; } }
+
+/* Dedicated guest account page. */
+.home-account,.home-menu-account,.catalog-account { text-decoration:none; }
+.account-page-body,.account-page-body * { box-sizing:border-box; }
+.account-page-body { margin:0; background:#f7f7f2; color:var(--ink); font:14px/1.65 'DM Sans',sans-serif; }
+.account-page-body a { color:inherit; }.account-page-body button,.account-page-body input { font:inherit; }
+.account-page-body [hidden] { display:none !important; }
+.account-page-header { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:20px max(32px,calc((100% - 1120px)/2)); border-bottom:1px solid var(--line); }
+.account-page-header img { display:block; object-fit:contain; }
+.account-page-header nav { display:flex; align-items:center; gap:32px; }
+.account-page-header a { text-decoration:none; font-size:13px; }
+.account-page-header .account-reserve { padding:12px 22px; background:#89714f; color:#fff; }
+.guest-account.account-page,.guest-account.account-page.has-reservation-profile { position:static; display:block; width:min(1120px,calc(100% - 64px)); max-height:none; margin:0 auto; padding:48px 0 64px; border:0; border-radius:0; background:transparent; box-shadow:none; text-align:left; min-height:calc(100vh - 250px); }
+.account-page-intro { margin-bottom:36px; }
+.guest-account .account-eyebrow { font-size:10px; letter-spacing:.22em; color:#89714f; margin:0 0 12px; }
+.account-page h1 { font:500 48px/1.2 'Playfair Display',Georgia,serif; margin:0 0 16px; }
+.account-page-intro > p:last-child { margin:0; }
+.account-dashboard { display:grid; grid-template-columns:250px minmax(0,1fr); gap:40px; align-items:start; }
+.account-sidebar { padding:28px; border:1px solid var(--line); background:#fffdf9; position:sticky; top:24px; min-width:0; }
+.account-sidebar .guest-profile-avatar { display:block; margin:0 0 18px; }
+.account-sidebar [data-account-email] { font-size:12px; }
+.account-sidebar .guest-logout { display:block; width:100%; margin-top:24px; }
+.account-sidebar-reserve { display:flex; align-items:center; gap:6px; margin-top:28px; font-size:12px; text-decoration:underline; text-underline-offset:4px; }
+.account-page .guest-reservations { margin-top:0; min-width:0; }
+.account-page .guest-booking { background:#fffdf9; }
+.account-login-card { width:min(480px,100%); margin:48px auto; padding:40px; border:1px solid var(--line); background:#fffdf9; text-align:center; }
+.account-login-card h2 { font-size:28px; }
+.account-back { display:inline-block; margin-top:24px; font-size:12px; }
+.account-page-footer { padding:28px 24px; text-align:center; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+.account-page-footer p { margin:0 0 6px; }
+.account-skip { position:absolute; top:-100px; left:24px; z-index:10; padding:12px; background:white; }.account-skip:focus { top:12px; }
+.account-page-body :focus-visible { outline:2px solid #89714f; outline-offset:4px; }
+@media(max-width:767px) {
+ .account-page-header { padding:16px 20px; gap:16px; }.account-page-header img { width:120px; height:50px; }.account-page-header nav { gap:14px; }.account-page-header nav > a:first-child { display:none; }.account-page-header .account-reserve { padding:10px 14px; font-size:12px; }
+ .guest-account.account-page,.guest-account.account-page.has-reservation-profile { width:calc(100% - 40px); padding:32px 0 48px; }
+ .account-page h1 { font-size:36px; }.account-dashboard { grid-template-columns:1fr; gap:28px; }.account-sidebar { position:static; padding:22px; }.account-sidebar .guest-profile-avatar { width:52px; height:52px; }.account-sidebar .guest-logout { width:auto; }.account-sidebar-reserve { margin-top:18px; }
+ .account-login-card { padding:28px 22px; margin:24px auto; }
+}
