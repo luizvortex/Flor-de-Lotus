@@ -151,3 +151,7 @@ Os três separadores agora atravessam a largura completa da viewport, como a fai
 ### Ondas integradas aos fundos dos quartos
 
 Cada onda agora fica dentro do artigo do quarto, encerrando seu fundo e encontrando diretamente o fundo do quarto seguinte. Os blocos alternam areia clara e branco, em largura total, sem margens externas no separador ou cortes retos acima/abaixo dele. O desenho e os tempos das curvas aprovadas foram preservados. Conferido em 320/390/768/1024/1440/1900px: continuidade dos fundos, ausência de lacunas/overflow e funcionamento do álbum.
+
+### Transição do carrossel para os quartos
+
+O carrossel tem respiro de 32px no desktop e 24px no mobile antes de uma onda integrada, em largura total, que conecta o fundo claro da galeria ao fundo areia de “Nossos Quartos”. O separador pertence à seção `#galeria-pousada` e reutiliza a forma, espessura e animação das ondas entre quartos. Conferido em 320–1900px sem lacunas no encontro dos fundos ou overflow horizontal.
