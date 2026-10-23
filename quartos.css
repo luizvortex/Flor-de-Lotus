@@ -191,11 +191,11 @@ body.showcase-album-open { overflow: hidden; }
  .showcase-copy { transform: none !important; opacity: 1 !important; }
 }
 
-/* Areia e branco quente alternam entre quartos; ondas só nas extremidades. */
+/* Desktop em areia uniforme; no celular, cores e ondas alternam entre quartos. */
 .home-page #quartos.room-showcases {
  --room-sand: #eee9e3;
  --room-ivory: #fffdf9;
- --room-background: var(--room-ivory);
+ --room-background: var(--room-sand);
  --next-room-background: var(--soft);
  background: var(--room-sand);
  padding-bottom: 0;
@@ -209,9 +209,6 @@ body.showcase-album-open { overflow: hidden; }
  padding-block: 56px;
  margin-bottom: 0;
  border-bottom: 0;
-}
-.home-page .room-showcase:nth-of-type(even) {
- --room-background: var(--room-ivory);
 }
 .room-showcase::before {
  content: '';
@@ -268,4 +265,16 @@ body.showcase-album-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
  .room-wave-layer { animation-play-state: paused; }
+}
+
+.room-wave-between { display: none; }
+@media (max-width: 767px) {
+ .home-page #quartos { --room-background: var(--room-ivory); }
+ .home-page .room-showcase { --next-room-background: var(--room-ivory); }
+ .home-page .room-showcase:nth-of-type(even) {
+  --room-background: var(--room-ivory);
+  --next-room-background: var(--room-sand);
+ }
+ .home-page .room-showcase:not(:last-child) { padding-bottom: 0; }
+ .room-wave-between { display: block; margin-bottom: 0; }
 }

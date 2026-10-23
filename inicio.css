@@ -24,9 +24,9 @@
 .home-page .home-brand img { width: 160px; height: 66px; object-fit: contain; filter: brightness(0) invert(1); }
 .home-booking { grid-column: 3; justify-self: end; display: inline-flex; align-items: center; gap: 10px; font-size: 12px; padding: 12px 0; }
 .home-quick-nav { display: flex; align-items: center; justify-content: center; gap: 38px; min-height: 49px; border-bottom: 1px solid #ffffff30; }
-.home-quick-nav a { font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; padding: 14px 0; position: relative; }
-.home-quick-nav a::after { content: ''; position: absolute; bottom: 9px; left: 0; width: 0; height: 1px; background: currentColor; transition: width .25s; }
-.home-quick-nav a:hover::after { width: 100%; }
+.home-nav-links a { font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; padding: 14px 0; position: relative; }
+.home-nav-links a::after { content: ''; position: absolute; bottom: 9px; left: 0; width: 0; height: 1px; background: currentColor; transition: width .25s; }
+.home-nav-links a:hover::after { width: 100%; }
 .home-page #cabecalho.is-scrolled { background: var(--cream); color: var(--ink); box-shadow: 0 2px 18px #263d3810; }
 .home-header.is-scrolled .home-header-top, .home-header.is-scrolled .home-quick-nav { border-color: var(--line); }
 .home-page .home-header.is-scrolled .home-brand img { filter: none; }
@@ -113,4 +113,19 @@ body.home-menu-open { overflow: hidden; }
 .home-page[data-nav-input="pointer"] :is(.home-menu-close,.home-menu-toggle):focus { outline: none; box-shadow: none; }
 @media(max-width: 359px) {
     .hero-location { display: none; }
+}
+
+.home-nav-links { display: flex; align-items: center; justify-content: center; gap: inherit; }
+@media (min-width: 768px) {
+ .home-header.is-compact .home-header-top { display: none; }
+ .home-header.is-compact .home-quick-nav {
+  min-height: 64px;
+  padding-inline: clamp(20px, 3vw, 42px);
+  justify-content: space-between;
+  gap: 16px;
+ }
+ .home-header.is-compact .home-nav-links { gap: clamp(12px, 2vw, 32px); }
+ .home-header.is-compact .home-booking,
+ .home-header.is-compact .home-account { flex-shrink: 0; white-space: nowrap; }
+ .home-page:has(.home-header.is-compact) section { scroll-margin-top: 72px; }
 }

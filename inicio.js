@@ -12,8 +12,32 @@
     intro.addEventListener('animationend', event => {
         if (event.animationName === 'intro-curtain') root.classList.add('intro-complete');
     });
-    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    const desktopHeader = window.matchMedia('(min-width: 768px)');
+    const quickNav = header.querySelector('.home-quick-nav');
+    const booking = header.querySelector('.home-booking');
+    const account = header.querySelector('.home-account');
+    // Move the original controls so their listeners and signed-in avatar stay intact.
+    const bookingSlot = document.createComment('booking-home');
+    const accountSlot = document.createComment('account-home');
+    booking.before(bookingSlot); account.before(accountSlot);
+    function setCompact(compact) {
+        if (header.classList.contains('is-compact') === compact) return;
+        const focused = document.activeElement;
+        const restoreFocus = booking.contains(focused) || account.contains(focused);
+        if (compact) { quickNav.prepend(booking); quickNav.append(account); }
+        else { bookingSlot.after(booking); accountSlot.after(account); }
+        header.classList.toggle('is-compact', compact);
+        if (restoreFocus) focused.focus({ preventScroll: true });
+    }
+    const onScroll = () => {
+        header.classList.toggle('is-scrolled', window.scrollY > 40);
+        // Fixed expanded-header boundary avoids a resize loop when its height changes.
+        setCompact(desktopHeader.matches && hero.getBoundingClientRect().bottom <= 142);
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    desktopHeader.addEventListener('change', onScroll);
+    window.addEventListener('load', onScroll);
     onScroll();
     document.addEventListener('pointerdown', () => { document.body.dataset.navInput = 'pointer'; }, { passive: true });
     document.addEventListener('keydown', () => { document.body.dataset.navInput = 'keyboard'; });
@@ -46,7 +70,8 @@
             if (!target) return;
             event.preventDefault();
             if (menu.open) menu.close();
-            const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - header.offsetHeight);
+            const destinationHeader = desktopHeader.matches && target !== hero ? 64 : header.offsetHeight;
+            const top = Math.max(0, target.getBoundingClientRect().top + window.scrollY - destinationHeader);
             window.scrollTo({ top, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
             // Keep a navigable URL and move keyboard focus to the destination.
             history.replaceState(null, '', link.hash);

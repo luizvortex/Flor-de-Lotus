@@ -159,3 +159,11 @@ O carrossel tem respiro de 32px no desktop e 24px no mobile antes de uma onda in
 ### Teste visual: ondas somente nas extremidades dos quartos
 
 A seção de acomodações agora tem apenas uma onda na entrada (ainda dentro da galeria anterior) e uma na saída, como filha direta de `#quartos`, conectando à área de lazer. Não há SVGs entre quartos nem no renderizador dinâmico. Os quatro blocos alternam areia `#eee9e3` e branco quente `#fffdf9`, com divisões retas e espaçamento interno. Template e renderização dinâmica mantidos consistentes. Build e conferência em 320–1900px passaram, incluindo fundos alternados, continuidade, ausência de overflow e álbum.
+
+### Desktop compacto e apresentação específica no celular
+
+A partir de 768px, todos os quartos usam o fundo areia uniforme. Abaixo de 768px, os blocos alternam areia/branco quente e voltam a ter ondas entre cada quarto, além das ondas nas extremidades. O renderizador e o template incluem as ondas internas com `.room-wave-between`, exibidas somente no celular.
+
+No desktop, ao chegar à apresentação da pousada, o cabeçalho oculta a faixa superior/logo e move os controles originais Reservar e Minha Conta para as extremidades da mesma linha dos links principais. O limite é fixo em relação à abertura para evitar oscilações ao mudar a altura; voltar ao topo restaura o cabeçalho completo. Os controles preservam eventos, avatar e foco, e são devolvidos à faixa original ao redimensionar para celular. Links de seção usam a altura compacta de 64px no desktop. Mobile mantém menu, logo e ações originais.
+
+Verificação: build, navegação por âncoras, ida/volta da abertura, redimensionamento em 320/390/600/767/768/820/1024/1440/1900px, fundos por dispositivo, ondas internas somente no celular e diálogo de conta/menu com sessão HTTP simulada. Sem alterações na autenticação ou no banco.
