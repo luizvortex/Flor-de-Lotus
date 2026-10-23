@@ -2,7 +2,7 @@
 (() => {
  const section=document.querySelector('#area-de-lazer.leisure-experience');if(!section)return;
  const choices=[...section.querySelectorAll('[data-leisure]')],reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const tones={sinuca:'#e5ece5',churrasqueira:'#eee5d9',piscina:'#e8e6df'};
+ const tones={sinuca:'#f0e8df',churrasqueira:'#eee5d9',piscina:'#f3eee7'};
  let opened=null;
  const stage=section.querySelector('.leisure-choices'),images=choices.map(choice=>choice.querySelector('.leisure-preview'));
  const layer=document.createElement('div');layer.className='leisure-image-layer';layer.setAttribute('aria-hidden','true');stage.prepend(layer);
