@@ -1,0 +1,59 @@
+begin;
+set local role anon;
+do $$begin
+ assert not has_table_privilege(current_user,'lotus_private.booking_guest_links','SELECT');
+ assert not has_table_privilege(current_user,'lotus_private.guest_notifications','SELECT');
+ assert not has_table_privilege(current_user,'lotus_private.guest_reminder_deliveries','SELECT');
+ begin perform public.lotus_guest_booking_api('read'); raise exception 'Expected anonymous denial'; exception when insufficient_privilege then null; end;
+end $$;
+reset role;
+do $$
+declare u1 uuid:=gen_random_uuid(); u2 uuid:=gen_random_uuid(); s1 uuid:=gen_random_uuid(); s2 uuid:=gen_random_uuid(); rid bigint; bid bigint; pastid bigint; nid bigint; result jsonb; payload jsonb; starts date:=(now() at time zone 'America/Bahia')::date+30;
+begin
+ insert into auth.users(id,aud,role,email,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
+ values(u1,'authenticated','authenticated',u1||'@example.invalid',now(),'{}','{}',now(),now()),(u2,'authenticated','authenticated',u2||'@example.invalid',now(),'{}','{}',now(),now());
+ insert into auth.identities(provider_id,user_id,identity_data,provider) values(u1::text,u1,jsonb_build_object('sub',u1,'email',u1||'@example.invalid'),'google'),(u2::text,u2,jsonb_build_object('sub',u2,'email',u2||'@example.invalid'),'google');
+ insert into auth.sessions(id,user_id,created_at,updated_at) values(s1,u1,now(),now()),(s2,u2,now(),now());
+ insert into lotus_private.rooms(name,type,capacity,price,active) values('__guest_contract_'||u1,'familia',3,24000,1) returning id into rid;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',u1,'role','authenticated','session_id',s1)::text,true);
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=0;
+ payload:=jsonb_build_object('room_id',rid,'guest','Guest contract','phone','55000000000','start',starts,'end',starts+2,'guests',2,'user_id',u2,'status','confirmada');
+ result:=public.lotus_guest_booking_api('book',payload);bid:=(result->>'id')::bigint;
+ assert result->>'status'='pendente';assert (result->>'total')::bigint=48000;
+ assert (select user_id=u1 from lotus_private.booking_guest_links where booking_id=bid);
+ assert not exists(select 1 from lotus_private.guest_notifications where booking_id=bid);
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=1;
+ assert result->'bookings'->0->>'guest'='Guest contract';
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',u2,'role','authenticated','session_id',s2)::text,true);
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=0,'Other guest cannot see a reservation even with the same name/phone';
+ begin perform public.lotus_guest_booking_api('link',jsonb_build_object('booking_id',bid,'email',u2||'@example.invalid'));raise exception 'Expected unauthorized claim denial';exception when sqlstate 'PT401' then null;end;
+ update lotus_private.bookings set status='confirmada' where id=bid;
+ assert (select count(*)=2 from lotus_private.guest_notifications where booking_id=bid);
+ assert (select count(*)=4 from lotus_private.guest_reminder_deliveries d join lotus_private.guest_notifications n on n.id=d.notification_id where n.booking_id=bid and d.status='awaiting_setup' and d.sent_at is null);
+ assert not exists(select 1 from lotus_private.guest_notifications where booking_id=bid and checkin_at-due_at<>case kind when 'ten_days' then interval '10 days' else interval '24 hours' end);
+ assert (select bool_and((checkin_at at time zone 'America/Bahia')::time=time '14:00') from lotus_private.guest_notifications where booking_id=bid);
+ select id into nid from lotus_private.guest_notifications where booking_id=bid and kind='ten_days';
+ begin perform public.lotus_guest_booking_api('read_notification',jsonb_build_object('id',nid));raise exception 'Expected another guest notification denial';exception when sqlstate 'PT404' then null;end;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',u1,'role','authenticated','session_id',s1)::text,true);
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'notifications')=0,'Future notices stay hidden';
+ update lotus_private.guest_notifications set due_at=now()-interval '1 minute' where id=nid;
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'notifications')=1;
+ perform public.lotus_guest_booking_api('read_notification',jsonb_build_object('id',nid));
+ assert (select read_at is not null from lotus_private.guest_notifications where id=nid);
+ perform public.lotus_guest_booking_api('read');assert (select count(*)=2 from lotus_private.guest_notifications where booking_id=bid),'Reminders are idempotent';
+ insert into lotus_private.bookings(room_id,guest,phone,start,"end",guests,status,total,created)
+ values(rid,'Past guest','55000000000',starts-40,starts-38,2,'confirmada',48000,now()-interval '50 days') returning id into pastid;
+ insert into lotus_private.booking_guest_links(booking_id,user_id) values(pastid,u1);
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=2,'Completed bookings remain in history';
+ update lotus_private.bookings set status='cancelada' where id=bid;
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=2;assert jsonb_array_length(result->'notifications')=0;
+ assert not exists(select 1 from lotus_private.guest_reminder_deliveries d join lotus_private.guest_notifications n on n.id=d.notification_id where n.booking_id=bid and d.status<>'cancelled');
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',u2,'role','authenticated','session_id',s2)::text,true);insert into lotus_private.admin_users values(u2);
+ perform public.lotus_guest_booking_api('link',jsonb_build_object('booking_id',bid,'email',u2||'@example.invalid'));
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=1;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',u1,'role','authenticated','session_id',s1)::text,true);
+ result:=public.lotus_guest_booking_api('read');assert jsonb_array_length(result->'bookings')=1,'Previous owner loses access after admin reassignment';
+ delete from auth.sessions where id=s1;
+ begin perform public.lotus_guest_booking_api('read');raise exception 'Expected revoked session denial';exception when sqlstate 'PT401' then null;end;
+end $$;
+rollback;

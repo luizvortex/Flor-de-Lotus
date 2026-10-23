@@ -1,6 +1,11 @@
 'use strict';
 (() => {
  const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ document.addEventListener('lotus:guest-session',event=>{
+  const note=$('[data-booking-account-note]');if(!note)return;
+  if(event.detail.authenticated){note.textContent='Sua reserva ficará vinculada à conta Google. Acompanhe datas, status e avisos em Minha conta.';if(!$('#guest').value)$('#guest').value=event.detail.name;}
+  else note.innerHTML='<a href="/?conta=entrar">Entre com Google</a> antes de reservar para acompanhar sua estadia em Minha conta.';
+ });
  let shareTimer;
  const shareDialog=$('#share-dialog'),shareInput=$('#share-url');
  const shareUrl=()=>{const url=new URL(location.href);url.hash='';return url.href;};
@@ -152,7 +157,7 @@
   event.preventDefault();if(!selection)return;const button=event.submitter;button.disabled=true;const selected=selection;
   try{
    const q=selected.query,result=await api('bookings',{room_id:selected.room.id,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
-   $('#booking-dialog').close();event.target.reset();message(`Solicitação #${result.id} recebida! Total: ${money(result.total)}. As datas estão bloqueadas; aguarde o contato da pousada para confirmação e pagamento.`);await search(true);
+   document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();message(`Solicitação #${result.id} recebida! Total: ${money(result.total)}. As datas estão bloqueadas; aguarde o contato da pousada para confirmação e pagamento.`);await search(true);
   }catch(e){$('#booking-error').textContent=e.message;if(e.status===409){selection=null;await search(true);}}
   finally{button.disabled=!selection;}
  };

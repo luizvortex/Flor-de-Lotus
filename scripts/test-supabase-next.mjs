@@ -26,6 +26,10 @@ const mock = createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
   if (req.url.startsWith('/auth/v1/user')) return json(200, { email: 'admin@example.invalid' });
   if (req.url.startsWith('/storage/v1/object/lotus-showcase/')) return json(token === 'access-admin' ? 200 : 403, {});
+  if (req.url === '/rest/v1/rpc/lotus_guest_booking_api') {
+    if (token !== 'access-admin' || revoked) return json(401, { code:'PT401', message:'Entre no painel.' });
+    assert.equal(data.p_operation,'link'); return json(200,{ok:true});
+  }
   if (req.url === '/rest/v1/rpc/lotus_policy_api') {
     if (data.p_operation === 'read') return json(200, policyData);
     if (token !== 'access-admin' || revoked) return json(401, { code: 'PT401' });
@@ -82,6 +86,9 @@ try {
   r = await request('rooms', { name: 'Quarto de teste', type: 'casal', capacity: 2, price: 10000, active: 1, showcase_slug: 'triplo' }, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   const roomSave = received.findLast(x => x.data.p_operation === 'save_room');
   assert.equal(roomSave.path, '/rest/v1/rpc/lotus_room_catalog_api'); assert.equal(roomSave.data.p_data.showcase_slug, 'triplo');
+  r = await request('bookings/101/account', { email:'guest@example.invalid' }, { method:'PUT' }); assert.equal(r.status,401);
+  r = await request('bookings/101/account', { email:'guest@example.invalid' }, { method:'PUT', headers:{Cookie:cookies} }); assert.equal(r.status,200);
+  const accountLink=received.findLast(x=>x.path==='/rest/v1/rpc/lotus_guest_booking_api');assert.equal(accountLink.data.p_data.booking_id,101);assert.equal(accountLink.data.p_data.email,'guest@example.invalid');
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=expired; lotus_refresh=refresh-admin' } });
   assert.equal(r.status, 200); assert.equal((await r.json()).authenticated, true); assert.equal(r.headers.getSetCookie().length, 2);
   r = await request('bookings', { id: 999, total: 1 }); assert.equal(r.status, 201);
@@ -121,7 +128,7 @@ try {
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 31 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: 33 scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }

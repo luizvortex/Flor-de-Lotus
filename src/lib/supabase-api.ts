@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { guestBookingOperation, hasGuestSession } from './guest-bookings';
 import { randomUUID } from 'node:crypto';
 import { supabaseKey, supabaseUrl } from './supabase-config';
 
@@ -93,7 +94,7 @@ async function uploadShowcasePhoto(request: NextRequest, token: string): Promise
   return { url: `${supabaseUrl}/storage/v1/object/public/lotus-showcase/${name}` };
 }
 
-export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
+export async function supabaseApi(request: NextRequest): Promise<Response> {
   let rotated: Tokens | undefined;
   let token = request.cookies.get(ACCESS)?.value;
   let clear = false;
@@ -128,6 +129,10 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
       }
       rotated = tokens;
       return finish({ ok: true });
+    }
+    if (path === 'bookings' && method === 'POST' && hasGuestSession(request) && !Object.hasOwn(data, 'status')) {
+      delete data.id;
+      return await guestBookingOperation(request, 'book', data);
     }
     // The database verifies both the JWT identity and a live Auth session.
     // JWT expiry is handled via refresh, without trusting unverified claims.
@@ -206,6 +211,11 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
       data.guests = params.has('guests') ? Number(params.get('guests')) : 1;
       data.package_id = params.get('package_id') ? Number(params.get('package_id')) : null;
     }
+    const guestLink = /^bookings\/([1-9][0-9]*)\/account$/.exec(path);
+    if (guestLink && method === 'PUT') {
+      if (!token) throw new ApiError(401, 'Entre no painel para vincular uma conta.');
+      return finish(await call('/rest/v1/rpc/lotus_guest_booking_api', 'POST', { p_operation: 'link', p_data: { booking_id: Number(guestLink[1]), email: requiredText(data, 'email', 254) } }, token));
+    }
     const match = /^(rooms|packages|bookings)(?:\/([1-9][0-9]*))?$/.exec(path);
     if (match && ((method === 'POST' && !match[2]) || (method === 'PUT' && match[2]))) {
       // Never accept a client-supplied record id on creation.
@@ -214,6 +224,7 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
       operation = match[1] === 'rooms' ? 'save_room' : match[1] === 'packages' ? 'save_package' : method === 'POST' ? 'book' : 'booking_status';
     }
     if (!operation) throw new ApiError(404, 'Operação não encontrada.');
+    if (operation === 'book' && (!token || !Object.hasOwn(data, 'status')) && hasGuestSession(request)) return await guestBookingOperation(request, 'book', data);
     const result = await rpc(operation, data, token);
     return finish(result, operation === 'book' ? 201 : 200);
   } catch (error) {
