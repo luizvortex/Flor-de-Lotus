@@ -1,4 +1,4 @@
-#area-de-lazer.leisure-experience { --leisure-tone:#f7f7f2; background:var(--leisure-tone) !important; padding:78px 0 110px !important; transition:background-color .65s ease; }
+#area-de-lazer.leisure-experience { background:var(--leisure-tone,#f7f7f2) !important; padding:78px 0 110px !important; transition:background-color .65s ease; }
 .leisure-inner { max-width:1440px; margin:auto; padding:0 40px; position:relative; z-index:2; }
 .leisure-heading { text-align:center; color:var(--ink,#263d38); }
 .leisure-heading h2 { font:500 38px/1.25 'Playfair Display',Georgia,serif; margin:0 0 18px; }
@@ -60,3 +60,11 @@
  .leisure-panels { order:3; width:calc(100% - 80px); max-width:1040px; margin:0 auto; }
 }
 @media(prefers-reduced-motion:reduce) { .leisure-preview { transition:none; } }
+
+/* One shared colour keeps the room exit wave joined to the leisure section. */
+.home-page #quartos > .room-wave:last-child {
+ background:var(--leisure-tone,#f7f7f2);
+ height:clamp(64px,5vw,96px);
+ transition:background-color .65s ease;
+}
+@media(prefers-reduced-motion:reduce) { .home-page #quartos > .room-wave:last-child { transition:none; } }

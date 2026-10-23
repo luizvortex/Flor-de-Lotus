@@ -2,7 +2,7 @@
 (() => {
  const section=document.querySelector('#area-de-lazer.leisure-experience');if(!section)return;
  const choices=[...section.querySelectorAll('[data-leisure]')],reduced=matchMedia('(prefers-reduced-motion: reduce)');
- const tones={sinuca:'#cbdcda',churrasqueira:'#eadac7',piscina:'#efd4d5'};
+ const tones={sinuca:'#e5ece5',churrasqueira:'#eee5d9',piscina:'#e8e6df'};
  let opened=null;
  const stage=section.querySelector('.leisure-choices'),images=choices.map(choice=>choice.querySelector('.leisure-preview'));
  const layer=document.createElement('div');layer.className='leisure-image-layer';layer.setAttribute('aria-hidden','true');stage.prepend(layer);
@@ -12,7 +12,7 @@
  function preview(choice){
   choices.forEach((item,index)=>{item.classList.toggle('is-preview',item===choice);images[index].classList.toggle('is-visible',item===choice);});
   if(choice&&!mobile.matches){const image=images[choices.indexOf(choice)];if(!image.style.getPropertyValue('--leisure-x')){const rect=choice.getBoundingClientRect(),bounds=stage.getBoundingClientRect();image.style.setProperty('--leisure-x',`${rect.left-bounds.left+rect.width/2-image.offsetWidth/2}px`);image.style.setProperty('--leisure-y',`${(bounds.height-image.offsetHeight)/2}px`);}}
-  section.style.setProperty('--leisure-tone',choice?tones[choice.dataset.leisure]:'#f7f7f2');
+  (section.closest('main')||section.parentElement).style.setProperty('--leisure-tone',choice?tones[choice.dataset.leisure]:'#f7f7f2');
  }
  function expand(choice){
   opened=opened===choice?null:choice;
