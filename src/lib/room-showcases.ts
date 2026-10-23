@@ -30,7 +30,7 @@ const roomWaveSeparator = `<div class="room-wave" aria-hidden="true">
   <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V82C2640 82 2400 150 2160 150S1680 82 1440 82S960 150 720 150S240 82 0 82Z"/></svg>
 </div>`;
 export function renderShowcases(rows: Showcase[]): string {
-  return rows.map(row => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
+  return rows.map((row, index) => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
     <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-room="${escape(JSON.stringify({ title: row.title, eyebrow: row.eyebrow, description: row.description, features: row.features, details: row.details || {} }))}" data-photos="${escape(JSON.stringify(row.photos))}">
       <div class="showcase-main">
         <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de ${escape(row.title)}"><img class="showcase-main-image" src="${escape(row.photos[0].url)}" alt="${escape(row.photos[0].alt)}" loading="lazy" width="900" height="700"></button>
@@ -46,5 +46,6 @@ export function renderShowcases(rows: Showcase[]): string {
       <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><i class="bi bi-${escape(feature.icon)}" aria-hidden="true"></i><span>${escape(feature.label)}</span></li>`).join('')}</ul>
       <a class="showcase-rates" href="/reservas">Ver tarifas</a>
     </div>
-  </article>`).join(roomWaveSeparator);
+    ${index < rows.length - 1 ? roomWaveSeparator : ''}
+  </article>`).join('\n');
 }

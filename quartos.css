@@ -191,21 +191,49 @@ body.showcase-album-open { overflow: hidden; }
  .showcase-copy { transform: none !important; opacity: 1 !important; }
 }
 
-/* Ondas largas, de ponta a ponta da tela, como a faixa de fotos da pousada. */
+/* A onda encerra o próprio quarto e conecta os fundos dos dois blocos. */
+.home-page #quartos.room-showcases {
+ background: #eee9e3;
+ padding-bottom: 0;
+}
 .home-page .room-showcase {
+ --room-background: #eee9e3;
+ --next-room-background: #fff;
+ position: relative;
+ isolation: isolate;
+ row-gap: 0;
+ padding-top: 48px;
  padding-bottom: 0;
  margin-bottom: 0;
  border-bottom: 0;
 }
+.home-page .room-showcase:nth-of-type(even) {
+ --room-background: #fff;
+ --next-room-background: #eee9e3;
+}
+.room-showcase::before {
+ content: '';
+ position: absolute;
+ top: 0;
+ bottom: 0;
+ left: 50%;
+ width: 100vw;
+ transform: translateX(-50%);
+ background: var(--room-background);
+ z-index: -1;
+ pointer-events: none;
+}
+.home-page .room-showcase:last-child { padding-bottom: 64px; }
 .room-wave {
  position: relative;
  width: 100vw;
  height: clamp(130px, 13.75vw, 260px);
- margin: 32px calc(50% - 50vw) 40px;
+ grid-column: 1 / -1;
+ margin: 48px calc(50% - 50vw) 0;
  overflow: hidden;
  pointer-events: none;
  contain: paint;
- background: #fff;
+ background: var(--next-room-background);
 }
 .room-wave-layer {
  position: absolute;
@@ -224,7 +252,7 @@ body.showcase-album-open { overflow: hidden; }
  animation-delay: -16s;
 }
 .room-wave-layer:nth-child(3) {
- fill: #eee9e3;
+ fill: var(--room-background);
  opacity: 1;
  animation-duration: 40s;
  animation-delay: -8s;
@@ -234,7 +262,8 @@ body.showcase-album-open { overflow: hidden; }
  to { transform: translateX(-50%); }
 }
 @media (max-width: 600px) {
- .room-wave { height: 110px; margin-block: 24px 28px; }
+ .home-page .room-showcase { padding-top: 32px; }
+ .room-wave { height: 110px; margin-block: 32px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
  .room-wave-layer { animation-play-state: paused; }

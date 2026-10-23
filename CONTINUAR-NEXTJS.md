@@ -147,3 +147,7 @@ A vitrine contém quatro apresentações: Duplo Standard, Duplo Superior, Triplo
 ### Correção visual das ondas
 
 Os três separadores agora atravessam a largura completa da viewport, como a faixa de fotos, com curvas largas em camadas preenchidas do topo e fundo branco, seguindo a nova imagem de referência. A largura dos textos e galerias foi preservada. Conferido em 320/390/768/1024/1440/1900px: bordas em x=0 e x=largura da tela, sem overflow horizontal; animação contínua e pausa com movimento reduzido.
+
+### Ondas integradas aos fundos dos quartos
+
+Cada onda agora fica dentro do artigo do quarto, encerrando seu fundo e encontrando diretamente o fundo do quarto seguinte. Os blocos alternam areia clara e branco, em largura total, sem margens externas no separador ou cortes retos acima/abaixo dele. O desenho e os tempos das curvas aprovadas foram preservados. Conferido em 320/390/768/1024/1440/1900px: continuidade dos fundos, ausência de lacunas/overflow e funcionamento do álbum.
