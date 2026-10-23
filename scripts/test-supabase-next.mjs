@@ -91,8 +91,9 @@ try {
   const accountLink=received.findLast(x=>x.path==='/rest/v1/rpc/lotus_guest_booking_api');assert.equal(accountLink.data.p_data.booking_id,101);assert.equal(accountLink.data.p_data.email,'guest@example.invalid');
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=expired; lotus_refresh=refresh-admin' } });
   assert.equal(r.status, 200); assert.equal((await r.json()).authenticated, true); assert.equal(r.headers.getSetCookie().length, 2);
-  r = await request('bookings', { id: 999, total: 1 }); assert.equal(r.status, 201);
-  const booking = received.findLast(x => x.data.p_operation === 'book'); assert.equal(booking.data.p_data.id, undefined); assert.equal(booking.token, undefined);
+  r = await request('bookings', { id: 999, total: 1 }); assert.equal(r.status, 401);
+  r = await request('bookings', { id:999,total:1,status:'pendente' }, {headers:{Cookie:cookies}}); assert.equal(r.status,201);
+  const booking = received.findLast(x => x.data.p_operation === 'book'); assert.equal(booking.data.p_data.id, undefined); assert.equal(booking.token, 'access-admin');
   r = await request('account', { current_password: 'wrong', password: 'new-password-only' }, { method: 'PUT', headers: { Cookie: cookies } });
   assert.equal(r.status, 401);
   r = await request('account', { current_password: 'test-password-only', email: 'owner@example.invalid', password: 'new-password-only' }, { method: 'PUT', headers: { Cookie: cookies } });
@@ -128,7 +129,7 @@ try {
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 33 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: 34 scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }

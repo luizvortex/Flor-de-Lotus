@@ -4,6 +4,7 @@ do $$begin
  assert not has_table_privilege(current_user,'lotus_private.booking_guest_links','SELECT');
  assert not has_table_privilege(current_user,'lotus_private.guest_notifications','SELECT');
  assert not has_table_privilege(current_user,'lotus_private.guest_reminder_deliveries','SELECT');
+ begin perform public.lotus_api('book',jsonb_build_object('start',((now() at time zone 'America/Bahia')::date+30)::text,'end',((now() at time zone 'America/Bahia')::date+32)::text,'guests',1));raise exception 'Expected Google requirement on direct booking';exception when sqlstate 'PT401' then null;end;
  begin perform public.lotus_guest_booking_api('read'); raise exception 'Expected anonymous denial'; exception when insufficient_privilege then null; end;
 end $$;
 reset role;

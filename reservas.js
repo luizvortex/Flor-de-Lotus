@@ -1,10 +1,13 @@
 'use strict';
 (() => {
+ let guestAuthenticated=false;
  const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  document.addEventListener('lotus:guest-session',event=>{
+  guestAuthenticated=event.detail.authenticated;
+  $('#booking-form [type="submit"]').disabled=!guestAuthenticated;
   const note=$('[data-booking-account-note]');if(!note)return;
   if(event.detail.authenticated){note.textContent='Sua reserva ficará vinculada à conta Google. Acompanhe datas, status e avisos em Minha conta.';if(!$('#guest').value)$('#guest').value=event.detail.name;}
-  else note.innerHTML='<a href="/minha-conta">Entre com Google</a> antes de reservar para acompanhar sua estadia em Minha conta.';
+  else note.innerHTML='<a href="/minha-conta" target="_blank" rel="noopener">Entre com Google</a> para finalizar a reserva e para acompanhar sua estadia em Minha conta.';
  });
  let shareTimer;
  const shareDialog=$('#share-dialog'),shareInput=$('#share-url');
@@ -86,7 +89,8 @@
   if(packages.some(p=>String(p.id)===selected))$('#package').value=selected;
   if(showcases[0])$('#catalog-cover').src=showcases[0].photos[0].url;
   $('#special-packages').hidden=!packages.length;
-  $('#packages').innerHTML=packages.map(p=>`<article class="package-card"><h3>${esc(p.name)}</h3><p>${p.nights+1} dias · ${p.nights} noites<br>${dateLabel(p.start)} a ${dateLabel(p.end)}</p><p>${money(p.price)} <small>/ pacote por quarto</small></p><button type="button" class="gold-button" data-package="${p.id}">Consultar pacote</button></article>`).join('');
+  $('#more-packages').hidden=packages.length<=3;
+  $('#packages').innerHTML=packages.slice(0,3).map(p=>`<article class="package-card"><h3>${esc(p.name)}</h3><p>${p.nights+1} dias · ${p.nights} noites<br>${dateLabel(p.start)} a ${dateLabel(p.end)}</p><p>${money(p.price)} <small>/ pacote por quarto</small></p><button type="button" class="gold-button" data-package="${p.id}">Consultar pacote</button></article>`).join('');
  }
  function render(){
   $('#rooms').innerHTML=showcases.length?showcases.map(s=>{
@@ -147,19 +151,19 @@
   if(button.hasAttribute('data-search-focus')){$('#room-details').close();focusSearch();}
   if(button.hasAttribute('data-book')&&lastQuery){
    const room=available.find(r=>r.id===Number(button.dataset.book));if(!room)return;
-   selection={room:{...room},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=false;
+   selection={room:{...room},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=!guestAuthenticated;
    $('#booking-summary').textContent=`${room.name} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();
   }
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
  $('#close-booking').onclick=()=>$('#booking-dialog').close();$('#booking-dialog').addEventListener('close',()=>{selection=null;});
  $('#booking-form').onsubmit=async event=>{
-  event.preventDefault();if(!selection)return;const button=event.submitter;button.disabled=true;const selected=selection;
+  event.preventDefault();if(!selection)return;if(!guestAuthenticated){$('#booking-error').textContent='Entre com Google para finalizar sua reserva.';return;}const button=event.submitter;button.disabled=true;const selected=selection;
   try{
    const q=selected.query,result=await api('bookings',{room_id:selected.room.id,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
    document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();message(`Solicitação #${result.id} recebida! Total: ${money(result.total)}. As datas estão bloqueadas; aguarde o contato da pousada para confirmação e pagamento.`);await search(true);
   }catch(e){$('#booking-error').textContent=e.message;if(e.status===409){selection=null;await search(true);}}
-  finally{button.disabled=!selection;}
+  finally{button.disabled=!selection||!guestAuthenticated;}
  };
  $('#search').onsubmit=event=>{event.preventDefault();search();};$('#search').addEventListener('change',invalidate);
  $('#checkin').min=today;$('#checkout').min=nextDay(today);$('#checkin').addEventListener('change',()=>{if(!$('#checkin').value)return;$('#checkout').min=nextDay($('#checkin').value);if($('#checkout').value<=$('#checkin').value)$('#checkout').value=$('#checkout').min;});

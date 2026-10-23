@@ -130,7 +130,8 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       rotated = tokens;
       return finish({ ok: true });
     }
-    if (path === 'bookings' && method === 'POST' && hasGuestSession(request) && !Object.hasOwn(data, 'status')) {
+    if (path === 'bookings' && method === 'POST' && !Object.hasOwn(data, 'status')) {
+      if (!hasGuestSession(request)) throw new ApiError(401, 'Entre com Google para finalizar sua reserva.');
       delete data.id;
       return await guestBookingOperation(request, 'book', data);
     }
