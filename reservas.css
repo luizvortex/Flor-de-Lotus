@@ -117,3 +117,11 @@ dialog::backdrop { background: #14201d80; }
 #share-url { width:100%; margin-top:12px; }
 @media(max-width:1000px) { .catalog-tabs > div { grid-template-columns:minmax(0,1fr) auto; gap:18px; }.catalog-tab-links { grid-column:1; overflow-x:auto; min-width:0; }.catalog-share { grid-column:2; } }
 @media(max-width:600px) { .catalog-share { padding:10px; }.catalog-share span { display:none; } }
+
+/* Keep native date controls within their grid cells, including iOS Safari. */
+#search > div { min-width:0; }
+#search input,#search select { display:block; max-width:100%; min-inline-size:0; }
+#search input[type="date"] { appearance:none; -webkit-appearance:none; height:46px; }
+#search input[type="date"]::-webkit-date-and-time-value { min-width:0; text-align:left; }
+.location-copy .gold-button svg { flex-shrink:0; }
+@media(max-width:600px) { #search input,#search select { font-size:16px; padding-inline:8px; } }
