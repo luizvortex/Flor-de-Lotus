@@ -143,3 +143,7 @@ A pedido do usuário, a abertura agora usa o vídeo enviado de praia/stand-up em
 A vitrine contém quatro apresentações: Duplo Standard, Duplo Superior, Triplo Standard e Família. O novo Triplo Standard reutiliza as fotos existentes, tem descrição sem metragem ou configuração de camas presumidas e mantém álbum e tarifas. Separadores SVG em três camadas animam ondas em tons de areia entre os blocos; respeitam a preferência por movimento reduzido e não interferem nas animações de rolagem já existentes.
 
 `database/triplo-standard.sql` amplia os limites editoriais para quatro blocos e inclui `triplo-standard`, sem modificar estoque físico, reservas ou tarifas. Aplicar após publicar a versão que aceita quatro blocos. Durante a transição, a home aceita os três registros existentes e acrescenta o novo fallback preservando as edições do painel. A API de edição também aceita o novo slug.
+
+### Correção visual das ondas
+
+Os três separadores agora atravessam a largura completa da viewport, como a faixa de fotos, com curvas largas em camadas preenchidas do topo e fundo branco, seguindo a nova imagem de referência. A largura dos textos e galerias foi preservada. Conferido em 320/390/768/1024/1440/1900px: bordas em x=0 e x=largura da tela, sem overflow horizontal; animação contínua e pausa com movimento reduzido.

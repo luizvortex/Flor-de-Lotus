@@ -25,9 +25,9 @@ export async function getShowcases(): Promise<Showcase[]> {
 const arrow = (direction: 'left'|'right') => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="${direction === 'left' ? 'm13 5-7 7 7 7M6 12h13' : 'm11 5 7 7-7 7M18 12H5'}"/></svg>`;
 // Two identical wave periods make the half-width translation seamless.
 const roomWaveSeparator = `<div class="room-wave" aria-hidden="true">
-  <svg class="room-wave-layer" viewBox="0 0 2880 100" preserveAspectRatio="none" focusable="false"><path d="M0 40 C120 12 240 12 360 40 S600 68 720 40 S960 12 1080 40 S1320 68 1440 40 S1680 12 1800 40 S2040 68 2160 40 S2400 12 2520 40 S2760 68 2880 40 L2880 66 C2760 94 2640 94 2520 66 S2280 38 2160 66 S1920 94 1800 66 S1560 38 1440 66 S1200 94 1080 66 S840 38 720 66 S480 94 360 66 S120 38 0 66 Z"/></svg>
-  <svg class="room-wave-layer" viewBox="0 0 2880 100" preserveAspectRatio="none" focusable="false"><path d="M0 40 C120 12 240 12 360 40 S600 68 720 40 S960 12 1080 40 S1320 68 1440 40 S1680 12 1800 40 S2040 68 2160 40 S2400 12 2520 40 S2760 68 2880 40 L2880 66 C2760 94 2640 94 2520 66 S2280 38 2160 66 S1920 94 1800 66 S1560 38 1440 66 S1200 94 1080 66 S840 38 720 66 S480 94 360 66 S120 38 0 66 Z"/></svg>
-  <svg class="room-wave-layer" viewBox="0 0 2880 100" preserveAspectRatio="none" focusable="false"><path d="M0 40 C120 12 240 12 360 40 S600 68 720 40 S960 12 1080 40 S1320 68 1440 40 S1680 12 1800 40 S2040 68 2160 40 S2400 12 2520 40 S2760 68 2880 40 L2880 66 C2760 94 2640 94 2520 66 S2280 38 2160 66 S1920 94 1800 66 S1560 38 1440 66 S1200 94 1080 66 S840 38 720 66 S480 94 360 66 S120 38 0 66 Z"/></svg>
+  <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V118C2640 118 2400 198 2160 198S1680 118 1440 118S960 198 720 198S240 118 0 118Z"/></svg>
+  <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V108C2640 108 2400 176 2160 176S1680 108 1440 108S960 176 720 176S240 108 0 108Z"/></svg>
+  <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V82C2640 82 2400 150 2160 150S1680 82 1440 82S960 150 720 150S240 82 0 82Z"/></svg>
 </div>`;
 export function renderShowcases(rows: Showcase[]): string {
   return rows.map(row => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">

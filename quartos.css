@@ -1,6 +1,6 @@
 /* Vitrine de acomodações: conteúdo editorial, separado do estoque físico. */
 .home-page #quartos.room-showcases { padding: 72px 0 50px; background: var(--cream); }
-.showcase-container { max-width: 1536px; padding: 0 clamp(20px,5vw,88px); margin: auto; }
+.showcase-container { box-sizing: border-box; max-width: 1536px; padding: 0 clamp(20px,5vw,88px); margin: auto; }
 .showcase-heading { margin-bottom: 44px; }
 .showcase-heading h2 { font: 500 clamp(38px,4vw,56px)/1.2 'Playfair Display',serif; color: var(--ink); margin: 0 0 18px; }
 .showcase-heading p { color: var(--muted); margin: 0; font-size: 15px; }
@@ -191,7 +191,7 @@ body.showcase-album-open { overflow: hidden; }
  .showcase-copy { transform: none !important; opacity: 1 !important; }
 }
 
-/* Ondas de areia entre as acomodações, inspiradas na referência em vídeo. */
+/* Ondas largas, de ponta a ponta da tela, como a faixa de fotos da pousada. */
 .home-page .room-showcase {
  padding-bottom: 0;
  margin-bottom: 0;
@@ -199,43 +199,43 @@ body.showcase-album-open { overflow: hidden; }
 }
 .room-wave {
  position: relative;
- height: clamp(70px, 8vw, 110px);
- margin: 28px 0 40px;
+ width: 100vw;
+ height: clamp(130px, 13.75vw, 260px);
+ margin: 32px calc(50% - 50vw) 40px;
  overflow: hidden;
  pointer-events: none;
  contain: paint;
+ background: #fff;
 }
 .room-wave-layer {
  position: absolute;
  inset: 0 auto auto 0;
  width: 200%;
  height: 100%;
- fill: #d8c6b3;
- opacity: .22;
- animation: room-wave-drift 22s linear infinite;
+ fill: #cbb6a2;
+ opacity: .65;
+ animation: room-wave-drift 24s linear infinite;
 }
 .room-wave-layer:nth-child(2) {
- top: 10px;
- fill: #c3a78b;
- opacity: .2;
- animation-duration: 17s;
+ fill: #d4c4b5;
+ opacity: .6;
+ animation-duration: 32s;
  animation-direction: reverse;
- animation-delay: -6s;
+ animation-delay: -16s;
 }
 .room-wave-layer:nth-child(3) {
- top: 20px;
- fill: #b89a7b;
- opacity: .16;
- animation-duration: 28s;
- animation-delay: -14s;
+ fill: #eee9e3;
+ opacity: 1;
+ animation-duration: 40s;
+ animation-delay: -8s;
 }
 @keyframes room-wave-drift {
  from { transform: translateX(0); }
  to { transform: translateX(-50%); }
 }
 @media (max-width: 600px) {
- .room-wave { height: 64px; margin: 20px 0 28px; }
+ .room-wave { height: 110px; margin-block: 24px 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
- .room-wave-layer { animation: none; }
+ .room-wave-layer { animation-play-state: paused; }
 }
