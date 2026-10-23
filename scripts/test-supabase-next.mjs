@@ -20,7 +20,7 @@ const mock = createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/token')) {
     if (data.refresh_token === 'refresh-admin') return json(200, { access_token: 'access-admin', refresh_token: 'refresh-admin', expires_in: 3600 });
     if (data.password !== 'test-password-only') return json(400, { code: 'invalid_credentials' });
-    const access = data.email === 'admin@example.invalid' ? (++adminSignIns === 1 ? 'access-admin' : 'access-check') : 'access-other';
+    const access = ['admin@example.invalid','zilterpacheoni17@gmail.com'].includes(data.email) ? (++adminSignIns === 1 ? 'access-admin' : 'access-check') : 'access-other';
     return json(200, { access_token: access, refresh_token: 'refresh-admin', expires_in: 3600 });
   }
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
@@ -71,7 +71,8 @@ try {
   r = await request('login', { email: 'admin@example.invalid', password: 'test-password-only' }, { headers: { Origin: 'https://malicious.invalid' } });
   assert.equal(r.status, 403); assert.equal(received.length, before);
   r = await request('login', { email: 'other@example.invalid', password: 'test-password-only' }); assert.equal(r.status, 403);
-  r = await request('login', { email: 'admin@example.invalid', password: 'test-password-only' }); assert.equal(r.status, 200);
+  r = await request('login', { email: 'admin', password: 'test-password-only' }); assert.equal(r.status, 200);
+  assert.equal(received.findLast(x => x.path.startsWith('/auth/v1/token') && x.data.email).data.email, 'zilterpacheoni17@gmail.com');
   assert.deepEqual(await r.json(), { ok: true });
   const setCookies = r.headers.getSetCookie();
   assert.equal(setCookies.length, 2);
@@ -115,10 +116,12 @@ try {
   r = await upload(new Uint8Array([255,216,255,224,0,0,0,0]), 'image/jpeg'); assert.equal(r.status, 201);
   assert.match((await r.json()).url, /\/lotus-showcase\/[0-9a-f-]+\.jpg$/);
   assert.equal(received.findLast(x => x.path.startsWith('/storage/')).token, 'access-admin');
+  r = await request('login', { email: 'admin', password:'wrong' }); assert.equal(r.status, 401);
+  assert.equal(received.findLast(x => x.path.startsWith('/auth/v1/token') && x.data.email).data.email, 'zilterpacheoni17@gmail.com');
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 30 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: 31 scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }
