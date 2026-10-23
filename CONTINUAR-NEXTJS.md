@@ -137,3 +137,9 @@ Referência: vídeo `20261023-1135-11.7706897.mp4`. Nova seção `#galeria-pousa
 ## Hero substituído por vídeo
 
 A pedido do usuário, a abertura agora usa o vídeo enviado de praia/stand-up em looping, em vez do carrossel de seis imagens. MP4 otimizado H.264, 8 s, 960×538, sem áudio, em `media/abertura-praia.mp4`; poster `media/abertura-praia.jpg`. Ambos entram em public pela lista explícita do prepare-public. HTML autoplay/muted/loop/playsinline; JS pausa quando oculto/fora da tela/menu e usa poster com movimento reduzido ou falha de reprodução. Pontos e lógica do antigo carrossel de abertura removidos. Intro, navegação, conta, textos e outros carrosséis preservados. Teste de reprodução/loop real no Chromium e build/typecheck passaram; detalhes em README.
+
+## Ondas entre acomodações e Triplo Standard
+
+A vitrine contém quatro apresentações: Duplo Standard, Duplo Superior, Triplo Standard e Família. O novo Triplo Standard reutiliza as fotos existentes, tem descrição sem metragem ou configuração de camas presumidas e mantém álbum e tarifas. Separadores SVG em três camadas animam ondas em tons de areia entre os blocos; respeitam a preferência por movimento reduzido e não interferem nas animações de rolagem já existentes.
+
+`database/triplo-standard.sql` amplia os limites editoriais para quatro blocos e inclui `triplo-standard`, sem modificar estoque físico, reservas ou tarifas. Aplicar após publicar a versão que aceita quatro blocos. Durante a transição, a home aceita os três registros existentes e acrescenta o novo fallback preservando as edições do painel. A API de edição também aceita o novo slug.

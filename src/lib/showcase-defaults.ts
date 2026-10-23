@@ -125,8 +125,37 @@ export const showcaseDefaults: Showcase[] = [
     }
   },
   {
-    "slug": "familia",
+    "slug": "triplo-standard",
     "position": 3,
+    "title": "Quarto Triplo Standard",
+    "eyebrow": "",
+    "description": "Um refúgio acolhedor para compartilhar os dias em Itacaré. O Quarto Triplo Standard é uma opção para quem viaja em três e quer aproveitar a estadia com tranquilidade.",
+    "photos": [
+      {
+        "url": "/img Pousada/quartotriplo.jpg",
+        "alt": "Quarto Triplo Standard — foto 1"
+      },
+      {
+        "url": "/img casal/triplo.jpg",
+        "alt": "Quarto Triplo Standard — foto 2"
+      },
+      {
+        "url": "/img casal/triplo1.jpg",
+        "alt": "Quarto Triplo Standard — foto 3"
+      }
+    ],
+    "features": [
+      {
+        "icon": "people",
+        "label": "Acomodação para três pessoas"
+      }
+    ],
+    "details": {},
+    "revision": 1
+  },
+  {
+    "slug": "familia",
+    "position": 4,
     "title": "Quarto Família",
     "eyebrow": "17 m²",
     "description": "A melhor escolha para quem viaja com toda a família. Amplo espaço interno garantindo conforto para adultos e crianças, com todas as comodidades necessárias para se sentirem em casa.",

@@ -190,3 +190,52 @@ body.showcase-album-open { overflow: hidden; }
 @media(prefers-reduced-motion:reduce) {
  .showcase-copy { transform: none !important; opacity: 1 !important; }
 }
+
+/* Ondas de areia entre as acomodações, inspiradas na referência em vídeo. */
+.home-page .room-showcase {
+ padding-bottom: 0;
+ margin-bottom: 0;
+ border-bottom: 0;
+}
+.room-wave {
+ position: relative;
+ height: clamp(70px, 8vw, 110px);
+ margin: 28px 0 40px;
+ overflow: hidden;
+ pointer-events: none;
+ contain: paint;
+}
+.room-wave-layer {
+ position: absolute;
+ inset: 0 auto auto 0;
+ width: 200%;
+ height: 100%;
+ fill: #d8c6b3;
+ opacity: .22;
+ animation: room-wave-drift 22s linear infinite;
+}
+.room-wave-layer:nth-child(2) {
+ top: 10px;
+ fill: #c3a78b;
+ opacity: .2;
+ animation-duration: 17s;
+ animation-direction: reverse;
+ animation-delay: -6s;
+}
+.room-wave-layer:nth-child(3) {
+ top: 20px;
+ fill: #b89a7b;
+ opacity: .16;
+ animation-duration: 28s;
+ animation-delay: -14s;
+}
+@keyframes room-wave-drift {
+ from { transform: translateX(0); }
+ to { transform: translateX(-50%); }
+}
+@media (max-width: 600px) {
+ .room-wave { height: 64px; margin: 20px 0 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .room-wave-layer { animation: none; }
+}

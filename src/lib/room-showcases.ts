@@ -14,12 +14,21 @@ export async function getShowcases(): Promise<Showcase[]> {
     });
     if (!response.ok) return showcaseDefaults;
     const result = await response.json() as { showcases?: Showcase[] };
-    if (!Array.isArray(result.showcases) || result.showcases.length !== 3) return showcaseDefaults;
+    // Accept the three existing blocks while the fourth is being provisioned.
+    if (!Array.isArray(result.showcases) || ![3, 4].includes(result.showcases.length)) return showcaseDefaults;
+    const slugs = new Set(result.showcases.map(row => row.slug));
+    if (slugs.size !== result.showcases.length || !['duplo', 'triplo', 'familia'].every(slug => slugs.has(slug))) return showcaseDefaults;
     if (!result.showcases.every(row => showcaseDefaults.some(d => d.slug === row.slug) && typeof row.title === 'string' && typeof row.description === 'string' && Array.isArray(row.photos) && row.photos.length >= 3 && row.photos.every(p => typeof p.url === 'string' && safeShowcasePhoto(p.url)) && Array.isArray(row.features) && row.features.every(f => /^[a-z0-9-]+$/.test(f.icon) && typeof f.label === 'string'))) return showcaseDefaults;
-    return result.showcases;
+    return showcaseDefaults.map(fallback => result.showcases!.find(row => row.slug === fallback.slug) || fallback);
   } catch { return showcaseDefaults; }
 }
 const arrow = (direction: 'left'|'right') => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="${direction === 'left' ? 'm13 5-7 7 7 7M6 12h13' : 'm11 5 7 7-7 7M18 12H5'}"/></svg>`;
+// Two identical wave periods make the half-width translation seamless.
+const roomWaveSeparator = `<div class="room-wave" aria-hidden="true">
+  <svg class="room-wave-layer" viewBox="0 0 2880 100" preserveAspectRatio="none" focusable="false"><path d="M0 40 C120 12 240 12 360 40 S600 68 720 40 S960 12 1080 40 S1320 68 1440 40 S1680 12 1800 40 S2040 68 2160 40 S2400 12 2520 40 S2760 68 2880 40 L2880 66 C2760 94 2640 94 2520 66 S2280 38 2160 66 S1920 94 1800 66 S1560 38 1440 66 S1200 94 1080 66 S840 38 720 66 S480 94 360 66 S120 38 0 66 Z"/></svg>
+  <svg class="room-wave-layer" viewBox="0 0 2880 100" preserveAspectRatio="none" focusable="false"><path d="M0 40 C120 12 240 12 360 40 S600 68 720 40 S960 12 1080 40 S1320 68 1440 40 S1680 12 1800 40 S2040 68 2160 40 S2400 12 2520 40 S2760 68 2880 40 L2880 66 C2760 94 2640 94 2520 66 S2280 38 2160 66 S1920 94 1800 66 S1560 38 1440 66 S1200 94 1080 66 S840 38 720 66 S480 94 360 66 S120 38 0 66 Z"/></svg>
+  <svg class="room-wave-layer" viewBox="0 0 2880 100" preserveAspectRatio="none" focusable="false"><path d="M0 40 C120 12 240 12 360 40 S600 68 720 40 S960 12 1080 40 S1320 68 1440 40 S1680 12 1800 40 S2040 68 2160 40 S2400 12 2520 40 S2760 68 2880 40 L2880 66 C2760 94 2640 94 2520 66 S2280 38 2160 66 S1920 94 1800 66 S1560 38 1440 66 S1200 94 1080 66 S840 38 720 66 S480 94 360 66 S120 38 0 66 Z"/></svg>
+</div>`;
 export function renderShowcases(rows: Showcase[]): string {
   return rows.map(row => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
     <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-room="${escape(JSON.stringify({ title: row.title, eyebrow: row.eyebrow, description: row.description, features: row.features, details: row.details || {} }))}" data-photos="${escape(JSON.stringify(row.photos))}">
@@ -37,5 +46,5 @@ export function renderShowcases(rows: Showcase[]): string {
       <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><i class="bi bi-${escape(feature.icon)}" aria-hidden="true"></i><span>${escape(feature.label)}</span></li>`).join('')}</ul>
       <a class="showcase-rates" href="/reservas">Ver tarifas</a>
     </div>
-  </article>`).join('\n');
+  </article>`).join(roomWaveSeparator);
 }

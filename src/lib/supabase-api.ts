@@ -161,7 +161,7 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
     if (path === 'showcases' && method === 'GET') {
       return finish(await call('/rest/v1/rpc/lotus_showcase_api', 'POST', { p_operation: 'read', p_data: {} }, token));
     }
-    const showcaseMatch = /^showcases\/(duplo|triplo|familia)$/.exec(path);
+    const showcaseMatch = /^showcases\/(duplo|triplo|triplo-standard|familia)$/.exec(path);
     if (showcaseMatch && method === 'PUT') {
       if (!token) throw new ApiError(401, 'Entre no painel para editar o site.');
       data.slug = showcaseMatch[1];
