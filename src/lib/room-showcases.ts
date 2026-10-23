@@ -22,7 +22,7 @@ export async function getShowcases(): Promise<Showcase[]> {
 const arrow = (direction: 'left'|'right') => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="${direction === 'left' ? 'm13 5-7 7 7 7M6 12h13' : 'm11 5 7 7-7 7M18 12H5'}"/></svg>`;
 export function renderShowcases(rows: Showcase[]): string {
   return rows.map(row => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
-    <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-photos="${escape(JSON.stringify(row.photos))}">
+    <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-room="${escape(JSON.stringify({ title: row.title, eyebrow: row.eyebrow, description: row.description, features: row.features, details: row.details || {} }))}" data-photos="${escape(JSON.stringify(row.photos))}">
       <div class="showcase-main">
         <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de ${escape(row.title)}"><img class="showcase-main-image" src="${escape(row.photos[0].url)}" alt="${escape(row.photos[0].alt)}" loading="lazy" width="900" height="700"></button>
         <button type="button" class="showcase-view-photos"><i class="bi bi-images" aria-hidden="true"></i> Ver ${row.photos.length} fotos</button>

@@ -1,24 +1,25 @@
-export type Showcase = { slug: string; position: number; title: string; eyebrow: string; description: string; photos: {url: string; alt: string}[]; features: {icon: string; label: string}[]; revision: number };
+export type ShowcaseDetails = { beds?: string; description?: string; bathroom?: string[]; views?: string[]; amenities?: string[]; smoking?: string };
+export type Showcase = { slug: string; position: number; title: string; eyebrow: string; description: string; photos: {url: string; alt: string}[]; features: {icon: string; label: string}[]; details?: ShowcaseDetails; revision: number };
 
 export const showcaseDefaults: Showcase[] = [
   {
     "slug": "duplo",
     "position": 1,
-    "title": "Duplo Twin",
+    "title": "Quarto Duplo Standard",
     "eyebrow": "17 m²",
-    "description": "Perfeito para amigos ou casais que buscam praticidade. Este quarto oferece o conforto essencial com um toque de charme baiano, garantindo noites tranquilas após um longo dia de praia e passeios em Itacaré.",
+    "description": "Aconchego para desacelerar depois de um dia em Itacaré. São 17 m² com cama de casal, banheiro privativo e varanda com vista para o jardim — um convite ao descanso.",
     "photos": [
       {
         "url": "/img casal/casal.jpg",
-        "alt": "Duplo Twin — foto 1"
+        "alt": "Quarto Duplo Standard — foto 1"
       },
       {
         "url": "/img casal/casal1.jpg",
-        "alt": "Duplo Twin — foto 2"
+        "alt": "Quarto Duplo Standard — foto 2"
       },
       {
         "url": "/img casal/casal2.jpg",
-        "alt": "Duplo Twin — foto 3"
+        "alt": "Quarto Duplo Standard — foto 3"
       }
     ],
     "features": [
@@ -39,26 +40,47 @@ export const showcaseDefaults: Showcase[] = [
         "label": "Sua varanda, sua rede, seu descanso"
       }
     ],
-    "revision": 2
+    "revision": 3,
+    "details": {
+      "beds": "1 cama de casal",
+      "description": "A acomodação oferece produtos de banho gratuitos e banheiro privativo com chuveiro. A varanda tem vista para o jardim, e o quarto conta com ar-condicionado e TV de tela plana.",
+      "bathroom": [
+        "Produtos de banho gratuitos",
+        "Chuveiro",
+        "Banheiro privativo",
+        "Toalhas",
+        "Papel higiênico"
+      ],
+      "views": [
+        "Vista para o jardim"
+      ],
+      "amenities": [
+        "Varanda",
+        "Ar-condicionado",
+        "Roupa de cama",
+        "TV de tela plana"
+      ],
+      "smoking": "Não é permitido fumar"
+    }
   },
   {
     "slug": "triplo",
     "position": 2,
-    "title": "Quarto Triplo",
+    "title": "Quarto Duplo Superior",
     "eyebrow": "17 m²",
-    "description": "Acomodação espaçosa ideal para pequenos grupos ou famílias. Desfrute de um ambiente arejado e bem iluminado, decorado para proporcionar a máxima sensação de relaxamento e acolhimento.",
+    "description": "Seu descanso com o charme de Itacaré. Em 17 m², a cama de casal, o banheiro privativo e a varanda com vista para o jardim compõem um ambiente acolhedor para aproveitar a estadia.",
     "photos": [
       {
         "url": "/img Pousada/quartotriplo.jpg",
-        "alt": "Quarto Triplo — foto 1"
+        "alt": "Quarto Duplo Superior — foto 1"
       },
       {
         "url": "/img casal/triplo.jpg",
-        "alt": "Quarto Triplo — foto 2"
+        "alt": "Quarto Duplo Superior — foto 2"
       },
       {
         "url": "/img casal/triplo1.jpg",
-        "alt": "Quarto Triplo — foto 3"
+        "alt": "Quarto Duplo Superior — foto 3"
       }
     ],
     "features": [
@@ -79,7 +101,28 @@ export const showcaseDefaults: Showcase[] = [
         "label": "Varanda privativa com rede para relaxar"
       }
     ],
-    "revision": 2
+    "revision": 3,
+    "details": {
+      "beds": "1 cama de casal",
+      "description": "A acomodação oferece produtos de banho gratuitos e banheiro privativo com chuveiro. A varanda tem vista para o jardim, e o quarto conta com ar-condicionado e TV de tela plana.",
+      "bathroom": [
+        "Produtos de banho gratuitos",
+        "Chuveiro",
+        "Banheiro privativo",
+        "Toalhas",
+        "Papel higiênico"
+      ],
+      "views": [
+        "Vista para o jardim"
+      ],
+      "amenities": [
+        "Varanda",
+        "Ar-condicionado",
+        "Roupa de cama",
+        "TV de tela plana"
+      ],
+      "smoking": "Não é permitido fumar"
+    }
   },
   {
     "slug": "familia",
@@ -119,6 +162,14 @@ export const showcaseDefaults: Showcase[] = [
         "label": "Uma rede na varanda só de vocês"
       }
     ],
-    "revision": 2
+    "revision": 2,
+    "details": {
+      "beds": "",
+      "description": "",
+      "bathroom": [],
+      "views": [],
+      "amenities": [],
+      "smoking": ""
+    }
   }
 ];

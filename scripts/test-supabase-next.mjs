@@ -88,7 +88,8 @@ try {
   r = await fetch(base + '/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '[' }); assert.equal(r.status, 400);
   r = await request('showcases'); assert.equal(r.status, 200);
   r = await request('showcases/duplo', { title: 'Novo título' }, { method: 'PUT' }); assert.equal(r.status, 401);
-  r = await request('showcases/duplo', { title: 'Novo título' }, { method: 'PUT', headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  r = await request('showcases/duplo', { title: 'Novo título', details: { beds: '1 cama de casal', bathroom: ['Chuveiro'] } }, { method: 'PUT', headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  assert.deepEqual(received.findLast(x => x.data.p_operation === 'save').data.p_data.details, { beds: '1 cama de casal', bathroom: ['Chuveiro'] });
   r = await request('showcases'); assert.equal((await r.json()).showcases[0].title, 'Novo título');
   const upload = async (contents, type, authenticated = true) => {
     const form = new FormData(); form.append('photo', new Blob([contents], { type }), 'foto.jpg');
