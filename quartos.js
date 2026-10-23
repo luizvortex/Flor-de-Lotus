@@ -36,11 +36,28 @@
   const main=gallery.querySelector('.showcase-main-image');
   const thumbs=Array.from(gallery.querySelectorAll('.showcase-thumb'));
   const status=gallery.querySelector('.showcase-photo-status');
-  function show(next){
+  function show(next, announce=true){
    index=(next+photos.length)%photos.length;main.src=photos[index].url;main.alt=photos[index].alt;
    thumbs.forEach((button,i)=>{const next=(index+i+1)%photos.length;button.dataset.photoIndex=next;button.setAttribute('aria-label',`Destacar ${photos[next].alt}`);const img=button.querySelector('img');img.src=photos[next].url;img.alt=photos[next].alt;});
-   status.textContent=`Foto ${index+1} de ${photos.length}`;
+   if(announce)status.textContent=`Foto ${index+1} de ${photos.length}`;
   }
+  const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  let visible=false, hovered=false, timer;
+  function schedule(){
+   clearTimeout(timer);
+   if(!visible||hovered||document.hidden||album.open||motion.matches||gallery.contains(document.activeElement))return;
+   timer=setTimeout(()=>{show(index+1,false);schedule();},5000);
+  }
+  const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();},{threshold:.25});
+  observer.observe(gallery);
+  gallery.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){hovered=true;schedule();}});
+  gallery.addEventListener('pointerleave',()=>{hovered=false;schedule();});
+  gallery.addEventListener('focusin',schedule);
+  gallery.addEventListener('focusout',()=>setTimeout(schedule,0));
+  gallery.addEventListener('click',schedule);
+  document.addEventListener('visibilitychange',schedule);
+  motion.addEventListener('change',schedule);
+  new MutationObserver(schedule).observe(album,{attributes:true,attributeFilter:['open']});
   gallery.querySelector('.showcase-prev').addEventListener('click',()=>show(index-1));
   gallery.querySelector('.showcase-next').addEventListener('click',()=>show(index+1));
   thumbs.forEach(button=>button.addEventListener('click',()=>show(Number(button.dataset.photoIndex))));

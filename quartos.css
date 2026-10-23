@@ -15,7 +15,7 @@
 .showcase-thumb { border-radius: 8px; }
 .showcase-view-photos { position: absolute; top: 12px; left: 12px; z-index: 2; display: flex; align-items: center; gap: 8px; border: 0; padding: 7px 11px; background: var(--cream); color: var(--ink); font-size: 13px; cursor: pointer; }
 .showcase-view-photos i { color: #89714f; }
-.showcase-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: 0; border-radius: 50%; background: var(--cream); color: var(--ink); cursor: pointer; }
+.showcase-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: 0; border-radius: 0; background: transparent; color: white; cursor: pointer; filter: drop-shadow(0 1px 3px #0009); }
 .showcase-prev { left: 14px; }.showcase-next { right: 14px; }
 .showcase-copy { text-align: center; min-width: 0; }
 .showcase-eyebrow { font-size: 13px; letter-spacing: 1px; color: var(--muted); margin-bottom: 16px; }
