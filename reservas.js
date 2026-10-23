@@ -24,6 +24,47 @@
  const photoUrl=url=>typeof url==='string'&&!url.includes('..')&&(/^\/(img[^/]*|images)\/[^<>"\\]+\.(jpg|jpeg|png|webp)$/i.test(url)||/^https:\/\/asojfispuomhbfapqdmi\.supabase\.co\/storage\/v1\/object\/public\/lotus-showcase\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(url));
  let showcases=[],inventory=[],packages=[],available=[],lastQuery=null,nights=0,sequence=0,controller,selection=null,detail=null,detailIndex=0;
  const photoIndices=new Map();
+ const reducedPhotos=matchMedia('(prefers-reduced-motion: reduce)'),mobilePhotos=matchMedia('(max-width:767px)');
+ const transitions=new WeakMap();let carousels=[];
+ const photoDelay=()=>mobilePhotos.matches?2000:3000;
+ async function fadePhoto(image,photo){
+  const previous=transitions.get(image);if(previous){previous.cancelled=true;previous.layer?.remove();}
+  if(image.getAttribute('src')===photo.url){transitions.delete(image);image.alt=photo.alt;return;}
+  const state={cancelled:false,layer:null};transitions.set(image,state);
+  const layer=image.cloneNode(false);layer.removeAttribute('id');layer.loading='eager';layer.src=photo.url;layer.alt=photo.alt;
+  try{await layer.decode();}catch{if(transitions.get(image)===state)transitions.delete(image);return;}
+  if(state.cancelled||!image.isConnected)return;
+  if(!reducedPhotos.matches){
+   state.layer=layer;layer.classList.add('photo-transition');layer.setAttribute('aria-hidden','true');image.after(layer);
+   try{await layer.animate([{opacity:0},{opacity:1}],{duration:550,easing:'ease-in-out',fill:'forwards'}).finished;}catch{}
+  }
+  if(!state.cancelled&&image.isConnected){image.src=photo.url;image.alt=photo.alt;}
+  layer.remove();if(transitions.get(image)===state)transitions.delete(image);
+ }
+ function stepCard(card,step){
+  const room=showcases.find(s=>s.slug===card.dataset.slug);if(!room)return;
+  const index=((photoIndices.get(room.slug)||0)+step+room.photos.length)%room.photos.length;
+  photoIndices.set(room.slug,index);fadePhoto(card.querySelector('.card-photo img'),room.photos[index]);
+  const carousel=carousels.find(c=>c.card===card);if(carousel)carousel.next=Date.now()+photoDelay();
+ }
+ function setupCarousels(){
+  carousels=[...$('#rooms').querySelectorAll('.catalog-room')].map(card=>({card,next:Date.now()+photoDelay(),paused:false,hover:false}));
+  for(const carousel of carousels){
+   const gallery=carousel.card.querySelector('.card-gallery');
+   gallery.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')carousel.hover=true;});
+   gallery.addEventListener('pointerleave',()=>{carousel.hover=false;carousel.next=Date.now()+photoDelay();});
+   gallery.addEventListener('focusout',()=>{carousel.next=Date.now()+photoDelay();});
+  }
+ }
+ setInterval(()=>{
+  const now=Date.now(),blocked=document.hidden||reducedPhotos.matches||document.querySelector('dialog[open]');
+  for(const carousel of carousels){
+   const gallery=carousel.card.querySelector('.card-gallery'),rect=gallery.getBoundingClientRect();
+   if(blocked||carousel.paused||carousel.hover||gallery.contains(document.activeElement)||rect.bottom<=0||rect.top>=innerHeight){carousel.next=now+photoDelay();continue;}
+   if(now>=carousel.next)stepCard(carousel.card,1);
+  }
+ },250);
+
  async function api(path,body,signal){
   const response=await fetch('/api/'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,signal,cache:'no-store'});
   const data=await response.json();if(!response.ok){const error=new Error(data.error||'Não foi possível concluir a consulta.');error.status=response.status;throw error;}return data;
@@ -48,8 +89,9 @@
    const label=lastQuery?(best?`${plural(rows.length,'opção disponível','opções disponíveis')} · até ${best.capacity} hóspedes`:'Sem disponibilidade nestas datas'):(s.eyebrow||'Acomodações Flor de Lótus');
    const cost=price!==null?money(price):(lastQuery?'Experimente outras datas.':'Escolha as datas para consultar os valores.');
    const index=(photoIndices.get(s.slug)||0)%s.photos.length;
-   return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li><i class="bi bi-${/^[a-z0-9-]+$/.test(f.icon)?f.icon:'check2'}" aria-hidden="true"></i><span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button" data-details="${esc(s.slug)}">Mais detalhes e fotos</button><div class="room-cost"><small>${price!==null?(lastQuery?`Total para ${plural(nights,'noite','noites')}${rows.length>1?' · a partir de':''}`:'Diária por quarto · a partir de'):'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button></div></div></article>`;
+   return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button><button type="button" class="photo-autoplay" data-photo-pause aria-pressed="false" aria-label="Pausar fotos de ${esc(s.title)}">Pausar</button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li><i class="bi bi-${/^[a-z0-9-]+$/.test(f.icon)?f.icon:'check2'}" aria-hidden="true"></i><span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button" data-details="${esc(s.slug)}">Mais detalhes e fotos</button><div class="room-cost"><small>${price!==null?(lastQuery?`Total para ${plural(nights,'noite','noites')}${rows.length>1?' · a partir de':''}`:'Diária por quarto · a partir de'):'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button></div></div></article>`;
   }).join(''):'<p class="empty">Não foi possível carregar as acomodações. Atualize a consulta ou converse com a pousada.</p>';
+  setupCarousels();
   const priced=(lastQuery?available:inventory).map(r=>lastQuery?r.total:r.price).filter(n=>Number.isFinite(n)&&n>0);
   $('#from-price').hidden=!priced.length;$('#from-price').textContent=priced.length?`A partir de ${money(Math.min(...priced))}${lastQuery?' / estadia':' / noite'}`:'';
  }
@@ -69,7 +111,7 @@
   finally{if(request===sequence){button.disabled=false;$('#rooms').removeAttribute('aria-busy');}}
  }
  function paintDetails(next){
-  if(!detail)return;detailIndex=(next+detail.photos.length)%detail.photos.length;const photo=detail.photos[detailIndex];$('#details-image').src=photo.url;$('#details-image').alt=photo.alt;$('#details-counter').textContent=`${detailIndex+1} / ${detail.photos.length}`;
+  if(!detail)return;detailIndex=(next+detail.photos.length)%detail.photos.length;const photo=detail.photos[detailIndex];fadePhoto($('#details-image'),photo);$('#details-counter').textContent=`${detailIndex+1} / ${detail.photos.length}`;
   $('#details-thumbs').querySelectorAll('button').forEach((b,i)=>{if(i===detailIndex)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');});
  }
  function detailOptions(){
@@ -86,8 +128,11 @@
  $('#rooms').addEventListener('click',event=>{
   const button=event.target.closest('button');if(!button)return;
   if(button.matches('[data-photo-prev],[data-photo-next]')){
-   const card=button.closest('[data-slug]'),s=showcases.find(s=>s.slug===card.dataset.slug),index=((photoIndices.get(s.slug)||0)+(button.hasAttribute('data-photo-next')?1:-1)+s.photos.length)%s.photos.length;
-   photoIndices.set(s.slug,index);const img=card.querySelector('.card-photo img');img.src=s.photos[index].url;img.alt=s.photos[index].alt;return;
+   stepCard(button.closest('[data-slug]'),button.hasAttribute('data-photo-next')?1:-1);return;
+  }
+  if(button.hasAttribute('data-photo-pause')){
+   const carousel=carousels.find(c=>c.card===button.closest('[data-slug]'));if(!carousel)return;
+   carousel.paused=!carousel.paused;carousel.next=Date.now()+photoDelay();button.setAttribute('aria-pressed',String(carousel.paused));button.textContent=carousel.paused?'Reproduzir':'Pausar';button.setAttribute('aria-label',(carousel.paused?'Reproduzir':'Pausar')+' fotos do quarto');return;
   }
   if(button.hasAttribute('data-details')||button.hasAttribute('data-options'))openDetails(button.dataset.details||button.dataset.options);
   if(button.hasAttribute('data-search-focus'))focusSearch();
