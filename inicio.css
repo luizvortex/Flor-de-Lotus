@@ -155,13 +155,13 @@ body.home-menu-open { overflow: hidden; }
  .home-header:not(.is-scrolled) .home-header-top { border-color: #ffffff52; }
  .home-header:not(.is-scrolled) .home-quick-nav { border-color: #ffffff38; }
  .home-header:not(.is-scrolled) .home-nav-links a {
-  font-size: clamp(11px, .85vw, 12px); font-weight: 600; letter-spacing: 1.6px;
+  font-size: 11px; font-weight: 500; letter-spacing: 1.4px;
  }
  .home-header:not(.is-scrolled) :is(.home-nav-links a, .home-booking, .home-account, .home-brand span) {
   text-shadow: 0 1px 5px #00000070;
  }
  .home-page .home-header:not(.is-scrolled) .home-brand img {
-  width: 176px; height: 72px; filter: brightness(0) invert(1) drop-shadow(0 2px 4px #00000040);
+  width: 176px; height: 72px; filter: brightness(0) invert(1);
  }
- .home-header:not(.is-scrolled) .home-brand span { font-size: 10px; }
+ .home-header:not(.is-scrolled) .home-brand span { font-size: 9px; }
 }
