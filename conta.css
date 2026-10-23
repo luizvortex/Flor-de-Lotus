@@ -72,11 +72,11 @@
 .account-page h1 { font:500 48px/1.2 'Playfair Display',Georgia,serif; margin:0 0 16px; }
 .account-page-intro > p:last-child { margin:0; }
 .account-dashboard { display:grid; grid-template-columns:250px minmax(0,1fr); gap:40px; align-items:start; }
-.account-sidebar { padding:28px; border:1px solid var(--line); background:#fffdf9; position:sticky; top:24px; min-width:0; }
-.account-sidebar .guest-profile-avatar { display:block; margin:0 0 18px; }
+.account-sidebar { text-align:center; padding:28px; border:1px solid var(--line); background:#fffdf9; position:sticky; top:24px; min-width:0; }
+.account-sidebar .guest-profile-avatar { display:block; margin:0 auto 18px; }
 .account-sidebar [data-account-email] { font-size:12px; }
-.account-sidebar .guest-logout { display:block; width:100%; margin-top:24px; }
-.account-sidebar-reserve { display:flex; align-items:center; gap:6px; margin-top:28px; font-size:12px; text-decoration:underline; text-underline-offset:4px; }
+.account-sidebar .guest-logout { display:block; width:100%; margin:24px auto 0; }
+.account-sidebar-reserve { display:flex; justify-content:center; align-items:center; gap:6px; margin-top:28px; font-size:12px; text-decoration:underline; text-underline-offset:4px; }
 .account-page .guest-reservations { margin-top:0; min-width:0; }
 .account-page .guest-booking { background:#fffdf9; }
 .account-login-card { width:min(480px,100%); margin:48px auto; padding:40px; border:1px solid var(--line); background:#fffdf9; text-align:center; }
