@@ -165,3 +165,14 @@ body.home-menu-open { overflow: hidden; }
  }
  .home-header:not(.is-scrolled) .home-brand span { font-size: 9px; }
 }
+
+@media (max-width: 767px) {
+ .home-page #cabecalho.home-header::before {
+  content: ''; position: absolute; inset: 0 0 -48px; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, #0e1c1ac7 0%, #0e1c1a99 54%, #0e1c1a5c 78%, #0e1c1a00 100%);
+  opacity: 1; transition: opacity .3s ease;
+ }
+ .home-page #cabecalho.home-header.is-scrolled::before { opacity: 0; }
+ .home-header:not(.is-scrolled) .home-header-top { border-color: #ffffff48; }
+ .home-header:not(.is-scrolled) :is(.home-menu-toggle, .home-booking) { text-shadow: 0 1px 4px #00000060; }
+}
