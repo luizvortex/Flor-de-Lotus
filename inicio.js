@@ -111,6 +111,8 @@
         else if(video.readyState>=2)video.classList.add('is-playing');
     }
     if(video){
+        video.defaultPlaybackRate=.65;
+        video.playbackRate=.65;
         video.addEventListener('playing',()=>video.classList.add('is-playing'));
         video.addEventListener('error',()=>video.classList.remove('is-playing'));
         video.querySelector('source')?.addEventListener('error',()=>video.classList.remove('is-playing'));
