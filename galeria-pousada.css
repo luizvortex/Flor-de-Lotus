@@ -1,5 +1,5 @@
 /* Faixa fotográfica contínua entre a apresentação e os quartos. */
-.home-page #galeria-pousada { padding: 0 0 48px; background: var(--cream); }
+.home-page #galeria-pousada { padding: 0; background: var(--cream); }
 body.home-page main > section#galeria-pousada > .container { width: 100%; max-width: none; padding-inline: 0; }
 .pousada-gallery { --gallery-visible: 3; position: relative; }
 .pousada-gallery-viewport { overflow: hidden; touch-action: pan-y; }
@@ -15,7 +15,6 @@ body.home-page main > section#galeria-pousada > .container { width: 100%; max-wi
 @media(max-width:767px) {
  .pousada-gallery { --gallery-visible: 1.25; }
  .pousada-gallery-arrow { opacity: 1; }
- .home-page #galeria-pousada { padding-bottom: 28px; }
 }
 @media(prefers-reduced-motion:reduce) {
  .pousada-gallery-track { transition: none; }

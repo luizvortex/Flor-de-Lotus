@@ -227,7 +227,7 @@ body.showcase-album-open { overflow: hidden; }
 .room-wave {
  position: relative;
  width: 100vw;
- height: clamp(72px, 7vw, 132px);
+ height: clamp(80px, 8vw, 148px);
  grid-column: 1 / -1;
  margin: 48px calc(50% - 50vw) 0;
  overflow: hidden;
@@ -241,12 +241,12 @@ body.showcase-album-open { overflow: hidden; }
  width: 200%;
  height: 100%;
  fill: #d7c8ba;
- opacity: .35;
+ opacity: .4;
  animation: room-wave-drift 24s linear infinite;
 }
 .room-wave-layer:nth-child(2) {
  fill: #e2d6ca;
- opacity: .28;
+ opacity: .32;
  animation-duration: 32s;
  animation-direction: reverse;
  animation-delay: -16s;
@@ -263,7 +263,7 @@ body.showcase-album-open { overflow: hidden; }
 }
 @media (max-width: 600px) {
  .home-page .room-showcase { padding-top: 32px; }
- .room-wave { height: 64px; margin-block: 32px 0; }
+ .room-wave { height: 72px; margin-block: 32px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
  .room-wave-layer { animation-play-state: paused; }
