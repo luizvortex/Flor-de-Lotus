@@ -100,13 +100,23 @@
     const video=hero.querySelector('.home-hero-video');
     let heroVisible=true;
     let playPending=false;
-    let videoStart;
+    let animatedFallback;
+    const clearFallback=()=>{if(animatedFallback){animatedFallback.remove();animatedFallback=null;}};
+    function showFallback(){
+        if(!canPlay()||animatedFallback)return;
+        animatedFallback=document.createElement('img');
+        animatedFallback.className='home-hero-fallback';
+        animatedFallback.alt='';
+        animatedFallback.width=960;animatedFallback.height=540;
+        animatedFallback.src='/media/jardim-automatico.webp';
+        hero.querySelector('.home-hero-media').append(animatedFallback);
+    }
     const canPlay=()=>!reducedMotion.matches&&!document.hidden&&!menu.open&&heroVisible;
     function schedule(){
         if(!video)return;
         if(!canPlay()){
             video.pause();
-            videoStart.hidden=true;
+            clearFallback();
             if(reducedMotion.matches)video.classList.remove('is-playing');
             return;
         }
@@ -115,25 +125,18 @@
             playPending=true;
             video.play().then(()=>{
                 if(!canPlay()){video.pause();return;}
-                if(!video.paused){video.classList.add('is-playing');videoStart.hidden=true;}
+                if(!video.paused){video.classList.add('is-playing');clearFallback();}
             }).catch(error=>{
                 video.classList.remove('is-playing');
-                // iOS Low Power Mode can require an explicit user gesture.
-                videoStart.hidden=error.name!=='NotAllowedError'||!canPlay();
+                // Animated images keep the hero moving when mobile video autoplay is denied.
+                if(error.name==='NotAllowedError')showFallback();
             }).finally(()=>{playPending=false;});
         }else if(!video.paused&&video.readyState>=2){
             video.classList.add('is-playing');
-            videoStart.hidden=true;
+            clearFallback();
         }
     }
     if(video){
-        videoStart=document.createElement('button');
-        videoStart.type='button';
-        videoStart.className='hero-video-start';
-        videoStart.textContent='Reproduzir vídeo';
-        videoStart.hidden=true;
-        videoStart.addEventListener('click',schedule);
-        hero.append(videoStart);
         video.muted=true;
         video.defaultMuted=true;
         video.playsInline=true;
@@ -142,9 +145,9 @@
         video.addEventListener('playing',()=>{
             if(!canPlay()){video.pause();return;}
             video.classList.add('is-playing');
-            videoStart.hidden=true;
+            clearFallback();
         });
-        video.addEventListener('error',()=>{video.classList.remove('is-playing');videoStart.hidden=true;});
+        video.addEventListener('error',()=>{video.classList.remove('is-playing');showFallback();});
         video.addEventListener('canplay',schedule);
         new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;schedule();},{threshold:.05}).observe(hero);
         document.addEventListener('visibilitychange',schedule);

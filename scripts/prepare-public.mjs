@@ -1,7 +1,7 @@
 import { cp, mkdir, readdir } from 'node:fs/promises';
 // Explicit selection: never copy the repository, database, or server sources.
 await mkdir('public/media', { recursive: true });
-const files = ['media/abertura-jardim-4k.mp4', 'media/abertura-jardim-mobile.mp4', 'media/abertura-jardim-tratado.jpg', 'galeria-pousada.css', 'galeria-pousada.js', 'conta.css', 'conta.js', 'tema.css', 'quartos.css', 'quartos.js', 'admin-showcases.js', 'admin-guest-bookings.js', 'politicas.js', 'pacotes.js', 'lazer.css', 'lazer.js', 'inicio.css', 'inicio.js', 'main.css', 'painel.css', 'main.js', 'admin.js', 'reservas.js', 'reservas.css', 'disponibilidade.js', 'disponibilidade.css'];
+const files = ['media/jardim-automatico.webp', 'media/jardim-final-desktop.mp4', 'media/jardim-final-mobile.mp4', 'media/jardim-final.jpg', 'galeria-pousada.css', 'galeria-pousada.js', 'conta.css', 'conta.js', 'tema.css', 'quartos.css', 'quartos.js', 'admin-showcases.js', 'admin-guest-bookings.js', 'politicas.js', 'pacotes.js', 'lazer.css', 'lazer.js', 'inicio.css', 'inicio.js', 'main.css', 'painel.css', 'main.js', 'admin.js', 'reservas.js', 'reservas.css', 'disponibilidade.js', 'disponibilidade.css'];
 for (const entry of await readdir('.', { withFileTypes: true })) {
   if ((entry.isDirectory() && (entry.name === 'images' || entry.name.startsWith('img '))) ||
       (entry.isFile() && /\.(jpg|jpeg|png|ico|webp)$/i.test(entry.name))) files.push(entry.name);
