@@ -1,6 +1,20 @@
 'use strict';
 (() => {
  const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let shareTimer;
+ const shareDialog=$('#share-dialog'),shareInput=$('#share-url');
+ const shareUrl=()=>{const url=new URL(location.href);url.hash='';return url.href;};
+ function shared(){const status=$('#share-status');status.textContent='Link copiado! Envie para quem vai viajar com você.';status.hidden=false;clearTimeout(shareTimer);shareTimer=setTimeout(()=>{status.hidden=true;},4500);}
+ function manualShare(){shareInput.value=shareUrl();$('#share-copy-status').textContent='';shareDialog.showModal();shareInput.focus();shareInput.select();}
+ $('#share-site').onclick=async()=>{
+  const button=$('#share-site');button.disabled=true;
+  try{
+   if(navigator.share){try{await navigator.share({title:'Pousada Flor de Lótus · Itacaré',url:shareUrl()});return;}catch(error){if(error.name==='AbortError')return;}}
+   try{await navigator.clipboard.writeText(shareUrl());shared();}catch{manualShare();}
+  }finally{button.disabled=false;}
+ };
+ $('#close-share').onclick=()=>shareDialog.close();
+ $('#copy-share').onclick=async()=>{try{await navigator.clipboard.writeText(shareInput.value);shareDialog.close();shared();}catch{shareInput.focus();shareInput.select();$('#share-copy-status').textContent='Selecione e copie o link acima para compartilhar.';}};
  const plural=(n,singular,pluralForm)=>`${n} ${Number(n)===1?singular:pluralForm}`;
  const money=n=>(Number(n)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}),dateLabel=v=>v.split('-').reverse().join('/');
  const dateParts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bahia',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
