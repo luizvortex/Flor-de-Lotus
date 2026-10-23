@@ -4,7 +4,7 @@ import { getShowcases, renderShowcases } from './room-showcases';
 
 // Temporary compatibility layer. Only these checked-in templates can be read.
 const pages: Record<string, string> = {
-  index: 'index.html', reservas: 'reservas.html',
+  index: 'index.html', reservas: 'reservas.html', quartos: 'reservas.html',
   admin: 'admin.html', avaliacoes: 'avaliacoes.html',
 };
 export async function legacyPage(name: string): Promise<Response> {
@@ -12,7 +12,7 @@ export async function legacyPage(name: string): Promise<Response> {
   if (!file) return new Response('Página não encontrada', { status: 404 });
   let html = await readFile(path.join(process.cwd(), file), 'utf8');
   if (name === 'index') {
-    const content = renderShowcases(await getShowcases());
+    const content = renderShowcases((await getShowcases()).filter(row => ['duplo', 'triplo'].includes(row.slug)));
     html = html.replace(/<!--ROOM_SHOWCASES_START-->[\s\S]*?<!--ROOM_SHOWCASES_END-->/, () => `<!--ROOM_SHOWCASES_START-->${content}<!--ROOM_SHOWCASES_END-->`);
   }
   return new Response(html, { headers: {

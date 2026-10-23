@@ -30,7 +30,7 @@ const mock = createServer(async (req, res) => {
     if (token !== 'access-admin') return json(401, { code: 'PT401' });
     showcaseTitle = data.p_data.title; return json(200, { ok: true });
   }
-  if (req.url !== '/rest/v1/rpc/lotus_api') return json(404, {});
+  if (!['/rest/v1/rpc/lotus_api', '/rest/v1/rpc/lotus_room_catalog_api'].includes(req.url)) return json(404, {});
   if (token === 'expired') return json(401, { code: 'PGRST303' });
   const admin = token === 'access-admin' && !revoked;
   if (data.p_operation === 'session') return json(200, { authenticated: admin });
@@ -72,6 +72,9 @@ try {
   for (const cookie of setCookies) { assert.match(cookie, /httponly/i); assert.match(cookie, /samesite=strict/i); assert.match(cookie, /secure/i); }
   const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
   r = await request('admin', undefined, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  r = await request('rooms', { name: 'Quarto de teste', type: 'casal', capacity: 2, price: 10000, active: 1, showcase_slug: 'triplo' }, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  const roomSave = received.findLast(x => x.data.p_operation === 'save_room');
+  assert.equal(roomSave.path, '/rest/v1/rpc/lotus_room_catalog_api'); assert.equal(roomSave.data.p_data.showcase_slug, 'triplo');
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=expired; lotus_refresh=refresh-admin' } });
   assert.equal(r.status, 200); assert.equal((await r.json()).authenticated, true); assert.equal(r.headers.getSetCookie().length, 2);
   r = await request('bookings', { id: 999, total: 1 }); assert.equal(r.status, 201);
@@ -103,7 +106,7 @@ try {
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 24 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: 25 scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }

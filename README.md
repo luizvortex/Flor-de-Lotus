@@ -119,3 +119,19 @@ O carrossel do cabeçalho foi substituído pelo MP4 enviado pelo usuário (`flor
 HTML usa autoplay/muted/loop/playsinline. `inicio.js` mantém navegação/intro e controla reprodução ao abrir menu, sair da tela, ocultar aba e mudar preferência de movimento reduzido; poster permanece disponível se autoplay for bloqueado ou houver falha. Movimento reduzido usa imagem estática. Os pontos/temporizador/swipe do antigo hero foram removidos; galerias de fotos e quartos continuam independentes. Marca, texto e navegação foram preservados.
 
 Verificado em Chromium sem forçar a política de autoplay: reprodução, reinício real do loop, atributos de mídia, menu mobile, pausa fora da tela, poster, Range HTTP 206, ausência de erros JS/overflow e layouts 1440/1024/390/320px. H.264 foi escolhido para compatibilidade; Safari nativo não está instalado neste ambiente. Build e typecheck passaram.
+
+## Consulta de quartos e conteúdo editável
+
+A home apresenta somente **Quarto Standard** e **Quarto Superior**. “Ver mais quartos” e “Ver tarifas” abrem a consulta de entrada, saída e hóspedes para um quarto. Ao consultar, o visitante segue para `/quartos` com as datas preservadas. `/reservas` continua funcionando como alias da mesma página, incluindo URLs `.html` e parâmetros `start`, `end`, `guests` e `package_id`.
+
+O catálogo usa fotos e textos da própria pousada, apresenta todas as acomodações editoriais e consulta vagas/valores dos quartos físicos. Sem quartos cadastrados ou sem disponibilidade, não exibe preços ou vagas inventados. Os cartões indisponíveis continuam permitindo conhecer fotos e detalhes; reservas só são solicitadas para quartos retornados pela consulta. A criação continua pendente, com total e bloqueio de datas calculados pelo banco; a pousada confirma depois.
+
+No painel:
+
+- **Conteúdo dos quartos:** títulos, descrições, fotos, ordem das fotos, ícones e informações detalhadas. Standard/Superior aparecem na home e no catálogo; as demais apresentações aparecem no catálogo.
+- **Quartos:** nome/número físico, capacidade, diária, disponibilidade para venda e **Fotos e descrição no catálogo**, que associa o quarto à apresentação editorial. “Padrão do tipo de acomodação” usa o tipo cadastrado. Selecione Superior explicitamente para quartos dessa categoria.
+- **Pacotes / Disponibilidade / Reservas:** mesmas regras de períodos, valores, bloqueios e confirmação administrativa já existentes.
+
+A migração remota `lotus_room_catalog` está reproduzida em `database/room-catalog.sql`. O vínculo é privado, com RLS e acesso direto negado. A nova RPC `lotus_room_catalog_api` complementa as operações de catálogo/admin/consulta/cadastro de quarto; delega as validações, autorização e regras de reserva ao dispatcher anterior. Salvar a diária e sua apresentação é atômico. A API antiga continua disponível; operações de reservas não foram substituídas.
+
+Validação: `npm run build`, `npm run test:supabase-api` (25 cenários HTTP com backend simulado) e `database/test-room-catalog.sql` no Postgres real com rollback. Navegador: fluxo home → datas → catálogo → opções → solicitação pendente; erros de conexão, falta de vagas, cancelamento da consulta, edição administrativa refletida e larguras 320/390/430/768/1024/1440px. Nenhuma reserva de teste foi criada em produção. O carrossel de fotos avança a cada **2 segundos no celular** e **3 segundos no computador**.

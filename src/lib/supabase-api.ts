@@ -32,7 +32,8 @@ async function call(path: string, method: string, data?: Json, token?: string): 
   return result;
 }
 function rpc(operation: string, data: Json, token?: string) {
-  return call('/rest/v1/rpc/lotus_api', 'POST', { p_operation: operation, p_data: data }, token);
+  const endpoint = ['catalog', 'availability', 'admin', 'save_room'].includes(operation) ? 'lotus_room_catalog_api' : 'lotus_api';
+  return call(`/rest/v1/rpc/${endpoint}`, 'POST', { p_operation: operation, p_data: data }, token);
 }
 function setTokens(response: NextResponse, tokens: Tokens) {
   // Keep access cookie briefly beyond JWT expiry so refresh happens only after

@@ -44,7 +44,7 @@ class NextReservationTests(ReservationTests):
         super().tearDownClass()
 
     def test_pages_and_private_files(self):
-        for page in ['/', '/reservas', '/admin', '/avaliacoes', '/index.html', '/reservas.html', '/admin.html', '/avaliacoes.html']:
+        for page in ['/', '/reservas', '/quartos', '/quartos.html', '/admin', '/avaliacoes', '/index.html', '/reservas.html', '/admin.html', '/avaliacoes.html']:
             with urllib.request.urlopen(self.url + page) as response:
                 self.assertEqual(response.status, 200)
                 self.assertIn('<html lang="pt-BR">', response.read().decode())

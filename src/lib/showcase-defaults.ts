@@ -5,21 +5,21 @@ export const showcaseDefaults: Showcase[] = [
   {
     "slug": "duplo",
     "position": 1,
-    "title": "Quarto Duplo Standard",
+    "title": "Quarto Standard",
     "eyebrow": "17 m²",
     "description": "Aconchego para desacelerar depois de um dia em Itacaré. São 17 m² com cama de casal, banheiro privativo e varanda com vista para o jardim — um convite ao descanso.",
     "photos": [
       {
         "url": "/img casal/casal.jpg",
-        "alt": "Quarto Duplo Standard — foto 1"
+        "alt": "Quarto Standard — foto 1"
       },
       {
         "url": "/img casal/casal1.jpg",
-        "alt": "Quarto Duplo Standard — foto 2"
+        "alt": "Quarto Standard — foto 2"
       },
       {
         "url": "/img casal/casal2.jpg",
-        "alt": "Quarto Duplo Standard — foto 3"
+        "alt": "Quarto Standard — foto 3"
       }
     ],
     "features": [
@@ -66,21 +66,21 @@ export const showcaseDefaults: Showcase[] = [
   {
     "slug": "triplo",
     "position": 2,
-    "title": "Quarto Duplo Superior",
+    "title": "Quarto Superior",
     "eyebrow": "17 m²",
     "description": "Seu descanso com o charme de Itacaré. Em 17 m², a cama de casal, o banheiro privativo e a varanda com vista para o jardim compõem um ambiente acolhedor para aproveitar a estadia.",
     "photos": [
       {
         "url": "/img Pousada/quartotriplo.jpg",
-        "alt": "Quarto Duplo Superior — foto 1"
+        "alt": "Quarto Superior — foto 1"
       },
       {
         "url": "/img casal/triplo.jpg",
-        "alt": "Quarto Duplo Superior — foto 2"
+        "alt": "Quarto Superior — foto 2"
       },
       {
         "url": "/img casal/triplo1.jpg",
-        "alt": "Quarto Duplo Superior — foto 3"
+        "alt": "Quarto Superior — foto 3"
       }
     ],
     "features": [

@@ -43,8 +43,8 @@ export function renderShowcases(rows: Showcase[]): string {
     <div class="showcase-copy">${row.eyebrow ? `<p class="showcase-eyebrow">${escape(row.eyebrow)}</p>` : ''}<h3 id="room-title-${escape(row.slug)}">${escape(row.title)}</h3>
       <p class="showcase-description">${escape(row.description)}</p>
       <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><i class="bi bi-${escape(feature.icon)}" aria-hidden="true"></i><span>${escape(feature.label)}</span></li>`).join('')}</ul>
-      <a class="showcase-rates" href="/reservas">Ver tarifas</a>
+      <a class="showcase-rates" href="/quartos" data-availability-open>Ver tarifas</a>
     </div>
-    ${index < rows.length - 1 ? mobileRoomWave : ''}
+    ${index < rows.length - 1 ? mobileRoomWave : '<div class="showcase-more"><button type="button" class="showcase-rates" data-availability-open>Ver mais quartos</button></div>'}
   </article>`).join('\n');
 }

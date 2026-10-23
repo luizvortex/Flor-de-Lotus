@@ -14,7 +14,7 @@
  function schedule(){
   clearTimeout(timer);
   if(!visible||document.hidden)return;
-  timer=setTimeout(()=>{advance(1,false);schedule();},3000);
+  timer=setTimeout(()=>{advance(1,false);schedule();},window.matchMedia('(max-width: 767px)').matches?2000:3000);
  }
  function settle(){
   clearTimeout(settleTimer);moving=false;
