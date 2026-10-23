@@ -176,3 +176,19 @@ body.home-menu-open { overflow: hidden; }
  .home-header:not(.is-scrolled) .home-header-top { border-color: #ffffff48; }
  .home-header:not(.is-scrolled) :is(.home-menu-toggle, .home-booking) { text-shadow: 0 1px 4px #00000060; }
 }
+
+.home-contact { display: none; }
+@media (max-width: 767px) {
+ .home-header.is-scrolled .home-booking { display: none; }
+ .home-header.is-scrolled .home-contact {
+  display: inline-flex; grid-column: 3; grid-row: 1; justify-self: end;
+  align-items: center; gap: 7px; min-height: 44px; padding: 10px 0;
+  font-size: 11px; white-space: nowrap;
+ }
+ .home-contact svg { flex-shrink: 0; }
+}
+@media (max-width: 359px) {
+ .home-page .home-header.is-scrolled .home-brand img { width: 102px; height: 43px; }
+ .home-header.is-scrolled .home-contact { font-size: 10px; gap: 5px; }
+ .home-contact svg { width: 16px; height: 16px; }
+}
