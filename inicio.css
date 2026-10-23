@@ -45,7 +45,7 @@
 .home-hero-video { opacity: 0; transition: opacity .6s ease; }
 .home-hero-video.is-playing { opacity: 1; }
 .home-hero-shade { position: absolute; inset: 0; }
-.home-hero-shade { background: linear-gradient(180deg,#142a2880 0%,#142a2866 30%,#10222066 58%,#1022208c 100%); pointer-events: none; }
+.home-hero-shade { background: linear-gradient(180deg,#10222038 0%,#10222018 30%,#10222018 58%,#10222050 100%); pointer-events: none; }
 .home-hero-copy { position: absolute; top: 51%; left: 24px; right: 24px; transform: translateY(-50%); text-align: center; }
 .home-hero-eyebrow { font-family: 'Playfair Display',serif; font-size: clamp(17px,2vw,24px); margin: 0 0 19px; font-weight: 400; }
 .home-hero-copy h1 { font-family: 'Playfair Display',serif; font-size: clamp(48px,6.8vw,98px); font-weight: 500; line-height: 1.12; letter-spacing: -.035em; margin: 0 0 29px; color: inherit; }
@@ -140,3 +140,6 @@ body.home-menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
  .home-hero-media { transform: none; will-change: auto; }
 }
+
+.home-hero-media { filter:saturate(1.08); }
+.home-hero-copy { text-shadow:0 2px 16px #10222070; }
