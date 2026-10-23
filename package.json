@@ -12,12 +12,15 @@
     "test": "python3 -m unittest discover -s tests -v",
     "dev:api": "HOST=127.0.0.1 python3 server.py",
     "test:next": "python3 scripts/test-next.py",
-    "test:supabase-api": "node scripts/test-supabase-next.mjs"
+    "test:supabase-api": "node scripts/test-supabase-next.mjs",
+    "test:guest-auth": "node scripts/test-guest-auth-next.mjs"
   },
   "engines": {
     "node": ">=24 <25"
   },
   "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.118.0",
     "next": "16.4.2",
     "react": "19.3.1",
     "react-dom": "19.3.1"

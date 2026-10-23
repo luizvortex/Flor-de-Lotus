@@ -46,7 +46,7 @@
   function schedule(){
    clearTimeout(timer);
    if(!visible||hovered||document.hidden||album.open||motion.matches||gallery.contains(document.activeElement))return;
-   timer=setTimeout(()=>{show(index+1,false);schedule();},5000);
+   timer=setTimeout(()=>{show(index+1,false);schedule();},3000);
   }
   const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();},{threshold:.25});
   observer.observe(gallery);

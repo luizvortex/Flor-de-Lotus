@@ -1,0 +1,28 @@
+.home-account { grid-column: 3; grid-row: 1; justify-self: end; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 10px 0; background: none; border: 0; color: inherit; font: inherit; font-size: 12px; cursor: pointer; }
+.home-account-icon { position: relative; display: grid; place-items: center; width: 28px; height: 28px; }
+.home-page .home-account-icon img { position: absolute; inset: 0; width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.home-account-icon img[hidden] { display: none; }
+.home-account-icon:has(img:not([hidden])) svg { visibility: hidden; }
+.home-menu-account { display: inline-flex; gap: 10px; align-items: center; margin-top: 24px; padding: 10px 0; border: 0; background: none; color: var(--ink); font-size: 13px; }
+@media(min-width:768px) {
+ .home-header-top .home-booking { grid-column: 1; grid-row: 1; justify-self: start; }
+ .home-header-top .home-brand { grid-row: 1; }
+}
+@media(max-width:767px) { .home-header-top .home-account { display: none; } }
+.guest-account { width: min(420px,calc(100% - 32px)); max-height: calc(100dvh - 48px); padding: 36px 28px 30px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: var(--cream); text-align: center; box-shadow: 0 20px 80px #14201d30; }
+.guest-account::backdrop { background: #14201d80; }
+.guest-account [hidden] { display: none !important; }
+.guest-account-close { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 40px; height: 40px; border: 0; background: none; color: var(--ink); font-size: 26px; cursor: pointer; }
+.guest-account h2 { font: 500 30px/1.2 'Playfair Display',serif; margin: 0 0 12px; }
+.guest-account p { font-size: 14px; line-height: 1.6; color: var(--muted); }
+.guest-account-heading-icon { display: grid; place-items: center; margin: 0 auto 20px; width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 50%; }
+.google-login { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 48px; padding: 12px 16px; background: white; border: 1px solid #747775; border-radius: 6px; color: #1f1f1f; font: 500 14px 'DM Sans',sans-serif; cursor: pointer; margin-top: 24px; }
+.google-login:disabled { opacity: .55; cursor: default; }
+.guest-profile-avatar { width: 72px; height: 72px; margin: 12px auto 18px; object-fit: cover; border-radius: 50%; }
+.guest-account [data-account-name] { color: var(--ink); font-weight: 600; margin-bottom: 4px; }
+.guest-account [data-account-email] { overflow-wrap: anywhere; }
+.guest-logout { min-height: 44px; padding: 10px 24px; margin-top: 12px; border: 1px solid var(--line); border-radius: 6px; background: none; color: var(--ink); cursor: pointer; font-size: 14px; }
+.guest-account [data-account-message] { margin: 18px 0 0; font-size: 13px; }
+.guest-account-open { overflow: hidden; }
+.home-page[data-nav-input="pointer"] .guest-account-close:focus { outline: none; box-shadow: none; }
+.guest-account-close:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 4px; }
