@@ -5,6 +5,7 @@ import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 let showcaseTitle = 'Duplo Twin';
+let policyData = { policies: {checkin:'A partir das 14h.'}, revision:1 };
 
 
 let revoked = false;
@@ -25,6 +26,11 @@ const mock = createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
   if (req.url.startsWith('/auth/v1/user')) return json(200, { email: 'admin@example.invalid' });
   if (req.url.startsWith('/storage/v1/object/lotus-showcase/')) return json(token === 'access-admin' ? 200 : 403, {});
+  if (req.url === '/rest/v1/rpc/lotus_policy_api') {
+    if (data.p_operation === 'read') return json(200, policyData);
+    if (token !== 'access-admin' || revoked) return json(401, { code: 'PT401' });
+    policyData = { policies:data.p_data.policies, revision:policyData.revision+1 }; return json(200, policyData);
+  }
   if (req.url === '/rest/v1/rpc/lotus_showcase_api') {
     if (data.p_operation === 'read') return json(200, { showcases: [{ slug: 'duplo', title: showcaseTitle, photos: [] }] });
     if (token !== 'access-admin') return json(401, { code: 'PT401' });
@@ -94,6 +100,12 @@ try {
   r = await request('showcases/duplo', { title: 'Novo título', details: { beds: '1 cama de casal', bathroom: ['Chuveiro'] } }, { method: 'PUT', headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert.deepEqual(received.findLast(x => x.data.p_operation === 'save').data.p_data.details, { beds: '1 cama de casal', bathroom: ['Chuveiro'] });
   r = await request('showcases'); assert.equal((await r.json()).showcases[0].title, 'Novo título');
+  r = await request('policies'); assert.equal(r.status, 200); assert.equal((await r.json()).policies.checkin, 'A partir das 14h.');
+  r = await request('policies', { policies:{checkin:'15h'}, revision:1 }, { method:'PUT' }); assert.equal(r.status, 401);
+  r = await request('policies', { policies:{checkin:'15h'}, revision:1 }, { method:'PUT', headers:{ Cookie:cookies, Origin:'https://malicious.invalid' } }); assert.equal(r.status, 403);
+  r = await request('policies', { policies:{checkin:'15h'}, revision:1 }, { method:'PUT', headers:{ Cookie:cookies } }); assert.equal(r.status, 200); assert.equal((await r.json()).revision, 2);
+  assert.equal(received.findLast(x => x.path === '/rest/v1/rpc/lotus_policy_api').data.p_operation, 'save');
+  r = await request('policies'); assert.equal((await r.json()).policies.checkin, '15h');
   const upload = async (contents, type, authenticated = true) => {
     const form = new FormData(); form.append('photo', new Blob([contents], { type }), 'foto.jpg');
     return fetch(base + '/api/showcase-upload', { method: 'POST', body: form, headers: authenticated ? { Cookie: cookies } : {} });
@@ -106,7 +118,7 @@ try {
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 25 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: 30 scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }

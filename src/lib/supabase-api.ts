@@ -62,9 +62,9 @@ async function readBytes(request: NextRequest, limit: number): Promise<Buffer> {
   }
   return Buffer.concat(chunks);
 }
-async function body(request: NextRequest): Promise<Json> {
+async function body(request: NextRequest, limit = 16384): Promise<Json> {
   if (request.headers.get('content-type')?.split(';')[0].trim() !== 'application/json') throw new ApiError(415, 'Use application/json.');
-  const bytes = await readBytes(request, 16384);
+  const bytes = await readBytes(request, limit);
   try {
     const value: unknown = JSON.parse(bytes.toString('utf8'));
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error();
@@ -115,7 +115,7 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
       }
     }
     const isUpload = path === 'showcase-upload' && method === 'POST';
-    const data = method === 'GET' || isUpload ? {} : await body(request);
+    const data = method === 'GET' || isUpload ? {} : await body(request, path === 'policies' ? 65536 : 16384);
     if (path === 'login' && method === 'POST') {
       const email = requiredText(data, 'email', 254).trim();
       const password = requiredText(data, 'password', 256);
@@ -158,6 +158,10 @@ export async function supabaseApi(request: NextRequest): Promise<NextResponse> {
     if (isUpload) {
       if (!token) throw new ApiError(401, 'Entre no painel para enviar fotos.');
       return finish(await uploadShowcasePhoto(request, token), 201);
+    }
+    if (path === 'policies' && (method === 'GET' || method === 'PUT')) {
+      if (method === 'PUT' && !token) throw new ApiError(401, 'Entre no painel para editar as políticas.');
+      return finish(await call('/rest/v1/rpc/lotus_policy_api', 'POST', { p_operation: method === 'GET' ? 'read' : 'save', p_data: data }, token));
     }
     if (path === 'showcases' && method === 'GET') {
       return finish(await call('/rest/v1/rpc/lotus_showcase_api', 'POST', { p_operation: 'read', p_data: {} }, token));

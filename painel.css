@@ -52,3 +52,6 @@
  .showcase-feature-edit>.btn { grid-column: 3; grid-row: 1; }
  .showcase-editor input,.showcase-editor textarea,.showcase-editor select { font-size: 16px; min-width: 0; }
 }
+
+#policies-form { margin-top:28px; }
+#policies-form textarea { width:100%; resize:vertical; min-height:110px; }
