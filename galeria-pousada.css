@@ -1,0 +1,21 @@
+/* Faixa fotográfica contínua entre a apresentação e os quartos. */
+.home-page #galeria-pousada { padding: 0 0 48px; background: var(--cream); }
+.pousada-gallery { --gallery-visible: 3; position: relative; }
+.pousada-gallery-viewport { overflow: hidden; touch-action: pan-y; }
+.pousada-gallery-track { display: flex; align-items: stretch; transition: transform .8s cubic-bezier(.22,.61,.36,1); }
+.pousada-gallery-slide { flex: 0 0 calc(100% / var(--gallery-visible)); min-width: 0; aspect-ratio: 4 / 3; margin: 0; overflow: hidden; }
+.pousada-gallery-slide img { display: block; width: 100%; height: 100%; object-fit: cover; transition: none; }
+.pousada-gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: white; filter: drop-shadow(0 1px 3px #000b); cursor: pointer; opacity: 0; transition: opacity .2s; }
+.pousada-gallery-arrow[data-gallery-prev] { left: 10px; }
+.pousada-gallery-arrow[data-gallery-next] { right: 10px; }
+.pousada-gallery:hover .pousada-gallery-arrow,
+.pousada-gallery:focus-within .pousada-gallery-arrow { opacity: 1; }
+.pousada-gallery :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+@media(max-width:767px) {
+ .pousada-gallery { --gallery-visible: 1.25; }
+ .pousada-gallery-arrow { opacity: 1; }
+ .home-page #galeria-pousada { padding-bottom: 28px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .pousada-gallery-track { transition: none; }
+}

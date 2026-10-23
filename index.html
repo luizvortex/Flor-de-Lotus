@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="./inicio.css">
     <link rel="stylesheet" href="./quartos.css">
+    <link rel="stylesheet" href="./galeria-pousada.css">
     <link rel="stylesheet" href="./conta.css">
     <link rel="preload" as="image" href="./img Pousada/FlordeLotus1.jpg" fetchpriority="high">
     <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},3600)}</script>
@@ -119,6 +120,28 @@
                             </ul>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+        <section id="galeria-pousada" aria-labelledby="galeria-pousada-title">
+            <h2 id="galeria-pousada-title" class="visually-hidden">Conheça a pousada em imagens</h2>
+            <div class="container">
+                <div class="pousada-gallery" role="region" aria-roledescription="carrossel" aria-label="Fotos da Pousada Flor de Lótus">
+                    <div class="pousada-gallery-viewport"><div class="pousada-gallery-track">
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 1 de 10"><img src="/img Pousada/interiorpousada.jpg" alt="Jardim e acomodações da Pousada Flor de Lótus" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 2 de 10"><img src="/img Pousada/FlordeLotus3.jpg" alt="Mesa de café da manhã da pousada" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 3 de 10"><img src="/img Pousada/quartocasal.jpg" alt="Quarto de casal da pousada" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 4 de 10"><img src="/img Pousada/FlordeLotus6.jpg" alt="Piscina cercada pelo jardim" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 5 de 10"><img src="/img Pousada/FlordeLotus9.jpg" alt="Área de convivência junto ao jardim" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 6 de 10"><img src="/img casal/casal2.jpg" alt="Detalhes da acomodação com cama e toalhas" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 7 de 10"><img src="/img Pousada/FlordeLotus2.jpg" alt="Varandas e jardim da pousada" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 8 de 10"><img src="/img Pousada/FlordeLotus4.jpg" alt="Acomodação preparada para receber hóspedes" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 9 de 10"><img src="/img Pousada/FlordeLotus5.jpg" alt="Mesa de sinuca na área de lazer" width="800" height="600" loading="lazy"></figure>
+                        <figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto 10 de 10"><img src="/img Pousada/FlordeLotus1.jpg" alt="Entrada da Pousada Flor de Lótus" width="800" height="600" loading="lazy"></figure>
+                    </div></div>
+                    <button type="button" class="pousada-gallery-arrow" data-gallery-prev aria-label="Foto anterior da pousada"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button>
+                    <button type="button" class="pousada-gallery-arrow" data-gallery-next aria-label="Próxima foto da pousada"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button>
+                    <span class="visually-hidden" data-gallery-status role="status" aria-live="polite"></span>
                 </div>
             </div>
         </section>
@@ -738,6 +761,7 @@
     </main>
     <script src="./inicio.js"></script>
     <script src="./quartos.js"></script>
+    <script src="./galeria-pousada.js"></script>
     <script src="./conta.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
