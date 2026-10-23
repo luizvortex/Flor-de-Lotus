@@ -44,6 +44,11 @@
 .showcase-album-thumbs img { width: 100%; height: 100%; object-fit: cover; }
 .showcase-album :focus-visible { outline-color: var(--cream); }
 body.showcase-album-open { overflow: hidden; }
+@media(min-width:1001px) {
+ .room-showcase:nth-of-type(even) { grid-template-columns: minmax(0,1fr) minmax(0,1.08fr); }
+ .room-showcase:nth-of-type(even) .room-showcase-gallery { grid-column: 2; grid-row: 1; }
+ .room-showcase:nth-of-type(even) .showcase-copy { grid-column: 1; grid-row: 1; }
+}
 @media(max-width:1000px) {
  .room-showcase { grid-template-columns: minmax(0,1fr); gap: 30px; padding-bottom: 45px; margin-bottom: 45px; }
  .room-showcase-gallery { height: clamp(320px,55vw,500px); }
