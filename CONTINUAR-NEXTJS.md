@@ -167,3 +167,7 @@ A partir de 768px, todos os quartos usam o fundo areia uniforme. Abaixo de 768px
 No desktop, ao chegar à apresentação da pousada, o cabeçalho oculta a faixa superior/logo e move os controles originais Reservar e Minha Conta para as extremidades da mesma linha dos links principais. O limite é fixo em relação à abertura para evitar oscilações ao mudar a altura; voltar ao topo restaura o cabeçalho completo. Os controles preservam eventos, avatar e foco, e são devolvidos à faixa original ao redimensionar para celular. Links de seção usam a altura compacta de 64px no desktop. Mobile mantém menu, logo e ações originais.
 
 Verificação: build, navegação por âncoras, ida/volta da abertura, redimensionamento em 320/390/600/767/768/820/1024/1440/1900px, fundos por dispositivo, ondas internas somente no celular e diálogo de conta/menu com sessão HTTP simulada. Sem alterações na autenticação ou no banco.
+
+### Profundidade da abertura durante a rolagem
+
+A mídia da abertura (poster e vídeo no mesmo contêiner) ganha deslocamento vertical e zoom progressivos ao rolar para Sobre a Pousada. No desktop, até 16% da altura e 7,5% de zoom; no celular, 9% e 4%, respectivamente. A atualização usa requestAnimationFrame junto do cabeçalho e limita o progresso ao trecho da abertura. O efeito reverte ao subir, respeita movimento reduzido e mantém a mídia cobrindo a área visível. Cabeçalho compacto e controles de vídeo preservados. Build e conferência de progresso, reversão, enquadramento e preferência de movimento passaram em desktop e celular.

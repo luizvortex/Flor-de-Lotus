@@ -33,7 +33,14 @@
 .home-page .home-header :focus-visible { outline-color: currentColor; }
 .home-page .home-hero { padding: 0; position: relative; isolation: isolate; height: 100svh; min-height: 580px; overflow: hidden; background: var(--ink); color: var(--hero-white); }
 .home-hero-media, .home-hero-shade { position: absolute; inset: 0; }
-.home-hero-media { isolation: isolate; overflow: hidden; }
+/* Poster e vídeo acompanham juntos a rolagem, mantendo o enquadramento. */
+.home-hero-media {
+ isolation: isolate;
+ overflow: hidden;
+ transform: translate3d(0, var(--hero-scroll-y, 0px), 0) scale(var(--hero-scroll-scale, 1));
+ transform-origin: center center;
+}
+.home-hero.is-scroll-active .home-hero-media { will-change: transform; }
 .home-hero-media .home-hero-poster, .home-hero-media .home-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% center; }
 .home-hero-video { opacity: 0; transition: opacity .6s ease; }
 .home-hero-video.is-playing { opacity: 1; }
@@ -128,4 +135,8 @@ body.home-menu-open { overflow: hidden; }
  .home-header.is-compact .home-booking,
  .home-header.is-compact .home-account { flex-shrink: 0; white-space: nowrap; }
  .home-page:has(.home-header.is-compact) section { scroll-margin-top: 72px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+ .home-hero-media { transform: none; will-change: auto; }
 }

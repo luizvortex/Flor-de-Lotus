@@ -29,16 +29,34 @@
         header.classList.toggle('is-compact', compact);
         if (restoreFocus) focused.focus({ preventScroll: true });
     }
-    const onScroll = () => {
+    let scrollFrame = 0;
+    let lastHeroProgress = -1;
+    let lastHeroDesktop;
+    function paintScroll() {
+        scrollFrame = 0;
+        const rect = hero.getBoundingClientRect();
         header.classList.toggle('is-scrolled', window.scrollY > 40);
         // Fixed expanded-header boundary avoids a resize loop when its height changes.
-        setCompact(desktopHeader.matches && hero.getBoundingClientRect().bottom <= 142);
+        setCompact(desktopHeader.matches && rect.bottom <= 142);
+        const progress = reducedMotion.matches ? 0 : Math.max(0, Math.min(1, -rect.top / rect.height));
+        if (progress !== lastHeroProgress || desktopHeader.matches !== lastHeroDesktop) {
+            const travel = desktopHeader.matches ? .16 : .09;
+            hero.style.setProperty('--hero-scroll-y', `${(progress * rect.height * travel).toFixed(2)}px`);
+            hero.style.setProperty('--hero-scroll-scale', (1 + progress * (desktopHeader.matches ? .075 : .04)).toFixed(4));
+            hero.classList.toggle('is-scroll-active', progress > 0 && progress < 1);
+            lastHeroProgress = progress;
+            lastHeroDesktop = desktopHeader.matches;
+        }
+    }
+    const onScroll = () => {
+        if (!scrollFrame) scrollFrame = requestAnimationFrame(paintScroll);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
     desktopHeader.addEventListener('change', onScroll);
     window.addEventListener('load', onScroll);
-    onScroll();
+    reducedMotion.addEventListener('change', onScroll);
+    paintScroll();
     document.addEventListener('pointerdown', () => { document.body.dataset.navInput = 'pointer'; }, { passive: true });
     document.addEventListener('keydown', () => { document.body.dataset.navInput = 'keyboard'; });
     const mobileMenu = window.matchMedia('(max-width: 767px)');
