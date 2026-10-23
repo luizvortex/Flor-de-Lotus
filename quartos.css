@@ -176,3 +176,10 @@ body.showcase-album-open { overflow: hidden; }
  .home-page .showcase-features { grid-template-columns: minmax(0,1fr); max-width: 280px; gap: 12px; }
  .home-page .showcase-features li { min-height: 24px; }
 }
+
+/* Inclinação vinculada à rolagem, aplicada ao conjunto principal + miniaturas. */
+.room-showcase-gallery { transform-origin: center center; }
+.room-showcase-gallery:focus-within { transform: none !important; }
+@media(prefers-reduced-motion:reduce) {
+ .room-showcase-gallery { transform: none !important; }
+}

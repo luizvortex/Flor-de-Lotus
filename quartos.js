@@ -60,6 +60,29 @@
  let touch;
  album.querySelector('.showcase-album-stage').addEventListener('touchstart',e=>{touch={x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};},{passive:true});
  album.querySelector('.showcase-album-stage').addEventListener('touchend',e=>{if(!touch)return;const x=e.changedTouches[0].clientX-touch.x,y=e.changedTouches[0].clientY-touch.y;if(Math.abs(x)>50&&Math.abs(x)>Math.abs(y)*1.5)paintAlbum(albumIndex+(x<0?1:-1));touch=null;},{passive:true});
+ // Scroll position drives the tilt; measure the untransformed article to avoid feedback.
+ const galleries=Array.from(document.querySelectorAll('.room-showcase-gallery'));
+ const scrollMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+ let scrollFrame=0;
+ function alignGalleries(){
+  scrollFrame=0;
+  const height=window.innerHeight;
+  const compact=window.innerWidth<=1000;
+  galleries.forEach(gallery=>{
+   if(scrollMotion.matches){gallery.style.removeProperty('transform');return;}
+   const top=gallery.closest('.room-showcase').getBoundingClientRect().top;
+   const progress=Math.max(0,Math.min(1,(height*.95-top)/(height*.63)));
+   const remaining=1-progress;
+   gallery.style.transform=remaining<.001?'none':`perspective(1200px) translateY(${(compact?20:36)*remaining}px) rotateY(${-6*remaining}deg) rotateZ(${(compact?2:4)*remaining}deg) scale(${1-.035*remaining})`;
+  });
+ }
+ function requestAlignment(){if(!scrollFrame)scrollFrame=requestAnimationFrame(alignGalleries);}
+ window.addEventListener('scroll',requestAlignment,{passive:true});
+ window.addEventListener('resize',requestAlignment,{passive:true});
+ scrollMotion.addEventListener('change',requestAlignment);
+ // Keyboard and pointer controls stay steady while someone interacts with a photo.
+ galleries.forEach(gallery=>gallery.addEventListener('focusin',()=>{gallery.style.transform='none';}));
+ alignGalleries();
  document.querySelectorAll('.room-showcase-gallery').forEach(gallery=>{
   let photos;try{photos=JSON.parse(gallery.dataset.photos);}catch{return;}
   let room;try{room=JSON.parse(gallery.dataset.room);}catch{room={title:gallery.dataset.title,features:[]};}
