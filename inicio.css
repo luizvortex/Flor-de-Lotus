@@ -143,3 +143,25 @@ body.home-menu-open { overflow: hidden; }
 
 .home-hero-media { filter: none; }
 .home-hero-copy { text-shadow:0 2px 16px #10222070; }
+
+/* Contraste localizado na abertura, mantendo o vídeo claro abaixo do menu. */
+@media (min-width: 768px) {
+ .home-page #cabecalho.home-header::before {
+  content: ''; position: absolute; inset: 0 0 -64px; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, #0e1c1ae0 0%, #0e1c1ac7 60%, #0e1c1a9e 76%, #0e1c1a00 100%);
+  opacity: 1; transition: opacity .3s ease;
+ }
+ .home-page #cabecalho.home-header.is-scrolled::before { opacity: 0; }
+ .home-header:not(.is-scrolled) .home-header-top { border-color: #ffffff52; }
+ .home-header:not(.is-scrolled) .home-quick-nav { border-color: #ffffff38; }
+ .home-header:not(.is-scrolled) .home-nav-links a {
+  font-size: clamp(11px, .85vw, 12px); font-weight: 600; letter-spacing: 1.6px;
+ }
+ .home-header:not(.is-scrolled) :is(.home-nav-links a, .home-booking, .home-account, .home-brand span) {
+  text-shadow: 0 1px 5px #00000070;
+ }
+ .home-page .home-header:not(.is-scrolled) .home-brand img {
+  width: 176px; height: 72px; filter: brightness(0) invert(1) drop-shadow(0 2px 4px #00000040);
+ }
+ .home-header:not(.is-scrolled) .home-brand span { font-size: 10px; }
+}
