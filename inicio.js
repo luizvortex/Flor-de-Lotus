@@ -99,25 +99,60 @@
     });
     const video=hero.querySelector('.home-hero-video');
     let heroVisible=true;
+    let playPending=false;
+    let videoStart;
+    const canPlay=()=>!reducedMotion.matches&&!document.hidden&&!menu.open&&heroVisible;
     function schedule(){
         if(!video)return;
-        if(reducedMotion.matches||document.hidden||menu.open||!heroVisible){
+        if(!canPlay()){
             video.pause();
+            videoStart.hidden=true;
             if(reducedMotion.matches)video.classList.remove('is-playing');
             return;
         }
         video.muted=true;
-        if(video.paused)video.play().then(()=>{if(!video.paused)video.classList.add('is-playing');}).catch(()=>{video.classList.remove('is-playing');});
-        else if(video.readyState>=2)video.classList.add('is-playing');
+        if(video.paused&&!playPending){
+            playPending=true;
+            video.play().then(()=>{
+                if(!canPlay()){video.pause();return;}
+                if(!video.paused){video.classList.add('is-playing');videoStart.hidden=true;}
+            }).catch(error=>{
+                video.classList.remove('is-playing');
+                // iOS Low Power Mode can require an explicit user gesture.
+                videoStart.hidden=error.name!=='NotAllowedError'||!canPlay();
+            }).finally(()=>{playPending=false;});
+        }else if(!video.paused&&video.readyState>=2){
+            video.classList.add('is-playing');
+            videoStart.hidden=true;
+        }
     }
     if(video){
+        videoStart=document.createElement('button');
+        videoStart.type='button';
+        videoStart.className='hero-video-start';
+        videoStart.textContent='Reproduzir vídeo';
+        videoStart.hidden=true;
+        videoStart.addEventListener('click',schedule);
+        hero.append(videoStart);
+        video.muted=true;
+        video.defaultMuted=true;
+        video.playsInline=true;
         video.defaultPlaybackRate=.65;
         video.playbackRate=.65;
-        video.addEventListener('playing',()=>video.classList.add('is-playing'));
-        video.addEventListener('error',()=>video.classList.remove('is-playing'));
-        video.querySelector('source')?.addEventListener('error',()=>video.classList.remove('is-playing'));
+        video.addEventListener('playing',()=>{
+            if(!canPlay()){video.pause();return;}
+            video.classList.add('is-playing');
+            videoStart.hidden=true;
+        });
+        video.addEventListener('error',()=>{video.classList.remove('is-playing');videoStart.hidden=true;});
+        video.addEventListener('canplay',schedule);
         new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;schedule();},{threshold:.05}).observe(hero);
         document.addEventListener('visibilitychange',schedule);
+        window.addEventListener('pageshow',schedule);
+        // Retry inside a trusted gesture when mobile autoplay was denied.
+        document.addEventListener('touchend',schedule,{passive:true});
+        document.addEventListener('pointerup',schedule,{passive:true});
+        document.addEventListener('keydown',schedule);
         reducedMotion.addEventListener('change',schedule);
         schedule();
     }

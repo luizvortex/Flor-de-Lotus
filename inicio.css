@@ -143,3 +143,7 @@ body.home-menu-open { overflow: hidden; }
 
 .home-hero-media { filter:saturate(1.08); }
 .home-hero-copy { text-shadow:0 2px 16px #10222070; }
+
+.hero-video-start { position: absolute; z-index: 2; right: 24px; bottom: 115px; border: 1px solid #ffffff90; border-radius: 2px; padding: 10px 15px; color: #fff; background: #10222066; font: inherit; font-size: 13px; cursor: pointer; }
+.hero-video-start[hidden] { display: none; }
+.hero-video-start:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
