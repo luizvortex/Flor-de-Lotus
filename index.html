@@ -69,18 +69,15 @@
     </dialog>
     <main id="conteudo-principal">
         <section id="inicio" class="home-hero" aria-label="Bem-vindo à Flor de Lótus">
-            <div id="hero-carousel" class="hero-slideshow" role="region" aria-roledescription="carrossel" aria-label="Fotos da pousada">
-                <div class="hero-frame is-active" role="group" aria-roledescription="slide" aria-label="1 de 6: entrada da pousada"><img src="./img Pousada/FlordeLotus1.jpg" alt="Entrada e jardim da Pousada Flor de Lótus" width="1600" height="1000" fetchpriority="high"></div>
-                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="2 de 6: piscina" aria-hidden="true"><img src="./img Pousada/FlordeLotus6.jpg" alt="Piscina e área externa da pousada" width="1600" height="1000" loading="lazy"></div>
-                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="3 de 6: café da manhã" aria-hidden="true"><img src="./img Pousada/FlordeLotus3.jpg" alt="Café da manhã da pousada" width="1600" height="1000" loading="lazy"></div>
-                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="4 de 6: acomodações" aria-hidden="true"><img src="./img Pousada/FlordeLotus4.jpg" alt="Acomodações da Flor de Lótus" width="1600" height="1000" loading="lazy"></div>
-                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="5 de 6: interior da pousada" aria-hidden="true"><img src="./img Pousada/interiorpousada.jpg" alt="Interior e área de convivência da pousada" width="1600" height="1000" loading="lazy"></div>
-                <div class="hero-frame" role="group" aria-roledescription="slide" aria-label="6 de 6: lazer" aria-hidden="true"><img src="./img Pousada/FlordeLotus5.jpg" alt="Mesa de sinuca da pousada" width="1600" height="1000" loading="lazy"></div>
+            <div class="home-hero-media" aria-hidden="true">
+                <img class="home-hero-poster" src="/media/abertura-praia.jpg" alt="" width="960" height="538" fetchpriority="high">
+                <video class="home-hero-video" autoplay muted loop playsinline preload="metadata" poster="/media/abertura-praia.jpg" width="960" height="538" tabindex="-1">
+                    <source src="/media/abertura-praia.mp4" type="video/mp4">
+                </video>
             </div>
             <div class="home-hero-shade"></div>
             <div class="home-hero-copy"><p class="home-hero-eyebrow">Pousada · Itacaré, Bahia</p><h1>Flor de Lótus</h1><p class="home-hero-tagline">Seu refúgio entre o mar e a natureza.</p></div>
-            <div class="home-hero-bottom"><span class="hero-location">Praia da Concha<br><span>Itacaré · Bahia</span></span><a href="#sobre-a-pousada" class="hero-discover">Descubra a pousada<span aria-hidden="true">↓</span></a><div class="hero-controls"><div class="hero-pagination" role="group" aria-label="Escolher foto da pousada"><button type="button" class="hero-dot is-active" aria-label="Mostrar foto 1 de 6" aria-current="true"><span class="hero-dot-track"><span class="hero-dot-fill"></span></span></button><button type="button" class="hero-dot" aria-label="Mostrar foto 2 de 6"><span class="hero-dot-track"><span class="hero-dot-fill"></span></span></button><button type="button" class="hero-dot" aria-label="Mostrar foto 3 de 6"><span class="hero-dot-track"><span class="hero-dot-fill"></span></span></button><button type="button" class="hero-dot" aria-label="Mostrar foto 4 de 6"><span class="hero-dot-track"><span class="hero-dot-fill"></span></span></button><button type="button" class="hero-dot" aria-label="Mostrar foto 5 de 6"><span class="hero-dot-track"><span class="hero-dot-fill"></span></span></button><button type="button" class="hero-dot" aria-label="Mostrar foto 6 de 6"><span class="hero-dot-track"><span class="hero-dot-fill"></span></span></button></div></div></div>
-            <p id="hero-status" class="visually-hidden" role="status" aria-live="polite"></p>
+            <div class="home-hero-bottom"><span class="hero-location">Praia da Concha<br><span>Itacaré · Bahia</span></span><a href="#sobre-a-pousada" class="hero-discover">Descubra a pousada<span aria-hidden="true">↓</span></a></div>
         </section>
         <section id="sobre-a-pousada">
             <div class="pt-5 pb-5">

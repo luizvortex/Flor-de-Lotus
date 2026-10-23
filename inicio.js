@@ -54,82 +54,26 @@
             target.focus({ preventScroll: true });
         });
     });
-    const slides = Array.from(document.querySelectorAll('.hero-frame'));
-    const dots = Array.from(document.querySelectorAll('.hero-dot'));
-    const interval = 6500;
-    const status = document.getElementById('hero-status');
-    let index = 0;
-    let motionPaused = reducedMotion.matches;
-    let hovering = false;
-    let focused = false;
-    let timer;
-    let remaining = interval;
-    let startedAt = 0;
-    let progress;
-    function stopClock() {
-        if (timer !== undefined) {
-            window.clearTimeout(timer);
-            timer = undefined;
-            remaining = Math.max(0, remaining - (performance.now() - startedAt));
+    const video=hero.querySelector('.home-hero-video');
+    let heroVisible=true;
+    function schedule(){
+        if(!video)return;
+        if(reducedMotion.matches||document.hidden||menu.open||!heroVisible){
+            video.pause();
+            if(reducedMotion.matches)video.classList.remove('is-playing');
+            return;
         }
-        progress?.pause();
+        video.muted=true;
+        if(video.paused)video.play().then(()=>{if(!video.paused)video.classList.add('is-playing');}).catch(()=>{video.classList.remove('is-playing');});
+        else if(video.readyState>=2)video.classList.add('is-playing');
     }
-    function resetProgress() {
-        progress?.cancel();
-        progress = undefined;
-        if (!reducedMotion.matches) {
-            progress = dots[index].querySelector('.hero-dot-fill').animate(
-                [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
-                { duration: interval, fill: 'both' }
-            );
-            progress.pause();
-        }
-    }
-    function show(next, manual = false) {
-        stopClock();
-        const previous = index;
-        index = (next + slides.length) % slides.length;
-        slides[previous].classList.remove('is-active');
-        slides[previous].setAttribute('aria-hidden', 'true');
-        slides[index].classList.add('is-active');
-        slides[index].removeAttribute('aria-hidden');
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('is-active', i === index);
-            if (i === index) dot.setAttribute('aria-current', 'true');
-            else dot.removeAttribute('aria-current');
-        });
-        remaining = interval;
-        resetProgress();
-        if (manual) status.textContent = slides[index].getAttribute('aria-label');
+    if(video){
+        video.addEventListener('playing',()=>video.classList.add('is-playing'));
+        video.addEventListener('error',()=>video.classList.remove('is-playing'));
+        video.querySelector('source')?.addEventListener('error',()=>video.classList.remove('is-playing'));
+        new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;schedule();},{threshold:.05}).observe(hero);
+        document.addEventListener('visibilitychange',schedule);
+        reducedMotion.addEventListener('change',schedule);
         schedule();
     }
-    function schedule() {
-        stopClock();
-        if (!motionPaused && !hovering && !focused && !document.hidden && !menu.open) {
-            startedAt = performance.now();
-            progress?.play();
-            timer = window.setTimeout(() => { timer = undefined; show(index + 1); }, remaining);
-        }
-    }
-    dots.forEach((dot, i) => dot.addEventListener('click', () => show(i, true)));
-    hero.addEventListener('mouseenter', () => { hovering = true; schedule(); });
-    hero.addEventListener('mouseleave', () => { hovering = false; schedule(); });
-    hero.addEventListener('focusin', () => { focused = true; schedule(); });
-    hero.addEventListener('focusout', event => {
-        if (!hero.contains(event.relatedTarget)) { focused = false; schedule(); }
-    });
-    // Swipe is limited to horizontal gestures; vertical page scrolling remains native.
-    let touch;
-    hero.addEventListener('touchstart', event => { touch = { x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY }; }, { passive: true });
-    hero.addEventListener('touchend', event => {
-        if (!touch) return;
-        const x = event.changedTouches[0].clientX - touch.x;
-        const y = event.changedTouches[0].clientY - touch.y;
-        if (Math.abs(x) > 55 && Math.abs(x) > Math.abs(y) * 1.5) show(index + (x < 0 ? 1 : -1), true);
-        touch = undefined;
-    }, { passive: true });
-    document.addEventListener('visibilitychange', schedule);
-    reducedMotion.addEventListener('change', () => { stopClock(); motionPaused = reducedMotion.matches; remaining = interval; resetProgress(); schedule(); });
-    resetProgress();
-    schedule();
 })();

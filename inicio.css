@@ -32,12 +32,12 @@
 .home-page .home-header.is-scrolled .home-brand img { filter: none; }
 .home-page .home-header :focus-visible { outline-color: currentColor; }
 .home-page .home-hero { padding: 0; position: relative; isolation: isolate; height: 100svh; min-height: 580px; overflow: hidden; background: var(--ink); color: var(--hero-white); }
-.hero-slideshow, .hero-frame, .home-hero-shade { position: absolute; inset: 0; }
-.hero-frame { opacity: 0; transition: opacity 1.4s ease; }
-.hero-frame.is-active { opacity: 1; }
-.hero-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: none; }
-.hero-frame.is-active img { animation: hero-drift 8s linear both; }
-@keyframes hero-drift { from { transform: scale(1.065); } to { transform: scale(1); } }
+.home-hero-media, .home-hero-shade { position: absolute; inset: 0; }
+.home-hero-media { isolation: isolate; overflow: hidden; }
+.home-hero-media .home-hero-poster, .home-hero-media .home-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% center; }
+.home-hero-video { opacity: 0; transition: opacity .6s ease; }
+.home-hero-video.is-playing { opacity: 1; }
+.home-hero-shade { position: absolute; inset: 0; }
 .home-hero-shade { background: linear-gradient(180deg,#142a2880 0%,#142a2866 30%,#10222066 58%,#1022208c 100%); pointer-events: none; }
 .home-hero-copy { position: absolute; top: 51%; left: 24px; right: 24px; transform: translateY(-50%); text-align: center; }
 .home-hero-eyebrow { font-family: 'Playfair Display',serif; font-size: clamp(17px,2vw,24px); margin: 0 0 19px; font-weight: 400; }
@@ -51,16 +51,6 @@
 .home-hero a { color: inherit; }
 .hero-discover { display: flex; flex-direction: column; gap: 10px; align-items: center; text-decoration: none; font-size: 9px; text-transform: uppercase; letter-spacing: 2px; }
 .hero-discover span { font-size: 27px; line-height: 1; }
-.hero-controls { justify-self: end; display: flex; align-items: center; gap: 16px; }
-.hero-controls button { background: transparent; color: inherit; border: 0; width: 34px; height: 44px; font-size: 23px; padding: 0; }
-.hero-pagination { display: flex; align-items: center; gap: 0; padding: 0 8px; border-radius: 30px; background: transparent; }
-.hero-pagination .hero-dot { display: grid; place-items: center; width: 24px; height: 36px; border-radius: 20px; transition: width .25s ease; }
-.hero-pagination .hero-dot.is-active { width: 44px; }
-.hero-dot-track { display: block; position: relative; width: 6px; height: 6px; overflow: hidden; border-radius: 8px; background: #dce3df; }
-.hero-dot.is-active .hero-dot-track { width: 40px; background: #e3e9e5; }
-.hero-dot-fill { display: none; width: 100%; height: 100%; background: var(--green); transform-origin: left; }
-.hero-dot.is-active .hero-dot-fill { display: block; }
-.home-page .hero-pagination .hero-dot:focus-visible { outline-color: var(--green); outline-offset: 0; }
 .home-hero :focus-visible { outline-color: var(--hero-white); }
 /* Native dialog provides focus containment, Escape, and restoration to Menu. */
 .home-menu { position: fixed; inset: 0; max-width: none; max-height: none; width: 100%; height: 100%; margin: 0; border: 0; border-radius: 0; padding: 0; background: var(--cream); color: var(--ink); }
@@ -99,7 +89,6 @@ body.home-menu-open { overflow: hidden; }
     .home-hero-bottom { left: 22px; right: 22px; bottom: 26px; grid-template-columns: minmax(0,1fr) auto; row-gap: 25px; }
     .hero-discover { grid-column: 1/-1; grid-row: 1; }
     .hero-location { font-size: 14px; }
-    .hero-controls { gap: 6px; }
     .intro-signature { gap: 15px; }
     .intro-signature span { font-size: 8px; letter-spacing: 2px; }
     .intro-signature img { width: 144px; height: 64px; }
@@ -114,7 +103,7 @@ body.home-menu-open { overflow: hidden; }
 }
 @media(prefers-reduced-motion: reduce) {
     .intro-screen { display: none; }
-    .hero-frame, .home-menu[open], .hero-frame.is-active img, .home-hero-copy { animation: none !important; transition: none !important; }
+    .home-hero-video, .home-menu[open], .home-hero-copy { animation: none !important; transition: none !important; }
 }
 
 .menu-reserve { display: inline-flex; align-items: center; gap: 6px; }
@@ -124,5 +113,4 @@ body.home-menu-open { overflow: hidden; }
 .home-page[data-nav-input="pointer"] :is(.home-menu-close,.home-menu-toggle):focus { outline: none; box-shadow: none; }
 @media(max-width: 359px) {
     .hero-location { display: none; }
-    .hero-controls { grid-column: 1/-1; justify-self: center; }
 }
