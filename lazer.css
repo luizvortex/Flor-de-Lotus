@@ -68,3 +68,9 @@
  transition:background-color .65s ease;
 }
 @media(prefers-reduced-motion:reduce) { .home-page #quartos > .room-wave:last-child { transition:none; } }
+@media(max-width:767px) {
+ .home-page #quartos > .room-wave:last-child {
+  --room-background:var(--room-ivory,#fffdf9);
+  height:60px;
+ }
+}
