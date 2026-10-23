@@ -183,3 +183,10 @@ body.showcase-album-open { overflow: hidden; }
 @media(prefers-reduced-motion:reduce) {
  .room-showcase-gallery { transform: none !important; }
 }
+
+/* Texto acompanha o lado ocupado pelo bloco sem criar rolagem horizontal. */
+.home-page #quartos.room-showcases { overflow-x: clip; }
+.showcase-copy:focus-within { transform: none !important; opacity: 1 !important; }
+@media(prefers-reduced-motion:reduce) {
+ .showcase-copy { transform: none !important; opacity: 1 !important; }
+}

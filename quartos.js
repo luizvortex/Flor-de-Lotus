@@ -68,11 +68,22 @@
   scrollFrame=0;
   const height=window.innerHeight;
   const compact=window.innerWidth<=1000;
-  galleries.forEach(gallery=>{
-   if(scrollMotion.matches){gallery.style.removeProperty('transform');return;}
-   const top=gallery.closest('.room-showcase').getBoundingClientRect().top;
+  galleries.forEach((gallery,index)=>{
+   const article=gallery.closest('.room-showcase');
+   const copy=article.querySelector('.showcase-copy');
+   if(scrollMotion.matches){
+    gallery.style.removeProperty('transform');
+    copy.style.removeProperty('transform');copy.style.removeProperty('opacity');return;
+   }
+   const top=article.getBoundingClientRect().top;
    const progress=Math.max(0,Math.min(1,(height*.95-top)/(height*.63)));
    const remaining=1-progress;
+   const textProgress=Math.max(0,Math.min(1,(height*.95-copy.getBoundingClientRect().top)/(height*.55)));
+   const textRemaining=1-textProgress;
+   const direction=index%2===0?1:-1;
+   const distance=compact?24:Math.min(160,window.innerWidth*.12);
+   copy.style.transform=textRemaining<.001?'none':`translateX(${direction*distance*textRemaining}px)`;
+   copy.style.opacity=String(Math.min(1,textProgress*1.5));
    gallery.style.transform=remaining<.001?'none':`perspective(1200px) translateY(${(compact?20:36)*remaining}px) rotateY(${-6*remaining}deg) rotateZ(${(compact?2:4)*remaining}deg) scale(${1-.035*remaining})`;
   });
  }

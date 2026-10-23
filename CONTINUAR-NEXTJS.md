@@ -127,3 +127,5 @@ Verificação: build/typecheck e contratos HTTP; contrato Postgres real com roll
 ## Inclinação das galerias com scroll
 
 Referência do usuário: vídeo `20261023-1019-43.2611128.mp4`. As três galerias começam levemente inclinadas à direita e se alinham progressivamente conforme entram na tela; o movimento acompanha também a rolagem inversa. `quartos.js` mede o artigo sem transformação e atualiza a galeria por requestAnimationFrame, sem dependência adicional. No celular a inclinação é menor. Movimento reduzido e foco nos controles mantêm a galeria alinhada. Carrossel de 3 segundos, miniaturas e janela de detalhes preservados. Conferência Chromium em 1440/1024/768/390/320px sem overflow.
+
+Os textos dos quartos também acompanham a rolagem: blocos à direita entram pela direita e o bloco à esquerda entra pela esquerda, com opacidade gradual. No layout empilhado, o deslocamento é menor e usa a posição do próprio texto como referência. Foco de teclado e movimento reduzido mostram o conteúdo alinhado e visível; sem JavaScript o texto permanece normal. A seção recorta apenas o excesso horizontal da animação.
