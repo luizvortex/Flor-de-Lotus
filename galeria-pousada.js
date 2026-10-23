@@ -7,10 +7,10 @@
  if(total<4)return;
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
  const status=gallery.querySelector('[data-gallery-status]');
- let index=clones,step=0,timer,settleTimer,visible=false,moving=false;
+ let index=clones,step=0,offset=0,timer,settleTimer,visible=false,moving=false;
  function clone(slide){const copy=slide.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.removeAttribute('aria-label');copy.querySelector('img').alt='';return copy;}
  track.prepend(...slides.slice(-clones).map(clone));track.append(...slides.slice(0,clones).map(clone));
- function paint(animate){track.style.transition=animate?'':'none';track.style.transform=`translateX(${-index*step}px)`;}
+ function paint(animate){track.style.transition=animate?'':'none';track.style.transform=`translateX(${offset-index*step}px)`;}
  function schedule(){
   clearTimeout(timer);
   if(!visible||document.hidden)return;
@@ -28,7 +28,11 @@
   clearTimeout(settleTimer);settleTimer=setTimeout(settle,motion.matches?0:900);
  }
  function resize(){
-  settle();step=viewport.clientWidth/parseFloat(getComputedStyle(gallery).getPropertyValue('--gallery-visible'));paint(false);schedule();
+  settle();
+  const style=getComputedStyle(gallery);
+  step=viewport.clientWidth/parseFloat(style.getPropertyValue('--gallery-visible'));
+  offset=parseFloat(style.getPropertyValue('--gallery-center'))*(viewport.clientWidth-step)/2;
+  paint(false);schedule();
  }
  track.addEventListener('transitionend',event=>{if(event.propertyName==='transform')settle();});
  new ResizeObserver(resize).observe(viewport);

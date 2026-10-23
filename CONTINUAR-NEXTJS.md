@@ -171,3 +171,7 @@ Verificação: build, navegação por âncoras, ida/volta da abertura, redimensi
 ### Profundidade da abertura durante a rolagem
 
 A mídia da abertura (poster e vídeo no mesmo contêiner) ganha deslocamento vertical e zoom progressivos ao rolar para Sobre a Pousada. No desktop, até 16% da altura e 7,5% de zoom; no celular, 9% e 4%, respectivamente. A atualização usa requestAnimationFrame junto do cabeçalho e limita o progresso ao trecho da abertura. O efeito reverte ao subir, respeita movimento reduzido e mantém a mídia cobrindo a área visível. Cabeçalho compacto e controles de vídeo preservados. Build e conferência de progresso, reversão, enquadramento e preferência de movimento passaram em desktop e celular.
+
+### Carrossel centralizado no celular
+
+Até 767px, a foto ativa ocupa 80% da largura e fica centralizada, com 10% da anterior e da próxima visíveis nas laterais. `--gallery-center` controla o deslocamento no cálculo do carrossel; no desktop vale zero, preservando as três fotos alinhadas. ResizeObserver recalcula a posição ao redimensionar; clones e loop continuam funcionando nos dois sentidos. Conferido de 320–767px e desktop 768/1024/1440/1900px, incluindo avanço e retorno ao atravessar os limites do loop.
