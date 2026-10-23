@@ -155,3 +155,7 @@ Cada onda agora fica dentro do artigo do quarto, encerrando seu fundo e encontra
 ### Transição do carrossel para os quartos
 
 O carrossel tem respiro de 32px no desktop e 24px no mobile antes de uma onda integrada, em largura total, que conecta o fundo claro da galeria ao fundo areia de “Nossos Quartos”. O separador pertence à seção `#galeria-pousada` e reutiliza a forma, espessura e animação das ondas entre quartos. Conferido em 320–1900px sem lacunas no encontro dos fundos ou overflow horizontal.
+
+### Teste visual: ondas somente nas extremidades dos quartos
+
+A seção de acomodações agora tem apenas uma onda na entrada (ainda dentro da galeria anterior) e uma na saída, como filha direta de `#quartos`, conectando à área de lazer. Não há SVGs entre quartos nem no renderizador dinâmico. Os quatro blocos alternam areia `#eee9e3` e branco quente `#fffdf9`, com divisões retas e espaçamento interno. Template e renderização dinâmica mantidos consistentes. Build e conferência em 320–1900px passaram, incluindo fundos alternados, continuidade, ausência de overflow e álbum.

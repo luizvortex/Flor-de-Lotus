@@ -23,14 +23,8 @@ export async function getShowcases(): Promise<Showcase[]> {
   } catch { return showcaseDefaults; }
 }
 const arrow = (direction: 'left'|'right') => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="${direction === 'left' ? 'm13 5-7 7 7 7M6 12h13' : 'm11 5 7 7-7 7M18 12H5'}"/></svg>`;
-// Two identical wave periods make the half-width translation seamless.
-const roomWaveSeparator = `<div class="room-wave" aria-hidden="true">
-  <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V118C2640 118 2400 198 2160 198S1680 118 1440 118S960 198 720 198S240 118 0 118Z"/></svg>
-  <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V108C2640 108 2400 176 2160 176S1680 108 1440 108S960 176 720 176S240 108 0 108Z"/></svg>
-  <svg class="room-wave-layer" viewBox="0 0 2880 240" preserveAspectRatio="none" focusable="false"><path d="M0 0H2880V82C2640 82 2400 150 2160 150S1680 82 1440 82S960 150 720 150S240 82 0 82Z"/></svg>
-</div>`;
 export function renderShowcases(rows: Showcase[]): string {
-  return rows.map((row, index) => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
+  return rows.map(row => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
     <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-room="${escape(JSON.stringify({ title: row.title, eyebrow: row.eyebrow, description: row.description, features: row.features, details: row.details || {} }))}" data-photos="${escape(JSON.stringify(row.photos))}">
       <div class="showcase-main">
         <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de ${escape(row.title)}"><img class="showcase-main-image" src="${escape(row.photos[0].url)}" alt="${escape(row.photos[0].alt)}" loading="lazy" width="900" height="700"></button>
@@ -46,6 +40,5 @@ export function renderShowcases(rows: Showcase[]): string {
       <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><i class="bi bi-${escape(feature.icon)}" aria-hidden="true"></i><span>${escape(feature.label)}</span></li>`).join('')}</ul>
       <a class="showcase-rates" href="/reservas">Ver tarifas</a>
     </div>
-    ${index < rows.length - 1 ? roomWaveSeparator : ''}
   </article>`).join('\n');
 }
