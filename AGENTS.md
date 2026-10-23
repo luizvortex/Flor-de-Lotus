@@ -2,6 +2,8 @@
 
 ## Decisão do usuário
 
+O usuário autorizou fazer push das alterações concluídas deste site para `origin/main`, inclusive nas correções seguintes, sem pedir nova confirmação. O push aciona a publicação automática na Vercel; execute as verificações apropriadas antes de enviar. Preserve alterações remotas e não faça force-push.
+
 A stack escolhida para a próxima fase é **Next.js com TypeScript**, usando React e App Router. O usuário pretende melhorar bastante o site e o painel em novos chats. Não retome a proposta de Django/Python como stack principal. A migração completa ainda não foi implementada: os arquivos HTML/JS/CSS e o servidor Python atuais são referência funcional a preservar durante a transição.
 
 Leia `CONTINUAR-NEXTJS.md` antes de alterar a arquitetura. Use o checkout existente; tarefas Codex já são isoladas. Não crie um Git worktree sem solicitação explícita. Há alterações e arquivos novos ainda não commitados de trabalhos anteriores: inspecione `git status`, preserve-os, não execute reset/clean e não sobrescreva dados em `.local/`.
