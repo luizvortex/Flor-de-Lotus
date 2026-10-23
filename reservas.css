@@ -138,5 +138,3 @@ dialog::backdrop { background: #14201d80; }
 .card-photo { position:relative; }
 .card-photo img.photo-transition,.details-stage img.photo-transition { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
 .card-photo-label { z-index:1; }
-.photo-autoplay { position:absolute; right:10px; bottom:10px; padding:5px 8px; border:0; border-radius:2px; color:#fff; background:#263d3866; font-size:11px; }
-@media(prefers-reduced-motion:reduce) { .photo-autoplay { display:none; } }
