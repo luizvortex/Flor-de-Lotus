@@ -87,7 +87,7 @@
   packages=(data.packages||[]).filter(p=>p.end>today);
   const selected=$('#package').value;$('#package').innerHTML='<option value="">Diárias padrão</option>'+packages.map(p=>`<option value="${p.id}">${esc(p.name)} · ${p.nights} noites</option>`).join('');
   if(packages.some(p=>String(p.id)===selected))$('#package').value=selected;
-  if(showcases[0])$('#catalog-cover').src=showcases[0].photos[0].url;
+  if(showcases[0]&&!$('#catalog-cover').dataset.cmsCover)$('#catalog-cover').src=showcases[0].photos[0].url;
   $('#special-packages').hidden=!packages.length;
   $('#more-packages').hidden=packages.length<=3;
   $('#packages').innerHTML=packages.slice(0,3).map(p=>`<article class="package-card"><h3>${esc(p.name)}</h3><p>${p.nights+1} dias · ${p.nights} noites<br>${dateLabel(p.start)} a ${dateLabel(p.end)}</p><p>${money(p.price)} <small>/ pacote por quarto</small></p><button type="button" class="gold-button" data-package="${p.id}">Consultar pacote</button></article>`).join('');

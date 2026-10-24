@@ -1,0 +1,14 @@
+[data-cms-hidden],[hidden].home-contact { display:none!important; }
+.cms-paragraph { white-space:pre-line; }
+.cms-block { padding:80px 24px; background:var(--cream,#fffdf7); color:var(--ink,#263d38); }
+.cms-tone-areia { background:#eee8df; }
+.cms-block-inner { max-width:1120px; margin:auto; display:flex; align-items:center; gap:56px; }
+.cms-block-inner > * { flex:1; min-width:0; }
+.cms-block img { width:48%; max-height:520px; object-fit:cover; border-radius:4px; }
+.cms-block h2 { font:500 clamp(30px,4vw,48px)/1.2 'Playfair Display',serif; margin:0 0 24px; }
+.cms-block p { line-height:1.9; }
+.cms-block a { margin-top:20px; display:inline-block; }
+.cms-image-direita .cms-block-inner { flex-direction:row-reverse; }
+@media(max-width:767px){.cms-block{padding:48px 24px}.cms-block-inner,.cms-image-direita .cms-block-inner{flex-direction:column;gap:24px;align-items:stretch}.cms-block img{width:100%}}
+.pousada-gallery.is-single { --gallery-visible:1; --gallery-center:0; }
+.home-header a[hidden],.home-menu a[hidden] { display:none!important; }

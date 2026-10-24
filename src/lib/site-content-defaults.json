@@ -1,0 +1,365 @@
+{
+  "branding": {
+    "title": "Pousada Flor de Lótus",
+    "description": "Seu refúgio entre o mar e a natureza, na Praia da Concha em Itacaré, Bahia.",
+    "logo": "/img Pousada/flordelotuslogo.png",
+    "whatsapp": "557399728505",
+    "address": "Rua Hibisco, 33\nPraia da Concha · Itacaré, Bahia",
+    "instagram": "https://www.instagram.com/flordelotuspousada1?igsh=MXVtNHJmNWtkeXE1bg==",
+    "facebook": "https://www.facebook.com/share/15sgTAWutg/",
+    "maps": "https://www.google.com/maps/search/?api=1&query=Pousada+Flor+de+Lotus+Rua+Hibisco+33+Itacare",
+    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d966.6503207455313!2d-38.991001310535104!3d-14.276459651459168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7393537958f0d43%3A0x5549d0040f6757ff!2sPousada%20Flor%20de%20Lotus!5e0!3m2!1spt-BR!2sbr!4v1778290627113!5m2!1spt-BR!2sbr"
+  },
+  "hero": {
+    "visible": true,
+    "title": "Flor de Lótus",
+    "eyebrow": "Pousada · Itacaré, Bahia",
+    "description": "Seu refúgio entre o mar e a natureza.",
+    "video": "/media/jardim-loop-5s-desktop.mp4",
+    "mobileVideo": "/media/jardim-loop-5s-mobile.mp4",
+    "poster": "/media/jardim-final.jpg",
+    "animation": "/media/jardim-loop-5s.webp",
+    "speed": 0.65,
+    "limit": 5,
+    "location": "Praia da Concha",
+    "region": "Itacaré · Bahia",
+    "button": "Descubra a pousada"
+  },
+  "about": {
+    "visible": true,
+    "title": "Sobre a Pousada",
+    "description": "Seu refúgio de tranquilidade em Itacaré. Na Pousada Flor de Lótus, o conforto encontra a natureza. Nossas acomodações foram pensadas para o seu relaxamento, oferecendo varandas privativas com vista para o jardim, ar-condicionado, Smart TV e mimos especiais de banho. Comece o dia com um farto café da manhã em estilo buffet antes de explorar o paraíso: estamos a apenas 3 minutos a pé da Praia da Concha e próximos às principais atrações da cidade. Após os passeios, relaxe em nossa piscina ao ar livre ou aproveite a paz do nosso jardim. Estacionamento rotativo e Wi-Fi são por nossa conta. Descubra por que os casais nos avaliam com nota 9,3 e viva momentos inesquecíveis.",
+    "image": "/img Pousada/frentepousada.jpg",
+    "alt": "Foto da Frente da Pousada",
+    "featuresTitle": "O que temos ?",
+    "features": "Wi-Fi Gratuito\nCafé da Manhã incluso\nEstacionamento rotativo\nQuarto com varanda privativa\nÁrea de Lazer com churrasqueira e piscina"
+  },
+  "gallery": {
+    "visible": true,
+    "title": "Conheça a pousada em imagens",
+    "mobileDelay": 2,
+    "desktopDelay": 3,
+    "photos": [
+      {
+        "url": "/img Pousada/interiorpousada.jpg",
+        "alt": "Jardim e acomodações da Pousada Flor de Lótus"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus3.jpg",
+        "alt": "Mesa de café da manhã da pousada"
+      },
+      {
+        "url": "/img Pousada/quartocasal.jpg",
+        "alt": "Quarto de casal da pousada"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus6.jpg",
+        "alt": "Piscina cercada pelo jardim"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus9.jpg",
+        "alt": "Área de convivência junto ao jardim"
+      },
+      {
+        "url": "/img casal/casal2.jpg",
+        "alt": "Detalhes da acomodação com cama e toalhas"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus2.jpg",
+        "alt": "Varandas e jardim da pousada"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus4.jpg",
+        "alt": "Acomodação preparada para receber hóspedes"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus5.jpg",
+        "alt": "Mesa de sinuca na área de lazer"
+      },
+      {
+        "url": "/img Pousada/FlordeLotus1.jpg",
+        "alt": "Entrada da Pousada Flor de Lótus"
+      }
+    ]
+  },
+  "rooms": {
+    "visible": true,
+    "title": "Nossos Quartos",
+    "description": "Conheça nossas acomodações e escolha o seu refúgio perfeito.",
+    "ratesLabel": "Ver tarifas",
+    "moreLabel": "Ver mais quartos"
+  },
+  "leisure": {
+    "visible": true,
+    "title": "Área de Lazer",
+    "eyebrow": "SEUS DIAS, NO SEU RITMO",
+    "description": "Momentos de diversão e relaxamento para sua estadia.",
+    "hint": "Escolha um momento para descobrir mais.",
+    "items": [
+      {
+        "id": "sinuca",
+        "title": "Sinuca",
+        "heading": "Uma partida, boas histórias.",
+        "description": "Desafie seus amigos ou familiares para uma partida descontraída. O ambiente perfeito para fechar a noite com boas risadas após os passeios por Itacaré.",
+        "image": "/img Pousada/FlordeLotus5.jpg",
+        "alt": "Sinuca"
+      },
+      {
+        "id": "churrasqueira",
+        "title": "Churrasqueira",
+        "heading": "Tempo para estar junto.",
+        "description": "Aproveite nossa área gourmet equipada para preparar aquele churrasco especial. Um espaço amplo, rústico e acolhedor para confraternizar com quem você ama.",
+        "image": "/img Pousada/FlordeLotus9.jpg",
+        "alt": "Churrasqueira"
+      },
+      {
+        "id": "piscina",
+        "title": "Piscina",
+        "heading": "Desacelere ao ar livre.",
+        "description": "Refresque-se em nossa piscina ao ar livre. Cercada por muito verde e com espreguiçadeiras, é o local ideal para relaxar, ler um livro e tomar um banho de sol.",
+        "image": "/img Pousada/FlordeLotus6.jpg",
+        "alt": "Piscina"
+      }
+    ]
+  },
+  "beaches": {
+    "visible": true,
+    "title": "Praias de Itacaré",
+    "items": [
+      {
+        "id": "orla-de-itacare",
+        "title": "Orla de Itacaré",
+        "photos": [
+          {
+            "url": "/img Orla/orla.jpg",
+            "alt": "Orla com nascer do sol"
+          },
+          {
+            "url": "/img Orla/orla1.jpg",
+            "alt": "Orla com nascer do sol"
+          },
+          {
+            "url": "/img Orla/orla2.jpg",
+            "alt": "Orla com nascer do sol"
+          },
+          {
+            "url": "/img Orla/orla3.jpg",
+            "alt": "Orla com nascer do sol"
+          }
+        ]
+      },
+      {
+        "id": "praia-da-concha",
+        "title": "Praia da Concha",
+        "photos": [
+          {
+            "url": "/img concha/praiadaconcha1.jpg",
+            "alt": "Praia da concha"
+          },
+          {
+            "url": "/img concha/praiadaconcha2.jpg",
+            "alt": "Praia da concha"
+          },
+          {
+            "url": "/img concha/praiadaconcha3.jpg",
+            "alt": "Praia da concha"
+          },
+          {
+            "url": "/img concha/praiadaconcha4.jpg",
+            "alt": "Praia da concha"
+          }
+        ]
+      },
+      {
+        "id": "praia-da-resende",
+        "title": "Praia da Resende",
+        "photos": [
+          {
+            "url": "/img Resende/resende1.jpg",
+            "alt": "Praia da Resende"
+          },
+          {
+            "url": "/img Resende/resende3.jpg",
+            "alt": "Praia da Resende"
+          },
+          {
+            "url": "/img Resende/resende5.jpg",
+            "alt": "Praia da Resende"
+          },
+          {
+            "url": "/img Resende/resende6.jpg",
+            "alt": "Praia da Resende"
+          }
+        ]
+      },
+      {
+        "id": "praia-da-tiririca",
+        "title": "Praia da Tiririca",
+        "photos": [
+          {
+            "url": "/img Tiririca/tiririca.jpg",
+            "alt": "Praia da Resende"
+          },
+          {
+            "url": "/img Tiririca/tiririca1.jpg",
+            "alt": "Praia da Resende"
+          },
+          {
+            "url": "/img Tiririca/tiririca3.jpg",
+            "alt": "Praia da tiririca"
+          }
+        ]
+      },
+      {
+        "id": "praia-da-ribeira",
+        "title": "Praia da Ribeira",
+        "photos": [
+          {
+            "url": "/img Ribeira/ribeira1.jpg",
+            "alt": "Praia da Ribeira"
+          },
+          {
+            "url": "/img Ribeira/praiaribeira.jpg",
+            "alt": "Praia da Ribeira"
+          }
+        ]
+      },
+      {
+        "id": "praia-de-jeribucaçu",
+        "title": "Praia de Jeribucaçu",
+        "photos": [
+          {
+            "url": "/img Jeribucaçu/jeribucaçu3.jpg",
+            "alt": "Praia de Jeribucaçu"
+          },
+          {
+            "url": "/img Jeribucaçu/jeribucaçu4.jpg",
+            "alt": "Praia de Jeribucaçu"
+          },
+          {
+            "url": "/img Jeribucaçu/jeribucaçu1.jpg",
+            "alt": "Praia de Jeribucaçu"
+          },
+          {
+            "url": "/img Jeribucaçu/jeribucaçu2.jpg",
+            "alt": "Praia de Jeribucaçu"
+          }
+        ]
+      },
+      {
+        "id": "praia-de-itacarezinho",
+        "title": "Praia de Itacarezinho",
+        "photos": [
+          {
+            "url": "/img Itacarezinho/miranteitacarezinho1.jpg",
+            "alt": "Mirante de Itacarezinho"
+          },
+          {
+            "url": "/img Itacarezinho/itacarezinho.jpg",
+            "alt": "Praia de Itacarezinho"
+          },
+          {
+            "url": "/img Itacarezinho/itacarezinho1.jpg",
+            "alt": "Praia de Itacarezinho"
+          },
+          {
+            "url": "/img Itacarezinho/itacarezinho2.jpg",
+            "alt": "Praia de Itacarezinho"
+          }
+        ]
+      },
+      {
+        "id": "cachoeira-do-tijuipe",
+        "title": "Cachoeira do Tijuípe",
+        "photos": [
+          {
+            "url": "/img Tijuípe/tijuipe.jpg",
+            "alt": "Cachoeira do Tijuípe"
+          },
+          {
+            "url": "/img Tijuípe/tijuipe1.jpg",
+            "alt": "Cachoeira do Tijuípe"
+          },
+          {
+            "url": "/img Tijuípe/tijuipe2.jpg",
+            "alt": "Cachoeira do Tijuípe"
+          },
+          {
+            "url": "/img Tijuípe/tijuipe3.jpg",
+            "alt": "Cachoeira do Tijuípe"
+          }
+        ]
+      },
+      {
+        "id": "cachoeira-do-cleandro",
+        "title": "Cachoeira do Cleandro",
+        "photos": [
+          {
+            "url": "/img Cleandro/cachoeira cleandro2.jpg",
+            "alt": "Cachoeira do Cleandro"
+          },
+          {
+            "url": "/img Cleandro/cachoeira cleandro1.jpg",
+            "alt": "Cachoeira do Cleandro"
+          },
+          {
+            "url": "/img Cleandro/cachoeira cleandro.jpg",
+            "alt": "Cachoeira do Cleandro"
+          },
+          {
+            "url": "/img Cleandro/cachoeira cleandro3.jpg",
+            "alt": "Cachoeira do Cleandro"
+          }
+        ]
+      }
+    ]
+  },
+  "reviews": {
+    "visible": true,
+    "title": "Avaliações dos Hóspedes",
+    "description": "Veja o que nossos visitantes dizem sobre a experiência na Pousada Flor de Lotus.",
+    "moreLabel": "Ver mais avaliações",
+    "items": [
+      {
+        "name": "Ramon",
+        "rating": 5,
+        "description": "“Gostei que as praias ficam perto da pra ir a pé. A dona do estabelecimento e muito simpática O local é aconchegante café da manhã sempre tem novidades, muito bom eu recomendo.”",
+        "source": "Booking.com"
+      },
+      {
+        "name": "Helio",
+        "rating": 5,
+        "description": "“OLHA ,O CAFÉ DA MANHÃ EXTRAORDINÁRIO, A EDUCAÇÃO DAS MOÇAS QUE SERVEM ,O CAFÉ E FAZ A LIMPEZA, DISPENSA COMENTÁRIOS, O ZILTER E UMA FIGURA, A SEGUNDA VEZ ,QUE VOU EM ITACARÉ, VOLTAREI LA ,E HOSPEDAREI LA.POUSADA FLOR DE LOTUS.”",
+        "source": "Booking.com"
+      },
+      {
+        "name": "Manoela",
+        "rating": 5,
+        "description": "“A localização da Pousada e Maravilhosa , o tratamento da Josi e do seu esposo foram excelentes. Voltaremos sem dúvida alguma O ambiente e totalmente acolhedor. Café da manhã muito bom Amamos a experiência”",
+        "source": "Booking.com"
+      }
+    ]
+  },
+  "contact": {
+    "visible": true,
+    "title": "Fale Conosco",
+    "addressTitle": "Endereço",
+    "socialTitle": "Redes Sociais"
+  },
+  "catalog": {
+    "cover": "/img casal/casal.jpg",
+    "title": "Encontre seu refúgio.",
+    "eyebrow": "SEUS DIAS EM ITACARÉ",
+    "heading": "Escolha seu quarto",
+    "packagesTitle": "Pacotes para datas especiais",
+    "packagesEyebrow": "MAIS TEMPO PARA APROVEITAR",
+    "locationTitle": "Localização",
+    "locationEyebrow": "PERTINHO DO MAR",
+    "policiesTitle": "Políticas da pousada",
+    "policiesEyebrow": "PARA UMA ESTADIA TRANQUILA"
+  },
+  "layout": {
+    "order": "about\ngallery\nrooms\nleisure\nbeaches\nreviews\ncontact",
+    "blocks": []
+  }
+}

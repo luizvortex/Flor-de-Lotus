@@ -163,3 +163,18 @@ A área do hóspede agora fica na página exclusiva **`/minha-conta`** (`minha-c
 Reservas públicas agora exigem login Google antes de finalizar. A API retorna 401 sem a sessão do hóspede; o banco também rejeita chamadas diretas anônimas a `lotus_api('book')`. Toda criação pública com Google vincula a reserva ao UUID da sessão na mesma transação. A confirmação final continua com a administração. Registros feitos pela equipe no painel mantêm o fluxo administrativo. Migração: `database/require-google-booking.sql` (`lotus_require_google_for_public_booking`), após as migrações de conta do hóspede.
 
 Na página de quartos, os pacotes ficam centralizados e são exibidos até três cartões. Com mais de três, “Ver mais” abre `/pacotes` em nova aba. A página exclusiva mostra todos os pacotes ativos, sem os vencidos, e permite consultar cada um no catálogo de quartos com período e tarifa preenchidos. Os cadastros continuam na aba Pacotes da administração.
+
+## Editor do site no painel administrativo
+
+Acesse `/admin` e escolha **Editar site**. As onze áreas do editor cobrem identidade e contatos; cabeçalho/vídeo; Sobre a pousada; carrossel; apresentação dos quartos; lazer; praias e passeios; avaliações em destaque; contato; página de quartos; ordem das seções e blocos extras.
+
+- **Pré-visualizar** mostra o conteúdo ainda não publicado, com opções de computador e celular. A prévia é visual, com scripts e formulários desativados.
+- **Publicar alterações** salva o documento no Supabase; novos acessos ao site já recebem o conteúdo. Não exige novo deploy.
+- Fotos: JPG/PNG/WebP até 3 MB. Vídeos: MP4 (H.264 recomendado) ou WebM até 50 MB, enviados diretamente para o Storage por URL assinada após autorização administrativa. A troca do vídeo principal também o aplica no celular, gera uma capa quando possível e limpa o vídeo móvel/animação antigos. O editor permite ajustar velocidade e duração do trecho; o padrão atual mantém os cinco segundos iniciais a 0,65×.
+- Carrosséis e listas permitem adicionar, remover e ordenar itens. Seções podem ser ocultadas e reordenadas. Blocos extras usam modelos de texto, imagem e botão, com fundo claro/areia e imagem à esquerda/direita; não aceitam HTML ou JavaScript livre.
+- **Histórico de publicações** permite restaurar até 30 versões anteriores do conteúdo deste editor. Fotos e arquivos antigos são preservados para que o histórico continue funcionando. Os rascunhos em edição ficam na aba atual, não são publicados automaticamente e não sobrevivem ao fechamento do navegador; há aviso antes de sair.
+- Fotos, textos e ícones de cada quarto permanecem em **Conteúdo dos quartos**. Valores/inventário, pacotes, reservas e políticas mantêm suas abas e regras independentes.
+
+Persistência: `database/site-content.sql`; tabelas privadas com RLS, escrita e histórico restritos a administrador com sessão ativa, revisão otimista e bucket público `lotus-site` para mídia editorial. O documento público nunca contém dados de hóspedes. A renderização valida URLs e escapa textos. O conteúdo inicial em `src/lib/site-content-defaults.json` preserva o site antes da primeira publicação e serve como fallback em falhas temporárias de leitura.
+
+Verificações: `npm run typecheck`, `npm run build`, `node scripts/test-site-editor.mjs` (HTTP Next.js real + Supabase isolado simulado + Chromium; requer Playwright Python e `/usr/bin/chromium`) e `database/test-site-content.sql` (transação com rollback no banco). O teste do editor exercita permissões HTTP, validação, URLs assinadas, upload de foto/vídeo, prévia sem escrita, publicação, conflito de revisão, histórico, restauração, preservação do rascunho e layout móvel. `npm run test:supabase-api` verifica também o contrato das rotas já existentes.

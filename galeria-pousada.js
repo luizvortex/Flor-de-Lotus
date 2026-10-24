@@ -3,8 +3,8 @@
  const gallery=document.querySelector('.pousada-gallery');if(!gallery)return;
  const viewport=gallery.querySelector('.pousada-gallery-viewport');
  const track=gallery.querySelector('.pousada-gallery-track');
- const slides=Array.from(track.children),total=slides.length,clones=3;
- if(total<4)return;
+ const slides=Array.from(track.children),total=slides.length,clones=Math.min(3,slides.length);
+ if(total<2)return;
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
  const status=gallery.querySelector('[data-gallery-status]');
  let index=clones,step=0,offset=0,timer,settleTimer,visible=false,moving=false;
@@ -14,7 +14,7 @@
  function schedule(){
   clearTimeout(timer);
   if(!visible||document.hidden)return;
-  timer=setTimeout(()=>{advance(1,false);schedule();},window.matchMedia('(max-width: 767px)').matches?2000:3000);
+  timer=setTimeout(()=>{advance(1,false);schedule();},1000*(window.matchMedia('(max-width: 767px)').matches?Number(gallery.dataset.mobileDelay||2):Number(gallery.dataset.desktopDelay||3)));
  }
  function settle(){
   clearTimeout(settleTimer);moving=false;

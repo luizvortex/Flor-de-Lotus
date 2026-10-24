@@ -35,10 +35,10 @@
     function paintScroll() {
         scrollFrame = 0;
         const rect = hero.getBoundingClientRect();
-        header.classList.toggle('is-scrolled', window.scrollY > 40);
+        header.classList.toggle('is-scrolled', hero.hidden || window.scrollY > 40);
         // Fixed expanded-header boundary avoids a resize loop when its height changes.
-        setCompact(desktopHeader.matches && rect.bottom <= 142);
-        const progress = reducedMotion.matches ? 0 : Math.max(0, Math.min(1, -rect.top / rect.height));
+        setCompact(desktopHeader.matches && (hero.hidden || rect.bottom <= 142));
+        const progress = reducedMotion.matches ? 0 : Math.max(0, Math.min(1, -rect.top / Math.max(1,rect.height)));
         if (progress !== lastHeroProgress || desktopHeader.matches !== lastHeroDesktop) {
             const travel = desktopHeader.matches ? .16 : .09;
             hero.style.setProperty('--hero-scroll-y', `${(progress * rect.height * travel).toFixed(2)}px`);
@@ -103,12 +103,12 @@
     let animatedFallback;
     const clearFallback=()=>{if(animatedFallback){animatedFallback.remove();animatedFallback=null;}};
     function showFallback(){
-        if(!canPlay()||animatedFallback)return;
+        if(!canPlay()||animatedFallback||video.dataset.animation==='')return;
         animatedFallback=document.createElement('img');
         animatedFallback.className='home-hero-fallback';
         animatedFallback.alt='';
         animatedFallback.width=960;animatedFallback.height=540;
-        animatedFallback.src='/media/jardim-loop-5s.webp';
+        animatedFallback.src=video.dataset.animation||'/media/jardim-loop-5s.webp';
         hero.querySelector('.home-hero-media').append(animatedFallback);
     }
     const canPlay=()=>!reducedMotion.matches&&!document.hidden&&!menu.open&&heroVisible;
@@ -140,8 +140,9 @@
         video.muted=true;
         video.defaultMuted=true;
         video.playsInline=true;
-        video.defaultPlaybackRate=.65;
-        video.playbackRate=.65;
+        video.defaultPlaybackRate=Number(video.dataset.speed||.65);
+        video.playbackRate=video.defaultPlaybackRate;
+        video.addEventListener('timeupdate',()=>{const limit=Number(video.dataset.limit||0);if(limit>0&&limit<video.duration&&video.currentTime>=limit)video.currentTime=0;});
         video.addEventListener('playing',()=>{
             if(!canPlay()){video.pause();return;}
             video.classList.add('is-playing');

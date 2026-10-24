@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { guestBookingOperation, hasGuestSession } from './guest-bookings';
 import { randomUUID } from 'node:crypto';
+import {siteDefaults,siteSections,validateSiteContent} from './site-content-schema';
+import {getSiteDocument} from './site-content';
+import {legacyPage} from './legacy-page';
 import { supabaseKey, supabaseUrl } from './supabase-config';
 
 const ACCESS = 'lotus_access';
@@ -116,7 +119,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       }
     }
     const isUpload = path === 'showcase-upload' && method === 'POST';
-    const data = method === 'GET' || isUpload ? {} : await body(request, path === 'policies' ? 65536 : 16384);
+    const data = method === 'GET' || isUpload ? {} : await body(request, path === 'policies' ? 65536 : ['site-content','site-preview'].includes(path) ? 200000 : 16384);
     if (path === 'login' && method === 'POST') {
       const login = requiredText(data, 'email', 254).trim();
       const email = login.toLowerCase() === 'admin' ? (process.env.ADMIN_LOGIN_EMAIL || 'zilterpacheoni17@gmail.com') : login;
@@ -165,6 +168,36 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
     if (isUpload) {
       if (!token) throw new ApiError(401, 'Entre no painel para enviar fotos.');
       return finish(await uploadShowcasePhoto(request, token), 201);
+    }
+    if (['site-content','site-preview','site-upload','site-history','site-restore'].includes(path)) {
+      if(!token)throw new ApiError(401,'Entre no painel para editar o site.');
+      if(path==='site-content'&&method==='GET')return finish({...await getSiteDocument(),sections:siteSections});
+      if((path==='site-content'&&method==='PUT')||(path==='site-preview'&&method==='POST')){
+        let content;
+        try{content=validateSiteContent(data.content);}catch(error){throw new ApiError(400,(error as Error).message);}
+        if(path==='site-preview'){
+          const pageName=data.page==='quartos'?'quartos':'index';
+          return finish({html:await(await legacyPage(pageName,content)).text()});
+        }
+        return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'save',p_data:{content,revision:data.revision}},token));
+      }
+      if(path==='site-history'&&method==='GET')return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'history',p_data:{}},token));
+      if(path==='site-restore'&&method==='POST'){
+        const saved=await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'restore',p_data:data},token);
+        return finish({...saved,content:saved.content??siteDefaults});
+      }
+      if(path==='site-upload'&&method==='POST'){
+        const types:Record<string,string>={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','video/mp4':'mp4','video/webm':'webm'};
+        const type=String(data.type),size=data.size;
+        if(!Object.hasOwn(types,type)||typeof size!=='number'||!Number.isInteger(size)||size<=0||size>(type.startsWith('video/')?50:3)*1024*1024)throw new ApiError(400,'Use fotos de até 3 MB ou vídeos MP4/WebM de até 50 MB.');
+        const filename=`${randomUUID()}.${types[type]}`;
+        const signed=await call(`/storage/v1/object/upload/sign/lotus-site/${filename}`,'POST',{},token);
+        const signedPath=String(signed.url);
+        const upload=new URL(signedPath.startsWith('/object/')?`${supabaseUrl}/storage/v1${signedPath}`:signedPath,supabaseUrl);
+        if(upload.origin!==new URL(supabaseUrl).origin||!upload.pathname.startsWith('/storage/v1/object/upload/sign/lotus-site/'))throw new ApiError(503,'Não foi possível preparar o envio.');
+        return finish({uploadUrl:upload.href,url:`${supabaseUrl}/storage/v1/object/public/lotus-site/${filename}`});
+      }
+      throw new ApiError(404,'Operação não encontrada.');
     }
     if (path === 'policies' && (method === 'GET' || method === 'PUT')) {
       if (method === 'PUT' && !token) throw new ApiError(401, 'Entre no painel para editar as políticas.');

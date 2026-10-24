@@ -79,7 +79,7 @@ Gostaria de mais informações sobre hospedagem na Pousada Flor de Lotus.
 Mensagem:
 ${mensagem}`;
 
-            const numeroWhatsApp = '557399728505';
+            const numeroWhatsApp = document.body.dataset.contactWhatsapp || '557399728505';
 
             const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
 
