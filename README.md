@@ -192,3 +192,13 @@ No guia, a seta sobre cada cartão com várias fotos avança uma imagem por cliq
 O teste do guia verifica também duas trocas de foto com a rede desligada após o pré-carregamento, no desktop e na largura de celular, com seta sempre habilitada e sem avanço automático.
 
 O menu principal do painel também oferece **Praias e passeios**, com acesso direto em `/admin#praias-passeios`. A área usa o mesmo documento e histórico de **Editar site**, sem duplicar dados. Os grupos **Capa e apresentação**, **Praias e cachoeiras** e **Passeios** tornam os campos mais fáceis de localizar. O atalho **Editar fotos do passeio das baleias** abre o roteiro de tipo baleias; em **Fotos → + Adicionar**, é possível enviar imagens ou escolher as já existentes. A primeira foto publicada substitui automaticamente a ilustração e se torna a capa. Subtítulos opcionais de destinos e passeios também são editáveis. Os campos expandidos permanecem abertos após o upload.
+
+### Avaliações dos hóspedes
+
+A aba **Avaliações** (`/admin#avaliacoes`) edita a apresentação, as notas por plataforma e os depoimentos que alimentam a página inicial e `/avaliacoes`. A inicial exibe até três avaliações publicadas, priorizando as marcadas como destaque. É possível adicionar, ocultar, reordenar e editar as transcrições, informar fonte/link e datas reais, e pré-visualizar antes de publicar. Textos longos têm expansão acessível; a página completa oferece busca, filtros de origem e lotes de seis comentários.
+
+As notas são manuais, com escala individual de 5 ou 10; a nota geral não é calculada pelos comentários cadastrados. Quantidade zero significa não informada e não é exibida. Links e datas desconhecidos ficam vazios, sem alegação de sincronização automática ou selo de hóspede verificado. A coleta de novas avaliações pela conta do hóspede não faz parte desta etapa.
+
+A migração editorial em `upgradeReviewContent` preserva os três depoimentos da inicial e os 14 da antiga página completa, incluindo as notas numéricas existentes. As estrelas decorativas dos três destaques não são convertidas em notas Booking. O marcador `schemaVersion` impede reintroduzir comentários removidos após a primeira publicação no novo editor; versões antigas continuam legíveis. Nenhum comentário é deduplicado apenas pelo nome.
+
+`reviews.css`, `reviews.js` e `src/lib/review-content.ts` implementam a apresentação. `scripts/test-reviews-browser.py`, executado pelo teste do editor, verifica busca, paginação, publicação, ocultação, rascunhos, prévia, fontes/escalas separadas e layout móvel. O teste HTTP cobre também migração de publicações antigas e rejeição de notas, escalas, datas e URLs inválidas.

@@ -1,6 +1,6 @@
 import defaults from './site-content-defaults.json';
 import {supabaseUrl} from './supabase-config';
-export type Field = {key:string; label:string; type:'text'|'textarea'|'image'|'video'|'url'|'number'|'boolean'|'select'|'list'; max?:number; min?:number; step?:number; required?:boolean; options?:string[]; fields?:Field[]; hint?:string};
+export type Field = {key:string; label:string; type:'text'|'textarea'|'image'|'video'|'url'|'number'|'boolean'|'select'|'list'|'date'; max?:number; min?:number; step?:number; required?:boolean; options?:string[]; fields?:Field[]; hint?:string};
 export type SiteContent = Record<string, Record<string, unknown>>;
 const f=(key:string,label:string,type:Field['type']='text',extra:Partial<Field>={}):Field=>({key,label,type,...extra});
 const visible=f('visible','Exibir esta seção','boolean');
@@ -15,7 +15,7 @@ export const siteSections:{key:string;label:string;hint:string;fields:Field[]}[]
  {key:'rooms',label:'Apresentação dos quartos',hint:'Os textos desta seção ficam aqui. As fotos e descrições de cada acomodação continuam na aba “Conteúdo dos quartos”.',fields:[visible,title,description,f('ratesLabel','Botão de tarifas'),f('moreLabel','Botão para ver mais quartos')]},
  {key:'leisure',label:'Área de Lazer',hint:'Edite as experiências que mostram uma foto ao passar o mouse e os detalhes ao clicar.',fields:[visible,title,f('eyebrow','Texto acima do título'),description,f('hint','Instrução abaixo das opções'),f('items','Experiências','list',{min:1,max:8,fields:[f('id','Identificador','text',{max:50,required:true}),title,f('heading','Título dos detalhes'),description,f('image','Foto','image',{required:true}),f('alt','Descrição da foto')]})]},
  {key:'beaches',label:'Praias e passeios',hint:'A página inicial mostra os destinos em destaque. O botão Ver mais abre o guia completo, com todas as fotos e os passeios. Edite os roteiros e as informações de temporada aqui.',fields:[visible,title,f('eyebrow','Texto acima do título'),description,f('moreLabel','Botão para abrir o guia'),f('cover','Capa do guia de Itacaré','image',{required:true}),f('pageTitle','Título do guia completo'),f('pageDescription','Introdução do guia','textarea',{max:3000}),f('toursTitle','Título dos passeios'),f('toursDescription','Introdução dos passeios','textarea',{max:3000}),f('items','Praias e cachoeiras','list',{min:1,max:20,fields:[f('id','Identificador','text',{max:50,required:true}),title,f('subtitle','Subtítulo (opcional)','text',{max:250}),f('category','Categoria','select',{options:['praia','cachoeira']}),f('featured','Destacar na página inicial','boolean'),description,f('highlights','Tópicos (um por linha)','textarea',{max:1500}),f('photos','Fotos do destino','list',{min:1,max:12,fields:photoFields})]}),f('tours','Passeios','list',{min:0,max:12,fields:[f('id','Identificador','text',{max:50,required:true}),title,f('subtitle','Subtítulo (opcional)','text',{max:250}),description,f('highlights','Tópicos (um por linha)','textarea',{max:1500}),f('season','Época ou temporada (opcional)'),f('kind','Tipo de passeio','select',{options:['trilha','baleias']}),f('photos','Fotos do passeio (opcional)','list',{min:0,max:12,fields:photoFields})]})]},
- {key:'reviews',label:'Avaliações em destaque',hint:'Transcreva apenas avaliações reais, preservando a autoria e a fonte.',fields:[visible,title,description,f('moreLabel','Botão para mais avaliações'),f('items','Avaliações','list',{min:1,max:12,fields:[f('name','Nome do hóspede','text',{required:true}),f('rating','Estrelas','number',{min:1,max:5,step:1}),description,f('source','Fonte da avaliação')]})]},
+ {key:'reviews',label:'Avaliações',hint:'Preserve os relatos reais e a autoria. As três avaliações publicadas marcadas como destaque aparecem primeiro na página inicial. As notas das plataformas são informadas manualmente, com escala, fonte e data próprias; não são calculadas a partir dos depoimentos.',fields:[f('schemaVersion','Versão do conteúdo','number',{min:1,max:1,step:1}),visible,title,description,f('moreLabel','Botão para mais avaliações'),f('eyebrow','Texto acima do título'),f('pageTitle','Título da página completa'),f('pageDescription','Introdução da página completa','textarea',{max:3000}),f('platforms','Notas das plataformas','list',{min:0,max:6,fields:[f('id','Identificador','text',{required:true,max:50}),f('label','Nome da plataforma','text',{required:true,max:80}),f('score','Nota geral da plataforma','text',{required:true,max:5,hint:'Informe a nota exibida no perfil da pousada, sem calcular uma média dos depoimentos cadastrados.'}),f('scale','Escala da nota (5 ou 10)','number',{min:5,max:10,step:5}),f('count','Quantidade de avaliações (0 = não informado)','number',{min:0,max:1000000,step:1}),f('updated','Data em que a nota foi conferida (opcional)','date',{max:10}),f('url','Link do perfil da pousada na plataforma (opcional)','url')]}),f('items','Depoimentos','list',{min:0,max:60,fields:[f('id','Identificador','text',{required:true,max:50}),f('name','Nome do hóspede','text',{required:true,max:120}),f('description','Texto da avaliação','textarea',{required:true,max:6000}),f('source','Plataforma de origem','text',{required:true,max:80}),f('sourceUrl','Link da avaliação original (opcional)','url'),f('date','Data original da avaliação (opcional)','date',{max:10}),f('score','Nota individual (opcional)','text',{max:5,hint:'Deixe em branco quando a avaliação original não informar uma nota.'}),f('scale','Escala da nota (5 ou 10)','number',{min:5,max:10,step:5}),f('featured','Destacar na página inicial','boolean'),f('published','Exibir esta avaliação','boolean')]})]},
  {key:'contact',label:'Seção de contato',hint:'O endereço, as redes sociais e o mapa são definidos em “Identidade e contatos”.',fields:[visible,title,f('addressTitle','Título do endereço'),f('socialTitle','Título das redes sociais')]},
  {key:'catalog',label:'Página de quartos e reservas',hint:'Personalize a capa e os títulos da página de quartos. Tarifas, pacotes e políticas têm suas próprias abas.',fields:[f('cover','Foto da capa','image',{required:true}),title,f('eyebrow','Texto acima de “Escolha seu quarto”'),f('heading','Título da lista de quartos'),f('packagesTitle','Título dos pacotes'),f('packagesEyebrow','Subtítulo dos pacotes'),f('locationTitle','Título da localização'),f('locationEyebrow','Subtítulo da localização'),f('policiesTitle','Título das políticas'),f('policiesEyebrow','Subtítulo das políticas')]},
  {key:'layout',label:'Ordem e blocos extras',hint:'Reorganize as seções e crie blocos adicionais de texto, imagem e botão.',fields:[f('order','Ordem das seções (uma chave por linha)','textarea',{hint:'Use cada chave uma vez: about, gallery, rooms, leisure, beaches, reviews, contact.',required:true,max:200}),f('blocks','Blocos extras','list',{min:0,max:12,fields:[f('id','Identificador','text',{required:true,max:50}),visible,title,description,f('image','Foto (opcional)','image'),f('alt','Descrição da foto'),f('button','Texto do botão (opcional)'),f('url','Destino do botão','url'),f('after','Exibir após','select',{options:['about','gallery','rooms','leisure','beaches','reviews','contact']}),f('tone','Fundo','select',{options:['claro','areia']}),f('position','Posição da imagem','select',{options:['esquerda','direita']})]})]}
@@ -42,9 +42,25 @@ export function upgradeExploreContent(input:SiteContent):SiteContent {
  if(Array.isArray(section.tours))section.tours=section.tours.map(item=>item&&typeof item==='object'&&!Array.isArray(item)&&!Object.hasOwn(item,'subtitle')?{...item,subtitle:''}:item);
  return {...input,beaches:section};
 }
+export function upgradeReviewContent(input:SiteContent):SiteContent {
+ const old=input.reviews;if(!old||typeof old!=='object'||Array.isArray(old)||Object.hasOwn(old,'schemaVersion'))return input;
+ const base=siteDefaults.reviews,section={...old};
+ for(const key of ['schemaVersion','eyebrow','pageTitle','pageDescription','platforms'])section[key]=Object.hasOwn(old,key)?old[key]:structuredClone(base[key]);
+ if(Array.isArray(old.items)){
+  const normalize=(s:unknown)=>String(s??'').replace(/\s+/g,' ').trim();
+  const imported=old.items.map((item,index)=>{
+   if(!item||typeof item!=='object'||Array.isArray(item))return item;
+   const previous=item as Record<string,unknown>,match=(base.items as Record<string,unknown>[]).find(r=>normalize(r.name)===normalize(previous.name)&&normalize(r.description)===normalize(previous.description));
+   return {...previous,id:previous.id??match?.id??`old-home-${index+1}`,sourceUrl:previous.sourceUrl??'',date:previous.date??'',score:previous.score??'',scale:previous.scale??(/booking/i.test(String(previous.source))?10:5),featured:previous.featured??index<3,published:previous.published??true};
+  });
+  const originals=(base.items as Record<string,unknown>[]).filter(r=>String(r.id).startsWith('legacy-')&&!imported.some(i=>i&&normalize(i.name)===normalize(r.name)&&normalize(i.description)===normalize(r.description)));
+  section.items=[...imported,...structuredClone(originals)];
+ }
+ return {...input,reviews:section};
+}
 export function validateSiteContent(input:unknown):SiteContent {
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Conteúdo inválido.');
- input=upgradeExploreContent(input as SiteContent);
+ input=upgradeReviewContent(upgradeExploreContent(input as SiteContent));
  const parse=(fields:Field[],obj:unknown,label:string):Record<string,unknown>=>{
   if(!obj||typeof obj!=='object'||Array.isArray(obj))throw Error(`Confira ${label}.`);
   const src=obj as Record<string,unknown>,out:Record<string,unknown>={};
@@ -52,7 +68,7 @@ export function validateSiteContent(input:unknown):SiteContent {
    if(field.type==='boolean'){if(typeof value!=='boolean')throw Error(`Confira ${name}.`);out[field.key]=value;}
    else if(field.type==='number'){if(typeof value!=='number'||!Number.isFinite(value)||value<(field.min??0)||value>(field.max??100000)||(field.step===1&&!Number.isInteger(value)))throw Error(`Confira ${name}.`);out[field.key]=value;}
    else if(field.type==='list'){if(!Array.isArray(value)||value.length<(field.min??0)||value.length>(field.max??30))throw Error(`Confira a quantidade em ${name}.`);out[field.key]=value.map((v,i)=>parse(field.fields!,v,`${name} ${i+1}`));}
-   else {if(typeof value!=='string'||value.length>(field.max??1000)||(field.required&&!value.trim()))throw Error(`Confira ${name}.`);const v=value.trim();if((field.type==='image'||field.type==='video')&&!safeMedia(v,field.type))throw Error(`Envie um arquivo pelo painel em ${name}.`);if(field.type==='url'&&!safeLink(v))throw Error(`Use um endereço https válido em ${name}.`);if(field.type==='select'&&!field.options!.includes(v))throw Error(`Confira ${name}.`);out[field.key]=v;}
+   else {if(typeof value!=='string'||value.length>(field.max??1000)||(field.required&&!value.trim()))throw Error(`Confira ${name}.`);const v=value.trim();if((field.type==='image'||field.type==='video')&&!safeMedia(v,field.type))throw Error(`Envie um arquivo pelo painel em ${name}.`);if(field.type==='url'&&!safeLink(v))throw Error(`Use um endereço https válido em ${name}.`);if(field.type==='date'&&v&&(!/^\d{4}-\d{2}-\d{2}$/.test(v)||!Number.isFinite(Date.parse(v+'T00:00:00Z'))||new Date(v+'T00:00:00Z').toISOString().slice(0,10)!==v))throw Error(`Confira a data em ${name}.`);if(field.type==='select'&&!field.options!.includes(v))throw Error(`Confira ${name}.`);out[field.key]=v;}
   }return out;
  };
  const result:SiteContent={};for(const section of siteSections)result[section.key]=parse(section.fields,(input as SiteContent)[section.key],section.label);
@@ -60,6 +76,15 @@ export function validateSiteContent(input:unknown):SiteContent {
  for(const key of ['maps','mapEmbed']){const u=new URL(String(result.branding[key]));if(u.protocol!=='https:'||!['www.google.com','maps.google.com','maps.app.goo.gl'].includes(u.hostname)||(key==='mapEmbed'&&!u.pathname.startsWith('/maps/embed')))throw Error('Use os links do Google Maps para localização e incorporação.');}
  const order=String(result.layout.order).split(/\s+/).filter(Boolean),expected=['about','gallery','rooms','leisure','beaches','reviews','contact'];
  if(order.length!==expected.length||new Set(order).size!==expected.length||!expected.every(k=>order.includes(k)))throw Error('A ordem precisa conter cada uma das sete chaves de seção, uma vez.');
- for(const items of [result.leisure.items,result.beaches.items,result.beaches.tours,result.layout.blocks]){const ids=(items as Record<string,unknown>[]).map(i=>String(i.id));if(ids.some(id=>!/^[-\p{Ll}0-9]{1,50}$/u.test(id))||new Set(ids).size!==ids.length)throw Error('Use identificadores únicos com letras minúsculas, números e hífen.');}
+ for(const items of [result.leisure.items,result.beaches.items,result.beaches.tours,result.reviews.items,result.reviews.platforms,result.layout.blocks]){const ids=(items as Record<string,unknown>[]).map(i=>String(i.id));if(ids.some(id=>!/^[-\p{Ll}0-9]{1,50}$/u.test(id))||new Set(ids).size!==ids.length)throw Error('Use identificadores únicos com letras minúsculas, números e hífen.');}
+ for(const row of [...result.reviews.items as Record<string,unknown>[],...result.reviews.platforms as Record<string,unknown>[]]){
+  if(![5,10].includes(Number(row.scale)))throw Error('Use escala 5 ou 10 nas avaliações.');
+  if(String(row.score).trim()){
+   const value=String(row.score).replace(',','.');
+   if(!/^\d{1,2}(\.\d{1,2})?$/.test(value)||Number(value)>Number(row.scale))throw Error('A nota precisa estar entre 0 e a escala da plataforma.');
+   row.score=value;
+  }
+  for(const key of ['url','sourceUrl'])if(row[key]&&!String(row[key]).startsWith('https://'))throw Error('Use um link https para conferir a avaliação na plataforma.');
+ }
  return result;
 }

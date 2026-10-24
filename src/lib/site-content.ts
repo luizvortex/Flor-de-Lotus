@@ -1,4 +1,5 @@
 import { load } from 'cheerio';
+import {applyReviewsPage,renderReviewsPreview} from './review-content';
 import {applyExplorePage,renderExplorePreview} from './itacare-content';
 import { siteDefaults, validateSiteContent, type SiteContent } from './site-content-schema';
 import { supabaseUrl, supabaseKey } from './supabase-config';
@@ -31,6 +32,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  const k=c.catalog;
  img('#catalog-cover',k.cover);$('#catalog-cover').attr('data-cms-cover','true');text('.catalog-hero h1',k.title);text('.catalog-title h2',k.heading);text('.catalog-title .eyebrow',k.eyebrow);
  text('#special-packages h2',k.packagesTitle);text('#special-packages > .eyebrow',k.packagesEyebrow);text('#location-title',k.locationTitle);text('.location-copy .eyebrow',k.locationEyebrow);text('#policies-title',k.policiesTitle);text('#politicas > .eyebrow',k.policiesEyebrow);
+ if(page==='avaliacoes')applyReviewsPage($,c);
  if(page==='itacare')applyExplorePage($,c);
  if(page!=='index')return $.html();
  $('head').append('<link rel="stylesheet" href="/itacare.css">');
@@ -51,8 +53,8 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('.leisure-choices').html((leisure.items as Item[]).map(i=>`<button type="button" class="leisure-choice" data-leisure="${esc(i.id)}" aria-expanded="false" aria-controls="leisure-panel-${esc(i.id)}"><img class="leisure-preview" src="${esc(i.image)}" alt="${esc(i.alt)}" width="600" height="650" loading="lazy"><span class="leisure-name">${esc(i.title)}</span><span class="leisure-indicator" aria-hidden="true">+</span></button>`).join(''));
  $('.leisure-panels').html((leisure.items as Item[]).map(i=>`<div id="leisure-panel-${esc(i.id)}" class="leisure-panel" role="region" aria-label="Sobre ${esc(i.title)}" aria-hidden="true" inert><div class="leisure-panel-clip"><div class="leisure-panel-content"><div><p class="leisure-eyebrow">${esc(i.title)}</p><h3>${esc(i.heading)}</h3></div><p class="cms-paragraph">${esc(i.description)}</p>${close}</div></div></div>`).join(''));
  $('#praias').removeClass('pt-5 pb-5').addClass('discovery-preview').attr('aria-labelledby','topo-praias').html(renderExplorePreview(c));
- text('#avaliacoes h2',c.reviews.title);text('#avaliacoes .row > p',c.reviews.description);text('.btn-avaliacoes',c.reviews.moreLabel);
- $('#avaliacoes .row.g-4').html((c.reviews.items as Item[]).map(i=>`<div class="col-md-4"><div class="card-avaliacao h-100"><div class="avaliacao-topo"><h5>${esc(i.name)}</h5><span aria-label="${esc(i.rating)} estrelas">${'⭐'.repeat(Number(i.rating))}</span></div><p class="cms-paragraph">${esc(i.description)}</p><small>${esc(i.source)}</small></div></div>`).join(''));
+ $('head').append('<link rel="stylesheet" href="/reviews.css">');
+ $('#avaliacoes').removeClass('pt-5 pb-5').addClass('guest-reviews').html(renderReviewsPreview(c));
  text('#fale-conosco h2',c.contact.title);text('#fale-conosco .col-sm-7 h3',c.contact.addressTitle);text('#fale-conosco .col-sm-5 h3',c.contact.socialTitle);
  const ids:Record<string,string>={hero:'inicio',about:'sobre-a-pousada',gallery:'galeria-pousada',rooms:'quartos',leisure:'area-de-lazer',beaches:'praias',reviews:'avaliacoes',contact:'fale-conosco'};
  for(const [key,id] of Object.entries(ids)){if(c[key].visible===false){$('#'+id).attr('hidden','').attr('data-cms-hidden','true');$(`.home-header a[href="#${id}"],.home-menu a[href="#${id}"]`).attr('hidden','');}}

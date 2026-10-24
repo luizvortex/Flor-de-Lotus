@@ -45,6 +45,10 @@ try{
  console.log('Editor integration server ready');
  assert.equal((await request('site-content',undefined,false)).status,401);
  assert.equal((await request('site-upload',{type:'video/mp4',size:100},false)).status,401);
+ const legacyReviews=structuredClone(defaults);legacyReviews.reviews={visible:true,title:'Título personalizado',description:'Texto mantido',moreLabel:'Ver mais',items:defaults.reviews.items.slice(0,3).map(r=>({name:r.name,description:r.description,source:r.source,rating:5}))};
+ const legacyReviewPreview=await request('site-preview',{content:legacyReviews,page:'avaliacoes'});assert.equal(legacyReviewPreview.status,200);const legacyHtml=(await legacyReviewPreview.json()).html;assert.ok(legacyHtml.includes('Rita'));assert.ok(legacyHtml.includes('Ramon'));
+ for(const change of [c=>c.reviews.platforms[0].score='11',c=>c.reviews.platforms[0].scale=7,c=>c.reviews.items[0].description='',c=>c.reviews.items[0].date='2026-02-30',c=>c.reviews.items[0].sourceUrl='javascript:alert(1)']){const invalid=structuredClone(defaults);change(invalid);assert.equal((await request('site-preview',{content:invalid,page:'avaliacoes'})).status,400);}
+ const emptyReviews=structuredClone(defaults);emptyReviews.reviews.items=[];const emptyPreview=await request('site-preview',{content:emptyReviews,page:'avaliacoes'});assert.equal(emptyPreview.status,200);assert.ok(!(await emptyPreview.json()).html.includes('data-review-source='));
  const validation=await request('site-preview',{content:defaults});if(validation.status!==200)throw Error(JSON.stringify(await validation.json()));
  const read=await(await request('site-content')).json();assert.ok(read.content,read.error);assert.equal(read.content.hero.limit,5);assert.equal(read.sections.length,11);
  let invalid=structuredClone(defaults);invalid.hero.video='javascript:alert(1)';assert.equal((await request('site-content',{content:invalid,revision:1},true,'PUT')).status,400);
@@ -65,6 +69,8 @@ try{
  const catalog=await(await fetch(base+'/quartos')).text();assert.ok(catalog.includes('Escolha seu descanso'));
  assert.equal((await request('site-restore',{revision:2,target:1})).status,200);assert.deepEqual(document.content,defaults);
  const exploreBrowser=spawn('python',['scripts/test-itacare-browser.py',base],{stdio:'inherit'});await once(exploreBrowser,'exit');assert.equal(exploreBrowser.exitCode,0);
+ const reviewsBrowser=spawn('python',['scripts/test-reviews-browser.py',base],{stdio:'inherit'});await once(reviewsBrowser,'exit');assert.equal(reviewsBrowser.exitCode,0);
+ document={content:structuredClone(defaults),revision:document.revision+1};
  const browser=spawn('python',['scripts/test-site-editor-browser.py',base],{stdio:'inherit'});await once(browser,'exit');assert.equal(browser.exitCode,0);
  console.log('Site editor API, preview, uploads, publication, history and browser flow: passed.');
 }finally{app.kill('SIGTERM');mock.closeAllConnections();await new Promise(r=>mock.close(r));}

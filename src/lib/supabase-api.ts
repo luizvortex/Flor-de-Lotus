@@ -176,7 +176,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
         let content;
         try{content=validateSiteContent(data.content);}catch(error){throw new ApiError(400,(error as Error).message);}
         if(path==='site-preview'){
-          const pageName=data.page==='quartos'?'quartos':data.page==='itacare'?'itacare':'index';
+          const pageName=data.page==='avaliacoes'?'avaliacoes':data.page==='quartos'?'quartos':data.page==='itacare'?'itacare':'index';
           return finish({html:await(await legacyPage(pageName,content)).text()});
         }
         return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'save',p_data:{content,revision:data.revision}},token));
