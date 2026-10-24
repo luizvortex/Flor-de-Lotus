@@ -49,44 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // =========================
-    // MÁSCARA TELEFONE
-    // =========================
-    if (document.getElementById('telefone') && typeof window.jQuery !== 'undefined' && window.jQuery.fn.inputmask) {
-        window.jQuery('#telefone').inputmask('(99) 9 9999-9999');
-    }
-
-    // =========================
-    // FORMULÁRIO WHATSAPP
-    // =========================
-    const form = document.querySelector('#fale-conosco form');
-
-    if (form) {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const nome = document.getElementById('nome').value;
-            const telefone = document.getElementById('telefone').value;
-            const email = document.getElementById('email').value;
-            const mensagem = document.getElementById('mensagem').value;
-
-            const texto = `Olá, tudo bem? Me chamo ${nome}.
-Telefone: ${telefone}
-E-mail: ${email}
-
-Gostaria de mais informações sobre hospedagem na Pousada Flor de Lotus.
-
-Mensagem:
-${mensagem}`;
-
-            const numeroWhatsApp = document.body.dataset.contactWhatsapp || '557399728505';
-
-            const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(texto)}`;
-
-            window.open(url, '_blank');
-        });
-    }
-
     // SUBSTITUA TODO O BLOCO DO DROPDOWN PRAIAS POR ESTE:
 
     const praiasSelect = document.getElementById('praias-select');

@@ -17,7 +17,7 @@ const publishedContent=unstable_cache(async()=>{
 },['lotus-published-content-v2',supabaseUrl],{revalidate:60,tags:['lotus-content']});
 export function rememberPublishedContent(content:SiteContent){lastPublished=content;revalidateTag('lotus-content',{expire:0});}
 export async function getSiteContent():Promise<SiteContent>{
- try{const content=await publishedContent();lastPublished=content;return content;}
+ try{const content=validateSiteContent(await publishedContent());lastPublished=content;return content;}
  catch{console.error('[lotus] Falha ao carregar conteúdo editorial; usando última versão disponível.');return lastPublished??siteDefaults;}
 }
 const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
@@ -67,7 +67,9 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('#praias').removeClass('pt-5 pb-5').addClass('discovery-preview').attr('aria-labelledby','topo-praias').html(renderExplorePreview(c));
  $('head').append('<link rel="stylesheet" href="/reviews.css">');
  $('#avaliacoes').removeClass('pt-5 pb-5').addClass('guest-reviews').html(renderReviewsPreview(c));
- text('#fale-conosco h2',c.contact.title);text('#fale-conosco .col-sm-7 h3',c.contact.addressTitle);text('#fale-conosco .col-sm-5 h3',c.contact.socialTitle);
+ text('#contact-title',c.contact.title);text('.contact-eyebrow',c.contact.eyebrow);text('[data-contact-description]',c.contact.description);text('[data-contact-form-title]',c.contact.formTitle);text('[data-contact-intro]',c.contact.intro);text('[data-contact-button]',c.contact.buttonLabel);
+ text('[data-contact-address-title]',c.contact.addressTitle);text('[data-contact-social-title]',c.contact.socialTitle);text('.contact-address',b.address);
+ $('#whatsapp-form').attr('data-default-message',String(c.contact.defaultMessage)).attr('action',`https://wa.me/${b.whatsapp}`);link('[data-contact-maps]',b.maps);
  const ids:Record<string,string>={hero:'inicio',about:'sobre-a-pousada',gallery:'galeria-pousada',rooms:'quartos',leisure:'area-de-lazer',beaches:'praias',reviews:'avaliacoes',contact:'fale-conosco'};
  for(const [key,id] of Object.entries(ids)){if(c[key].visible===false){$('#'+id).attr('hidden','').attr('data-cms-hidden','true');$(`.home-header a[href="#${id}"],.home-menu a[href="#${id}"]`).attr('hidden','');}}
  const sections=new Map(Object.entries(ids).filter(([key])=>key!=='hero').map(([key,id])=>[key,$('#'+id).remove()]));
