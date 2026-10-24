@@ -3,6 +3,16 @@
  const page=document.querySelector('.explore-page');if(!page)return;
  // A small pan and perspective tilt follow the mouse without moving the hit area.
  const desktopMotion=matchMedia('(min-width:768px) and (hover:hover) and (pointer:fine)'),reducedMotion=matchMedia('(prefers-reduced-motion:reduce)');
+
+ const discover=page.querySelector('.explore-discover');
+ discover?.addEventListener('click',event=>{
+  if(event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+  const target=document.getElementById(discover.hash.slice(1));if(!target)return;
+  event.preventDefault();
+  if(location.hash!==discover.hash)history.pushState(null,'',discover.hash);
+  target.setAttribute('tabindex','-1');target.focus({preventScroll:true});
+  target.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'start'});
+ });
  let motionTarget=null,motionFrame=0,mouseX=0,mouseY=0;
  const motionProperties=['--photo-pan-x','--photo-pan-y','--photo-rotate-x','--photo-rotate-y'];
  function resetMotion(){
