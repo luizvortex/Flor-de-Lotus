@@ -32,10 +32,7 @@ with sync_playwright() as p:
  page.locator('[data-cms-action="save"]').click();page.get_by_text('Publicado! As alterações aparecem ao abrir ou atualizar o site.').wait_for()
  page.goto(base+'/',wait_until='domcontentloaded')
  assert page.locator('.pousada-gallery-slide img').first.evaluate("i=>getComputedStyle(i).objectFit")=='cover'
- originals=page.locator('.pousada-gallery-slide:not([aria-hidden="true"])')
- total=originals.count()
- for i in range(total):
-  assert originals.nth(i).locator('.gallery-photo-number').inner_text()==f'{i+1:02d} / {total:02d}'
+ assert page.locator('.gallery-photo-number').count()==0
  assert page.locator('[data-gallery-prev]').count()==1 and page.locator('[data-gallery-next]').count()==1
  for width in [390,1440,1900]:
   page.set_viewport_size({'width':width,'height':1000})

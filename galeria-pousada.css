@@ -21,6 +21,3 @@ body.home-page main > section#galeria-pousada > .container { width: 100%; max-wi
 @media(prefers-reduced-motion:reduce) {
  .pousada-gallery-track { transition: none; }
 }
-
-.gallery-photo-number { position:absolute; left:16px; bottom:16px; z-index:1; padding:5px 10px; background:rgba(38,61,56,.72); color:#fff; border-radius:2px; font:500 12px/1.5 "DM Sans",sans-serif; font-variant-numeric:tabular-nums; letter-spacing:.06em; pointer-events:none; }
-@media(max-width:767px){.gallery-photo-number{left:12px;bottom:12px;font-size:11px;}}
