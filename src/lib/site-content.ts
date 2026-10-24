@@ -1,4 +1,5 @@
 import { load } from 'cheerio';
+import {applyExplorePage,renderExplorePreview} from './itacare-content';
 import { siteDefaults, validateSiteContent, type SiteContent } from './site-content-schema';
 import { supabaseUrl, supabaseKey } from './supabase-config';
 export async function getSiteDocument():Promise<{content:SiteContent;revision:number}> {
@@ -30,7 +31,9 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  const k=c.catalog;
  img('#catalog-cover',k.cover);$('#catalog-cover').attr('data-cms-cover','true');text('.catalog-hero h1',k.title);text('.catalog-title h2',k.heading);text('.catalog-title .eyebrow',k.eyebrow);
  text('#special-packages h2',k.packagesTitle);text('#special-packages > .eyebrow',k.packagesEyebrow);text('#location-title',k.locationTitle);text('.location-copy .eyebrow',k.locationEyebrow);text('#policies-title',k.policiesTitle);text('#politicas > .eyebrow',k.policiesEyebrow);
+ if(page==='itacare')applyExplorePage($,c);
  if(page!=='index')return $.html();
+ $('head').append('<link rel="stylesheet" href="/itacare.css">');
  const hero=c.hero;
  text('.home-hero-copy h1',hero.title);text('.home-hero-eyebrow',hero.eyebrow);text('.home-hero-tagline',hero.description);
  img('.home-hero-poster',hero.poster);const video=$('.home-hero-video');video.attr('poster',String(hero.poster)).attr('data-speed',String(hero.speed)).attr('data-limit',String(hero.limit)).attr('data-animation',String(hero.animation));
@@ -47,15 +50,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  const close='<button type="button" data-leisure-close aria-label="Fechar detalhes"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button>';
  $('.leisure-choices').html((leisure.items as Item[]).map(i=>`<button type="button" class="leisure-choice" data-leisure="${esc(i.id)}" aria-expanded="false" aria-controls="leisure-panel-${esc(i.id)}"><img class="leisure-preview" src="${esc(i.image)}" alt="${esc(i.alt)}" width="600" height="650" loading="lazy"><span class="leisure-name">${esc(i.title)}</span><span class="leisure-indicator" aria-hidden="true">+</span></button>`).join(''));
  $('.leisure-panels').html((leisure.items as Item[]).map(i=>`<div id="leisure-panel-${esc(i.id)}" class="leisure-panel" role="region" aria-label="Sobre ${esc(i.title)}" aria-hidden="true" inert><div class="leisure-panel-clip"><div class="leisure-panel-content"><div><p class="leisure-eyebrow">${esc(i.title)}</p><h3>${esc(i.heading)}</h3></div><p class="cms-paragraph">${esc(i.description)}</p>${close}</div></div></div>`).join(''));
- text('#topo-praias h2',c.beaches.title);
- const destinations=c.beaches.items as Item[],nav=$('#praias .nav-pills'),tabContent=$('#praias .tab-content');
- const samplePane=$('#praias .tab-pane').first().clone(),sampleNav=nav.children().first().clone();
- $('#praias-select').html(destinations.map((i,n)=>`<option value="${esc(i.id)}" ${n===0?'selected':''}>${esc(i.title)}</option>`).join(''));
- nav.empty();tabContent.empty();destinations.forEach((i,n)=>{
-  const navItem=sampleNav.clone();navItem.find('button,a').addBack('button,a').attr('data-bs-target',`#${i.id}`).attr('aria-controls',String(i.id)).attr('aria-selected',String(n===0)).toggleClass('active',n===0).text(String(i.title));nav.append(navItem);
-  const pane=samplePane.clone().attr('id',String(i.id)).toggleClass('active',n===0).toggleClass('show',n===0);
-  pane.html(`<div class="row">${(i.photos as Item[]).map(photo=>`<div class="col-md-3"><img src="${esc(photo.url)}" alt="${esc(photo.alt)}" loading="lazy"></div>`).join('')}</div>`);tabContent.append(pane);
- });
+ $('#praias').removeClass('pt-5 pb-5').addClass('discovery-preview').attr('aria-labelledby','topo-praias').html(renderExplorePreview(c));
  text('#avaliacoes h2',c.reviews.title);text('#avaliacoes .row > p',c.reviews.description);text('.btn-avaliacoes',c.reviews.moreLabel);
  $('#avaliacoes .row.g-4').html((c.reviews.items as Item[]).map(i=>`<div class="col-md-4"><div class="card-avaliacao h-100"><div class="avaliacao-topo"><h5>${esc(i.name)}</h5><span aria-label="${esc(i.rating)} estrelas">${'⭐'.repeat(Number(i.rating))}</span></div><p class="cms-paragraph">${esc(i.description)}</p><small>${esc(i.source)}</small></div></div>`).join(''));
  text('#fale-conosco h2',c.contact.title);text('#fale-conosco .col-sm-7 h3',c.contact.addressTitle);text('#fale-conosco .col-sm-5 h3',c.contact.socialTitle);

@@ -58,9 +58,13 @@ try{
  const preview=await request('site-preview',{content:changed});assert.equal(preview.status,200);const previewHtml=(await preview.json()).html;assert.ok(previewHtml.includes('Minha pousada de teste'));assert.ok(previewHtml.includes('&lt;script&gt;alert(1)&lt;/script&gt;'));assert.equal(JSON.stringify(document),before);
  assert.equal((await request('site-content',{content:changed,revision:1},true,'PUT')).status,200);
  assert.equal((await request('site-content',{content:changed,revision:1},true,'PUT')).status,409);
- const publicHtml=await(await fetch(base+'/')).text();assert.ok(publicHtml.includes('Minha pousada de teste'));assert.ok(publicHtml.includes('Praia de teste'));assert.ok(publicHtml.includes('extra-oferta-teste'));
+ const publicHtml=await(await fetch(base+'/')).text();assert.ok(publicHtml.includes('Minha pousada de teste'));assert.ok(publicHtml.includes('href="/itacare"'));assert.ok(!publicHtml.includes('id="praias-select"'));assert.ok(publicHtml.includes('extra-oferta-teste'));
+ const guide=await(await fetch(base+'/itacare')).text();assert.ok(guide.includes('Praia de teste'));assert.ok(guide.includes('4 praias + cachoeira'));assert.ok(guide.includes('Jeribucaçu, Usina e Arruda'));assert.ok(guide.includes('Agosto e setembro'));
+ const old=structuredClone(defaults);for(const key of ['eyebrow','description','moreLabel','cover','pageTitle','pageDescription','toursTitle','toursDescription','tours'])delete old.beaches[key];for(const item of old.beaches.items)for(const key of ['category','featured','description','highlights'])delete item[key];
+ const oldPreview=await request('site-preview',{content:old,page:'itacare'});assert.equal(oldPreview.status,200);assert.ok((await oldPreview.json()).html.includes('Agosto e setembro'));
  const catalog=await(await fetch(base+'/quartos')).text();assert.ok(catalog.includes('Escolha seu descanso'));
  assert.equal((await request('site-restore',{revision:2,target:1})).status,200);assert.deepEqual(document.content,defaults);
+ const exploreBrowser=spawn('python',['scripts/test-itacare-browser.py',base],{stdio:'inherit'});await once(exploreBrowser,'exit');assert.equal(exploreBrowser.exitCode,0);
  const browser=spawn('python',['scripts/test-site-editor-browser.py',base],{stdio:'inherit'});await once(browser,'exit');assert.equal(browser.exitCode,0);
  console.log('Site editor API, preview, uploads, publication, history and browser flow: passed.');
 }finally{app.kill('SIGTERM');mock.closeAllConnections();await new Promise(r=>mock.close(r));}

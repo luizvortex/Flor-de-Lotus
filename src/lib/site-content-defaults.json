@@ -146,7 +146,11 @@
             "url": "/img Orla/orla3.jpg",
             "alt": "Orla com nascer do sol"
           }
-        ]
+        ],
+        "description": "Um passeio para sentir o ritmo da cidade, caminhar à beira-rio e apreciar a paisagem da orla de Itacaré.",
+        "highlights": "Caminhada pela cidade\nPaisagem à beira-rio",
+        "category": "praia",
+        "featured": false
       },
       {
         "id": "praia-da-concha",
@@ -168,7 +172,11 @@
             "url": "/img concha/praiadaconcha4.jpg",
             "alt": "Praia da concha"
           }
-        ]
+        ],
+        "description": "Perto da pousada, a Praia da Concha é um convite para aproveitar o mar e desacelerar sem ir longe.",
+        "highlights": "Perto da pousada\nUm dia para relaxar",
+        "category": "praia",
+        "featured": true
       },
       {
         "id": "praia-da-resende",
@@ -190,7 +198,11 @@
             "url": "/img Resende/resende6.jpg",
             "alt": "Praia da Resende"
           }
-        ]
+        ],
+        "description": "Uma praia pequena e cercada de verde, com um cenário que convida a deixar a pressa para depois.",
+        "highlights": "Natureza ao redor\nPaisagem para contemplar",
+        "category": "praia",
+        "featured": false
       },
       {
         "id": "praia-da-tiririca",
@@ -208,7 +220,11 @@
             "url": "/img Tiririca/tiririca3.jpg",
             "alt": "Praia da tiririca"
           }
-        ]
+        ],
+        "description": "Um dos cenários mais conhecidos do surfe em Itacaré. Aproveite o passeio para sentir a energia do mar e acompanhar o movimento das ondas.",
+        "highlights": "Cultura do surfe\nOndas e paisagens",
+        "category": "praia",
+        "featured": false
       },
       {
         "id": "praia-da-ribeira",
@@ -222,7 +238,11 @@
             "url": "/img Ribeira/praiaribeira.jpg",
             "alt": "Praia da Ribeira"
           }
-        ]
+        ],
+        "description": "Entre o verde da mata e o azul do mar, a Ribeira oferece um belo cenário para aproveitar um dia ao ar livre.",
+        "highlights": "Mar e Mata Atlântica\nPasseio em meio à natureza",
+        "category": "praia",
+        "featured": false
       },
       {
         "id": "praia-de-jeribucaçu",
@@ -244,7 +264,11 @@
             "url": "/img Jeribucaçu/jeribucaçu2.jpg",
             "alt": "Praia de Jeribucaçu"
           }
-        ]
+        ],
+        "description": "O encontro do rio com o mar e a trilha em meio ao verde fazem de Jeribucaçu uma experiência que começa antes de chegar à areia.",
+        "highlights": "Trilha pela natureza\nEncontro do rio com o mar",
+        "category": "praia",
+        "featured": true
       },
       {
         "id": "praia-de-itacarezinho",
@@ -266,7 +290,11 @@
             "url": "/img Itacarezinho/itacarezinho2.jpg",
             "alt": "Praia de Itacarezinho"
           }
-        ]
+        ],
+        "description": "Uma faixa de areia extensa, coqueiros e um horizonte que parece não ter fim. Itacarezinho é um convite para caminhar e apreciar a costa.",
+        "highlights": "Areia e coqueiros\nVista para o oceano",
+        "category": "praia",
+        "featured": true
       },
       {
         "id": "cachoeira-do-tijuipe",
@@ -288,7 +316,11 @@
             "url": "/img Tijuípe/tijuipe3.jpg",
             "alt": "Cachoeira do Tijuípe"
           }
-        ]
+        ],
+        "description": "Uma pausa de água doce entre os passeios pela região. Descubra um cenário de cachoeira cercado pela vegetação da Mata Atlântica.",
+        "highlights": "Água doce\nNatureza e descanso",
+        "category": "cachoeira",
+        "featured": false
       },
       {
         "id": "cachoeira-do-cleandro",
@@ -310,7 +342,58 @@
             "url": "/img Cleandro/cachoeira cleandro3.jpg",
             "alt": "Cachoeira do Cleandro"
           }
-        ]
+        ],
+        "description": "Um passeio para conhecer outro lado de Itacaré, com água doce e vegetação exuberante no entorno do Rio de Contas.",
+        "highlights": "Cachoeira\nPaisagens do Rio de Contas",
+        "category": "cachoeira",
+        "featured": false
+      }
+    ],
+    "eyebrow": "DIAS PARA DESCOBRIR",
+    "description": "Praias cercadas de verde, trilhas que levam a cachoeiras e encontros inesquecíveis com o mar. Encontre o passeio que combina com a sua estadia.",
+    "moreLabel": "Ver mais praias e passeios",
+    "cover": "/img Itacarezinho/miranteitacarezinho1.jpg",
+    "pageTitle": "Descubra o melhor de Itacaré.",
+    "pageDescription": "Um lugar para ir além da paisagem. Explore praias, cachoeiras e passeios e comece a imaginar os seus dias na Bahia.",
+    "toursTitle": "Experiências para levar na memória",
+    "toursDescription": "Entre um mergulho e outro, escolha um roteiro para descobrir novos lados de Itacaré.",
+    "tours": [
+      {
+        "id": "quatro-praias-cachoeira",
+        "title": "4 praias + cachoeira",
+        "description": "Um dia para alternar mar, trilhas e água doce. Descubra diferentes paisagens da região e aproveite uma parada em cachoeira para completar o passeio.",
+        "highlights": "Praias e trilhas\nParada em cachoeira\nUm dia em contato com a natureza",
+        "season": "",
+        "photos": [
+          {
+            "url": "/img Itacarezinho/itacarezinho.jpg",
+            "alt": "Praia de Itacarezinho, na costa de Itacaré"
+          }
+        ],
+        "kind": "trilha"
+      },
+      {
+        "id": "jeribucacu-usina-arruda",
+        "title": "Jeribucaçu, Usina e Arruda",
+        "description": "Combine a Praia de Jeribucaçu com as cachoeiras da Usina e da Arruda. Um convite para alternar água doce, mar e caminhos cercados de verde.",
+        "highlights": "Praia de Jeribucaçu\nCachoeira da Usina\nCachoeira da Arruda",
+        "season": "",
+        "photos": [
+          {
+            "url": "/img Jeribucaçu/jeribucaçu3.jpg",
+            "alt": "Paisagem da Praia de Jeribucaçu em Itacaré"
+          }
+        ],
+        "kind": "trilha"
+      },
+      {
+        "id": "observacao-baleias",
+        "title": "Encontro com as baleias",
+        "description": "Uma experiência para quem sonha em observar baleias no mar. Planeje sua visita para agosto ou setembro e converse com a equipe sobre as possibilidades de saída durante a sua estadia.",
+        "highlights": "Observação no mar\nUma experiência de temporada\nPlaneje com a equipe da pousada",
+        "season": "Agosto e setembro",
+        "photos": [],
+        "kind": "baleias"
       }
     ]
   },

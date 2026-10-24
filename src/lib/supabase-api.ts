@@ -176,7 +176,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
         let content;
         try{content=validateSiteContent(data.content);}catch(error){throw new ApiError(400,(error as Error).message);}
         if(path==='site-preview'){
-          const pageName=data.page==='quartos'?'quartos':'index';
+          const pageName=data.page==='quartos'?'quartos':data.page==='itacare'?'itacare':'index';
           return finish({html:await(await legacyPage(pageName,content)).text()});
         }
         return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'save',p_data:{content,revision:data.revision}},token));
@@ -184,7 +184,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       if(path==='site-history'&&method==='GET')return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'history',p_data:{}},token));
       if(path==='site-restore'&&method==='POST'){
         const saved=await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'restore',p_data:data},token);
-        return finish({...saved,content:saved.content??siteDefaults});
+        return finish({...saved,content:validateSiteContent(saved.content??siteDefaults)});
       }
       if(path==='site-upload'&&method==='POST'){
         const types:Record<string,string>={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','video/mp4':'mp4','video/webm':'webm'};

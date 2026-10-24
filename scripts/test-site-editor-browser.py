@@ -10,6 +10,17 @@ with sync_playwright() as p:
  page.route('https://**',lambda r:r.abort())
  page.goto(base+'/admin',wait_until='networkidle')
  page.locator('[data-tab="site"]').click()
+ page.locator('[data-cms-section="beaches"]').click()
+ page.locator('[data-cms-field="beaches.pageTitle"]').fill('Itacaré editado pelo painel')
+ season=page.locator('[data-cms-field="beaches.tours.2.season"]')
+ season.locator('xpath=ancestor::details[1]').locator('summary').first.click()
+ season.fill('Agosto e setembro — consulte a equipe')
+ page.locator('[data-cms-action="save"]').click()
+ page.get_by_text('Publicado! As alterações aparecem ao abrir ou atualizar o site.').wait_for()
+ guide=context.new_page();guide.route('https://**',lambda r:r.abort());guide.goto(base+'/itacare',wait_until='domcontentloaded')
+ assert guide.locator('#explore-title').inner_text()=='Itacaré editado pelo painel'
+ assert 'consulte a equipe' in guide.locator('#passeio-observacao-baleias').text_content()
+ guide.close()
  page.locator('[data-cms-section="about"]').click()
  page.locator('[data-cms-field="about.title"]').fill('Pousada editada pelo painel')
  # Real signed URL upload flow into isolated Storage, followed by publication.
