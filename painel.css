@@ -84,3 +84,11 @@
 @media(max-width:600px){.cms-media{grid-template-columns:1fr}.cms-media img,.cms-media video{max-height:200px}.cms-actions .btn{font-size:12px}.cms-list-item{padding:12px}.cms-preview{padding:12px}.cms-preview .modal-head{flex-wrap:wrap}}
 .cms-order-row { display:flex; gap:12px; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding:12px 0; }
 .cms-order-row .btn { padding:8px 10px; font-size:12px; }
+
+.cms-beach-help { display:flex; align-items:center; flex-wrap:wrap; gap:16px; margin:24px 0; }
+.cms-beach-help a { color:var(--green); font-size:13px; text-underline-offset:4px; }
+.cms-beach-tabs { display:flex; flex-wrap:wrap; gap:8px; border-bottom:1px solid var(--line); padding:0 0 18px; margin-bottom:24px; }
+.cms-beach-tabs button { padding:11px 15px; border:1px solid var(--line); border-radius:6px; background:transparent; color:var(--ink); font:inherit; font-size:12px; cursor:pointer; }
+.cms-beach-tabs button.active { background:var(--green); border-color:var(--green); color:white; }
+.cms-empty-photos { color:var(--muted); font-size:13px; line-height:1.8; background:#f5f2eb; padding:18px; border-radius:6px; }
+[data-cms-item] { scroll-margin-top:140px; }

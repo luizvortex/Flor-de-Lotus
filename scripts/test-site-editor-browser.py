@@ -1,4 +1,4 @@
-import sys, json
+import sys, json, time
 from playwright.sync_api import sync_playwright
 base=sys.argv[1]
 with sync_playwright() as p:
@@ -8,18 +8,36 @@ with sync_playwright() as p:
  page=context.new_page();errors=[]
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.route('https://**',lambda r:r.abort())
- page.goto(base+'/admin',wait_until='networkidle')
- page.locator('[data-tab="site"]').click()
- page.locator('[data-cms-section="beaches"]').click()
+ page.route('**/admin-site.js',lambda r:(time.sleep(.5),r.continue_()))
+ page.goto(base+'/admin#praias-passeios',wait_until='networkidle')
+ assert page.locator('[data-tab="experiences"]').evaluate("b=>b.classList.contains('active')")
  page.locator('[data-cms-field="beaches.pageTitle"]').fill('Itacaré editado pelo painel')
+ page.locator('[data-whale-photos]').click()
  season=page.locator('[data-cms-field="beaches.tours.2.season"]')
- season.locator('xpath=ancestor::details[1]').locator('summary').first.click()
  season.fill('Agosto e setembro — consulte a equipe')
+ page.locator('[data-cms-field="beaches.tours.2.subtitle"]').fill('Observação no mar — teste do editor')
+ # Test-only photos go to the isolated fake Storage; production content is untouched.
+ for i in range(2):
+  page.locator('[data-list-add="beaches.tours.2.photos"]').click()
+  upload=page.locator(f'[data-cms-upload="beaches.tours.2.photos.{i}.url"]')
+  if not upload.is_visible():page.locator(f'[data-cms-item="beaches.tours.2.photos.{i}"] > summary').click()
+  assert upload.is_visible()
+  upload.set_input_files('img Pousada/frentepousada.jpg')
+  page.wait_for_function("path=>document.querySelector('[data-cms-field=\"'+path+'\"]')?.value.includes('/storage/v1/object/public/lotus-site/')",arg=f'beaches.tours.2.photos.{i}.url')
+  assert page.locator('[data-cms-item="beaches.tours.2"]').evaluate('(el)=>el.open')
+  page.locator(f'[data-cms-field="beaches.tours.2.photos.{i}.alt"]').fill(f'Foto de teste {i+1}')
  page.locator('[data-cms-action="save"]').click()
  page.get_by_text('Publicado! As alterações aparecem ao abrir ou atualizar o site.').wait_for()
  guide=context.new_page();guide.route('https://**',lambda r:r.abort());guide.goto(base+'/itacare',wait_until='domcontentloaded')
  assert guide.locator('#explore-title').inner_text()=='Itacaré editado pelo painel'
  assert 'consulte a equipe' in guide.locator('#passeio-observacao-baleias').text_content()
+ whale=guide.locator('#passeio-observacao-baleias')
+ assert whale.locator('.explore-subtitle').inner_text()=='Observação no mar — teste do editor'
+ assert whale.locator('.explore-whale-art').count()==0
+ assert whale.locator('[data-explore-card-next]').is_visible()
+ assert whale.locator('.explore-photo-count').inner_text()=='Ver 2 fotos'
+ assert '/storage/v1/object/public/lotus-site/' in whale.locator('.explore-photo-button img').get_attribute('src')
+ page.locator('[data-tab="site"]').click()
  guide.close()
  page.locator('[data-cms-section="about"]').click()
  page.locator('[data-cms-field="about.title"]').fill('Pousada editada pelo painel')

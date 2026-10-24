@@ -1,13 +1,15 @@
 'use strict';
 (() => {
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- let state=null,active='hero',pending=0,saving=false,dirty=false,container,notice='',noticeError=false;
+ let state=null,active='hero',pending=0,saving=false,dirty=false,container,notice='',noticeError=false,beachGroup='overview';
+ const disclosure=new Map();
+ const editorActive=()=>Boolean(document.querySelector('[data-tab="site"].active,[data-tab="experiences"].active'));
  const preview=document.createElement('dialog');preview.className='cms-preview';preview.innerHTML='<div class="modal-head"><h2>Pré-visualização</h2><div><button type="button" class="btn secondary" data-preview-size="desktop">Computador</button> <button type="button" class="btn secondary" data-preview-size="mobile">Celular</button> <button type="button" class="close" aria-label="Fechar pré-visualização">×</button></div></div><p class="hint">Prévia visual das alterações ainda não publicadas. Os formulários estão desativados aqui.</p><iframe title="Prévia do site" sandbox="allow-same-origin"></iframe>';document.body.append(preview);
  preview.querySelector('.close').onclick=()=>preview.close();preview.querySelectorAll('[data-preview-size]').forEach(b=>b.onclick=()=>preview.classList.toggle('is-mobile',b.dataset.previewSize==='mobile'));
  const get=path=>path.split('.').reduce((v,k)=>v?.[k],state.content);
  const set=(path,value)=>{const parts=path.split('.'),key=parts.pop();parts.reduce((v,k)=>v[k],state.content)[key]=value;dirty=true;updateStatus('Alterações ainda não publicadas.');};
  function updateStatus(message,error=false){notice=message;noticeError=error;const el=container?.querySelector('[data-cms-status]');if(el){el.textContent=message;el.className=error?'error':'hint';}refreshButtons();}
- function refreshButtons(){container?.querySelectorAll('[data-cms-action]').forEach(b=>b.disabled=pending>0||saving);container?.querySelectorAll('[data-cms-field],[data-cms-section]').forEach(el=>el.disabled=saving);container?.querySelectorAll('[data-cms-upload],[data-media-choice]').forEach(el=>el.disabled=saving||pending>0);}
+ function refreshButtons(){container?.querySelectorAll('[data-cms-action]').forEach(b=>b.disabled=pending>0||saving);container?.querySelectorAll('[data-cms-field],[data-cms-section],[data-beach-group],[data-whale-photos]').forEach(el=>el.disabled=saving);container?.querySelectorAll('[data-cms-upload],[data-media-choice]').forEach(el=>el.disabled=saving||pending>0);}
  async function request(path,body,method='POST'){
   const response=await fetch('/api/'+path,{method:body?method:'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,cache:'no-store'});
   const data=await response.json();if(!response.ok)throw Error(data.error||'Não foi possível concluir a operação.');return data;
@@ -17,7 +19,7 @@
   const name=path+'.'+field.key,value=get(name),id='cms-'+name.replaceAll('.','-'),attrs=`data-cms-field="${esc(name)}" id="${id}"`,required=field.required?'required':'',max=field.max||1000;
   if(field.key==='id')return '';
   if(name==='layout.order')return `<div class="wide"><h3>Ordem das seções</h3>${value.split(/\s+/).filter(Boolean).map((key,i,keys)=>`<div class="cms-order-row"><span>${esc(state.sections.find(s=>s.key===key)?.label||key)}</span><div><button type="button" class="btn secondary" data-order-index="${i}" data-direction="-1" ${i===0?'disabled':''}>↑ Subir</button> <button type="button" class="btn secondary" data-order-index="${i}" data-direction="1" ${i===keys.length-1?'disabled':''}>↓ Descer</button></div></div>`).join('')}</div>`;
-  if(field.type==='list')return `<div class="cms-list wide"><div class="cms-list-heading"><h3>${esc(field.label)}</h3><button type="button" class="btn secondary" data-list-add="${esc(name)}" ${(value.length>=field.max||pending)?'disabled':''}>+ Adicionar</button></div><div>${value.map((item,i)=>`<details class="cms-list-item" ${value.length===1?'open':''}><summary>${esc(item.title||item.name||item.alt||field.label+' '+(i+1))}</summary><div class="cms-item-tools"><button type="button" class="btn secondary" data-list-move="${esc(name)}" data-index="${i}" data-direction="-1" ${i===0||pending?'disabled':''}>↑ Subir</button><button type="button" class="btn secondary" data-list-move="${esc(name)}" data-index="${i}" data-direction="1" ${i===value.length-1||pending?'disabled':''}>↓ Descer</button><button type="button" class="btn danger" data-list-remove="${esc(name)}" data-index="${i}" ${value.length<=field.min||pending?'disabled':''}>Remover</button></div><div class="fields">${fieldsHTML(field.fields,name+'.'+i)}</div></details>`).join('')}</div></div>`;
+  if(field.type==='list')return `<div class="cms-list wide"><div class="cms-list-heading"><h3>${esc(field.label)}</h3><button type="button" class="btn secondary" data-list-add="${esc(name)}" ${(value.length>=field.max||pending)?'disabled':''}>+ Adicionar</button></div>${!value.length&&field.fields?.some(f=>f.key==='url')?'<p class="cms-empty-photos">Nenhuma foto adicionada. Use <strong>+ Adicionar</strong> para enviar uma foto ou escolher uma imagem da biblioteca. A primeira será a capa.</p>':''}<div>${value.map((item,i)=>`<details class="cms-list-item" data-cms-item="${esc(name+'.'+i)}" ${value.length===1?'open':''}><summary>${esc(item.title||item.name||item.alt||field.label+' '+(i+1))}</summary><div class="cms-item-tools"><button type="button" class="btn secondary" data-list-move="${esc(name)}" data-index="${i}" data-direction="-1" ${i===0||pending?'disabled':''}>↑ Subir</button><button type="button" class="btn secondary" data-list-move="${esc(name)}" data-index="${i}" data-direction="1" ${i===value.length-1||pending?'disabled':''}>↓ Descer</button><button type="button" class="btn danger" data-list-remove="${esc(name)}" data-index="${i}" ${value.length<=field.min||pending?'disabled':''}>Remover</button></div><div class="fields">${fieldsHTML(field.fields,name+'.'+i)}</div></details>`).join('')}</div></div>`;
   if(field.type==='boolean')return `<div class="wide cms-check"><label><input ${attrs} type="checkbox" ${value?'checked':''}> ${esc(field.label)}</label></div>`;
   let control='';
   if(field.type==='image'||field.type==='video'){
@@ -42,9 +44,17 @@
   });}finally{video.removeAttribute('src');video.load();URL.revokeObjectURL(url);}
  }
  function render(){
-  if(!container||!document.querySelector('[data-tab="site"]')?.classList.contains('active'))return;
+  if(!container||!editorActive())return;
   const section=state.sections.find(s=>s.key===active)||state.sections[0];active=section.key;
-  container.innerHTML=`<div class="cms-toolbar panel"><div><strong>Conteúdo do site</strong><p class="hint" data-cms-status role="status" aria-live="polite">${esc(notice||(dirty?'Alterações ainda não publicadas.':'Versão publicada '+state.revision+'. Edite e pré-visualize antes de publicar.'))}</p></div><div class="cms-actions"><button class="btn secondary" type="button" data-cms-action="preview">Pré-visualizar</button><button class="btn" type="button" data-cms-action="save">Publicar alterações</button></div></div><div class="cms-layout"><nav class="cms-nav" aria-label="Seções do site">${state.sections.map(s=>`<button type="button" data-cms-section="${s.key}" class="${s.key===active?'active':''}" aria-current="${s.key===active?'page':'false'}">${esc(s.label)}</button>`).join('')}<a href="/" target="_blank" rel="noopener">Abrir site ↗</a><button type="button" data-cms-action="history">Histórico de publicações</button><button type="button" data-cms-action="reload">Descartar alterações e recarregar</button></nav><section class="panel cms-editor"><h2>${esc(section.label)}</h2><p class="sub">${esc(section.hint)}</p><form id="cms-form"><div class="fields">${fieldsHTML(section.fields,section.key)}</div></form>${active==='rooms'?'<p><button type="button" class="btn secondary" data-open-room-content>Editar fotos e descrições dos quartos →</button></p>':''}</section></div>`;
+  container.querySelectorAll('[data-cms-item]').forEach(el=>disclosure.set(el.dataset.cmsItem,el.open));
+  const dedicated=document.querySelector('[data-tab="experiences"]')?.classList.contains('active');
+  const beachTabs=active==='beaches'?`<div class="cms-beach-tabs" role="group" aria-label="Editar praias e passeios">${[['overview','Capa e apresentação'],['destinations','Praias e cachoeiras'],['tours','Passeios']].map(([key,label])=>`<button type="button" class="${beachGroup===key?'active':''}" data-beach-group="${key}" aria-pressed="${beachGroup===key}">${label}</button>`).join('')}</div>`:'';
+  const whale=active==='beaches'?state.content.beaches.tours.findIndex(t=>t.kind==='baleias'):-1;
+  const beachHelp=active==='beaches'?`<div class="cms-beach-help"><a href="/itacare" target="_blank" rel="noopener">Abrir guia de Itacaré ↗</a>${whale>=0?'<button type="button" class="btn secondary" data-whale-photos>Editar fotos do passeio das baleias</button>':''}</div>`:'';
+  const visibleFields=active!=='beaches'?section.fields:section.fields.filter(f=>beachGroup==='destinations'?f.key==='items':beachGroup==='tours'?f.key==='tours':!['items','tours'].includes(f.key));
+
+  container.innerHTML=`<div class="cms-toolbar panel"><div><strong>Conteúdo do site</strong><p class="hint" data-cms-status role="status" aria-live="polite">${esc(notice||(dirty?'Alterações ainda não publicadas.':'Versão publicada '+state.revision+'. Edite e pré-visualize antes de publicar.'))}</p></div><div class="cms-actions"><button class="btn secondary" type="button" data-cms-action="preview">Pré-visualizar</button><button class="btn" type="button" data-cms-action="save">Publicar alterações</button></div></div><div class="cms-layout"><nav class="cms-nav" aria-label="Seções do site">${state.sections.filter(s=>!dedicated||s.key==='beaches').map(s=>`<button type="button" data-cms-section="${s.key}" class="${s.key===active?'active':''}" aria-current="${s.key===active?'page':'false'}">${esc(s.label)}</button>`).join('')}<a href="/" target="_blank" rel="noopener">Abrir site ↗</a><button type="button" data-cms-action="history">Histórico de publicações</button><button type="button" data-cms-action="reload">Descartar alterações e recarregar</button></nav><section class="panel cms-editor"><h2>${esc(section.label)}</h2><p class="sub">${esc(section.hint)}</p>${beachHelp}${beachTabs}<form id="cms-form"><div class="fields">${fieldsHTML(visibleFields,section.key)}</div></form>${active==='rooms'?'<p><button type="button" class="btn secondary" data-open-room-content>Editar fotos e descrições dos quartos →</button></p>':''}</section></div>`;
+  container.querySelectorAll('[data-cms-item]').forEach(el=>{if(disclosure.has(el.dataset.cmsItem))el.open=disclosure.get(el.dataset.cmsItem);});
   container.querySelectorAll('[data-cms-field]').forEach(input=>input.addEventListener('input',()=>{const field=fieldFor(input.dataset.cmsField);set(input.dataset.cmsField,field.type==='boolean'?input.checked:field.type==='number'?Number(input.value):input.value);}));
   container.querySelectorAll('[data-media-choice]').forEach(select=>select.onchange=()=>{if(select.value){set(select.dataset.mediaChoice,select.value);render();}});
   container.querySelectorAll('[data-cms-upload]').forEach(input=>input.onchange=async()=>{
@@ -59,17 +69,25 @@
   });
   container.querySelector('form').onsubmit=event=>event.preventDefault();if(noticeError)container.querySelector('[data-cms-status]').className='error';refreshButtons();
  }
- async function load(target){container=target;container.innerHTML='<div class="panel" role="status">Carregando editor do site…</div>';try{const result=await request('site-content');state=result;dirty=false;notice='';noticeError=false;render();}catch(error){if(!document.querySelector('[data-tab="site"]')?.classList.contains('active'))return;container.innerHTML=`<div class="panel"><p class="error" role="alert">${esc(error.message)}</p><button class="btn secondary" type="button" data-retry-cms>Tentar novamente</button></div>`;}}
+ async function load(target){container=target;container.innerHTML='<div class="panel" role="status">Carregando editor do site…</div>';try{const result=await request('site-content');state=result;dirty=false;notice='';noticeError=false;render();}catch(error){if(!editorActive())return;container.innerHTML=`<div class="panel"><p class="error" role="alert">${esc(error.message)}</p><button class="btn secondary" type="button" data-retry-cms>Tentar novamente</button></div>`;}}
  document.querySelector('#content').addEventListener('click',async event=>{
   const button=event.target.closest('button');if(!button)return;
   if(button.hasAttribute('data-retry-cms'))return load(document.querySelector('#content'));
-  if(!state||!document.querySelector('[data-tab="site"]')?.classList.contains('active'))return;
+  if(!state||!editorActive())return;
+  if(button.dataset.beachGroup){if(saving||pending)return;beachGroup=button.dataset.beachGroup;render();return;}
+  if(button.hasAttribute('data-whale-photos')){
+   if(saving||pending)return;beachGroup='tours';render();
+   const index=state.content.beaches.tours.findIndex(t=>t.kind==='baleias');
+   const item=container.querySelector(`[data-cms-item="beaches.tours.${index}"]`);
+   if(item){item.open=true;item.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}
+   return;
+  }
   if(button.dataset.cmsSection){active=button.dataset.cmsSection;render();return;}
   if(button.hasAttribute('data-open-room-content')){document.querySelector('[data-tab="showcases"]').click();return;}
   if(pending||saving)return;
   if(button.hasAttribute('data-order-index')){const keys=String(state.content.layout.order).split(/\s+/).filter(Boolean),i=Number(button.dataset.orderIndex),j=i+Number(button.dataset.direction);if(j>=0&&j<keys.length){[keys[i],keys[j]]=[keys[j],keys[i]];set('layout.order',keys.join('\n'));render();}return;}
   if(button.dataset.mediaClear){set(button.dataset.mediaClear,'');render();return;}
-  if(button.dataset.listAdd){const path=button.dataset.listAdd,field=fieldFor(path),list=get(path);if(list.length<field.max){list.push(newItem(field.fields));dirty=true;render();}return;}
+  if(button.dataset.listAdd){const path=button.dataset.listAdd,field=fieldFor(path),list=get(path);if(list.length<field.max){const item=newItem(field.fields);if(Object.hasOwn(item,'alt')){const parent=get(path.split('.').slice(0,-1).join('.'));item.alt=parent?.title||'Foto da pousada';}list.push(item);dirty=true;render();}return;}
   if(button.dataset.listRemove){const path=button.dataset.listRemove,list=get(path),field=fieldFor(path);if(list.length>field.min&&confirm('Remover este item? A mudança só aparecerá no site ao publicar.')){list.splice(Number(button.dataset.index),1);dirty=true;render();}return;}
   if(button.dataset.listMove){const list=get(button.dataset.listMove),i=Number(button.dataset.index),j=i+Number(button.dataset.direction);if(j>=0&&j<list.length){[list[i],list[j]]=[list[j],list[i]];dirty=true;render();}return;}
   const action=button.dataset.cmsAction;
@@ -83,5 +101,5 @@
   }catch(error){updateStatus(error.message,true);}finally{saving=false;refreshButtons();}
  });
  window.addEventListener('beforeunload',event=>{if(dirty||pending){event.preventDefault();event.returnValue='';}});
- window.siteEditor={render(target){container=target;if(state)render();else load(target);}};
+ window.siteEditor={render(target,section){container=target;if(section)active=section;if(state)render();else load(target);}};
 })();
