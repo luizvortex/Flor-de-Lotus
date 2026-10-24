@@ -29,7 +29,7 @@
   let control='';
   if(field.type==='image'||field.type==='video'){
    const video=field.type==='video';
-   control=`<div class="cms-media">${value?(video?`<video src="${esc(value)}" controls muted playsinline preload="metadata"></video>`:`<img src="${esc(value)}" alt="Prévia de ${esc(field.label)}" loading="lazy">`):'<span class="hint">Nenhum arquivo selecionado</span>'}<div><label class="cms-upload-label" for="${id}-upload">Enviar ${video?'vídeo':'imagem'}</label><input id="${id}-upload" type="file" data-cms-upload="${esc(name)}" data-kind="${field.type}" accept="${video?'video/mp4,video/webm':'image/jpeg,image/png,image/webp'}"><p class="hint">${video?'MP4 ou WebM, até 50 MB.':'JPG, PNG ou WebP. A foto é otimizada automaticamente antes do envio.'}</p>${name.startsWith('gallery.photos.')?'<p class="hint">Formato automático 4:3, até 1600 × 1200 px. A imagem inteira é preservada; quando necessário, as bordas recebem um fundo claro.</p>':''}</div></div><input ${attrs} type="hidden" value="${esc(value)}">${!field.required?`<button type="button" class="btn secondary" data-media-clear="${esc(name)}">Remover arquivo</button>`:''}`;
+   control=`<div class="cms-media">${value?(video?`<video src="${esc(value)}" controls muted playsinline preload="metadata"></video>`:`<img src="${esc(value)}" alt="Prévia de ${esc(field.label)}" loading="lazy">`):'<span class="hint">Nenhum arquivo selecionado</span>'}<div><label class="cms-upload-label" for="${id}-upload">Enviar ${video?'vídeo':'imagem'}</label><input id="${id}-upload" type="file" data-cms-upload="${esc(name)}" data-kind="${field.type}" accept="${video?'video/mp4,video/webm':'image/jpeg,image/png,image/webp'}"><p class="hint">${video?'MP4 ou WebM, até 50 MB.':'JPG, PNG ou WebP. A foto é otimizada automaticamente antes do envio.'}</p>${name.startsWith('gallery.photos.')?'<p class="hint">Formato automático 4:3, até 1600 × 1200 px. A foto preenche todo o quadro, sem faixas. Imagens de outra proporção recebem um recorte central.</p>':''}</div></div><input ${attrs} type="hidden" value="${esc(value)}">${!field.required?`<button type="button" class="btn secondary" data-media-clear="${esc(name)}">Remover arquivo</button>`:''}`;
   }else if(field.type==='textarea')control=`<textarea ${attrs} rows="${field.key==='description'?5:4}" maxlength="${max}" ${required}>${esc(value)}</textarea>`;
   else if(field.type==='select')control=`<select ${attrs}>${field.options.map(option=>`<option value="${esc(option)}" ${value===option?'selected':''}>${esc(state.sections.find(s=>s.key===option)?.label||option)}</option>`).join('')}</select>`;
   else control=`<input ${attrs} type="${field.type==='number'?'number':field.type==='date'?'date':'text'}" value="${esc(value)}" ${required} ${field.type==='number'?`min="${field.min}" max="${field.max}" step="${field.step||1}"`:`maxlength="${max}"`}>`;
@@ -52,14 +52,14 @@
   try{
    image.src=url;try{await image.decode();}catch{throw Error('Não foi possível abrir esta imagem. Tente exportá-la como JPG, PNG ou WebP.');}
    if(!image.naturalWidth||!image.naturalHeight)throw Error('A imagem está vazia ou danificada.');
-   const units=Math.max(1,Math.floor(Math.min(400,Math.max(image.naturalWidth/4,image.naturalHeight/3))));
+   const units=Math.max(1,Math.floor(Math.min(400,Math.min(image.naturalWidth/4,image.naturalHeight/3))));
    const width=gallery?units*4:image.naturalWidth,height=gallery?units*3:image.naturalHeight;
    let ratio=gallery?1:Math.min(1,1920/Math.max(width,height));
    const canvas=document.createElement('canvas');
    for(let attempt=0;attempt<5;attempt++){
     if(gallery){const size=Math.max(1,Math.floor(units*ratio));canvas.width=size*4;canvas.height=size*3;}else{canvas.width=Math.max(1,Math.round(width*ratio));canvas.height=Math.max(1,Math.round(height*ratio));}
     const context=canvas.getContext('2d');if(!context)throw Error('Não foi possível preparar a imagem neste navegador.');
-    if(gallery){context.fillStyle='#f7f7f2';context.fillRect(0,0,canvas.width,canvas.height);const scale=Math.min(canvas.width/image.naturalWidth,canvas.height/image.naturalHeight),w=image.naturalWidth*scale,h=image.naturalHeight*scale;context.drawImage(image,(canvas.width-w)/2,(canvas.height-h)/2,w,h);}else context.drawImage(image,0,0,canvas.width,canvas.height);
+    if(gallery){const scale=Math.max(canvas.width/image.naturalWidth,canvas.height/image.naturalHeight),w=image.naturalWidth*scale,h=image.naturalHeight*scale;context.drawImage(image,(canvas.width-w)/2,(canvas.height-h)/2,w,h);}else context.drawImage(image,0,0,canvas.width,canvas.height);
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',Math.max(.65,.88-attempt*.05)));
     if(blob&&blob.size<=3*1024*1024){
      if(!gallery&&file.size<=3*1024*1024&&file.size<blob.size)return file;

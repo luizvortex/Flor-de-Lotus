@@ -26,11 +26,16 @@ with sync_playwright() as p:
   }''')
   assert result['w']*3==result['h']*4,result
   assert result['w']<=1600 and result['h']<=1200
-  assert all(abs(a-b)<10 for a,b in zip(result['background'][:3],[247,247,242])),result
-  if height>width:
-   assert result['top'][0]>150 and result['bottom'][2]>150,result
+  assert result['background'][0]>150 and result['background'][1]<50,result
+  assert result['top'][0]>150 and result['bottom'][2]>150,result
  page.locator('[data-cms-action="save"]').click();page.get_by_text('Publicado! As alterações aparecem ao abrir ou atualizar o site.').wait_for()
  page.goto(base+'/',wait_until='domcontentloaded')
- assert page.locator('.pousada-gallery-slide img').first.evaluate("i=>getComputedStyle(i).objectFit")=='contain'
+ assert page.locator('.pousada-gallery-slide img').first.evaluate("i=>getComputedStyle(i).objectFit")=='cover'
+ for width in [390,1440,1900]:
+  page.set_viewport_size({'width':width,'height':1000})
+  frames=page.locator('.pousada-gallery-slide').all()[:3]
+  boxes=[frame.bounding_box() for frame in frames]
+  assert all(abs(box['height']-boxes[0]['height'])<1 and abs(box['y']-boxes[0]['y'])<1 for box in boxes),boxes
+  assert abs(boxes[1]['x']-(boxes[0]['x']+boxes[0]['width']))<1,boxes
  context.close();browser.close()
- print('Portrait and panorama automatically fitted to 4:3; full image, neutral borders and publication passed.')
+ print('Portrait and panorama cropped to full 4:3 frames; equal heights, adjacent slides and publication passed.')
