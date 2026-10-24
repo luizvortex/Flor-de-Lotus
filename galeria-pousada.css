@@ -6,7 +6,7 @@ body.home-page main > section#galeria-pousada > .container { width: 100%; max-wi
 .pousada-gallery-viewport { overflow: hidden; touch-action: pan-y; }
 .pousada-gallery-track { display: flex; align-items: stretch; transition: transform .8s cubic-bezier(.22,.61,.36,1); }
 .pousada-gallery-slide { flex: 0 0 calc(100% / var(--gallery-visible)); min-width: 0; aspect-ratio: 4 / 3; margin: 0; overflow: hidden; }
-.pousada-gallery-slide img { display: block; width: 100%; height: 100%; object-fit: cover; transition: none; }
+.pousada-gallery-slide img { display: block; width: 100%; height: 100%; object-fit: contain; background: #f7f7f2; transition: none; }
 .pousada-gallery-arrow { position: absolute; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: white; filter: drop-shadow(0 1px 3px #000b); cursor: pointer; opacity: 0; transition: opacity .2s; }
 .pousada-gallery-arrow[data-gallery-prev] { left: 10px; }
 .pousada-gallery-arrow[data-gallery-next] { right: 10px; }
