@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseKey, supabaseUrl } from './supabase-config';
+import {siteOrigin} from './site-url';
 
 // A separate cookie namespace keeps guest OAuth independent of admin access.
 export function guestClient(request: NextRequest, response: NextResponse) {
@@ -40,7 +41,7 @@ export function authOrigin(request: NextRequest): string {
   // Production callbacks always use the canonical URL, never forwarded headers.
   const host = request.headers.get('host') || '';
   if (process.env.VERCEL !== '1' && /^(localhost|127\.0\.0\.1)(:\d{1,5})?$/.test(host)) return `http://${host}`;
-  return 'https://flor-de-lotus-three.vercel.app';
+  return siteOrigin();
 }
 export function googleAvatar(value: unknown): string | null {
   if (typeof value !== 'string') return null;

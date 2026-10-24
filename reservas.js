@@ -33,7 +33,7 @@
  let showcases=[],inventory=[],packages=[],available=[],lastQuery=null,nights=0,sequence=0,controller,selection=null,detail=null,detailIndex=0;
  const photoIndices=new Map();
  const reducedPhotos=matchMedia('(prefers-reduced-motion: reduce)'),mobilePhotos=matchMedia('(max-width:767px)');
- const transitions=new WeakMap();let carousels=[];
+ const transitions=new WeakMap();let carousels=[],warmObserver;
  const photoDelay=()=>mobilePhotos.matches?2000:3000;
  async function fadePhoto(image,photo){
   const previous=transitions.get(image);if(previous){previous.cancelled=true;previous.layer?.remove();}
@@ -52,12 +52,16 @@
  function stepCard(card,step){
   const room=showcases.find(s=>s.slug===card.dataset.slug);if(!room)return;
   const index=((photoIndices.get(room.slug)||0)+step+room.photos.length)%room.photos.length;
+  const next=room.photos[(index+1)%room.photos.length];if(next){const image=new Image();image.src=next.url;}
   photoIndices.set(room.slug,index);fadePhoto(card.querySelector('.card-photo img'),room.photos[index]);
   const carousel=carousels.find(c=>c.card===card);if(carousel)carousel.next=Date.now()+photoDelay();
  }
  function setupCarousels(){
+  warmObserver?.disconnect();
   carousels=[...$('#rooms').querySelectorAll('.catalog-room')].map(card=>({card,next:Date.now()+photoDelay(),hover:false}));
-  for(const carousel of carousels){
+  const warm=card=>{const room=showcases.find(s=>s.slug===card.dataset.slug);if(!room)return;const next=room.photos[((photoIndices.get(room.slug)||0)+1)%room.photos.length];if(next){const img=new Image();img.src=next.url;}};
+  const observer=warmObserver=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){warm(entry.target);observer.unobserve(entry.target);}},{rootMargin:'300px'});
+  for(const carousel of carousels){observer.observe(carousel.card);
    const gallery=carousel.card.querySelector('.card-gallery');
    gallery.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')carousel.hover=true;});
    gallery.addEventListener('pointerleave',()=>{carousel.hover=false;carousel.next=Date.now()+photoDelay();});

@@ -3,11 +3,16 @@
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let state=null,active='hero',pending=0,saving=false,dirty=false,container,notice='',noticeError=false,beachGroup='overview',reviewGroup='overview';
  const disclosure=new Map();
+ const draftKey='lotus-editor-draft-v1';let draftAvailable=null,draftTimer;
+ function readDraft(){try{const value=JSON.parse(localStorage.getItem(draftKey)||'null');return value&&value.content&&Number.isSafeInteger(value.revision)?value:null;}catch{return null;}}
+ function clearDraft(){clearTimeout(draftTimer);try{localStorage.removeItem(draftKey);}catch{}draftAvailable=null;}
+ function saveDraft(){clearTimeout(draftTimer);if(!dirty||!state)return;try{localStorage.setItem(draftKey,JSON.stringify({content:state.content,revision:state.revision,updated:new Date().toISOString()}));}catch{updateStatus('Não foi possível guardar o rascunho neste navegador. Mantenha esta aba aberta até publicar.',true);}}
+ function queueDraft(){clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,450);}
  const editorActive=()=>Boolean(document.querySelector('[data-tab="site"].active,[data-tab="experiences"].active,[data-tab="reviews"].active'));
  const preview=document.createElement('dialog');preview.className='cms-preview';preview.innerHTML='<div class="modal-head"><h2>Pré-visualização</h2><div><button type="button" class="btn secondary" data-preview-size="desktop">Computador</button> <button type="button" class="btn secondary" data-preview-size="mobile">Celular</button> <button type="button" class="close" aria-label="Fechar pré-visualização">×</button></div></div><p class="hint">Prévia visual das alterações ainda não publicadas. Os formulários estão desativados aqui.</p><iframe title="Prévia do site" sandbox="allow-same-origin"></iframe>';document.body.append(preview);
  preview.querySelector('.close').onclick=()=>preview.close();preview.querySelectorAll('[data-preview-size]').forEach(b=>b.onclick=()=>preview.classList.toggle('is-mobile',b.dataset.previewSize==='mobile'));
  const get=path=>path.split('.').reduce((v,k)=>v?.[k],state.content);
- const set=(path,value)=>{const parts=path.split('.'),key=parts.pop();parts.reduce((v,k)=>v[k],state.content)[key]=value;dirty=true;updateStatus('Alterações ainda não publicadas.');};
+ const set=(path,value)=>{const parts=path.split('.'),key=parts.pop();parts.reduce((v,k)=>v[k],state.content)[key]=value;dirty=true;queueDraft();updateStatus('Alterações ainda não publicadas. Rascunho guardado automaticamente neste navegador.');};
  function updateStatus(message,error=false){notice=message;noticeError=error;const el=container?.querySelector('[data-cms-status]');if(el){el.textContent=message;el.className=error?'error':'hint';}refreshButtons();}
  function refreshButtons(){container?.querySelectorAll('[data-cms-action]').forEach(b=>b.disabled=pending>0||saving);container?.querySelectorAll('[data-cms-field],[data-cms-section],[data-beach-group],[data-whale-photos],[data-review-group]').forEach(el=>el.disabled=saving);container?.querySelectorAll('[data-cms-upload],[data-media-choice]').forEach(el=>el.disabled=saving||pending>0);}
  async function request(path,body,method='POST'){
@@ -36,6 +41,16 @@
   const ticket=await request('site-upload',{type:file.type,size:file.size});
   await new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('PUT',ticket.uploadUrl);xhr.setRequestHeader('Content-Type',file.type);xhr.setRequestHeader('x-upsert','false');xhr.timeout=180000;xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(100*e.loaded/e.total));};xhr.onload=()=>xhr.status>=200&&xhr.status<300?resolve():reject(Error('Não foi possível enviar o arquivo. Tente novamente.'));xhr.onerror=()=>reject(Error('Falha de conexão ao enviar o arquivo.'));xhr.ontimeout=()=>reject(Error('O envio demorou demais. Tente novamente.'));xhr.send(file);});return ticket.url;
  }
+ async function optimizeImage(file){
+  // Preserve animated WebP files; resizing a canvas would discard the animation.
+  if(file.type==='image/webp')return file;
+  const url=URL.createObjectURL(file),image=new Image();
+  try{image.src=url;await image.decode();const ratio=Math.min(1,1920/Math.max(image.naturalWidth,image.naturalHeight));
+   const canvas=document.createElement('canvas');canvas.width=Math.round(image.naturalWidth*ratio);canvas.height=Math.round(image.naturalHeight*ratio);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.86));
+   return blob&&blob.size<file.size?new File([blob],file.name.replace(/\.[^.]+$/,'')+'.webp',{type:'image/webp'}):file;
+  }catch{return file;}finally{URL.revokeObjectURL(url);}
+ }
  async function capturePoster(file){
   const url=URL.createObjectURL(file),video=document.createElement('video');video.muted=true;video.playsInline=true;video.preload='auto';
   try{return await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{cleanup();reject(Error('Escolha uma capa para o vídeo.'));},12000);const cleanup=()=>clearTimeout(timer);
@@ -56,26 +71,31 @@
   const visibleFields=active==='reviews'?section.fields.filter(f=>reviewGroup==='items'?f.key==='items':reviewGroup==='platforms'?f.key==='platforms':!['items','platforms'].includes(f.key)):active!=='beaches'?section.fields:section.fields.filter(f=>beachGroup==='destinations'?f.key==='items':beachGroup==='tours'?f.key==='tours':!['items','tours'].includes(f.key));
 
   container.innerHTML=`<div class="cms-toolbar panel"><div><strong>Conteúdo do site</strong><p class="hint" data-cms-status role="status" aria-live="polite">${esc(notice||(dirty?'Alterações ainda não publicadas.':'Versão publicada '+state.revision+'. Edite e pré-visualize antes de publicar.'))}</p></div><div class="cms-actions"><button class="btn secondary" type="button" data-cms-action="preview">Pré-visualizar</button><button class="btn" type="button" data-cms-action="save">Publicar alterações</button></div></div><div class="cms-layout"><nav class="cms-nav" aria-label="Seções do site">${state.sections.filter(s=>!dedicated||s.key===dedicatedSection).map(s=>`<button type="button" data-cms-section="${s.key}" class="${s.key===active?'active':''}" aria-current="${s.key===active?'page':'false'}">${esc(s.label)}</button>`).join('')}<a href="/" target="_blank" rel="noopener">Abrir site ↗</a><button type="button" data-cms-action="history">Histórico de publicações</button><button type="button" data-cms-action="reload">Descartar alterações e recarregar</button></nav><section class="panel cms-editor"><h2>${esc(section.label)}</h2><p class="sub">${esc(section.hint)}</p>${beachHelp}${beachTabs}${reviewTabs}<form id="cms-form"><div class="fields">${fieldsHTML(visibleFields,section.key)}</div></form>${active==='rooms'?'<p><button type="button" class="btn secondary" data-open-room-content>Editar fotos e descrições dos quartos →</button></p>':''}</section></div>`;
+  if(draftAvailable&&!dirty){const same=draftAvailable.revision===state.revision;container.insertAdjacentHTML('afterbegin',`<div class="cms-draft-notice" role="status"><strong>Há um rascunho salvo neste navegador.</strong><p>${same?'Você pode recuperar suas alterações e continuar editando.':'A publicação mudou desde este rascunho. Baixe uma cópia para recuperar os textos sem sobrescrever a versão atual.'}</p>${same?'<button type="button" class="btn" data-draft-restore>Recuperar rascunho</button>':''}<button type="button" class="btn secondary" data-draft-download>Baixar cópia</button><button type="button" class="btn secondary" data-draft-discard>Descartar rascunho</button></div>`);}
+  if(dirty)queueDraft();
   container.querySelectorAll('[data-cms-item]').forEach(el=>{if(disclosure.has(el.dataset.cmsItem))el.open=disclosure.get(el.dataset.cmsItem);});
   container.querySelectorAll('[data-cms-field]').forEach(input=>input.addEventListener('input',()=>{const field=fieldFor(input.dataset.cmsField);set(input.dataset.cmsField,field.type==='boolean'?input.checked:field.type==='number'?Number(input.value):input.value);}));
   container.querySelectorAll('[data-media-choice]').forEach(select=>select.onchange=()=>{if(select.value){set(select.dataset.mediaChoice,select.value);render();}});
   container.querySelectorAll('[data-cms-upload]').forEach(input=>input.onchange=async()=>{
-   const file=input.files[0];if(!file)return;const kind=input.dataset.kind,path=input.dataset.cmsUpload;
+   let file=input.files[0];if(!file)return;const kind=input.dataset.kind,path=input.dataset.cmsUpload;
    if(!((kind==='video'?['video/mp4','video/webm']:['image/jpeg','image/png','image/webp']).includes(file.type))||file.size>(kind==='video'?50:3)*1024*1024){updateStatus('Use fotos JPG, PNG ou WebP de até 3 MB ou vídeos MP4/WebM de até 50 MB.',true);return;}
    pending++;input.disabled=true;refreshButtons();
-   try{const url=await signedUpload(file,n=>updateStatus(`Enviando arquivo… ${n}%`));set(path,url);
+   try{if(kind==='image')file=await optimizeImage(file);const url=await signedUpload(file,n=>updateStatus(`Enviando arquivo… ${n}%`));set(path,url);
     if(path==='hero.video'){set('hero.mobileVideo','');set('hero.animation','');try{const poster=await capturePoster(file);set('hero.poster',await signedUpload(poster,()=>{}));}catch{updateStatus('Vídeo enviado. Selecione uma imagem de capa antes de publicar.');}}
     if(path==='hero.mobileVideo')set('hero.animation','');
-    updateStatus('Arquivo enviado. Publique as alterações para exibi-lo no site.');
+    updateStatus(kind==='video'&&file.size>8*1024*1024?'Vídeo enviado. Este arquivo é pesado: recomendamos uma versão otimizada antes de publicar.':'Arquivo enviado. Publique as alterações para exibi-lo no site.');
    }catch(error){updateStatus(error.message,true);}finally{pending--;render();}
   });
   container.querySelector('form').onsubmit=event=>event.preventDefault();if(noticeError)container.querySelector('[data-cms-status]').className='error';refreshButtons();
  }
- async function load(target){container=target;container.innerHTML='<div class="panel" role="status">Carregando editor do site…</div>';try{const result=await request('site-content');state=result;dirty=false;notice='';noticeError=false;render();}catch(error){if(!editorActive())return;container.innerHTML=`<div class="panel"><p class="error" role="alert">${esc(error.message)}</p><button class="btn secondary" type="button" data-retry-cms>Tentar novamente</button></div>`;}}
+ async function load(target){container=target;container.innerHTML='<div class="panel" role="status">Carregando editor do site…</div>';try{const result=await request('site-content');state=result;dirty=false;notice='';noticeError=false;draftAvailable=readDraft();render();}catch(error){if(!editorActive())return;container.innerHTML=`<div class="panel"><p class="error" role="alert">${esc(error.message)}</p><button class="btn secondary" type="button" data-retry-cms>Tentar novamente</button></div>`;}}
  document.querySelector('#content').addEventListener('click',async event=>{
   const button=event.target.closest('button');if(!button)return;
   if(button.hasAttribute('data-retry-cms'))return load(document.querySelector('#content'));
   if(!state||!editorActive())return;
+  if(button.hasAttribute('data-draft-restore')){if(draftAvailable?.revision!==state.revision)return;state.content=structuredClone(draftAvailable.content);draftAvailable=null;dirty=true;render();updateStatus('Rascunho recuperado. Revise e pré-visualize antes de publicar.');return;}
+  if(button.hasAttribute('data-draft-discard')){clearDraft();render();return;}
+  if(button.hasAttribute('data-draft-download')){if(!draftAvailable)return;const url=URL.createObjectURL(new Blob([JSON.stringify(draftAvailable.content,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='rascunho-flor-de-lotus.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
   if(button.dataset.reviewGroup){if(saving||pending)return;reviewGroup=button.dataset.reviewGroup;render();return;}
   if(button.dataset.beachGroup){if(saving||pending)return;beachGroup=button.dataset.beachGroup;render();return;}
   if(button.hasAttribute('data-whale-photos')){
@@ -94,15 +114,16 @@
   if(button.dataset.listRemove){const path=button.dataset.listRemove,list=get(path),field=fieldFor(path);if(list.length>field.min&&confirm('Remover este item? A mudança só aparecerá no site ao publicar.')){list.splice(Number(button.dataset.index),1);dirty=true;render();}return;}
   if(button.dataset.listMove){const list=get(button.dataset.listMove),i=Number(button.dataset.index),j=i+Number(button.dataset.direction);if(j>=0&&j<list.length){[list[i],list[j]]=[list[j],list[i]];dirty=true;render();}return;}
   const action=button.dataset.cmsAction;
-  if(action==='reload'){if(!dirty||confirm('Descartar as alterações não publicadas?'))load(container);return;}
+  if(action==='reload'){if(!dirty||confirm('Descartar as alterações não publicadas?')){clearDraft();load(container);}return;}
   if(!action)return;
   saving=true;refreshButtons();
   try{
-   if(action==='save'){updateStatus('Publicando alterações…');const saved=await request('site-content',{content:state.content,revision:state.revision},'PUT');state.content=saved.content;state.revision=saved.revision;dirty=false;render();updateStatus('Publicado! As alterações aparecem ao abrir ou atualizar o site.');}
+   if(action==='save'){updateStatus('Publicando alterações…');const saved=await request('site-content',{content:state.content,revision:state.revision},'PUT');state.content=saved.content;state.revision=saved.revision;dirty=false;clearDraft();render();updateStatus('Publicado! As alterações aparecem ao abrir ou atualizar o site.');}
    if(action==='preview'){updateStatus('Preparando prévia…');const result=await request('site-preview',{content:state.content,page:active==='reviews'?'avaliacoes':active==='catalog'?'quartos':active==='beaches'?'itacare':'index'});preview.querySelector('iframe').srcdoc=result.html.replace('<head>','<head><base href="'+location.origin+'/">');preview.showModal();updateStatus(dirty?'Prévia pronta. As alterações ainda não foram publicadas.':'Prévia da versão publicada.');}
-   if(action==='history'){const data=await request('site-history');if(!data.versions.length){updateStatus('O histórico aparecerá após a primeira publicação.');return;}const choices=data.versions.map(v=>`${v.revision} — ${new Date(v.published_at).toLocaleString('pt-BR')}`).join('\n');const target=prompt('Qual versão deseja restaurar? Digite o número.\n'+choices);if(target&&data.versions.some(v=>v.revision===Number(target))&&confirm('Publicar esta versão anterior? A versão atual será guardada no histórico.')){const saved=await request('site-restore',{target:Number(target),revision:state.revision});state.content=saved.content;state.revision=saved.revision;dirty=false;render();updateStatus('Versão anterior restaurada e publicada.');}}
+   if(action==='history'){const data=await request('site-history');if(!data.versions.length){updateStatus('O histórico aparecerá após a primeira publicação.');return;}const choices=data.versions.map(v=>`${v.revision} — ${new Date(v.published_at).toLocaleString('pt-BR')}`).join('\n');const target=prompt('Qual versão deseja restaurar? Digite o número.\n'+choices);if(target&&data.versions.some(v=>v.revision===Number(target))&&confirm('Publicar esta versão anterior? A versão atual será guardada no histórico.')){const saved=await request('site-restore',{target:Number(target),revision:state.revision});state.content=saved.content;state.revision=saved.revision;dirty=false;clearDraft();render();updateStatus('Versão anterior restaurada e publicada.');}}
   }catch(error){updateStatus(error.message,true);}finally{saving=false;refreshButtons();}
  });
  window.addEventListener('beforeunload',event=>{if(dirty||pending){event.preventDefault();event.returnValue='';}});
- window.siteEditor={render(target,section){container=target;if(section)active=section;if(state)render();else load(target);}};
+ window.addEventListener('pagehide',saveDraft);
+ window.siteEditor={clear(){saveDraft();state=null;dirty=false;container=null;},render(target,section){container=target;if(section)active=section;if(state)render();else load(target);}};
 })();

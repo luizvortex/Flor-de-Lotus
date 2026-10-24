@@ -11,6 +11,7 @@
   grid.innerHTML='<p class="policy-status">Carregando informações da pousada…</p>';
   try{
    const data=await request(),visible=fields.filter(([key])=>typeof data.policies?.[key]==='string'&&data.policies[key].trim());
+   document.dispatchEvent(new CustomEvent('lotus:property-hours',{detail:{checkin:data.policies?.checkin_time||'14:00',checkout:data.policies?.checkout_time||'12:00'}}));
    grid.innerHTML=visible.length?visible.map(([key,title,icon])=>`<article class="policy-item"><h3><i class="bi bi-${icon}" aria-hidden="true"></i>${title}</h3><p>${esc(data.policies[key])}</p></article>`).join(''):'<p class="policy-status">Consulte a equipe da pousada para saber mais sobre as condições da sua estadia.</p>';
   }catch{
    grid.innerHTML='<div class="policy-status"><p>Não foi possível carregar as políticas agora.</p><button type="button" class="text-button" id="retry-policies">Tentar novamente</button> · <a href="/#fale-conosco">Fale com a pousada</a></div>';
@@ -27,10 +28,11 @@
    const data=await request();if(!active())return;
    container.innerHTML=`<div class="panel"><p class="sub">As informações salvas aparecem na página de quartos. Deixe um campo vazio para ocultá-lo. Escreva apenas condições confirmadas pela pousada.</p><a href="/quartos#politicas" target="_blank" rel="noopener">Ver políticas no site ↗</a><form id="policies-form"><div class="fields">${fields.map(([key,title])=>`<div><label for="policy-${key}">${title}</label><textarea id="policy-${key}" name="${key}" rows="4" maxlength="1000">${esc(data.policies?.[key]||'')}</textarea></div>`).join('')}</div><p class="hint">Até 1.000 caracteres por campo. As políticas informam os hóspedes; alterações nas tarifas, no calendário e nas reservas são feitas nas respectivas abas.</p><p id="policies-status" role="status" aria-live="polite"></p><div class="form-actions"><button type="button" class="btn secondary" id="reload-policies">Recarregar informações</button><button type="submit" class="btn">Salvar políticas no site</button></div></form></div>`;
    const form=container.querySelector('form'),status=form.querySelector('#policies-status');let revision=data.revision;
+   form.querySelector('.fields').insertAdjacentHTML('afterbegin',`<div><label for="policy-checkin-time">Horário de check-in</label><input id="policy-checkin-time" name="checkin_time" type="time" required value="${esc(data.policies?.checkin_time||'14:00')}"></div><div><label for="policy-checkout-time">Horário de check-out</label><input id="policy-checkout-time" name="checkout_time" type="time" required value="${esc(data.policies?.checkout_time||'12:00')}"></div><p class="hint wide">Os horários atualizam os textos de entrada/saída, a conta dos hóspedes e os lembretes futuros. Os campos de texto abaixo podem conter observações; o horário exibido será gerado ao salvar.</p>`);
    form.querySelector('#reload-policies').onclick=()=>{if(!form.dataset.dirty||confirm('Descartar as alterações não salvas e carregar as políticas atuais?'))window.policyEditor.render(container);};
    form.oninput=()=>{form.dataset.dirty='true';status.textContent='Alterações ainda não salvas.';status.className='hint';};
    form.onsubmit=async event=>{
-    event.preventDefault();const policies=Object.fromEntries(fields.map(([key])=>[key,form.elements.namedItem(key).value.trim()]));
+    event.preventDefault();const policies=Object.fromEntries([...fields.map(([key])=>key),'checkin_time','checkout_time'].map(key=>[key,form.elements.namedItem(key).value.trim()]));
     const controls=[...form.elements];controls.forEach(el=>el.disabled=true);status.textContent='Salvando…';status.className='hint';
     try{const saved=await request({revision,policies});revision=saved.revision;delete form.dataset.dirty;status.textContent='Políticas salvas. As informações já estão disponíveis na página de quartos.';status.className='success';}
     catch(error){status.textContent=error.message;status.className='error';}

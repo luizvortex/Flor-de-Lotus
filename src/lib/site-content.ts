@@ -3,12 +3,23 @@ import {applyReviewsPage,renderReviewsPreview} from './review-content';
 import {applyExplorePage,renderExplorePreview} from './itacare-content';
 import { siteDefaults, validateSiteContent, type SiteContent } from './site-content-schema';
 import { supabaseUrl, supabaseKey } from './supabase-config';
+import {unstable_cache,revalidateTag} from 'next/cache';
+import {applySiteSeo} from './site-seo';
+import {applyInformation} from './site-information';
 export async function getSiteDocument():Promise<{content:SiteContent;revision:number}> {
  const response=await fetch(`${supabaseUrl}/rest/v1/rpc/lotus_site_api`,{method:'POST',cache:'no-store',signal:AbortSignal.timeout(4000),headers:{apikey:supabaseKey,'Content-Type':'application/json'},body:JSON.stringify({p_operation:'read',p_data:{}})});
  if(!response.ok)throw Error('Não foi possível carregar o conteúdo do site.');
  const data=await response.json();return{content:validateSiteContent(data.content??siteDefaults),revision:Number(data.revision)};
 }
-export async function getSiteContent():Promise<SiteContent>{try{return(await getSiteDocument()).content;}catch{return siteDefaults;}}
+let lastPublished:SiteContent|undefined;
+const publishedContent=unstable_cache(async()=>{
+ const content=(await getSiteDocument()).content;lastPublished=content;return content;
+},['lotus-published-content-v2',supabaseUrl],{revalidate:60,tags:['lotus-content']});
+export function rememberPublishedContent(content:SiteContent){lastPublished=content;revalidateTag('lotus-content',{expire:0});}
+export async function getSiteContent():Promise<SiteContent>{
+ try{const content=await publishedContent();lastPublished=content;return content;}
+ catch{console.error('[lotus] Falha ao carregar conteúdo editorial; usando última versão disponível.');return lastPublished??siteDefaults;}
+}
 const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
 type Item=Record<string,unknown>;
 export function renderSiteContent(html:string,content:SiteContent,page:string):string {
@@ -21,6 +32,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('title').text(page==='index'?String(b.title):`${$('title').text().split('|')[0].trim()} | ${b.title}`);
  if(!$('meta[name="description"]').length)$('head').append('<meta name="description">');
  $('meta[name="description"]').attr('content',String(b.description));
+ applySiteSeo($,c,page);applyInformation($,c,page);
  $('img').each((_,el)=>{if(/flordelotuslogo\.png/.test($(el).attr('src')??''))$(el).attr('src',String(b.logo));});
  $('a[href*="wa.me/"]').attr('href',`https://wa.me/${b.whatsapp}`);
  $('body').attr('data-contact-whatsapp',String(b.whatsapp));

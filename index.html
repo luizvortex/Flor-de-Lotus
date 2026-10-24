@@ -19,8 +19,8 @@
     <link rel="stylesheet" href="./galeria-pousada.css">
     <link rel="stylesheet" href="./conta.css">
     <link rel="stylesheet" href="./lazer.css">
-    <link rel="preload" as="image" href="./img Pousada/FlordeLotus1.jpg" fetchpriority="high">
-    <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},3600)}</script>
+    <link rel="preload" as="image" href="/media/jardim-final.jpg" fetchpriority="high">
+    <script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches&&!sessionStorage.getItem("lotus-intro-seen")){sessionStorage.setItem("lotus-intro-seen","1");document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},1600)}}catch{}</script>
     <link rel="icon" type="image" href="img Pousada/flordelotuslogo.png">
 </head>
 
@@ -56,9 +56,9 @@
         <section id="inicio" class="home-hero" aria-label="Bem-vindo à Flor de Lótus">
             <div class="home-hero-media" aria-hidden="true">
                 <img class="home-hero-poster" src="/media/jardim-final.jpg" alt="" width="1920" height="1080" fetchpriority="high">
-                <video class="home-hero-video" autoplay muted loop playsinline preload="metadata" poster="/media/jardim-final.jpg" width="3840" height="2160" tabindex="-1">
-                    <source src="/media/jardim-loop-5s-mobile.mp4" media="(max-width: 767px)" type="video/mp4">
-                    <source src="/media/jardim-loop-5s-desktop.mp4" type="video/mp4">
+                <video class="home-hero-video" autoplay muted loop playsinline preload="metadata" poster="/media/jardim-final.jpg" width="1920" height="1080" tabindex="-1">
+                    <source src="/media/jardim-otimizado-mobile.mp4" media="(max-width: 767px)" type="video/mp4">
+                    <source src="/media/jardim-otimizado-desktop.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="home-hero-shade"></div>

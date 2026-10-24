@@ -17,6 +17,7 @@ begin
  data:=public.lotus_policy_api('read');
  begin perform public.lotus_policy_api('save',data); raise exception 'Expected guest denial'; exception when sqlstate 'PT401' then null; end;
  insert into lotus_private.admin_users values(uid);
+ data:=data#-'{policies,checkin_time}'#-'{policies,checkout_time}';
  data:=jsonb_set(data,'{policies,checkin}','"__policy_test__"');
  saved:=public.lotus_policy_api('save',data);
  assert (saved->>'revision')::bigint=(data->>'revision')::bigint+1;

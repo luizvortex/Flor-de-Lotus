@@ -25,10 +25,10 @@
  const states={pendente:'Aguardando confirmação',confirmada:'Confirmada',cancelada:'Cancelada'};
  let requestId=0, pendingSession,bookingRequest;
  function bookingCard(booking){
-  const completed=new Date(booking.checkout_at||booking.end+'T12:00:00-03:00').getTime()<=accountNow&&booking.status!=='cancelada';
-  return `<article class="guest-booking"><div class="guest-booking-heading"><div><span class="guest-booking-number">Reserva #${esc(booking.id)}</span><h4>${esc(booking.presentation||booking.room_name)}</h4></div><span class="guest-booking-status ${esc(booking.status)}">${completed?'Estadia concluída':esc(states[booking.status]||booking.status)}</span></div><dl><div><dt>Entrada</dt><dd>${esc(date(booking.start))}<small>A partir das 14h · horário da Bahia</small></dd></div><div><dt>Saída</dt><dd>${esc(date(booking.end))}<small>Até as 12h · horário da Bahia</small></dd></div><div><dt>Estadia</dt><dd>${esc(booking.nights)} noite(s) · ${esc(booking.guests)} hóspede(s)</dd></div><div><dt>Quarto</dt><dd>${esc(booking.room_name)}</dd></div><div><dt>Hóspede</dt><dd>${esc(booking.guest)}</dd></div><div><dt>Contato</dt><dd>${esc(booking.phone)}</dd></div><div><dt>Total da reserva</dt><dd>${esc(money(booking.total))}</dd></div>${booking.package_name?`<div><dt>Tarifa</dt><dd>${esc(booking.package_name)}</dd></div>`:''}</dl>${booking.status==='pendente'?'<p class="guest-booking-note">Aguarde a confirmação da equipe da pousada. Sua solicitação já bloqueia essas datas.</p>':''}<a class="guest-booking-contact" href="/#fale-conosco">Falar com a pousada sobre esta reserva</a></article>`;
+  const completed=new Date(booking.checkout_at||booking.end+'T12:00:00-03:00').getTime()<=accountNow&&booking.status==='confirmada';
+  return `<article class="guest-booking"><div class="guest-booking-heading"><div><span class="guest-booking-number">Reserva #${esc(booking.id)}</span><h4>${esc(booking.presentation||booking.room_name)}</h4></div><span class="guest-booking-status ${esc(booking.status)}">${completed?'Estadia concluída':esc(states[booking.status]||booking.status)}</span></div><dl><div><dt>Entrada</dt><dd>${esc(date(booking.start))}<small>A partir das ${esc(checkinTime.replace(':','h'))} · horário da Bahia</small></dd></div><div><dt>Saída</dt><dd>${esc(date(booking.end))}<small>Até as ${esc(checkoutTime.replace(':','h'))} · horário da Bahia</small></dd></div><div><dt>Estadia</dt><dd>${esc(booking.nights)} noite(s) · ${esc(booking.guests)} hóspede(s)</dd></div><div><dt>Quarto</dt><dd>${esc(booking.room_name)}</dd></div><div><dt>Hóspede</dt><dd>${esc(booking.guest)}</dd></div><div><dt>Contato</dt><dd>${esc(booking.phone)}</dd></div><div><dt>Total da reserva</dt><dd>${esc(money(booking.total))}</dd></div>${booking.package_name?`<div><dt>Tarifa</dt><dd>${esc(booking.package_name)}</dd></div>`:''}</dl>${booking.status==='pendente'?'<p class="guest-booking-note">Aguarde a confirmação da equipe da pousada. Sua solicitação já bloqueia essas datas.</p>':''}<a class="guest-booking-contact" href="/#fale-conosco">Falar com a pousada sobre esta reserva</a></article>`;
  }
- let accountNow;
+ let accountNow,checkinTime='14:00',checkoutTime='12:00';
  async function loadBookings(id){
   bookingRequest?.abort();const controller=new AbortController();bookingRequest=controller;
   reservations.innerHTML='<p role="status">Carregando suas reservas…</p>';
@@ -36,6 +36,7 @@
    const response=await fetch('/api/guest/bookings',{cache:'no-store',signal:controller.signal}),data=await response.json();
    if(!response.ok)throw Error(data.error||'Não foi possível carregar suas reservas.');
    if(id!==requestId||controller.signal.aborted)return;
+   checkinTime=data.checkin_time||'14:00';checkoutTime=data.checkout_time||'12:00';
    accountNow=new Date(data.now||data.today+'T00:00:00-03:00').getTime();
    const isUpcoming=b=>new Date(b.checkout_at||b.end+'T12:00:00-03:00').getTime()>accountNow;
    const bookings=data.bookings||[],upcoming=bookings.filter(b=>b.status!=='cancelada'&&isUpcoming(b)).sort((a,b)=>a.start.localeCompare(b.start)),history=bookings.filter(b=>b.status==='cancelada'||!isUpcoming(b));

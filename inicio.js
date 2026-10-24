@@ -108,7 +108,7 @@
         animatedFallback.className='home-hero-fallback';
         animatedFallback.alt='';
         animatedFallback.width=960;animatedFallback.height=540;
-        animatedFallback.src=video.dataset.animation||'/media/jardim-loop-5s.webp';
+        animatedFallback.src=video.dataset.animation||'/media/jardim-otimizado.webp';
         hero.querySelector('.home-hero-media').append(animatedFallback);
     }
     const canPlay=()=>!reducedMotion.matches&&!document.hidden&&!menu.open&&heroVisible;

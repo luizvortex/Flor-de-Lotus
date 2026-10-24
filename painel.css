@@ -92,3 +92,5 @@
 .cms-beach-tabs button.active { background:var(--green); border-color:var(--green); color:white; }
 .cms-empty-photos { color:var(--muted); font-size:13px; line-height:1.8; background:#f5f2eb; padding:18px; border-radius:6px; }
 [data-cms-item] { scroll-margin-top:140px; }
+
+.setup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.setup-grid>.panel{min-width:0;margin:0;overflow-wrap:anywhere}.setup-grid .btn{margin:5px 5px 5px 0}.setup-status{display:inline-block;padding:5px 10px;background:#f2ebe0;color:#70552f;font-size:12px}.setup-status.is-ready{background:#edf1e8;color:#354e3a}.pending-age{font-size:11px;color:#8a531e}.cms-draft-notice{margin-bottom:18px;padding:18px;background:#f4eee3}.cms-draft-notice button{margin:5px 8px 0 0}@media(max-width:1000px){.setup-grid{grid-template-columns:1fr}}

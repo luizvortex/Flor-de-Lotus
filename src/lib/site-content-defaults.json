@@ -15,10 +15,10 @@
     "title": "Flor de Lótus",
     "eyebrow": "Pousada · Itacaré, Bahia",
     "description": "Seu refúgio entre o mar e a natureza.",
-    "video": "/media/jardim-loop-5s-desktop.mp4",
-    "mobileVideo": "/media/jardim-loop-5s-mobile.mp4",
+    "video": "/media/jardim-otimizado-desktop.mp4",
+    "mobileVideo": "/media/jardim-otimizado-mobile.mp4",
     "poster": "/media/jardim-final.jpg",
-    "animation": "/media/jardim-loop-5s.webp",
+    "animation": "/media/jardim-otimizado.webp",
     "speed": 0.65,
     "limit": 5,
     "location": "Praia da Concha",
@@ -657,5 +657,14 @@
   "layout": {
     "order": "about\ngallery\nrooms\nleisure\nbeaches\nreviews\ncontact",
     "blocks": []
+  },
+  "operations": {
+    "contactEmail": "",
+    "legalName": "",
+    "privacyExtra": "",
+    "bookingEngineUrl": "",
+    "silbeckChecked": false,
+    "bookingFlowChecked": false,
+    "backupsChecked": false
   }
 }

@@ -43,7 +43,7 @@ with sync_playwright() as p:
  page.locator('[data-cms-field="about.title"]').fill('Pousada editada pelo painel')
  # Real signed URL upload flow into isolated Storage, followed by publication.
  page.locator('[data-cms-upload="about.image"]').set_input_files('img Pousada/frentepousada.jpg')
- page.wait_for_function("document.querySelector('[data-cms-field=\"about.image\"]')?.value.includes('/storage/v1/object/public/lotus-site/')")
+ page.wait_for_function("() => document.querySelector('[data-cms-field=\"about.image\"]')?.value.includes('/storage/v1/object/public/lotus-site/')")
  page.locator('[data-cms-action="preview"]').click()
  page.locator('.cms-preview[open]').wait_for()
  page.frame_locator('.cms-preview iframe').locator('#sobre-a-pousada h2').first.wait_for()
@@ -74,11 +74,11 @@ with sync_playwright() as p:
  # Discard instead of publishing the intentionally incomplete block.
  page.on('dialog',lambda d:d.accept())
  page.locator('[data-cms-action="reload"]').click()
- page.wait_for_function("document.querySelector('[data-cms-field=\"about.title\"]')?.value==='Pousada editada pelo painel'")
+ page.wait_for_function("() => document.querySelector('[data-cms-field=\"about.title\"]')?.value==='Pousada editada pelo painel'")
  # Replace the hero video through the same upload interface, including an automatic cover.
  page.locator('[data-cms-section="hero"]').click()
  page.locator('[data-cms-upload="hero.video"]').set_input_files('media/jardim-loop-5s-mobile.mp4')
- page.wait_for_function("document.querySelector('[data-cms-field=\"hero.video\"]')?.value.includes('/storage/v1/object/public/lotus-site/')")
+ page.wait_for_function("() => document.querySelector('[data-cms-field=\"hero.video\"]')?.value.includes('/storage/v1/object/public/lotus-site/')")
  assert page.locator('[data-cms-field="hero.mobileVideo"]').input_value()==''
  assert page.locator('[data-cms-field="hero.animation"]').input_value()==''
  assert '/storage/v1/object/public/lotus-site/' in page.locator('[data-cms-field="hero.poster"]').input_value()

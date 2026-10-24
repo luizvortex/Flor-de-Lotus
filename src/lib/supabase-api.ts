@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { guestBookingOperation, hasGuestSession } from './guest-bookings';
 import { randomUUID } from 'node:crypto';
 import {siteDefaults,siteSections,validateSiteContent} from './site-content-schema';
-import {getSiteDocument} from './site-content';
+import {getSiteDocument,rememberPublishedContent} from './site-content';
 import {legacyPage} from './legacy-page';
 import { supabaseKey, supabaseUrl } from './supabase-config';
 
@@ -179,11 +179,14 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
           const pageName=data.page==='avaliacoes'?'avaliacoes':data.page==='quartos'?'quartos':data.page==='itacare'?'itacare':'index';
           return finish({html:await(await legacyPage(pageName,content)).text()});
         }
-        return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'save',p_data:{content,revision:data.revision}},token));
+        const saved=await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'save',p_data:{content,revision:data.revision}},token);
+        rememberPublishedContent(validateSiteContent(saved.content??content));
+        return finish(saved);
       }
       if(path==='site-history'&&method==='GET')return finish(await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'history',p_data:{}},token));
       if(path==='site-restore'&&method==='POST'){
         const saved=await call('/rest/v1/rpc/lotus_site_api','POST',{p_operation:'restore',p_data:data},token);
+        rememberPublishedContent(validateSiteContent(saved.content??siteDefaults));
         return finish({...saved,content:validateSiteContent(saved.content??siteDefaults)});
       }
       if(path==='site-upload'&&method==='POST'){

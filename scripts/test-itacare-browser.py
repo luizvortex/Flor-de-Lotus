@@ -18,7 +18,7 @@ with sync_playwright() as p:
   assert guide.locator('.explore-destination').count()==9
   assert guide.locator('.explore-tour').count()==3
   assert 'Agosto e setembro' in guide.locator('#passeio-observacao-baleias').text_content()
-  guide.wait_for_function("document.querySelector('#explore-cover').complete && document.querySelector('#explore-cover').naturalWidth>0")
+  guide.wait_for_function("() => document.querySelector('#explore-cover').complete && document.querySelector('#explore-cover').naturalWidth>0")
   guide.locator('[data-explore-filter="cachoeira"]').click()
   assert guide.locator('.explore-destination:visible').count()==2
   guide.locator('[data-explore-filter="praia"]').click()
@@ -37,14 +37,14 @@ with sync_playwright() as p:
   started=time.monotonic()
   advance.click()
   assert not advance.is_disabled()
-  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
+  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
   assert time.monotonic()-started<.5
   assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
   advance.click()
-  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
+  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
   assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
   guide.context.set_offline(False)
-  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'")
+  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'")
   assert not guide.locator('#explore-album').evaluate('(d)=>d.open')
   selected=cover.locator('img').get_attribute('src')
   guide.wait_for_timeout(2200)
@@ -57,12 +57,12 @@ with sync_playwright() as p:
   guide.wait_for_timeout(100)
   guide.mouse.move(box['x']+box['width']*.7,box['y']+box['height']*.6)
   if width>=768:
-   guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
+   guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
    assert float(cover.evaluate("e=>e.style.getPropertyValue('--photo-pan-x')").replace('px',''))>0
   else:
    assert not cover.evaluate("e=>e.classList.contains('is-pointer-follow')")
   guide.emulate_media(reduced_motion='reduce')
-  guide.wait_for_function("!document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
+  guide.wait_for_function("() => !document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
   guide.locator('.explore-destination:visible .explore-photo-button').click()
   assert guide.locator('#explore-album').evaluate('(d)=>d.open')
   first=guide.locator('#explore-album-image').get_attribute('src')
