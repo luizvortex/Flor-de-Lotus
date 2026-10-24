@@ -1,4 +1,4 @@
-import sys,json
+import sys,json,time
 from playwright.sync_api import sync_playwright
 base=sys.argv[1]
 with sync_playwright() as p:
@@ -28,13 +28,28 @@ with sync_playwright() as p:
   # The card advances manually without opening its album, and never auto-advances.
   shown=guide.locator('.explore-destination:visible')
   cover=shown.locator('.explore-photo-button');advance=shown.locator('[data-explore-card-next]')
+  advance.scroll_into_view_if_needed()
+  all_photos=json.loads(cover.get_attribute('data-explore-photos'))
+  # Upcoming optimized photos must arrive before the user clicks.
+  guide.wait_for_function("""photos=>photos.slice(1,3).every(photo=>performance.getEntriesByType('resource').some(r=>{const u=new URL(r.name);return u.searchParams.get('url')===photo.url&&u.searchParams.get('w')==='828'&&r.responseEnd>0}))""",arg=all_photos)
+  guide.wait_for_timeout(100)
+  guide.context.set_offline(True)
+  started=time.monotonic()
   advance.click()
-  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'")
+  assert not advance.is_disabled()
+  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
+  assert time.monotonic()-started<.5
+  assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
+  advance.click()
+  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
+  assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
+  guide.context.set_offline(False)
+  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'")
   assert not guide.locator('#explore-album').evaluate('(d)=>d.open')
   selected=cover.locator('img').get_attribute('src')
   guide.wait_for_timeout(2200)
   assert cover.locator('img').get_attribute('src')==selected
-  assert shown.locator('.explore-card-counter').inner_text().startswith('2 /')
+  assert shown.locator('.explore-card-counter').inner_text().startswith('3 /')
   # Mouse motion on desktop; no new motion on mobile or with reduced motion.
   guide.emulate_media(reduced_motion='no-preference')
   cover.scroll_into_view_if_needed();guide.wait_for_timeout(150)
