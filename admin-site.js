@@ -14,12 +14,12 @@
  const get=path=>path.split('.').reduce((v,k)=>v?.[k],state.content);
  const set=(path,value)=>{const parts=path.split('.'),key=parts.pop();parts.reduce((v,k)=>v[k],state.content)[key]=value;dirty=true;queueDraft();updateStatus('Alterações ainda não publicadas. Rascunho guardado automaticamente neste navegador.');};
  function updateStatus(message,error=false){notice=message;noticeError=error;const el=container?.querySelector('[data-cms-status]');if(el){el.textContent=message;el.className=error?'error':'hint';}refreshButtons();}
- function refreshButtons(){container?.querySelectorAll('[data-cms-action]').forEach(b=>b.disabled=pending>0||saving);container?.querySelectorAll('[data-cms-field],[data-cms-section],[data-beach-group],[data-whale-photos],[data-review-group]').forEach(el=>el.disabled=saving);container?.querySelectorAll('[data-cms-upload],[data-media-choice]').forEach(el=>el.disabled=saving||pending>0);}
+ function refreshButtons(){container?.querySelectorAll('[data-cms-action]').forEach(b=>b.disabled=pending>0||saving);container?.querySelectorAll('[data-cms-field],[data-cms-section],[data-beach-group],[data-whale-photos],[data-review-group]').forEach(el=>el.disabled=saving);container?.querySelectorAll('[data-cms-upload]').forEach(el=>el.disabled=saving||pending>0);}
  async function request(path,body,method='POST'){
   const response=await fetch('/api/'+path,{method:body?method:'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,cache:'no-store'});
   const data=await response.json();if(!response.ok)throw Error(data.error||'Não foi possível concluir a operação.');return data;
  }
- function library(){const urls=new Set();const walk=v=>{if(typeof v==='string'&&/\.(jpe?g|png|webp)$/i.test(v))urls.add(v);else if(v&&typeof v==='object')Object.values(v).forEach(walk);};walk(state.content);return [...urls];}
+
  function fieldsHTML(fields,path){return fields.map(field=>{
   const name=path+'.'+field.key,value=get(name),id='cms-'+name.replaceAll('.','-'),attrs=`data-cms-field="${esc(name)}" id="${id}"`,required=field.required?'required':'',max=field.max||1000;
   if(['id','schemaVersion'].includes(field.key))return '';
@@ -29,7 +29,7 @@
   let control='';
   if(field.type==='image'||field.type==='video'){
    const video=field.type==='video';
-   control=`<div class="cms-media">${value?(video?`<video src="${esc(value)}" controls muted playsinline preload="metadata"></video>`:`<img src="${esc(value)}" alt="Prévia de ${esc(field.label)}" loading="lazy">`):'<span class="hint">Nenhum arquivo selecionado</span>'}<div><label class="cms-upload-label" for="${id}-upload">Enviar ${video?'vídeo':'imagem'}</label><input id="${id}-upload" type="file" data-cms-upload="${esc(name)}" data-kind="${field.type}" accept="${video?'video/mp4,video/webm':'image/jpeg,image/png,image/webp'}"><p class="hint">${video?'MP4 ou WebM, até 50 MB.':'JPG, PNG ou WebP, até 3 MB.'}</p>${!video?`<label for="${id}-choice">Usar uma imagem já presente no site</label><select id="${id}-choice" data-media-choice="${esc(name)}"><option value="">Selecionar imagem…</option>${library().map(url=>`<option value="${esc(url)}">${esc(decodeURI(url.split('/').pop()))}</option>`).join('')}</select>`:''}</div></div><input ${attrs} type="hidden" value="${esc(value)}">${!field.required?`<button type="button" class="btn secondary" data-media-clear="${esc(name)}">Remover arquivo</button>`:''}`;
+   control=`<div class="cms-media">${value?(video?`<video src="${esc(value)}" controls muted playsinline preload="metadata"></video>`:`<img src="${esc(value)}" alt="Prévia de ${esc(field.label)}" loading="lazy">`):'<span class="hint">Nenhum arquivo selecionado</span>'}<div><label class="cms-upload-label" for="${id}-upload">Enviar ${video?'vídeo':'imagem'}</label><input id="${id}-upload" type="file" data-cms-upload="${esc(name)}" data-kind="${field.type}" accept="${video?'video/mp4,video/webm':'image/jpeg,image/png,image/webp'}"><p class="hint">${video?'MP4 ou WebM, até 50 MB.':'JPG, PNG ou WebP. A foto é otimizada automaticamente antes do envio.'}</p></div></div><input ${attrs} type="hidden" value="${esc(value)}">${!field.required?`<button type="button" class="btn secondary" data-media-clear="${esc(name)}">Remover arquivo</button>`:''}`;
   }else if(field.type==='textarea')control=`<textarea ${attrs} rows="${field.key==='description'?5:4}" maxlength="${max}" ${required}>${esc(value)}</textarea>`;
   else if(field.type==='select')control=`<select ${attrs}>${field.options.map(option=>`<option value="${esc(option)}" ${value===option?'selected':''}>${esc(state.sections.find(s=>s.key===option)?.label||option)}</option>`).join('')}</select>`;
   else control=`<input ${attrs} type="${field.type==='number'?'number':field.type==='date'?'date':'text'}" value="${esc(value)}" ${required} ${field.type==='number'?`min="${field.min}" max="${field.max}" step="${field.step||1}"`:`maxlength="${max}"`}>`;
@@ -42,14 +42,31 @@
   await new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('PUT',ticket.uploadUrl);xhr.setRequestHeader('Content-Type',file.type);xhr.setRequestHeader('x-upsert','false');xhr.timeout=180000;xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(Math.round(100*e.loaded/e.total));};xhr.onload=()=>xhr.status>=200&&xhr.status<300?resolve():reject(Error('Não foi possível enviar o arquivo. Tente novamente.'));xhr.onerror=()=>reject(Error('Falha de conexão ao enviar o arquivo.'));xhr.ontimeout=()=>reject(Error('O envio demorou demais. Tente novamente.'));xhr.send(file);});return ticket.url;
  }
  async function optimizeImage(file){
-  // Preserve animated WebP files; resizing a canvas would discard the animation.
-  if(file.type==='image/webp')return file;
+  // Keep small animated WebP intact; oversized static photos can be resized.
+  if(file.type==='image/webp'&&file.size<=3*1024*1024)return file;
+  if(file.type==='image/webp'){
+   const header=new Uint8Array(await file.slice(0,32).arrayBuffer());
+   if(String.fromCharCode(...header.slice(12,16))==='VP8X'&&(header[20]&2))throw Error('Esta imagem é um WebP animado muito grande. Use uma foto JPG, PNG ou WebP estática.');
+  }
   const url=URL.createObjectURL(file),image=new Image();
-  try{image.src=url;await image.decode();const ratio=Math.min(1,1920/Math.max(image.naturalWidth,image.naturalHeight));
-   const canvas=document.createElement('canvas');canvas.width=Math.round(image.naturalWidth*ratio);canvas.height=Math.round(image.naturalHeight*ratio);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
-   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.86));
-   return blob&&blob.size<file.size?new File([blob],file.name.replace(/\.[^.]+$/,'')+'.webp',{type:'image/webp'}):file;
-  }catch{return file;}finally{URL.revokeObjectURL(url);}
+  try{
+   image.src=url;try{await image.decode();}catch{throw Error('Não foi possível abrir esta imagem. Tente exportá-la como JPG, PNG ou WebP.');}
+   if(!image.naturalWidth||!image.naturalHeight)throw Error('A imagem está vazia ou danificada.');
+   let ratio=Math.min(1,1920/Math.max(image.naturalWidth,image.naturalHeight));
+   const canvas=document.createElement('canvas');
+   for(let attempt=0;attempt<5;attempt++){
+    canvas.width=Math.max(1,Math.round(image.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(image.naturalHeight*ratio));
+    const context=canvas.getContext('2d');if(!context)throw Error('Não foi possível preparar a imagem neste navegador.');
+    context.drawImage(image,0,0,canvas.width,canvas.height);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',Math.max(.65,.88-attempt*.05)));
+    if(blob&&blob.size<=3*1024*1024){
+     if(file.size<=3*1024*1024&&file.size<blob.size)return file;
+     return new File([blob],file.name.replace(/\.[^.]+$/,'')+'.'+(blob.type==='image/webp'?'webp':'png'),{type:blob.type});
+    }
+    ratio*=.75;
+   }
+   throw Error('Não foi possível otimizar esta imagem. Tente exportá-la como JPG e enviar novamente.');
+  }finally{image.src='';URL.revokeObjectURL(url);}
  }
  async function capturePoster(file){
   const url=URL.createObjectURL(file),video=document.createElement('video');video.muted=true;video.playsInline=true;video.preload='auto';
@@ -75,12 +92,16 @@
   if(dirty)queueDraft();
   container.querySelectorAll('[data-cms-item]').forEach(el=>{if(disclosure.has(el.dataset.cmsItem))el.open=disclosure.get(el.dataset.cmsItem);});
   container.querySelectorAll('[data-cms-field]').forEach(input=>input.addEventListener('input',()=>{const field=fieldFor(input.dataset.cmsField);set(input.dataset.cmsField,field.type==='boolean'?input.checked:field.type==='number'?Number(input.value):input.value);}));
-  container.querySelectorAll('[data-media-choice]').forEach(select=>select.onchange=()=>{if(select.value){set(select.dataset.mediaChoice,select.value);render();}});
+
   container.querySelectorAll('[data-cms-upload]').forEach(input=>input.onchange=async()=>{
    let file=input.files[0];if(!file)return;const kind=input.dataset.kind,path=input.dataset.cmsUpload;
-   if(!((kind==='video'?['video/mp4','video/webm']:['image/jpeg','image/png','image/webp']).includes(file.type))||file.size>(kind==='video'?50:3)*1024*1024){updateStatus('Use fotos JPG, PNG ou WebP de até 3 MB ou vídeos MP4/WebM de até 50 MB.',true);return;}
+   if(kind==='image'&&!['image/jpeg','image/png','image/webp'].includes(file.type)){
+    const extension=file.name.split('.').pop().toLowerCase(),type={jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp'}[extension];
+    if(type)file=new File([file],file.name,{type});
+   }
+   if(!file.size||!(kind==='video'?['video/mp4','video/webm']:['image/jpeg','image/png','image/webp']).includes(file.type)||(kind==='video'&&file.size>50*1024*1024)){updateStatus(kind==='video'?'Use vídeo MP4 ou WebM de até 50 MB.':'Use uma foto JPG, PNG ou WebP válida.',true);input.value='';return;}
    pending++;input.disabled=true;refreshButtons();
-   try{if(kind==='image')file=await optimizeImage(file);const url=await signedUpload(file,n=>updateStatus(`Enviando arquivo… ${n}%`));set(path,url);
+   try{if(kind==='image'){updateStatus('Preparando e otimizando a foto…');file=await optimizeImage(file);}const url=await signedUpload(file,n=>updateStatus(`Enviando arquivo… ${n}%`));set(path,url);
     if(path==='hero.video'){set('hero.mobileVideo','');set('hero.animation','');try{const poster=await capturePoster(file);set('hero.poster',await signedUpload(poster,()=>{}));}catch{updateStatus('Vídeo enviado. Selecione uma imagem de capa antes de publicar.');}}
     if(path==='hero.mobileVideo')set('hero.animation','');
     updateStatus(kind==='video'&&file.size>8*1024*1024?'Vídeo enviado. Este arquivo é pesado: recomendamos uma versão otimizada antes de publicar.':'Arquivo enviado. Publique as alterações para exibi-lo no site.');

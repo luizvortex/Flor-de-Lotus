@@ -233,3 +233,10 @@ Editar site → Seção de contato permite alterar título, subtítulo, introdu�
 Editar site → Sobre a pousada permite editar as duas imagens e descrições, o texto acima do título, a frase de destaque, a legenda, os rótulos dos botões e as comodidades (uma por linha; o ícone acompanha palavras como Wi-Fi, café, estacionamento, varanda e piscina, com ícone neutro para outras). Campos novos são preenchidos apenas quando ausentes em publicações antigas, preservando textos/imagens personalizados. A nova descrição inicial evita duplicar a nota das avaliações, que continua sendo gerenciada na seção própria.
 
 Verificação: build, TypeScript, `node scripts/test-site-editor.mjs` e teste focado `node scripts/test-site-editor.mjs --about-only`. O teste de navegador cobre imagens, ícones, ausência de overflow de 320 a 1900px e navegação para quartos; a API cobre compatibilidade editorial e escape de texto. Provedores externos são simulados; conteúdo publicado e reservas não são alterados pelos testes.
+
+
+## Envio de fotos grandes no editor
+
+O editor geral não oferece mais a lista de imagens já usadas no site. As fotos são escolhidas no dispositivo. Não existe limite de tamanho aplicado ao arquivo original de uma foto JPG/PNG/WebP antes da otimização: o navegador decodifica e prepara uma versão com até 1920px e até 3 MB para armazenamento. Esse tamanho final é um limite interno do envio, sem exigir que o administrador reduza previamente sua foto. O processamento pode depender da memória e dos formatos suportados pelo dispositivo; arquivos corrompidos recebem erro específico. WebP animado pequeno é preservado; animação acima do limite interno não é convertida silenciosamente em foto estática. Vídeos mantêm a regra existente de 50 MB.
+
+`node scripts/test-site-editor.mjs --upload-only` valida uma foto de origem acima de 50 MB, otimização antes da validação final, envio por URL assinada e publicação refletida em Sobre a pousada, com backend/Storage isolados. Não envia fotos ou publicações ao banco real.
