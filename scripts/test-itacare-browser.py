@@ -19,6 +19,9 @@ with sync_playwright() as p:
   assert guide.locator('.explore-tour').count()==3
   assert 'Agosto e setembro' in guide.locator('#passeio-observacao-baleias').text_content()
   guide.wait_for_function("() => document.querySelector('#explore-cover').complete && document.querySelector('#explore-cover').naturalWidth>0")
+  assert 'q=90' in guide.locator('#explore-cover').get_attribute('srcset')
+  assert '2268w' in guide.locator('#explore-cover').get_attribute('srcset')
+  assert '/miranteitacarezinho1.jpg' in guide.locator('#explore-cover').get_attribute('src')
   guide.locator('[data-explore-filter="cachoeira"]').click()
   assert guide.locator('.explore-destination:visible').count()==2
   guide.locator('[data-explore-filter="praia"]').click()

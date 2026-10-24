@@ -17,7 +17,12 @@ export function renderExplorePreview(content:SiteContent):string {
 }
 export function applyExplorePage($:CheerioAPI,content:SiteContent):void {
  const b=content.beaches;
- $('#explore-cover').attr('src',image(b.cover,1920));$('#explore-title').text(String(b.pageTitle));$('#explore-intro').text(String(b.pageDescription));
+ const cover=String(b.cover),knownCover=cover==='/img Itacarezinho/miranteitacarezinho1.jpg';
+ const coverSource=(width:number)=>`/_next/image?url=${encodeURIComponent(cover)}&w=${width}&q=90`;
+ const coverImage=$('#explore-cover');coverImage.attr('src',cover);
+ if(knownCover)coverImage.attr('srcset',`${coverSource(828)} 828w, ${coverSource(1200)} 1200w, ${coverSource(1920)} 1920w, ${encodeURI(cover)} 2268w`).attr('sizes','(max-width: 767px) 125vw, 100vw');
+ else coverImage.removeAttr('srcset').removeAttr('sizes');
+ $('#explore-title').text(String(b.pageTitle));$('#explore-intro').text(String(b.pageDescription));
  $('meta[name="description"]').attr('content',String(b.pageDescription));
  $('#explore-tours-title').text(String(b.toursTitle));$('#explore-tours-intro').text(String(b.toursDescription));
  const contact=(title:string)=>`https://wa.me/${content.branding.whatsapp}?text=${encodeURIComponent(`Olá! Vou visitar Itacaré e gostaria de saber mais sobre ${title}. Podem me ajudar a planejar?`)}`;

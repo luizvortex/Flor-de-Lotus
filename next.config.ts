@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const localSources=process.env.VERCEL==='1'?'':' http://127.0.0.1:* http://localhost:*';
 const config: NextConfig = {
   poweredByHeader:false,
+  images:{qualities:[75,90]},
   async headers(){return [{source:'/:path*',headers:[
     {key:'X-Content-Type-Options',value:'nosniff'},
     {key:'X-Frame-Options',value:'SAMEORIGIN'},

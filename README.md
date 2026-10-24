@@ -245,3 +245,8 @@ O editor geral não oferece mais a lista de imagens já usadas no site. As fotos
 ## Dimensionamento automático do carrossel
 
 Fotos enviadas em Editar site → Carrossel da pousada são preparadas em 4:3, até 1600×1200px, com recorte central para preencher todo o quadro sem esticar nem acrescentar faixas. O carrossel mantém imagens do mesmo tamanho, contíguas, usando `object-fit: cover`; celular mantém foto central e prévias laterais, com os intervalos existentes. A experiência anterior com imagem inteira e fundo claro foi retirada a pedido do proprietário. Outras imagens do editor mantêm sua proporção e a otimização existente. Teste focado: `node scripts/test-site-editor.mjs --gallery-only` (retrato, panorama, preenchimento sem faixas, proporção, alturas iguais, quadros adjacentes e publicação com backend isolado).
+
+
+## Qualidade da capa do guia de Itacaré
+
+A capa inicial conhecida (miranteitacarezinho1.jpg, 2268×3014) usa variantes locais com qualidade 90 em 828/1200/1920px, mais o arquivo original de 2268px para telas maiores/densas. O navegador escolhe pelo tamanho da tela, sem gerar uma versão ampliada artificialmente. A sombra lateral da paisagem foi suavizada no desktop, preservando o contraste da navegação e dos textos. Capas personalizadas continuam usando o arquivo escolhido no painel sem declarar dimensões desconhecidas. Teste focado: `node scripts/test-site-editor.mjs --guide-only`.
