@@ -8,6 +8,7 @@ with sync_playwright() as p:
  page=context.new_page();page.route('https://**',lambda route:route.abort())
  page.goto(base+'/admin',wait_until='networkidle')
  page.locator('[data-tab="site"]').click();page.locator('[data-cms-section="gallery"]').click()
+ assert page.locator('[data-cms-item="gallery.photos.0"] > summary').inner_text().startswith('Foto 1 ·')
  page.locator('[data-cms-item="gallery.photos.0"] > summary').click()
  field='[data-cms-field="gallery.photos.0.url"]'
  for width,height in [(200,400),(400,100)]:
@@ -31,6 +32,11 @@ with sync_playwright() as p:
  page.locator('[data-cms-action="save"]').click();page.get_by_text('Publicado! As alterações aparecem ao abrir ou atualizar o site.').wait_for()
  page.goto(base+'/',wait_until='domcontentloaded')
  assert page.locator('.pousada-gallery-slide img').first.evaluate("i=>getComputedStyle(i).objectFit")=='cover'
+ originals=page.locator('.pousada-gallery-slide:not([aria-hidden="true"])')
+ total=originals.count()
+ for i in range(total):
+  assert originals.nth(i).locator('.gallery-photo-number').inner_text()==f'{i+1:02d} / {total:02d}'
+ assert page.locator('[data-gallery-prev]').count()==1 and page.locator('[data-gallery-next]').count()==1
  for width in [390,1440,1900]:
   page.set_viewport_size({'width':width,'height':1000})
   frames=page.locator('.pousada-gallery-slide').all()[:3]

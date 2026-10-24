@@ -58,7 +58,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  applyAbout($,c);
  const gallery=c.gallery;const photos=gallery.photos as Item[];text('#galeria-pousada-title',gallery.title);
  $('.pousada-gallery').toggleClass('is-single',photos.length===1).attr('data-mobile-delay',String(gallery.mobileDelay)).attr('data-desktop-delay',String(gallery.desktopDelay));
- $('.pousada-gallery-track').html(photos.map((p,i)=>`<figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto ${i+1} de ${photos.length}"><img src="${esc(p.url)}" alt="${esc(p.alt)}" width="800" height="600" loading="lazy"></figure>`).join(''));
+ $('.pousada-gallery-track').html(photos.map((p,i)=>`<figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto ${i+1} de ${photos.length}"><img src="${esc(p.url)}" alt="${esc(p.alt)}" width="800" height="600" loading="lazy"><span class="gallery-photo-number" aria-hidden="true">${String(i+1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}</span></figure>`).join(''));
  if(photos.length===1)$('.pousada-gallery-arrow').attr('hidden','');
  text('.showcase-heading h2',c.rooms.title);text('.showcase-heading p',c.rooms.description);text('.showcase-copy .showcase-rates',c.rooms.ratesLabel);text('.showcase-more .showcase-rates',c.rooms.moreLabel);
  const leisure=c.leisure;text('#leisure-title',leisure.title);text('.leisure-heading .leisure-eyebrow',leisure.eyebrow);text('.leisure-heading > p:last-child',leisure.description);text('.leisure-hint',leisure.hint);
