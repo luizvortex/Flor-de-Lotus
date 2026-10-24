@@ -28,11 +28,18 @@
   "about": {
     "visible": true,
     "title": "Sobre a Pousada",
-    "description": "Seu refúgio de tranquilidade em Itacaré. Na Pousada Flor de Lótus, o conforto encontra a natureza. Nossas acomodações foram pensadas para o seu relaxamento, oferecendo varandas privativas com vista para o jardim, ar-condicionado, Smart TV e mimos especiais de banho. Comece o dia com um farto café da manhã em estilo buffet antes de explorar o paraíso: estamos a apenas 3 minutos a pé da Praia da Concha e próximos às principais atrações da cidade. Após os passeios, relaxe em nossa piscina ao ar livre ou aproveite a paz do nosso jardim. Estacionamento rotativo e Wi-Fi são por nossa conta. Descubra por que os casais nos avaliam com nota 9,3 e viva momentos inesquecíveis.",
-    "image": "/img Pousada/frentepousada.jpg",
-    "alt": "Foto da Frente da Pousada",
-    "featuresTitle": "O que temos ?",
-    "features": "Wi-Fi Gratuito\nCafé da Manhã incluso\nEstacionamento rotativo\nQuarto com varanda privativa\nÁrea de Lazer com churrasqueira e piscina"
+    "description": "Entre o verde do jardim e a brisa de Itacaré, a Flor de Lótus é um convite para viver dias mais leves.\n\nA poucos minutos a pé da Praia da Concha, você encontra quartos com varanda, café da manhã em estilo buffet e espaços para descansar depois da praia. Aproveite a piscina, sinta a tranquilidade do jardim e deixe o resto com a gente.",
+    "image": "/img Pousada/interiorpousada.jpg",
+    "alt": "Jardim e varandas da Pousada Flor de Lótus",
+    "featuresTitle": "Tudo para uma estadia tranquila.",
+    "features": "Wi-Fi gratuito\nCafé da manhã incluso\nEstacionamento rotativo\nQuartos com varanda\nPiscina e churrasqueira",
+    "eyebrow": "Um outro ritmo em Itacaré",
+    "lead": "Um convite para desacelerar.",
+    "secondaryImage": "/img Pousada/FlordeLotus6.jpg",
+    "secondaryAlt": "Piscina e espaço de descanso da pousada",
+    "caption": "Seu tempo, seu ritmo.",
+    "buttonLabel": "Conheça os quartos",
+    "locationLabel": "Como chegar"
   },
   "gallery": {
     "visible": true,

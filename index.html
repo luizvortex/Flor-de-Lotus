@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="./conta.css">
     <link rel="stylesheet" href="./lazer.css">
     <link rel="stylesheet" href="./contato.css">
+    <link rel="stylesheet" href="./sobre.css">
     <link rel="preload" as="image" href="/media/jardim-final.jpg" fetchpriority="high">
     <script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches&&!sessionStorage.getItem("lotus-intro-seen")){sessionStorage.setItem("lotus-intro-seen","1");document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},1600)}}catch{}</script>
     <link rel="icon" type="image" href="img Pousada/flordelotuslogo.png">
@@ -66,45 +67,22 @@
             <div class="home-hero-copy"><p class="home-hero-eyebrow">Pousada · Itacaré, Bahia</p><h1>Flor de Lótus</h1><p class="home-hero-tagline">Seu refúgio entre o mar e a natureza.</p></div>
             <div class="home-hero-bottom"><span class="hero-location">Praia da Concha<br><span>Itacaré · Bahia</span></span><a href="#sobre-a-pousada" class="hero-discover">Descubra a pousada<span aria-hidden="true">↓</span></a></div>
         </section>
-        <section id="sobre-a-pousada">
-            <div class="pt-5 pb-5">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <!-- IMAGEM -->
-                        <div class="col-lg-6 mb-4 mb-lg-0">
-                            <img src="./img Pousada/frentepousada.jpg" class="foto-sobre-pousada"
-                                alt="Foto da Frente da Pousada">
-                        </div>
-                        <!-- TEXTO -->
-                        <div class="col-lg-6">
-                            <h2 class="section-tittle">
-                                Sobre a <span>Pousada</span>
-                            </h2>
-                            <p>
-                                Seu refúgio de tranquilidade em Itacaré.
-                                Na Pousada Flor de Lótus, o conforto encontra a natureza. Nossas acomodações foram
-                                pensadas para o seu relaxamento, oferecendo varandas privativas com vista para o jardim,
-                                ar-condicionado, Smart TV e mimos especiais de banho.
-                                Comece o dia com um farto café da manhã em estilo buffet antes de explorar o paraíso:
-                                estamos a apenas 3 minutos a pé da Praia da Concha e próximos às principais atrações da
-                                cidade. Após os passeios, relaxe em nossa piscina ao ar livre ou aproveite a paz do
-                                nosso jardim. Estacionamento rotativo e Wi-Fi são por nossa conta. Descubra por que os
-                                casais nos
-                                avaliam com nota 9,3 e viva momentos inesquecíveis.
-                            </p>
-                            <h2 class="section-tittle mt-5">
-                                O que <span>temos</span> ?
-                            </h2>
-                            <ul>
-                                <li>Wi-Fi Gratuito</li>
-                                <li>Café da Manhã incluso</li>
-                                <li>Estacionamento rotativo</li>
-                                <li>Quarto com varanda privativa</li>
-                                <li>Área de Lazer com churrasqueira e piscina</li>
-                            </ul>
-                        </div>
+        <section id="sobre-a-pousada" class="about-section" aria-labelledby="about-title">
+            <div class="about-shell">
+                <div class="about-grid">
+                    <div class="about-photos">
+                        <figure class="about-photo-main"><img src="/img Pousada/interiorpousada.jpg" class="foto-sobre-pousada" alt="Jardim e varandas da Pousada Flor de Lótus" width="900" height="1100" loading="lazy" decoding="async"></figure>
+                        <figure class="about-photo-inset"><img src="/img Pousada/FlordeLotus6.jpg" alt="Piscina e espaço de descanso da pousada" width="420" height="315" loading="lazy" decoding="async"><figcaption>Seu tempo, seu ritmo.</figcaption></figure>
+                    </div>
+                    <div class="about-copy">
+                        <p class="about-eyebrow" data-about-eyebrow>UM OUTRO RITMO EM ITACARÉ</p>
+                        <h2 id="about-title">Sobre a Pousada</h2>
+                        <p class="about-lead" data-about-lead>Um convite para desacelerar.</p>
+                        <div class="about-description"><p>Entre o verde do jardim e a brisa de Itacaré, a Flor de Lótus é um convite para viver dias mais leves.</p><p>A poucos minutos a pé da Praia da Concha, você encontra quartos com varanda, café da manhã em estilo buffet e espaços para descansar depois da praia. Aproveite a piscina, sinta a tranquilidade do jardim e deixe o resto com a gente.</p></div>
+                        <div class="about-actions"><a class="about-rooms-link" href="#quartos"><span data-about-rooms-label>Conheça os quartos</span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a><a class="about-location-link" href="https://www.google.com/maps/search/?api=1&amp;query=Pousada+Flor+de+Lotus+Rua+Hibisco+33+Itacare" target="_blank" rel="noopener noreferrer"><span data-about-location-label>Como chegar</span><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M3 13 13 3M3 3h10v10"/></svg></a></div>
                     </div>
                 </div>
+                <div class="about-amenities" aria-labelledby="about-features-title"><h3 id="about-features-title">Tudo para uma estadia tranquila.</h3><ul class="about-feature-list"><li>Wi-Fi gratuito</li><li>Café da manhã incluso</li><li>Estacionamento rotativo</li><li>Quartos com varanda</li><li>Piscina e churrasqueira</li></ul></div>
             </div>
         </section>
         <section id="galeria-pousada" aria-labelledby="galeria-pousada-title">

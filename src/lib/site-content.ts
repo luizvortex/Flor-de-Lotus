@@ -6,6 +6,7 @@ import { supabaseUrl, supabaseKey } from './supabase-config';
 import {unstable_cache,revalidateTag} from 'next/cache';
 import {applySiteSeo} from './site-seo';
 import {applyInformation} from './site-information';
+import {applyAbout} from './about-content';
 export async function getSiteDocument():Promise<{content:SiteContent;revision:number}> {
  const response=await fetch(`${supabaseUrl}/rest/v1/rpc/lotus_site_api`,{method:'POST',cache:'no-store',signal:AbortSignal.timeout(4000),headers:{apikey:supabaseKey,'Content-Type':'application/json'},body:JSON.stringify({p_operation:'read',p_data:{}})});
  if(!response.ok)throw Error('Não foi possível carregar o conteúdo do site.');
@@ -54,7 +55,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  video.find('source').remove();if(hero.mobileVideo)video.append(`<source src="${esc(hero.mobileVideo)}" media="(max-width: 767px)" type="${String(hero.mobileVideo).endsWith('.webm')?'video/webm':'video/mp4'}">`);
  video.append(`<source src="${esc(hero.video)}" type="${String(hero.video).endsWith('.webm')?'video/webm':'video/mp4'}">`);
  $('.hero-location').html(`${esc(hero.location)}<br><span>${esc(hero.region)}</span>`);$('.hero-discover').html(`${esc(hero.button)}<span aria-hidden="true">↓</span>`);
- const about=c.about;text('#sobre-a-pousada h2:first-of-type',about.title);text('#sobre-a-pousada .col-lg-6:last-child > p',about.description);$('#sobre-a-pousada .col-lg-6:last-child > p').addClass('cms-paragraph');img('.foto-sobre-pousada',about.image,about.alt);text('#sobre-a-pousada h2:nth-of-type(2)',about.featuresTitle);$('#sobre-a-pousada ul').html(String(about.features).split('\n').filter(Boolean).map(x=>`<li>${esc(x)}</li>`).join(''));
+ applyAbout($,c);
  const gallery=c.gallery;const photos=gallery.photos as Item[];text('#galeria-pousada-title',gallery.title);
  $('.pousada-gallery').toggleClass('is-single',photos.length===1).attr('data-mobile-delay',String(gallery.mobileDelay)).attr('data-desktop-delay',String(gallery.desktopDelay));
  $('.pousada-gallery-track').html(photos.map((p,i)=>`<figure class="pousada-gallery-slide" role="group" aria-roledescription="slide" aria-label="Foto ${i+1} de ${photos.length}"><img src="${esc(p.url)}" alt="${esc(p.alt)}" width="800" height="600" loading="lazy"></figure>`).join(''));

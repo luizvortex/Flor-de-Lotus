@@ -82,7 +82,7 @@
     });
     // Smooth in-page links use the current fixed header height. No Bootstrap
     // collapse behavior is needed for this full-screen dialog menu.
-    document.querySelectorAll('.home-header a[href^="#"], .home-menu a[href^="#"], .hero-discover').forEach(link => {
+    document.querySelectorAll('.home-header a[href^="#"], .home-menu a[href^="#"], .hero-discover, .about-rooms-link').forEach(link => {
         link.addEventListener('click', event => {
             const target = document.getElementById(link.hash.slice(1));
             if (!target) return;
