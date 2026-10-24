@@ -30,6 +30,8 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  const img=(selector:string,url:unknown,alt?:unknown)=>{$(selector).attr('src',String(url));if(alt!==undefined)$(selector).attr('alt',String(alt));};
  const link=(selector:string,url:unknown)=>{$(selector).attr('href',String(url));};
  const b=c.branding;
+ $('link[rel="icon"],link[rel="shortcut icon"]').remove();
+ $('head').append($('<link>').attr({rel:'icon',href:String(b.logo)}));
  $('title').text(page==='index'?String(b.title):`${$('title').text().split('|')[0].trim()} | ${b.title}`);
  if(!$('meta[name="description"]').length)$('head').append('<meta name="description">');
  $('meta[name="description"]').attr('content',String(b.description));
