@@ -41,7 +41,7 @@
 .explore-destination { min-width:0; border:1px solid #e4e1d6; background:#fffdf8; scroll-margin-top:96px; }
 .explore-photo-button { display:block; position:relative; width:100%; aspect-ratio:4/3; background:#e8e6dc; border:0; padding:0; overflow:hidden; cursor:pointer; }
 .explore-photo-button>img { width:100%; height:100%; object-fit:cover; transition:transform .7s cubic-bezier(.2,.6,.3,1); display:block; }
-.explore-photo-button:hover>img { transform:scale(1.035); }
+
 .explore-photo-count { position:absolute; bottom:14px; right:14px; background:#fffdf8eb; color:#263d38; font-size:10px; padding:8px 10px; }
 .explore-destination-copy { padding:26px 24px; }.explore-destination-copy .explore-eyebrow { font-size:9px; margin-bottom:12px; letter-spacing:2px; }
 .explore-page h3 { font:500 28px/1.18 'Playfair Display',Georgia,serif; margin:0 0 18px; letter-spacing:-.02em; }
@@ -94,3 +94,19 @@
 @media(prefers-reduced-motion:reduce){.explore-photo-button>img,.discovery-card-image img{transition:none}.explore-photo-button:hover>img,.discovery-card:hover img{transform:none}}
 
 .explore-inline-arrow { vertical-align:middle; flex-shrink:0; }
+
+/* Movimento sutil dentro da foto, exclusivo para mouse em telas de desktop. */
+@media (min-width:768px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+ .explore-hero>img { transition:transform .7s cubic-bezier(.2,.6,.3,1); }
+ .explore-photo-button:hover>img { transform:scale(1.035); }
+ .explore-page .is-pointer-follow>img {
+  transform:perspective(1200px) translate3d(var(--photo-pan-x,0px),var(--photo-pan-y,0px),0) rotateX(var(--photo-rotate-x,0deg)) rotateY(var(--photo-rotate-y,0deg)) scale(1.09);
+  transition:transform .24s cubic-bezier(.2,.6,.3,1); will-change:transform;
+ }
+}
+
+.explore-photo-stage { position:relative; }
+.explore-card-next { position:absolute; z-index:2; right:8px; top:50%; transform:translateY(-50%); width:44px; height:44px; display:grid; place-items:center; padding:0; border:0; background:transparent; color:white; filter:drop-shadow(0 1px 3px #000b); cursor:pointer; }
+.explore-card-next:disabled { opacity:.5; cursor:wait; }
+.explore-card-counter { position:absolute; top:14px; left:14px; pointer-events:none; padding:6px 9px; font-size:10px; letter-spacing:.7px; background:#10222070; color:white; }
+@media(max-width:767px){.explore-hero>img,.explore-photo-button>img{transform:none;transition:none}}

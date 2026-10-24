@@ -25,6 +25,29 @@ with sync_playwright() as p:
   assert guide.locator('.explore-destination:visible').count()==7
   guide.locator('#explore-search').fill('Jeribucacu')
   assert guide.locator('.explore-destination:visible').count()==1
+  # The card advances manually without opening its album, and never auto-advances.
+  shown=guide.locator('.explore-destination:visible')
+  cover=shown.locator('.explore-photo-button');advance=shown.locator('[data-explore-card-next]')
+  advance.click()
+  guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'")
+  assert not guide.locator('#explore-album').evaluate('(d)=>d.open')
+  selected=cover.locator('img').get_attribute('src')
+  guide.wait_for_timeout(2200)
+  assert cover.locator('img').get_attribute('src')==selected
+  assert shown.locator('.explore-card-counter').inner_text().startswith('2 /')
+  # Mouse motion on desktop; no new motion on mobile or with reduced motion.
+  guide.emulate_media(reduced_motion='no-preference')
+  cover.scroll_into_view_if_needed();guide.wait_for_timeout(150)
+  box=cover.bounding_box();guide.mouse.move(box['x']+box['width']*.3,box['y']+box['height']*.5)
+  guide.wait_for_timeout(100)
+  guide.mouse.move(box['x']+box['width']*.7,box['y']+box['height']*.6)
+  if width>=768:
+   guide.wait_for_function("document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
+   assert float(cover.evaluate("e=>e.style.getPropertyValue('--photo-pan-x')").replace('px',''))>0
+  else:
+   assert not cover.evaluate("e=>e.classList.contains('is-pointer-follow')")
+  guide.emulate_media(reduced_motion='reduce')
+  guide.wait_for_function("!document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
   guide.locator('.explore-destination:visible .explore-photo-button').click()
   assert guide.locator('#explore-album').evaluate('(d)=>d.open')
   first=guide.locator('#explore-album-image').get_attribute('src')
