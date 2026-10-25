@@ -11,7 +11,7 @@
    const blob=source instanceof Blob?source:await(async()=>{const response=await fetch(source);if(!response.ok)throw Error('Não foi possível abrir a foto.');return response.blob();})();
    objectURL=URL.createObjectURL(blob);const img=dialog.querySelector('img');img.src=objectURL;await img.decode();
    const frame=dialog.querySelector('.cms-crop-frame'),zoom=dialog.querySelector('[data-crop-zoom]'),format=dialog.querySelector('[data-crop-ratio]');
-   const gallery=path.startsWith('gallery.photos.');
+   const gallery=/^(gallery|instagram)\.photos\./.test(path);
    let ratio=gallery?4/3:/cover|poster/.test(path)?16/9:path==='about.image'?3/4:4/3;
    format.value=String(ratio);format.disabled=gallery;zoom.value='1';let x=.5,y=.5,drag=null,lastGeometry;
    function geometry(){const w=frame.clientWidth,h=w/ratio,s=Math.max(w/img.naturalWidth,h/img.naturalHeight)*Number(zoom.value);return {w,h,iw:img.naturalWidth*s,ih:img.naturalHeight*s};}

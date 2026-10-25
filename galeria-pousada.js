@@ -1,6 +1,6 @@
 'use strict';
 (() => {
- const gallery=document.querySelector('.pousada-gallery');if(!gallery)return;
+ document.querySelectorAll('.pousada-gallery').forEach(gallery=>{
  const viewport=gallery.querySelector('.pousada-gallery-viewport');
  const track=gallery.querySelector('.pousada-gallery-track');
  const slides=Array.from(track.children),total=slides.length,clones=Math.min(3,slides.length);
@@ -8,7 +8,7 @@
  const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
  const status=gallery.querySelector('[data-gallery-status]');
  let index=clones,step=0,offset=0,timer,settleTimer,visible=false,moving=false;
- function clone(slide){const copy=slide.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.removeAttribute('aria-label');copy.querySelector('img').alt='';return copy;}
+ function clone(slide){const copy=slide.cloneNode(true);copy.setAttribute('aria-hidden','true');copy.removeAttribute('aria-label');copy.querySelector('img').alt='';copy.querySelectorAll('a,button').forEach(el=>el.tabIndex=-1);return copy;}
  track.prepend(...slides.slice(-clones).map(clone));track.append(...slides.slice(0,clones).map(clone));
  function paint(animate){track.style.transition=animate?'':'none';track.style.transform=`translateX(${offset-index*step}px)`;}
  function schedule(){
@@ -48,4 +48,5 @@
  viewport.addEventListener('touchcancel',()=>{touch=null;schedule();},{passive:true});
  document.addEventListener('visibilitychange',schedule);motion.addEventListener('change',()=>{resize();});
  resize();
+ });
 })();

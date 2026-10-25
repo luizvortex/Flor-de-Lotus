@@ -129,6 +129,16 @@
       }
     ]
   },
+  "instagram": {
+    "visible": true,
+    "eyebrow": "Nosso dia a dia em Itacaré",
+    "title": "Conheça nosso Instagram",
+    "description": "Um pouco da pousada, dos nossos cantinhos e dos dias que esperam por você.",
+    "buttonLabel": "Acompanhe a pousada",
+    "mobileDelay": 3,
+    "desktopDelay": 4,
+    "photos": []
+  },
   "beaches": {
     "visible": true,
     "title": "Praias de Itacaré",
@@ -668,7 +678,7 @@
     "policiesEyebrow": "PARA UMA ESTADIA TRANQUILA"
   },
   "layout": {
-    "order": "about\ngallery\nrooms\nleisure\nbeaches\nreviews\ncontact",
+    "order": "about\ngallery\nrooms\nleisure\ninstagram\nbeaches\nreviews\ncontact",
     "blocks": []
   },
   "operations": {
