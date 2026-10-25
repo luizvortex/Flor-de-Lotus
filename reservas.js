@@ -29,6 +29,8 @@
  const dateParts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bahia',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
  const dp=k=>dateParts.find(p=>p.type===k).value,today=`${dp('year')}-${dp('month')}-${dp('day')}`;
  const nextDay=(value,days=1)=>{const d=new Date(value+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);};
+ const floorLabel=value=>({terreo:'Térreo',superior:'Piso superior'}[value]||'Andar a definir');
+ const configuration=value=>({solteiro:'Single',casal:'Duplo',casal_mais_um:'Triplo',quadruplo:'Quádruplo',familia:'Família'}[value]||'Acomodação');
  const defaultSlug=r=>r.presentation_slug||r.showcase_slug||({familia:'familia',casal_mais_um:'triplo-standard'}[r.type]||'duplo');
  const photoUrl=url=>typeof url==='string'&&!url.includes('..')&&(/^\/(img[^/]*|images)\/[^<>"\\]+\.(jpg|jpeg|png|webp)$/i.test(url)||/^https:\/\/asojfispuomhbfapqdmi\.supabase\.co\/storage\/v1\/object\/public\/lotus-showcase\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(url));
  let showcases=[],inventory=[],packages=[],available=[],lastQuery=null,nights=0,sequence=0,controller,selection=null,detail=null,detailIndex=0;
@@ -84,12 +86,13 @@
   const data=await response.json();if(!response.ok){const error=new Error(data.error||'Não foi possível concluir a consulta.');error.status=response.status;throw error;}return data;
  }
  function message(text,error=false){$('#message').textContent=text;$('#message').className=error?'error':'';}
- function query(){return {start:$('#checkin').value,end:$('#checkout').value,guests:Number($('#guests').value),package_id:$('#package').value||''};}
+ function query(){return {start:$('#checkin').value,end:$('#checkout').value,guests:Number($('#guests').value),package_id:$('#package').value||'',floor:$('#floor').value||''};}
  function focusSearch(){ $('#search').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});$('#checkin').focus({preventScroll:true}); }
  function rowsFor(row){return (lastQuery?available:inventory).filter(r=>defaultSlug(r)===row.slug).sort((a,b)=>(lastQuery?a.total:a.price)-(lastQuery?b.total:b.price));}
  function applyCatalog(data){
   inventory=Array.isArray(data.rooms)?data.rooms:[];
   showcases=(data.showcases||[]).filter(s=>typeof s.title==='string'&&Array.isArray(s.photos)&&s.photos.some(p=>photoUrl(p.url))).map(s=>({...s,photos:s.photos.filter(p=>photoUrl(p.url)),features:Array.isArray(s.features)?s.features:[]}));
+  showcases=showcases.filter(s=>inventory.some(room=>defaultSlug(room)===s.slug));
   packages=(data.packages||[]).filter(p=>p.end>today);
   const selected=$('#package').value;$('#package').innerHTML='<option value="">Diárias padrão</option>'+packages.map(p=>`<option value="${p.id}">${esc(p.name)} · ${p.nights} noites</option>`).join('');
   if(packages.some(p=>String(p.id)===selected))$('#package').value=selected;
@@ -102,12 +105,13 @@
  function unavailableReason(row){
   const rooms=inventoryFor(row),capacity=rooms.length?Math.max(...rooms.map(room=>room.capacity)):0;
   if(!rooms.length)return 'Esta categoria ainda não possui uma unidade ativa para reserva. Consulte a pousada.';
+  if(lastQuery?.floor&&!rooms.some(room=>room.floor===lastQuery.floor))return `Não há unidades desta categoria cadastradas no ${floorLabel(lastQuery.floor).toLowerCase()}. Consulte outro andar ou converse com a pousada.`;
   if(lastQuery&&Number(lastQuery.guests)>capacity)return `Esta categoria está cadastrada para até ${plural(capacity,'hóspede','hóspedes')}. Ajuste a quantidade de pessoas ou consulte a pousada.`;
   return 'Sem disponibilidade para estas datas e hóspedes. Consulte outro período ou converse com a pousada.';
  }
  function whatsappLink(title,query=lastQuery,booking){
   const destination=document.body.dataset.contactWhatsapp;if(!/^\d{10,15}$/.test(destination||''))return '';
-  const text=[booking?`Olá! Gostaria de acompanhar minha solicitação de reserva #${booking.id}.`:'Olá! Gostaria de consultar uma estadia na pousada.',`Acomodação: ${title}`,query?`Entrada: ${dateLabel(query.start)}\nSaída: ${dateLabel(query.end)}\nHóspedes: ${query.guests}`:'',booking?`Total da solicitação: ${money(booking.total)}. Aguardando confirmação da pousada.`:''].filter(Boolean).join('\n');
+  const text=[booking?`Olá! Gostaria de acompanhar minha solicitação de reserva #${booking.id}.`:'Olá! Gostaria de consultar uma estadia na pousada.',`Acomodação: ${title}`,query?`Entrada: ${dateLabel(query.start)}\nSaída: ${dateLabel(query.end)}\nHóspedes: ${query.guests}${query.floor?'\nAndar: '+floorLabel(query.floor):''}`:'',booking?`Total da solicitação: ${money(booking.total)}. Aguardando confirmação da pousada.`:''].filter(Boolean).join('\n');
   return `https://wa.me/${destination}?${new URLSearchParams({text})}`;
  }
  function whatsappButton(title){const url=whatsappLink(title);return url?`<a class="text-button room-whatsapp" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Consultar a pousada no WhatsApp ↗</a>`:'';}
@@ -132,7 +136,7 @@
   try{
    const [catalog,data]=await Promise.all([api('catalog',null,controller.signal),api('availability?'+new URLSearchParams(q),null,controller.signal)]);
    if(request!==sequence)return;applyCatalog(catalog);lastQuery=q;available=data.rooms||[];nights=data.nights;render();
-   $('#result-count').textContent=`${plural(available.length,'quarto disponível','quartos disponíveis')} · ${plural(nights,'noite','noites')} · ${plural(q.guests,'hóspede','hóspedes')}`;
+   $('#result-count').textContent=`${plural(available.length,'quarto disponível','quartos disponíveis')} · ${plural(nights,'noite','noites')} · ${plural(q.guests,'hóspede','hóspedes')}${q.floor?' · '+floorLabel(q.floor):''}`;
    history.replaceState(null,'',location.pathname+'?'+new URLSearchParams(q));
    if(!silent)message(available.length?'Disponibilidade atualizada. Escolha uma acomodação abaixo.':'Não encontramos vagas para estas datas e hóspedes. Você pode conhecer as acomodações abaixo e consultar outro período.');
   }catch(e){if(request!==sequence||e.name==='AbortError')return;lastQuery=null;available=[];render();$('#result-count').textContent='Disponibilidade ainda não confirmada.';message(e.message,true);}
@@ -144,7 +148,7 @@
  }
  function detailOptions(){
   if(!detail)return;const rows=rowsFor(detail);
-  $('#details-options').innerHTML=lastQuery&&rows.length?rows.map(r=>`<div class="room-option"><p><strong>${esc(r.name)}</strong><br>Até ${r.capacity} hóspedes · ${nights} noites<br>${money(r.total)} no total</p><button type="button" class="gold-button" data-book="${r.id}">Escolher este quarto</button></div>`).join(''):`<p class="room-meta">${lastQuery?esc(unavailableReason(detail)):'Selecione as datas e a quantidade de hóspedes para verificar as opções.'}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`;
+  $('#details-options').innerHTML=lastQuery&&rows.length?rows.map(r=>`<div class="room-option"><p><strong>Unidade ${esc(r.name)} · ${esc(floorLabel(r.floor))}</strong><br>${esc(configuration(r.type))} · Até ${r.capacity} hóspedes · ${nights} noites<br>${money(r.total)} no total</p><button type="button" class="gold-button" data-book="${r.id}">Escolher este quarto</button></div>`).join(''):`<p class="room-meta">${lastQuery?esc(unavailableReason(detail)):'Selecione as datas e a quantidade de hóspedes para verificar as opções.'}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`;
  }
  function openDetails(slug){
   detail=showcases.find(s=>s.slug===slug);if(!detail)return;const d=detail.details||{};
@@ -171,7 +175,7 @@
   if(button.hasAttribute('data-book')&&lastQuery){
    const room=available.find(r=>r.id===Number(button.dataset.book));if(!room)return;
    selection={room:{...room,presentation:detail?.title||room.name},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=!guestAuthenticated;
-   $('#booking-summary').textContent=`${room.name} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();document.dispatchEvent(new Event('lotus:refresh-guest-session'));
+   $('#booking-summary').textContent=`Unidade ${room.name} · ${floorLabel(room.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();document.dispatchEvent(new Event('lotus:refresh-guest-session'));
   }
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
@@ -181,11 +185,11 @@
  $('#booking-form').onsubmit=async event=>{
   event.preventDefault();if(!selection)return;if(!guestAuthenticated){$('#booking-error').textContent='Entre com Google para finalizar sua reserva.';return;}const button=event.submitter;button.disabled=true;const selected=selection;
   try{
-   const q=selected.query,result=await api('bookings',{room_id:selected.room.id,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
+   const q=selected.query,result=await api('bookings',{room_id:selected.room.id,floor:q.floor,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
    document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();
    const receipt=$('#booking-receipt');receipt.hidden=false;
-   $('#booking-receipt-summary').textContent=`Solicitação #${result.id} · ${selected.room.presentation} · unidade ${selected.room.name} · ${dateLabel(q.start)} a ${dateLabel(q.end)} · ${plural(q.guests,'hóspede','hóspedes')} · Total: ${money(result.total)}.`;
-   const contact=$('#booking-receipt-whatsapp'),url=whatsappLink(`${selected.room.presentation} · unidade ${selected.room.name}`,q,result);contact.hidden=!url;if(url)contact.href=url;
+   $('#booking-receipt-summary').textContent=`Solicitação #${result.id} · ${selected.room.presentation} · unidade ${selected.room.name} · ${floorLabel(result.floor||selected.room.floor)} · ${dateLabel(q.start)} a ${dateLabel(q.end)} · ${plural(q.guests,'hóspede','hóspedes')} · Total: ${money(result.total)}.`;
+   const contact=$('#booking-receipt-whatsapp'),url=whatsappLink(`${selected.room.presentation} · unidade ${selected.room.name}`,{...q,floor:result.floor||selected.room.floor||q.floor},result);contact.hidden=!url;if(url)contact.href=url;
    $('#booking-success-summary').textContent=$('#booking-receipt-summary').textContent;
    const successContact=$('#booking-success-whatsapp');successContact.hidden=!url;if(url)successContact.href=url;
    $('#booking-success').showModal();
@@ -199,12 +203,12 @@
  $('#refresh-rooms').onclick=()=>search();
  $('#packages').onclick=event=>{
   const button=event.target.closest('[data-package]');if(!button)return;const p=packages.find(p=>p.id===Number(button.dataset.package));if(!p)return;
-  $('#package').value=p.id;$('#checkin').value=p.start<today?today:p.start;$('#checkout').value=nextDay($('#checkin').value,p.nights);$('#checkout').min=nextDay($('#checkin').value);$('#guests').value={solteiro:1,casal:2,casal_mais_um:3,familia:4}[p.type];search();focusSearch();
+  $('#package').value=p.id;$('#checkin').value=p.start<today?today:p.start;$('#checkout').value=nextDay($('#checkin').value,p.nights);$('#checkout').min=nextDay($('#checkin').value);$('#guests').value={solteiro:1,casal:2,casal_mais_um:3,quadruplo:4,familia:5}[p.type];search();focusSearch();
  };
  // Fill the URL search immediately; a slow catalog must not overwrite later edits.
  const params=new URLSearchParams(location.search),bootstrapSequence=sequence;
  if(!params.has('start'))$('#checkin').value=today;
- for(const [key,id] of [['start','checkin'],['end','checkout'],['guests','guests']])if(params.has(key))$('#'+id).value=params.get(key);
+ for(const [key,id] of [['start','checkin'],['end','checkout'],['guests','guests'],['floor','floor']])if(params.has(key))$('#'+id).value=params.get(key);
  if(!params.has('end'))$('#checkout').value=nextDay($('#checkin').value||today);
  if($('#checkin').value)$('#checkout').min=nextDay($('#checkin').value);
  api('catalog').then(data=>{

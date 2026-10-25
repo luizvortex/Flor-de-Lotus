@@ -246,6 +246,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       const params = request.nextUrl.searchParams;
       data.start = params.get('start'); data.end = params.get('end');
       data.guests = params.has('guests') ? Number(params.get('guests')) : 1;
+      data.floor = params.get('floor') || '';
       data.package_id = params.get('package_id') ? Number(params.get('package_id')) : null;
     }
     const guestLink = /^bookings\/([1-9][0-9]*)\/account$/.exec(path);
