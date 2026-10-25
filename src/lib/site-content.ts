@@ -70,6 +70,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('#praias').removeClass('pt-5 pb-5').addClass('discovery-preview').attr('aria-labelledby','topo-praias').html(renderExplorePreview(c));
  $('head').append('<link rel="stylesheet" href="/reviews.css">');
  $('#avaliacoes').removeClass('pt-5 pb-5').addClass('guest-reviews').html(renderReviewsPreview(c));
+ $('head').append('<script src="/reviews.js" defer></script>');
  text('#contact-title',c.contact.title);text('.contact-eyebrow',c.contact.eyebrow);text('[data-contact-description]',c.contact.description);text('[data-contact-form-title]',c.contact.formTitle);text('[data-contact-intro]',c.contact.intro);text('[data-contact-button]',c.contact.buttonLabel);
  text('[data-contact-address-title]',c.contact.addressTitle);text('[data-contact-social-title]',c.contact.socialTitle);text('.contact-address',b.address);
  $('#whatsapp-form').attr('data-default-message',String(c.contact.defaultMessage)).attr('action',`https://wa.me/${b.whatsapp}`);link('[data-contact-maps]',b.maps);

@@ -250,3 +250,8 @@ Fotos enviadas em Editar site → Carrossel da pousada são preparadas em 4:3, a
 ## Qualidade da capa do guia de Itacaré
 
 A capa inicial conhecida (miranteitacarezinho1.jpg, 2268×3014) usa variantes locais com qualidade 90 em 828/1200/1920px, mais o arquivo original de 2268px para telas maiores/densas. O navegador escolhe pelo tamanho da tela, sem gerar uma versão ampliada artificialmente. A sombra lateral da paisagem foi suavizada no desktop, preservando o contraste da navegação e dos textos. Capas personalizadas continuam usando o arquivo escolhido no painel sem declarar dimensões desconhecidas. Teste focado: `node scripts/test-site-editor.mjs --guide-only`.
+
+
+## Brilho dourado nos comentários
+
+Os cartões de avaliação da página inicial e de `/avaliacoes` têm um brilho radial discreto acompanhando a posição do mouse dentro do cartão. Usa requestAnimationFrame, variáveis CSS e camada com pointer-events:none, sem alterar o cursor ou impedir seleção, links e expansão dos relatos. O efeito existe apenas em telas a partir de 768px com hover/mouse preciso e sem preferência de movimento reduzido. Sai imediatamente ao deixar o cartão, trocar filtros, redimensionar, ocultar a aba ou perder foco. Durante a rolagem, só permanece enquanto a posição do cursor ainda estiver dentro do cartão. Teste focado: `node scripts/test-site-editor.mjs --glow-only`.
