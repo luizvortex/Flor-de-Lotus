@@ -10,7 +10,7 @@ revoke all on lotus_private.property_policies from public,anon,authenticated;
 create policy lotus_no_direct_policy_access on lotus_private.property_policies
  as restrictive for all to anon,authenticated using(false) with check(false);
 insert into lotus_private.property_policies(content) values (
- '{"checkin":"A partir das 14h.","checkout":"Até as 12h.","pets":"Aceitamos animais de estimação de pequeno porte.","internet":"Wi-Fi disponível gratuitamente para os hóspedes.","parking":"Estacionamento rotativo gratuito.","children":"","payments":"Aceitamos todas as formas de pagamento.","cancellation":"","reservations":"As solicitações de reserva ficam pendentes até a confirmação pela equipe da pousada.","additional":""}'::jsonb
+ '{"checkin":"A partir das 14h.","checkout":"Até as 12h.","pets":"Aceitamos animais de estimação de pequeno porte.","internet":"Wi-Fi disponível gratuitamente para os hóspedes.","parking":"Estacionamento rotativo gratuito.","children":"","payments":"Aceitamos somente cartão, dinheiro e Pix.","cancellation":"","reservations":"As solicitações de reserva ficam pendentes até a confirmação pela equipe da pousada.","additional":""}'::jsonb
 );
 create function lotus_private.policy_dispatch(op text,d jsonb) returns jsonb
 language plpgsql security definer set search_path='' as $$
