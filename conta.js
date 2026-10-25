@@ -1,11 +1,20 @@
 'use strict';
 (() => {
+ function finishBookingLogin(user){
+  if(!user||new URLSearchParams(location.search).get('conta')!=='conectada')return;
+  try{const started=Number(sessionStorage.getItem('lotus-booking-login'));if(!started||Date.now()-started>600000)return;sessionStorage.removeItem('lotus-booking-login');}catch{return;}
+  // Only notify that login finished. The booking tab verifies the server session itself.
+  try{const channel=new BroadcastChannel('lotus-booking-login');channel.postMessage('complete');channel.close();}catch{}
+  try{localStorage.setItem('lotus-booking-login-complete',String(Date.now()));}catch{}
+  window.close();
+ }
  const dialog=document.getElementById('guest-account');
  if(!dialog){
-  const refreshHeader=()=>fetch('/api/guest/session',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(result=>{
+  let headerRequest;
+  const refreshHeader=()=>headerRequest||(headerRequest=fetch('/api/guest/session',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(result=>{
    document.querySelectorAll('[data-guest-account]').forEach(link=>{const img=link.querySelector('img');if(img)paintAvatar(img,result.user?.avatar_url);link.classList.toggle('has-guest-profile',Boolean(result.user));});
-   document.dispatchEvent(new CustomEvent('lotus:guest-session',{detail:{authenticated:Boolean(result.user),name:result.user?.name||''}}));
-  }).catch(()=>{});
+   document.dispatchEvent(new CustomEvent('lotus:guest-session',{detail:{authenticated:Boolean(result.user),name:result.user?.name||'',google_enabled:result.google_enabled}}));
+  }).catch(()=>{document.dispatchEvent(new Event('lotus:guest-session-error'));}).finally(()=>{headerRequest=null;}));
   document.querySelectorAll('[data-guest-account]').forEach(link=>link.addEventListener('click',()=>{const menu=document.getElementById('home-menu');if(menu?.open)menu.close();}));
   refreshHeader();window.addEventListener('focus',refreshHeader);document.addEventListener('lotus:refresh-guest-session',refreshHeader);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHeader();});
   const state=new URL(location.href).searchParams.get('conta');if(state)location.replace('/minha-conta?'+new URLSearchParams({conta:state}));
@@ -71,6 +80,7 @@
   login.hidden=Boolean(user);profile.hidden=!user;dialog.classList.toggle('has-reservation-profile',Boolean(user));reservations.innerHTML='';
   document.dispatchEvent(new CustomEvent('lotus:guest-session',{detail:{authenticated:Boolean(user),name:user?.name||''}}));
   if(!user)return;
+  finishBookingLogin(user);
   dialog.querySelector('[data-account-name]').textContent=user.name;
   dialog.querySelector('[data-account-email]').textContent=user.email;
   paintAvatar(avatar,user.avatar_url);

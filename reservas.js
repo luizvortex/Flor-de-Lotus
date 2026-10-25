@@ -1,15 +1,48 @@
 'use strict';
 (() => {
- let guestAuthenticated=false;
+ let guestAuthenticated=false,bookingSubmitting=false,loginWindow,loginTimer,loginStarted=0;
  const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  document.addEventListener('lotus:guest-session',event=>{
   guestAuthenticated=event.detail.authenticated;
-  $('#booking-form [type="submit"]').disabled=!guestAuthenticated;
+  const submit=$('#booking-form [type="submit"]');submit.disabled=bookingSubmitting||!selection;submit.textContent=guestAuthenticated?'Solicitar reserva':'Entrar com Google e continuar';
+  if(guestAuthenticated){stopLoginWatch();try{loginWindow?.close();}catch{}if($('#booking-login-dialog').open)$('#booking-login-dialog').close();}
   const note=$('[data-booking-account-note]');if(!note)return;
   if(event.detail.authenticated){note.textContent='Sua reserva ficará vinculada à conta Google. Acompanhe datas, status e avisos em Minha conta.';if(!$('#guest').value)$('#guest').value=event.detail.name;}
-  else note.textContent='Entre com Google para registrar a solicitação na sua conta. Depois de entrar, volte a esta aba para continuar.';
+  else note.textContent='Entre com Google para registrar a solicitação na sua conta. Clique em Entrar com Google para continuar.';
   $('[data-booking-login]').hidden=guestAuthenticated;
  });
+ function stopLoginWatch(){clearInterval(loginTimer);loginTimer=null;$('#booking-google-form [type="submit"]').disabled=false;}
+ function loginStatus(text){$('[data-booking-login-status]').textContent=text;}
+ function openBookingLogin(){
+  if(!selection)return;
+  loginStatus('Entre com Google. Em seguida, confira seus dados e clique em Solicitar reserva.');
+  if(!$('#booking-login-dialog').open)$('#booking-login-dialog').showModal();
+  document.dispatchEvent(new Event('lotus:refresh-guest-session'));
+ }
+ $('#booking-google-form').addEventListener('submit',event=>{
+  if(!selection){event.preventDefault();return;}
+  const w=500,h=Math.min(720,screen.availHeight||720);
+  const left=Math.max(0,window.screenX+(window.outerWidth-w)/2),top=Math.max(0,window.screenY+(window.outerHeight-h)/2);
+  try{loginWindow=window.open('','lotus-booking-google',`popup=yes,width=${w},height=${h},left=${left},top=${top}`);try{loginWindow?.sessionStorage.setItem('lotus-booking-login',String(Date.now()));}catch{}}catch{loginWindow=null;}
+  event.currentTarget.target=loginWindow?'lotus-booking-google':'_blank';
+  loginStarted=Date.now();stopLoginWatch();$('#booking-google-form [type="submit"]').disabled=true;
+  loginStatus('Aguardando seu login na janela do Google. Se ela não abrir, use o link Minha conta abaixo.');
+  loginTimer=setInterval(()=>{
+   if(guestAuthenticated){stopLoginWatch();return;}
+   document.dispatchEvent(new Event('lotus:refresh-guest-session'));
+   let closed=false;try{closed=Boolean(loginWindow?.closed);}catch{}
+   if(closed||Date.now()-loginStarted>300000){stopLoginWatch();loginStatus('Se você já entrou, clique em Já entrei, verificar acesso. Caso tenha cancelado, pode tentar novamente.');}
+  },2000);
+ });
+ $('#booking-login-dialog').querySelectorAll('[data-close-booking-login]').forEach(button=>button.onclick=()=>$('#booking-login-dialog').close());
+ $('#booking-login-dialog').addEventListener('close',()=>{stopLoginWatch();if($('#booking-dialog').open)$('#booking-form [type="submit"]').focus({preventScroll:true});});
+ $('[data-booking-open-login]').onclick=openBookingLogin;
+ $('#booking-form [type="submit"]').addEventListener('click',event=>{if(!guestAuthenticated){event.preventDefault();openBookingLogin();}});
+ function checkReturnedLogin(){if(selection)document.dispatchEvent(new Event('lotus:refresh-guest-session'));}
+ try{const channel=new BroadcastChannel('lotus-booking-login');channel.onmessage=()=>checkReturnedLogin();window.addEventListener('pagehide',()=>channel.close());}catch{}
+ window.addEventListener('storage',event=>{if(event.key==='lotus-booking-login-complete')checkReturnedLogin();});
+ document.addEventListener('lotus:guest-session-error',()=>{if($('#booking-login-dialog').open)loginStatus('Não foi possível verificar seu acesso. Tente novamente em Já entrei, verificar acesso.');});
+ window.addEventListener('pagehide',stopLoginWatch);
  let shareTimer;
  const shareDialog=$('#share-dialog'),shareInput=$('#share-url');
  const shareUrl=()=>{const url=new URL(location.href);url.hash='';return url.href;};
@@ -174,8 +207,8 @@
   if(button.hasAttribute('data-search-focus')){$('#room-details').close();focusSearch();}
   if(button.hasAttribute('data-book')&&lastQuery){
    const room=available.find(r=>r.id===Number(button.dataset.book));if(!room)return;
-   selection={room:{...room,presentation:detail?.title||room.name},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=!guestAuthenticated;
-   $('#booking-summary').textContent=`Unidade ${room.name} · ${floorLabel(room.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();document.dispatchEvent(new Event('lotus:refresh-guest-session'));
+   selection={room:{...room,presentation:detail?.title||room.name},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=false;
+   $('#booking-summary').textContent=`Unidade ${room.name} · ${floorLabel(room.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();if(!guestAuthenticated)openBookingLogin();else document.dispatchEvent(new Event('lotus:refresh-guest-session'));
   }
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
@@ -183,7 +216,7 @@
  $('#booking-success').querySelectorAll('[data-close-success]').forEach(button=>button.onclick=()=>$('#booking-success').close());
  $('#booking-success').addEventListener('close',()=>$('#booking-receipt').focus({preventScroll:true}));
  $('#booking-form').onsubmit=async event=>{
-  event.preventDefault();if(!selection)return;if(!guestAuthenticated){$('#booking-error').textContent='Entre com Google para finalizar sua reserva.';return;}const button=event.submitter;button.disabled=true;const selected=selection;
+  event.preventDefault();if(!selection)return;if(!guestAuthenticated){openBookingLogin();return;}if(bookingSubmitting)return;const button=event.submitter;bookingSubmitting=true;button.disabled=true;const selected=selection;
   try{
    const q=selected.query,result=await api('bookings',{room_id:selected.room.id,floor:q.floor,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
    document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();
@@ -194,10 +227,10 @@
    const successContact=$('#booking-success-whatsapp');successContact.hidden=!url;if(url)successContact.href=url;
    $('#booking-success').showModal();
    message('Sua solicitação foi registrada na conta Google. Aguarde a confirmação da pousada.');await search(true);
-  }catch(e){$('#booking-error').textContent=e.message;if(e.status===409){selection=null;await search(true);}}
-  finally{button.disabled=!selection||!guestAuthenticated;}
+  }catch(e){$('#booking-error').textContent=e.message;if(e.status===401){guestAuthenticated=false;openBookingLogin();}if(e.status===409){selection=null;await search(true);}}
+  finally{bookingSubmitting=false;button.disabled=!selection;}
  };
-  document.querySelector('[data-booking-refresh-login]').onclick=()=>{document.dispatchEvent(new Event('lotus:refresh-guest-session'));};
+  document.querySelector('[data-booking-refresh-login]').onclick=()=>{loginStatus('Verificando seu acesso…');document.dispatchEvent(new Event('lotus:refresh-guest-session'));};
  $('#search').onsubmit=event=>{event.preventDefault();search();};$('#search').addEventListener('change',invalidate);
  $('#checkin').min=today;$('#checkout').min=nextDay(today);$('#checkin').addEventListener('change',()=>{if(!$('#checkin').value)return;$('#checkout').min=nextDay($('#checkin').value);if($('#checkout').value<=$('#checkin').value)$('#checkout').value=$('#checkout').min;});
  $('#refresh-rooms').onclick=()=>search();

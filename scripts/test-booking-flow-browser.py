@@ -24,7 +24,9 @@ with sync_playwright() as p:
    assert authenticated;booked=True;data={'id':101,'total':20000,'status':'pendente'}
   else:return route.continue_()
   route.fulfill(json=data)
- page.route('**/api/**',api)
+ context.route('**/api/**',api)
+ auth_requests=[]
+ context.route('**/auth/google',lambda r:(auth_requests.append(r.request.method),r.fulfill(content_type='text/html',body='<html><body>Login Google simulado</body></html>')))
  page.goto(sys.argv[1]+'/quartos',wait_until='networkidle')
  page.wait_for_function("()=>document.querySelector('#result-count').textContent.includes('quarto disponível')")
  standard=page.locator('[data-slug="duplo"]')
@@ -33,10 +35,37 @@ with sync_playwright() as p:
  assert standard.locator('.room-whatsapp').get_attribute('href').startswith('https://wa.me/')
  assert page.locator('#checkin').input_value() and page.locator('#checkout').input_value()
  page.locator('[data-options="triplo"]').click();page.locator('[data-book="6"]').click()
- assert page.locator('#booking-dialog').is_visible() and page.locator('#booking-form [type="submit"]').is_disabled()
- assert page.locator('[data-booking-login] a').is_visible()
- authenticated=True;page.locator('[data-booking-refresh-login]').click()
- page.wait_for_function("()=>!document.querySelector('#booking-form [type=submit]').disabled")
+ assert page.locator('#booking-login-dialog[open]').is_visible()
+ for width in [390,1366]:
+  page.set_viewport_size({'width':width,'height':900})
+  box=page.locator('#booking-login-dialog').bounding_box();assert box['x']>=0 and box['x']+box['width']<=width+1
+ assert page.locator('#booking-login-dialog').evaluate('i=>i.contains(document.activeElement)')
+ assert not payloads
+ page.locator('[data-close-booking-login]').last.click()
+ assert page.locator('#booking-form [type="submit"]').is_enabled()
+ page.locator('#guest').fill('Nome preservado');page.locator('#phone').fill('55000000000')
+ page.locator('#booking-form [type="submit"]').click()
+ assert page.locator('#booking-login-dialog[open]').is_visible() and not payloads
+ with page.expect_popup() as opened:
+  page.locator('#booking-google-form button').click()
+ popup=opened.value;popup.wait_for_url('**/auth/google')
+ assert auth_requests==['POST']
+ popup.close()
+ page.get_by_text('Se você já entrou, clique em Já entrei, verificar acesso. Caso tenha cancelado, pode tentar novamente.').wait_for()
+ assert not payloads and page.locator('#booking-google-form button').is_enabled()
+ with page.expect_popup() as reopened:
+  page.locator('#booking-google-form button').click()
+ popup=reopened.value;popup.wait_for_url('**/auth/google')
+ assert auth_requests==['POST','POST']
+ assert popup.evaluate("sessionStorage.getItem('lotus-booking-login')")
+ authenticated=True
+ with popup.expect_event('close'):
+  popup.goto(sys.argv[1]+'/minha-conta?conta=conectada',wait_until='commit')
+ page.wait_for_function("()=>!document.querySelector('#booking-login-dialog').open")
+ assert page.locator('#guest').input_value()=='Nome preservado'
+ assert page.locator('#phone').input_value()=='55000000000'
+ assert page.locator('#booking-dialog').is_visible() and not payloads
+
  assert page.locator('[data-booking-login]').is_hidden()
  page.locator('#guest').fill('Hóspede de teste');page.locator('#phone').fill('55000000000')
  page.locator('#booking-form [type="submit"]').click();page.locator('#booking-receipt').wait_for()
