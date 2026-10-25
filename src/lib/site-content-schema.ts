@@ -1,6 +1,6 @@
 import defaults from './site-content-defaults.json';
 import {supabaseUrl} from './supabase-config';
-export type Field = {key:string; label:string; type:'text'|'textarea'|'image'|'video'|'url'|'number'|'boolean'|'select'|'list'|'date'; max?:number; min?:number; step?:number; required?:boolean; options?:string[]; fields?:Field[]; hint?:string};
+export type Field = {hidden?:boolean; key:string; label:string; type:'text'|'textarea'|'image'|'video'|'url'|'number'|'boolean'|'select'|'list'|'date'; max?:number; min?:number; step?:number; required?:boolean; options?:string[]; fields?:Field[]; hint?:string};
 export type SiteContent = Record<string, Record<string, unknown>>;
 const f=(key:string,label:string,type:Field['type']='text',extra:Partial<Field>={}):Field=>({key,label,type,...extra});
 const visible=f('visible','Exibir esta seção','boolean');
@@ -21,6 +21,12 @@ export const siteSections:{key:string;label:string;hint:string;fields:Field[]}[]
  {key:'catalog',label:'Página de quartos e reservas',hint:'Personalize a capa e os títulos da página de quartos. Tarifas, pacotes e políticas têm suas próprias abas.',fields:[f('cover','Foto da capa','image',{required:true}),title,f('eyebrow','Texto acima de “Escolha seu quarto”'),f('heading','Título da lista de quartos'),f('packagesTitle','Título dos pacotes'),f('packagesEyebrow','Subtítulo dos pacotes'),f('locationTitle','Título da localização'),f('locationEyebrow','Subtítulo da localização'),f('policiesTitle','Título das políticas'),f('policiesEyebrow','Subtítulo das políticas')]},
  {key:'layout',label:'Ordem e blocos extras',hint:'Reorganize as seções e crie blocos adicionais de texto, imagem e botão.',fields:[f('order','Ordem das seções (uma chave por linha)','textarea',{hint:'Use cada chave uma vez: about, gallery, rooms, leisure, beaches, reviews, contact.',required:true,max:200}),f('blocks','Blocos extras','list',{min:0,max:12,fields:[f('id','Identificador','text',{required:true,max:50}),visible,title,description,f('image','Foto (opcional)','image'),f('alt','Descrição da foto'),f('button','Texto do botão (opcional)'),f('url','Destino do botão','url'),f('after','Exibir após','select',{options:['about','gallery','rooms','leisure','beaches','reviews','contact']}),f('tone','Fundo','select',{options:['claro','areia']}),f('position','Posição da imagem','select',{options:['esquerda','direita']})]})]}
 ];
+// Keep an optimized source beside each crop so future edits are reversible.
+const withPhotoSources=(fields:Field[]):Field[]=>fields.flatMap(field=>{
+ const next=field.fields?{...field,fields:withPhotoSources(field.fields)}:field;
+ return field.type==='image'?[next,f(field.key+'Source','Foto de origem','image',{hidden:true})]:[next];
+});
+for(const section of siteSections)section.fields=withPhotoSources(section.fields);
 export const siteDefaults=defaults as SiteContent;
 export function safeMedia(value:string,kind:'image'|'video'):boolean {
  if(!value)return true;
@@ -68,7 +74,7 @@ export function validateSiteContent(input:unknown):SiteContent {
  const parse=(fields:Field[],obj:unknown,label:string):Record<string,unknown>=>{
   if(!obj||typeof obj!=='object'||Array.isArray(obj))throw Error(`Confira ${label}.`);
   const src=obj as Record<string,unknown>,out:Record<string,unknown>={};
-  for(const field of fields){const value=src[field.key],name=`${label}: ${field.label}`;
+  for(const field of fields){const value=field.hidden&&!Object.hasOwn(src,field.key)?'':src[field.key],name=`${label}: ${field.label}`;
    if(field.type==='boolean'){if(typeof value!=='boolean')throw Error(`Confira ${name}.`);out[field.key]=value;}
    else if(field.type==='number'){if(typeof value!=='number'||!Number.isFinite(value)||value<(field.min??0)||value>(field.max??100000)||(field.step===1&&!Number.isInteger(value)))throw Error(`Confira ${name}.`);out[field.key]=value;}
    else if(field.type==='list'){if(!Array.isArray(value)||value.length<(field.min??0)||value.length>(field.max??30))throw Error(`Confira a quantidade em ${name}.`);out[field.key]=value.map((v,i)=>parse(field.fields!,v,`${name} ${i+1}`));}
