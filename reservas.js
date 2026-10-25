@@ -176,6 +176,8 @@
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
  $('#close-booking').onclick=()=>$('#booking-dialog').close();$('#booking-dialog').addEventListener('close',()=>{selection=null;});
+ $('#booking-success').querySelectorAll('[data-close-success]').forEach(button=>button.onclick=()=>$('#booking-success').close());
+ $('#booking-success').addEventListener('close',()=>$('#booking-receipt').focus({preventScroll:true}));
  $('#booking-form').onsubmit=async event=>{
   event.preventDefault();if(!selection)return;if(!guestAuthenticated){$('#booking-error').textContent='Entre com Google para finalizar sua reserva.';return;}const button=event.submitter;button.disabled=true;const selected=selection;
   try{
@@ -184,8 +186,10 @@
    const receipt=$('#booking-receipt');receipt.hidden=false;
    $('#booking-receipt-summary').textContent=`Solicitação #${result.id} · ${selected.room.presentation} · unidade ${selected.room.name} · ${dateLabel(q.start)} a ${dateLabel(q.end)} · ${plural(q.guests,'hóspede','hóspedes')} · Total: ${money(result.total)}.`;
    const contact=$('#booking-receipt-whatsapp'),url=whatsappLink(`${selected.room.presentation} · unidade ${selected.room.name}`,q,result);contact.hidden=!url;if(url)contact.href=url;
+   $('#booking-success-summary').textContent=$('#booking-receipt-summary').textContent;
+   const successContact=$('#booking-success-whatsapp');successContact.hidden=!url;if(url)successContact.href=url;
+   $('#booking-success').showModal();
    message('Sua solicitação foi registrada na conta Google. Aguarde a confirmação da pousada.');await search(true);
-   receipt.focus({preventScroll:true});receipt.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
   }catch(e){$('#booking-error').textContent=e.message;if(e.status===409){selection=null;await search(true);}}
   finally{button.disabled=!selection||!guestAuthenticated;}
  };

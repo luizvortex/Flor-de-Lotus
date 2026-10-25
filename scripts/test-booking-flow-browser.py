@@ -41,6 +41,21 @@ with sync_playwright() as p:
  page.locator('#guest').fill('Hóspede de teste');page.locator('#phone').fill('55000000000')
  page.locator('#booking-form [type="submit"]').click();page.locator('#booking-receipt').wait_for()
  assert 'Solicitação #101' in page.locator('#booking-receipt').inner_text()
+ page.locator('#booking-success[open]').wait_for()
+ assert page.locator('#booking-dialog').is_hidden()
+ assert 'Solicitação #101' in page.locator('#booking-success-summary').inner_text()
+ assert 'aguarde' in page.locator('#booking-success-note').inner_text().lower()
+ assert page.locator('#booking-success a[href="/minha-conta"]').count()==1
+ assert page.locator('#booking-success').evaluate('i=>i.contains(document.activeElement)')
+ for width in [390,1366]:
+  page.set_viewport_size({'width':width,'height':900})
+  box=page.locator('#booking-success').bounding_box()
+  assert box['x']>=0 and box['x']+box['width']<=width+1
+  assert abs(box['x']+box['width']/2-width/2)<2
+ page.locator('#booking-success [data-close-success]').last.click()
+ assert page.locator('#booking-success').is_hidden()
+ assert page.locator('#booking-receipt').is_visible()
+
  assert 'aguard' in page.locator('#message').inner_text().lower() or 'solicitação' in page.locator('#message').inner_text().lower()
  assert payloads[0]['room_id']==6 and payloads[0]['guests']==2
  from urllib.parse import urlparse,parse_qs
@@ -53,6 +68,7 @@ with sync_playwright() as p:
  page.locator('#guest').fill('Hóspede de teste');page.locator('#phone').fill('55000000000');page.locator('#booking-form [type="submit"]').click()
  page.get_by_text('Estas datas acabaram de ser reservadas. Consulte outras opções.').wait_for()
  assert page.locator('#booking-receipt').is_hidden()
+ assert page.locator('#booking-success').is_hidden()
  page.locator('#close-booking').click();fail=True;page.locator('#refresh-rooms').click()
  page.get_by_text('Sistema temporariamente indisponível. Tente novamente.').wait_for()
  assert page.locator('#search [type="submit"]').is_enabled()
