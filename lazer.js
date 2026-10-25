@@ -3,12 +3,29 @@
  const section=document.querySelector('#area-de-lazer.leisure-experience');if(!section)return;
  const choices=[...section.querySelectorAll('[data-leisure]')],reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const tones={sinuca:'#f0e8df',churrasqueira:'#eee5d9',piscina:'#f3eee7'};
- let opened=null;
+ let opened=null,scrollFrame=0;
+ function stopScroll(){cancelAnimationFrame(scrollFrame);scrollFrame=0;}
+ function glideTo(destination){
+  stopScroll();
+  if(reduced.matches){window.scrollTo({top:destination,behavior:'instant'});return;}
+  const start=window.scrollY,distance=destination-start,started=performance.now(),duration=1100;
+  function step(now){
+   const progress=Math.min(1,(now-started)/duration);
+   const eased=(1-Math.cos(Math.PI*progress))/2;
+   window.scrollTo({top:start+distance*eased,behavior:'instant'});
+   scrollFrame=progress<1?requestAnimationFrame(step):0;
+  }
+  scrollFrame=requestAnimationFrame(step);
+ }
+ // Give control back immediately when the visitor scrolls or interacts again.
+ ['wheel','touchstart','pointerdown','resize'].forEach(type=>window.addEventListener(type,stopScroll,{passive:true}));
+ window.addEventListener('keydown',event=>{if(['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' ','Escape'].includes(event.key))stopScroll();});
+ reduced.addEventListener('change',stopScroll);
  const stage=section.querySelector('.leisure-choices'),images=choices.map(choice=>choice.querySelector('.leisure-preview'));
  const layer=document.createElement('div');layer.className='leisure-image-layer';layer.setAttribute('aria-hidden','true');stage.prepend(layer);
  const mobile=matchMedia('(max-width:767px)'),panels=choices.map(choice=>document.getElementById(choice.getAttribute('aria-controls')));
  function placePanels(){images.forEach((image,index)=>{if(mobile.matches)choices[index].prepend(image);else layer.append(image);image.style.removeProperty('--leisure-x');image.style.removeProperty('--leisure-y');});panels.forEach((panel,index)=>{if(mobile.matches)choices[index].after(panel);else section.querySelector('.leisure-panels').append(panel);});preview(mobile.matches?opened:null);}
- mobile.addEventListener('change',placePanels);placePanels();
+ mobile.addEventListener('change',()=>{stopScroll();placePanels();});placePanels();
  function preview(choice){
   choices.forEach((item,index)=>{item.classList.toggle('is-preview',item===choice);images[index].classList.toggle('is-visible',item===choice);});
   if(choice&&!mobile.matches){const image=images[choices.indexOf(choice)];if(!image.style.getPropertyValue('--leisure-x')){const rect=choice.getBoundingClientRect(),bounds=stage.getBoundingClientRect();image.style.setProperty('--leisure-x',`${rect.left-bounds.left+rect.width/2-image.offsetWidth/2}px`);image.style.setProperty('--leisure-y',`${(bounds.height-image.offsetHeight)/2}px`);}}
@@ -29,9 +46,10 @@
   let delta=0;
   if(rect.height>bottom-top||rect.top<top)delta=rect.top-top;
   else if(rect.bottom>bottom)delta=rect.bottom-bottom;
-  if(Math.abs(delta)>1)window.scrollBy({top:delta,behavior:reduced.matches?'instant':'smooth'});
+  if(Math.abs(delta)>1)glideTo(Math.max(0,window.scrollY+delta));
  }
  function expand(choice){
+  stopScroll();
   opened=opened===choice?null:choice;
   choices.forEach(item=>{
    const isOpen=item===opened,panel=document.getElementById(item.getAttribute('aria-controls'));
