@@ -9,6 +9,8 @@ with sync_playwright() as p:
   for key in ['sinuca','churrasqueira','piscina']:
    page.evaluate('''key=>{const choice=document.querySelector('[data-leisure="'+key+'"]');window.scrollTo({top:window.scrollY+choice.getBoundingClientRect().top-220,behavior:'instant'});choice.click();}''',key)
    if width>767:
+    # Scroll must be requested during the click itself, without a timer.
+    assert page.evaluate('window.__reveals.length')>0
     page.wait_for_function('()=>window.__reveals.length>0')
     assert page.evaluate('window.__reveals.at(-1).behavior')=='smooth'
     page.wait_for_function('''key=>{const panel=document.getElementById(document.querySelector('[data-leisure="'+key+'"]').getAttribute('aria-controls'));const rect=panel.querySelector('.leisure-panel-content').getBoundingClientRect();return rect.bottom<=window.innerHeight-22&&rect.top>=document.querySelector('.home-header').getBoundingClientRect().bottom;}''',arg=key)

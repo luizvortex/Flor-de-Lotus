@@ -3,12 +3,12 @@
  const section=document.querySelector('#area-de-lazer.leisure-experience');if(!section)return;
  const choices=[...section.querySelectorAll('[data-leisure]')],reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const tones={sinuca:'#f0e8df',churrasqueira:'#eee5d9',piscina:'#f3eee7'};
- let opened=null,revealTimer;
+ let opened=null;
  const stage=section.querySelector('.leisure-choices'),images=choices.map(choice=>choice.querySelector('.leisure-preview'));
  const layer=document.createElement('div');layer.className='leisure-image-layer';layer.setAttribute('aria-hidden','true');stage.prepend(layer);
  const mobile=matchMedia('(max-width:767px)'),panels=choices.map(choice=>document.getElementById(choice.getAttribute('aria-controls')));
  function placePanels(){images.forEach((image,index)=>{if(mobile.matches)choices[index].prepend(image);else layer.append(image);image.style.removeProperty('--leisure-x');image.style.removeProperty('--leisure-y');});panels.forEach((panel,index)=>{if(mobile.matches)choices[index].after(panel);else section.querySelector('.leisure-panels').append(panel);});preview(mobile.matches?opened:null);}
- mobile.addEventListener('change',()=>{clearTimeout(revealTimer);placePanels();});placePanels();
+ mobile.addEventListener('change',placePanels);placePanels();
  function preview(choice){
   choices.forEach((item,index)=>{item.classList.toggle('is-preview',item===choice);images[index].classList.toggle('is-visible',item===choice);});
   if(choice&&!mobile.matches){const image=images[choices.indexOf(choice)];if(!image.style.getPropertyValue('--leisure-x')){const rect=choice.getBoundingClientRect(),bounds=stage.getBoundingClientRect();image.style.setProperty('--leisure-x',`${rect.left-bounds.left+rect.width/2-image.offsetWidth/2}px`);image.style.setProperty('--leisure-y',`${(bounds.height-image.offsetHeight)/2}px`);}}
@@ -17,7 +17,13 @@
  function revealDescription(choice){
   if(mobile.matches||opened!==choice)return;
   const panel=document.getElementById(choice.getAttribute('aria-controls'));
-  const content=panel.querySelector('.leisure-panel-content'),rect=content.getBoundingClientRect();
+  const content=panel.querySelector('.leisure-panel-content');
+  // The desktop panels share one slot. Use its final position while the
+  // accordion animates, so scrolling starts immediately on the click.
+  const panelTop=section.querySelector('.leisure-panels').getBoundingClientRect().top;
+  const contentTop=panelTop+parseFloat(getComputedStyle(content).marginTop);
+  const height=content.getBoundingClientRect().height;
+  const rect={top:contentTop,bottom:contentTop+height,height};
   const header=document.querySelector('.home-header'),top=(header?Math.max(0,header.getBoundingClientRect().bottom):0)+24;
   const bottom=window.innerHeight-24;
   let delta=0;
@@ -26,15 +32,13 @@
   if(Math.abs(delta)>1)window.scrollBy({top:delta,behavior:reduced.matches?'instant':'smooth'});
  }
  function expand(choice){
-  clearTimeout(revealTimer);
   opened=opened===choice?null:choice;
   choices.forEach(item=>{
    const isOpen=item===opened,panel=document.getElementById(item.getAttribute('aria-controls'));
    item.setAttribute('aria-expanded',String(isOpen));panel.setAttribute('aria-hidden',String(!isOpen));panel.inert=!isOpen;
   });
   preview(mobile.matches?opened:choices.find(item=>item.matches(':hover, :focus-visible'))||null);
-  // Measure after the accordion has expanded, then scroll only as far as needed.
-  if(opened&&!mobile.matches){const selected=opened;revealTimer=setTimeout(()=>revealDescription(selected),reduced.matches?0:570);}
+  if(opened&&!mobile.matches)revealDescription(opened);
  }
  choices.forEach(choice=>{
   choice.addEventListener('pointerenter',event=>{if(event.pointerType!=='touch')preview(choice);});
