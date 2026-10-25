@@ -165,6 +165,13 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       clear = true;
       return finish({ ok: true });
     }
+    if(path==='admin-alerts'){
+      if(!token)throw new ApiError(401,'Entre no painel para acompanhar os avisos.');
+      const operation=method==='GET'?'read':method==='POST'&&['mark_read','read_all','configure'].includes(String(data.operation))?String(data.operation):'';
+      if(!operation)throw new ApiError(400,'Operação de aviso inválida.');
+      const result=await call('/rest/v1/rpc/lotus_admin_alert_api','POST',{p_operation:operation,p_data:data},token);
+      const response=finish(result);response.headers.set('Cache-Control','private, no-store');return response;
+    }
     if (isUpload) {
       if (!token) throw new ApiError(401, 'Entre no painel para enviar fotos.');
       return finish(await uploadShowcasePhoto(request, token), 201);
