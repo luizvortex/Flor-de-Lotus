@@ -9,13 +9,13 @@ begin
  perform set_config('request.jwt.claims',jsonb_build_object('sub',uid,'role','authenticated','session_id',sid)::text,true);
  select id into room_a from lotus_private.rooms where name='18';select id into room_b from lotus_private.rooms where name='19';
  period:=jsonb_build_object('start',(now() at time zone 'America/Bahia')::date+400,'end',(now() at time zone 'America/Bahia')::date+402,'guests',2,'floor','superior');
- before_count:=jsonb_array_length(public.lotus_room_catalog_api('availability',period)->'rooms');assert before_count=10;
+ before_count:=jsonb_array_length(public.lotus_room_catalog_api('availability',period)->'rooms');assert before_count=8;
  payload:=period||jsonb_build_object('room_id',room_a,'guest','Synthetic inventory contract','phone','55000000000');
  booking:=public.lotus_api('book',payload);
  assert booking->>'floor'='superior';
  after_count:=jsonb_array_length(public.lotus_room_catalog_api('availability',period)->'rooms');assert after_count=before_count-1,'Only one physical unit must be blocked';
  assert exists(select 1 from jsonb_array_elements(public.lotus_room_catalog_api('availability',period)->'rooms') x where (x->>'id')::bigint=room_b),'The second unit stays available';
- assert jsonb_array_length(public.lotus_room_catalog_api('availability',period||'{"floor":"terreo"}'::jsonb)->'rooms')=9,'Ground floor inventory is independent';
+ assert jsonb_array_length(public.lotus_room_catalog_api('availability',period||'{"floor":"terreo"}'::jsonb)->'rooms')=11,'Ground floor inventory is independent';
  begin perform public.lotus_api('book',payload);raise exception 'Expected same-unit conflict';exception when sqlstate 'PT409' then null;end;
  perform public.lotus_api('book',payload||jsonb_build_object('room_id',room_b));
  begin perform public.lotus_api('book',payload||jsonb_build_object('floor','terreo'));raise exception 'Expected floor mismatch';exception when sqlstate 'PT409' then null;end;

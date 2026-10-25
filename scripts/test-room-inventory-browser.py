@@ -10,19 +10,19 @@ with sync_playwright() as p:
  page.goto(base+'/quartos',wait_until='networkidle')
  page.wait_for_function("()=>document.querySelector('#result-count').textContent.startsWith('19 quartos')")
  page.locator('#floor').select_option('terreo');page.locator('#search [type="submit"]').click()
- page.wait_for_function("()=>document.querySelector('#result-count').textContent.startsWith('9 quartos')")
+ page.wait_for_function("()=>document.querySelector('#result-count').textContent.startsWith('11 quartos')")
  assert 'Térreo' in page.locator('#result-count').inner_text()
  page.locator('[data-options="duplo"]').click()
- assert page.locator('[data-book]').count()==9
+ assert page.locator('[data-book]').count()==11
  assert page.locator('#details-options').get_by_text('Unidade 1 · Térreo',exact=True).count()==1
  page.locator('[data-book="1"]').click();page.locator('#guest').fill('Hóspede de teste');page.locator('#phone').fill('55000000000')
  page.locator('#booking-form [type="submit"]').click();page.locator('#booking-success[open]').wait_for()
  assert 'Térreo' in page.locator('#booking-success-summary').inner_text()
  page.locator('#booking-success [data-close-success]').last.click()
- page.wait_for_function("()=>document.querySelector('#result-count').textContent.startsWith('8 quartos')")
- page.locator('[data-options="duplo"]').click();assert page.locator('[data-book]').count()==8;assert page.locator('[data-book="1"]').count()==0
- page.locator('[data-close-details]').click();page.locator('#floor').select_option('superior');page.locator('#search [type="submit"]').click()
  page.wait_for_function("()=>document.querySelector('#result-count').textContent.startsWith('10 quartos')")
+ page.locator('[data-options="duplo"]').click();assert page.locator('[data-book]').count()==10;assert page.locator('[data-book="1"]').count()==0
+ page.locator('[data-close-details]').click();page.locator('#floor').select_option('superior');page.locator('#search [type="submit"]').click()
+ page.wait_for_function("()=>document.querySelector('#result-count').textContent.startsWith('8 quartos')")
  page.goto(base+'/admin',wait_until='networkidle');page.locator('[data-tab="rooms"]').click()
  assert page.locator('[data-edit-room]').count()==19
  page.locator('[data-edit-room="19"]').click()

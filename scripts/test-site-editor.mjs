@@ -12,7 +12,7 @@ const fixtureId='00000000-0000-4000-8000-000000000019';
 const fixtureToken=Buffer.from('{"alg":"HS256","typ":"JWT"}').toString('base64url')+'.'+Buffer.from(JSON.stringify({sub:fixtureId,exp:Math.floor(Date.now()/1000)+3600,iat:Math.floor(Date.now()/1000),role:'authenticated'})).toString('base64url')+'.test';
 const fixtureUser={id:fixtureId,aud:'authenticated',role:'authenticated',email:'inventory-test@example.invalid',created_at:new Date().toISOString(),app_metadata:{provider:'google',providers:['google']},user_metadata:{},identities:[{id:fixtureId,user_id:fixtureId,provider:'google',identity_data:{full_name:'Hóspede de teste'}}]};
 const fixtureCookie='base64-'+Buffer.from(JSON.stringify({access_token:fixtureToken,refresh_token:'test-refresh',expires_at:Math.floor(Date.now()/1000)+3600,expires_in:3600,token_type:'bearer',user:fixtureUser})).toString('base64url');
-const physicalRooms=Array.from({length:19},(_,i)=>({id:i+1,name:String(i+1),type:'casal',capacity:2,price:20000,active:1,floor:i<9?'terreo':'superior',family_enabled:false,presentation_slug:'duplo',showcase_slug:'duplo'}));
+const physicalRooms=Array.from({length:19},(_,i)=>({id:i+1,name:String(i+1),type:'casal',capacity:2,price:20000,active:1,floor:i<11?'terreo':'superior',family_enabled:false,presentation_slug:'duplo',showcase_slug:'duplo'}));
 const physicalBookings=[];
 const physicalShowcases=[{slug:'duplo',title:'Quarto Standard',description:'Quartos da pousada',photos:Array.from({length:3},()=>({url:'/img casal/casal.jpg',alt:'Quarto de teste'})),features:[]}];
 const mock=createServer(async(req,res)=>{
