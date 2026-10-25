@@ -543,6 +543,11 @@
                                 <div class="contact-field"><label for="contact-arrival">Entrada</label><input type="date" id="contact-arrival" name="arrival" required></div>
                                 <div class="contact-field"><label for="contact-departure">Saída</label><input type="date" id="contact-departure" name="departure" required></div>
                             </div>
+                            <div class="contact-fields">
+                                <div class="contact-field"><label for="contact-guests">Quantas pessoas?</label><input type="number" id="contact-guests" name="guests" min="1" step="1" inputmode="numeric" placeholder="Ex.: 2" required></div>
+                                <div class="contact-field"><label for="contact-pet">Vai levar pet?</label><select id="contact-pet" name="pet" required aria-controls="contact-pet-size-field"><option value="">Selecione</option><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+                            </div>
+                            <div class="contact-field" id="contact-pet-size-field" data-contact-pet-size hidden><label for="contact-pet-size">É de pequeno porte?</label><select id="contact-pet-size" name="petSize" disabled aria-describedby="contact-pet-policy"><option value="">Selecione</option><option value="sim">Sim, é de pequeno porte</option><option value="nao">Não, é de outro porte</option></select><p class="contact-help" id="contact-pet-policy">A pousada aceita pets de pequeno porte.</p></div>
                             <div class="contact-field"><label for="mensagem">Quer contar algo? <span>(opcional)</span></label><textarea id="mensagem" rows="3" maxlength="2000" placeholder="Uma dúvida, um pedido especial ou só um oi..."></textarea></div>
                             <button type="submit" class="contact-submit"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a9 9 0 0 1-13.6 7.7L3 21l1.7-4.5A9 9 0 1 1 21 11.5Z"/><path d="M8 7c-2 2 3 7 5 7l2-2-2-1-1 1-2-2 1-1-1-2Z"/></svg><span data-contact-button>Continuar no WhatsApp</span></button>
                             <p class="contact-help">Você abrirá o WhatsApp com a mensagem pronta. O envio é confirmado por lá.</p>

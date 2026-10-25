@@ -13,10 +13,10 @@
 .contact-field{min-width:0;margin-bottom:20px}
 .contact-field label{display:block;font-size:14px;font-weight:500;margin-bottom:9px}
 .contact-field label span{font-size:12px;font-weight:400;color:#627169}
-.contact-field input,.contact-field textarea{box-sizing:border-box;min-width:0;width:100%;min-height:48px;border:1px solid #dcded4;border-radius:3px;padding:12px 14px;background:#fff;color:#263d38;font:16px/1.5 'DM Sans',sans-serif;transition:border-color .15s,box-shadow .15s}
+.contact-field input,.contact-field select,.contact-field textarea{box-sizing:border-box;min-width:0;width:100%;min-height:48px;border:1px solid #dcded4;border-radius:3px;padding:12px 14px;background:#fff;color:#263d38;font:16px/1.5 'DM Sans',sans-serif;transition:border-color .15s,box-shadow .15s}
 .contact-field textarea{min-height:100px;resize:vertical}
 .contact-field input::placeholder,.contact-field textarea::placeholder{color:#7a817b;opacity:1}
-.contact-field input:focus,.contact-field textarea:focus{outline:none;border-color:#8a7353;box-shadow:0 0 0 3px #8a735318}
+.contact-field input:focus,.contact-field select:focus,.contact-field textarea:focus{outline:none;border-color:#8a7353;box-shadow:0 0 0 3px #8a735318}
 .contact-submit{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;padding:13px 18px;border:1px solid #8a7353;border-radius:3px;background:#8a7353;color:#fff;font:600 14px/1.5 'DM Sans',sans-serif;cursor:pointer;transition:background .15s}
 .contact-submit:hover{background:#766043}
 .contact-submit svg{flex-shrink:0}
@@ -37,4 +37,6 @@
 .contact-section a:focus-visible,.contact-submit:focus-visible{outline:2px solid #8a7353;outline-offset:5px}
 @media(max-width:800px){.contact-grid{grid-template-columns:1fr}.contact-location iframe{height:300px;min-height:300px;flex:none}.contact-location-copy{padding:25px 28px}}
 @media(max-width:480px){#fale-conosco.contact-section{padding:58px 20px}.contact-heading{margin-bottom:28px}.contact-card{padding:26px 22px}.contact-fields{grid-template-columns:1fr;gap:0}.contact-location-copy{grid-template-columns:1fr;gap:23px;padding:24px 22px}.contact-social{flex-direction:row;gap:20px;flex-wrap:wrap}.contact-card h3{font-size:25px}}
-@media(prefers-reduced-motion:reduce){.contact-submit,.contact-field input,.contact-field textarea{transition:none}}
+@media(prefers-reduced-motion:reduce){.contact-submit,.contact-field input,.contact-field select,.contact-field textarea{transition:none}}
+
+.contact-section [data-contact-pet-size][hidden]{display:none}

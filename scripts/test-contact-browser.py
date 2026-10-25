@@ -29,12 +29,25 @@ with sync_playwright() as p:
  assert page.evaluate('window.__contactOpens.length')==0
  form.locator('#contact-departure').fill(dates['departure'])
  form.locator('button[type="submit"]').click()
+ assert page.evaluate('window.__contactOpens.length')==0
+ form.locator('#contact-guests').fill('0');form.locator('#contact-pet').select_option('nao')
+ form.locator('button[type="submit"]').click()
+ assert page.evaluate('window.__contactOpens.length')==0
+ form.locator('#contact-guests').fill('2.5');form.locator('button[type="submit"]').click()
+ assert page.evaluate('window.__contactOpens.length')==0
+ form.locator('#contact-guests').fill('3');form.locator('#contact-pet').select_option('')
+ form.locator('button[type="submit"]').click()
+ assert page.evaluate('window.__contactOpens.length')==0
+ form.locator('#contact-pet').select_option('nao')
+ assert form.locator('#contact-pet-size').is_disabled()
+ form.locator('button[type="submit"]').click()
  draft=page.evaluate("() => {const [url,target,options]=window.__contactOpens.at(-1);const u=new URL(url);return {host:u.host,path:u.pathname,text:u.searchParams.get('text'),target,options}}")
  assert draft['host']=='wa.me'
  assert draft['path']=='/'+page.locator('body').get_attribute('data-contact-whatsapp')
  assert 'NomeTeste & Família' in draft['text'] and 'E-mail:' not in draft['text']
  assert form.get_attribute('data-default-message') in draft['text']
  assert 'Meu telefone:' not in draft['text']
+ assert 'Hóspedes: 3' in draft['text'] and 'Pet: Não' in draft['text']
  assert 'Entrada: '+'/'.join(reversed(dates['arrival'].split('-'))) in draft['text']
  assert 'Saída: '+'/'.join(reversed(dates['departure'].split('-'))) in draft['text']
  assert 'noopener' in draft['options'] and 'noreferrer' in draft['options']
@@ -44,6 +57,19 @@ with sync_playwright() as p:
  form.locator('#mensagem').fill('Quero saber sobre datas & valores. Obrigado!')
  form.locator('button[type="submit"]').click()
  assert page.evaluate("new URL(window.__contactOpens.at(-1)[0]).searchParams.get('text').includes('datas & valores')")
+ form.locator('#contact-pet').select_option('sim')
+ assert form.locator('#contact-pet-size').is_visible() and form.locator('#contact-pet-size').is_enabled()
+ before=page.evaluate('window.__contactOpens.length');form.locator('button[type="submit"]').click()
+ assert page.evaluate('window.__contactOpens.length')==before
+ form.locator('#contact-pet-size').select_option('sim');form.locator('button[type="submit"]').click()
+ assert page.evaluate("new URL(window.__contactOpens.at(-1)[0]).searchParams.get('text').includes('Pet: Sim — pequeno porte')")
+ form.locator('#contact-pet-size').select_option('nao');form.locator('button[type="submit"]').click()
+ assert page.evaluate("new URL(window.__contactOpens.at(-1)[0]).searchParams.get('text').includes('outro porte (consultar a pousada)')")
+ form.locator('#contact-pet').select_option('nao')
+ assert form.locator('#contact-pet-size').is_hidden() and form.locator('#contact-pet-size').input_value()==''
+ form.locator('button[type="submit"]').click()
+ assert page.evaluate("new URL(window.__contactOpens.at(-1)[0]).searchParams.get('text').includes('Pet: Não')")
+ form.locator('#contact-pet').select_option('sim');form.locator('#contact-pet-size').select_option('sim')
  for width in [320,390,768,1024,1440]:
   page.set_viewport_size({'width':width,'height':1000})
   form.scroll_into_view_if_needed()
@@ -53,4 +79,4 @@ with sync_playwright() as p:
  assert not outbound,outbound
  assert not errors,errors
  context.close();browser.close()
- print('Contact form: name and stay dates, no phone, optional message, date validation, encoding, popup fallback and mobile passed.')
+ print('Contact form: name and stay dates, no phone, optional message, guest count, conditional pet size, date validation, encoding, popup fallback and mobile passed.')
