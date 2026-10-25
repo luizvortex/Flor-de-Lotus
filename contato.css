@@ -13,7 +13,7 @@
 .contact-field{min-width:0;margin-bottom:20px}
 .contact-field label{display:block;font-size:14px;font-weight:500;margin-bottom:9px}
 .contact-field label span{font-size:12px;font-weight:400;color:#627169}
-.contact-field input,.contact-field textarea{box-sizing:border-box;width:100%;min-height:48px;border:1px solid #dcded4;border-radius:3px;padding:12px 14px;background:#fff;color:#263d38;font:16px/1.5 'DM Sans',sans-serif;transition:border-color .15s,box-shadow .15s}
+.contact-field input,.contact-field textarea{box-sizing:border-box;min-width:0;width:100%;min-height:48px;border:1px solid #dcded4;border-radius:3px;padding:12px 14px;background:#fff;color:#263d38;font:16px/1.5 'DM Sans',sans-serif;transition:border-color .15s,box-shadow .15s}
 .contact-field textarea{min-height:100px;resize:vertical}
 .contact-field input::placeholder,.contact-field textarea::placeholder{color:#7a817b;opacity:1}
 .contact-field input:focus,.contact-field textarea:focus{outline:none;border-color:#8a7353;box-shadow:0 0 0 3px #8a735318}

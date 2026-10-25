@@ -13,26 +13,34 @@ with sync_playwright() as p:
  page.on('request',lambda request:outbound.append(request.url) if 'NomeTeste' in request.url or '73123456789' in request.url else None)
  page.goto(base+'/',wait_until='domcontentloaded')
  form=page.locator('#whatsapp-form');form.scroll_into_view_if_needed()
- assert form.locator('input[type="email"]').count()==0
+ assert form.locator('input[type="email"],input[type="tel"],#telefone').count()==0
  assert not form.locator('#mensagem').get_attribute('required')
  form.locator('button[type="submit"]').click()
  assert page.evaluate('window.__contactOpens.length')==0
  form.locator('#nome').fill('NomeTeste & Família')
- form.locator('#telefone').fill('12345')
+ dates=page.evaluate('''()=>{const today=document.querySelector('#contact-arrival').min;const add=n=>{const d=new Date(today+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};return {past:add(-1),arrival:add(5),departure:add(8)}}''')
+ form.locator('#contact-arrival').fill(dates['past'])
+ form.locator('#contact-departure').fill(dates['departure'])
  form.locator('button[type="submit"]').click()
  assert page.evaluate('window.__contactOpens.length')==0
- form.locator('#telefone').fill('(73) 12345-6789')
+ form.locator('#contact-arrival').fill(dates['arrival'])
+ form.locator('#contact-departure').fill(dates['arrival'])
+ form.locator('button[type="submit"]').click()
+ assert page.evaluate('window.__contactOpens.length')==0
+ form.locator('#contact-departure').fill(dates['departure'])
  form.locator('button[type="submit"]').click()
  draft=page.evaluate("() => {const [url,target,options]=window.__contactOpens.at(-1);const u=new URL(url);return {host:u.host,path:u.pathname,text:u.searchParams.get('text'),target,options}}")
  assert draft['host']=='wa.me'
  assert draft['path']=='/'+page.locator('body').get_attribute('data-contact-whatsapp')
  assert 'NomeTeste & Família' in draft['text'] and 'E-mail:' not in draft['text']
  assert form.get_attribute('data-default-message') in draft['text']
+ assert 'Meu telefone:' not in draft['text']
+ assert 'Entrada: '+'/'.join(reversed(dates['arrival'].split('-'))) in draft['text']
+ assert 'Saída: '+'/'.join(reversed(dates['departure'].split('-'))) in draft['text']
  assert 'noopener' in draft['options'] and 'noreferrer' in draft['options']
  assert form.locator('[data-contact-status]').is_visible()
  assert form.locator('[data-contact-status] a').get_attribute('href').startswith('https://wa.me/')
  assert form.locator('#nome').input_value()=='NomeTeste & Família'
- form.locator('#telefone').fill('+351 912 345 678')
  form.locator('#mensagem').fill('Quero saber sobre datas & valores. Obrigado!')
  form.locator('button[type="submit"]').click()
  assert page.evaluate("new URL(window.__contactOpens.at(-1)[0]).searchParams.get('text').includes('datas & valores')")
@@ -45,4 +53,4 @@ with sync_playwright() as p:
  assert not outbound,outbound
  assert not errors,errors
  context.close();browser.close()
- print('Contact form: name/phone only, optional message, validation, encoding, popup fallback and mobile passed.')
+ print('Contact form: name and stay dates, no phone, optional message, date validation, encoding, popup fallback and mobile passed.')
