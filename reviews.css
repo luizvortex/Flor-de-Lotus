@@ -68,3 +68,12 @@
  .rv-review-card.has-cursor-glow::before{opacity:1;transition:opacity .12s ease-out}
  .rv-review-card>*{position:relative;z-index:1}
 }
+
+/* Leitura mais confortável dos depoimentos em notebooks e computadores. */
+@media(min-width:768px){
+ .rv-review-body{font-size:15px;line-height:1.85;color:#465b50}
+ .rv-review-author h3{font-size:15px}
+ .rv-review-author time,.rv-review-footer,.rv-review-footer a{font-size:11px}
+ .rv-read-label{font-size:12px}
+ .guest-reviews-heading>p,.rv-content-heading>p{font-size:15px;line-height:1.85}
+}
