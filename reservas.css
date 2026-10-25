@@ -144,3 +144,5 @@ dialog::backdrop { background: #14201d80; }
 .package-card { flex:0 1 365px; width:100%; text-align:left; }
 .more-packages { margin-top:28px; }
 .package-card h2 { font:500 22px/1.4 'Playfair Display',Georgia,serif; }
+
+.room-whatsapp{display:inline-block;margin-top:14px;font-size:13px}.booking-login{display:flex;flex-direction:column;gap:12px;margin:16px 0}.booking-login[hidden],.booking-receipt[hidden]{display:none}.booking-receipt{padding:26px;margin:24px 0;border:1px solid #cfc4ad;background:#f6f1e7;scroll-margin-top:90px}.booking-receipt h3{margin-top:0}.booking-receipt p{line-height:1.8}.booking-receipt>div{display:flex;align-items:center;gap:20px;flex-wrap:wrap}.booking-login .gold-button{text-align:center}.room-meta{overflow-wrap:anywhere}

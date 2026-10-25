@@ -261,3 +261,11 @@ O editor de imagens oferece **Ajustar enquadramento**: arraste, use as setas do 
 ## Instagram na página inicial
 
 A seção Instagram fica entre Área de Lazer e Praias de Itacaré. Em Editar site → Instagram da pousada, cadastre fotos, títulos e descrições, ordene as fotos, ajuste o enquadramento 4:3 e os intervalos de reprodução. O link do perfil usa Identidade e contatos → Instagram. As fotos são enviadas manualmente pelo administrador; não há importação ou sincronização com a API do Instagram. Sem fotos cadastradas, a seção mostra o convite e o link do perfil, sem quadros vazios. As duas faixas fotográficas têm controles e reprodução independentes, com três fotos no computador e vizinhas parcialmente visíveis no celular. Publicações anteriores recebem a seção após lazer sem sobrescrever o conteúdo existente.
+
+## Consulta e conclusão da solicitação de reserva
+
+A página de quartos inicia a consulta com hoje/amanhã, preservando datas informadas na URL. Quando uma categoria não comporta os hóspedes da busca, ela informa a capacidade cadastrada e mantém a diária de referência identificada; esse valor não é uma cotação nem indica disponibilidade. O total da estadia só aparece como tal para opções retornadas pelo servidor. No administrador, cada unidade identifica sua apresentação no site para facilitar a conferência de capacidade e tarifa.
+
+Escolher uma unidade abre a solicitação, exige login Google e oferece acesso explícito a Minha conta; ao voltar à aba, a sessão é atualizada, com atualização manual disponível. O envio retorna um comprovante da solicitação com número, acomodação/unidade, datas, hóspedes, total e links para Minha conta e WhatsApp. O WhatsApp abre um rascunho para acompanhamento; não finaliza outra reserva. A solicitação bloqueia a unidade e aguarda confirmação e pagamento combinados pela pousada. Erros de disponibilidade têm mensagem visível e consultas têm limite de espera de 15 segundos. Não há integração Silbeck ou cobrança online ativada.
+
+`scripts/test-booking-flow-browser.py` testa esse percurso e os estados de capacidade insuficiente, login, sucesso, conflito e indisponibilidade do serviço, com respostas sintéticas sem criar reservas reais. Os contratos HTTP e Google/PKCE são verificados separadamente por `npm run test:supabase-api` e `npm run test:guest-auth`.

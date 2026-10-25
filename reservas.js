@@ -7,7 +7,8 @@
   $('#booking-form [type="submit"]').disabled=!guestAuthenticated;
   const note=$('[data-booking-account-note]');if(!note)return;
   if(event.detail.authenticated){note.textContent='Sua reserva ficará vinculada à conta Google. Acompanhe datas, status e avisos em Minha conta.';if(!$('#guest').value)$('#guest').value=event.detail.name;}
-  else note.innerHTML='<a href="/minha-conta" target="_blank" rel="noopener">Entre com Google</a> para finalizar a reserva e para acompanhar sua estadia em Minha conta.';
+  else note.textContent='Entre com Google para registrar a solicitação na sua conta. Depois de entrar, volte a esta aba para continuar.';
+  $('[data-booking-login]').hidden=guestAuthenticated;
  });
  let shareTimer;
  const shareDialog=$('#share-dialog'),shareInput=$('#share-url');
@@ -78,7 +79,8 @@
  },250);
 
  async function api(path,body,signal){
-  const response=await fetch('/api/'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,signal,cache:'no-store'});
+  const timeout=AbortSignal.timeout(15000);
+  const response=await fetch('/api/'+path,{method:body?'POST':'GET',headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined,signal:signal?AbortSignal.any([signal,timeout]):timeout,cache:'no-store'}).catch(error=>{if(error.name==='TimeoutError')throw Error('A consulta demorou mais que o esperado. Tente novamente ou converse com a pousada pelo WhatsApp.');throw error;});
   const data=await response.json();if(!response.ok){const error=new Error(data.error||'Não foi possível concluir a consulta.');error.status=response.status;throw error;}return data;
  }
  function message(text,error=false){$('#message').textContent=text;$('#message').className=error?'error':'';}
@@ -96,13 +98,26 @@
   $('#more-packages').hidden=packages.length<=3;
   $('#packages').innerHTML=packages.slice(0,3).map(p=>`<article class="package-card"><h3>${esc(p.name)}</h3><p>${p.nights+1} dias · ${p.nights} noites<br>${dateLabel(p.start)} a ${dateLabel(p.end)}</p><p>${money(p.price)} <small>/ pacote por quarto</small></p><button type="button" class="gold-button" data-package="${p.id}">Consultar pacote</button></article>`).join('');
  }
+ function inventoryFor(row){return inventory.filter(room=>defaultSlug(room)===row.slug).sort((a,b)=>a.price-b.price);}
+ function unavailableReason(row){
+  const rooms=inventoryFor(row),capacity=rooms.length?Math.max(...rooms.map(room=>room.capacity)):0;
+  if(!rooms.length)return 'Esta categoria ainda não possui uma unidade ativa para reserva. Consulte a pousada.';
+  if(lastQuery&&Number(lastQuery.guests)>capacity)return `Esta categoria está cadastrada para até ${plural(capacity,'hóspede','hóspedes')}. Ajuste a quantidade de pessoas ou consulte a pousada.`;
+  return 'Sem disponibilidade para estas datas e hóspedes. Consulte outro período ou converse com a pousada.';
+ }
+ function whatsappLink(title,query=lastQuery,booking){
+  const destination=document.body.dataset.contactWhatsapp;if(!/^\d{10,15}$/.test(destination||''))return '';
+  const text=[booking?`Olá! Gostaria de acompanhar minha solicitação de reserva #${booking.id}.`:'Olá! Gostaria de consultar uma estadia na pousada.',`Acomodação: ${title}`,query?`Entrada: ${dateLabel(query.start)}\nSaída: ${dateLabel(query.end)}\nHóspedes: ${query.guests}`:'',booking?`Total da solicitação: ${money(booking.total)}. Aguardando confirmação da pousada.`:''].filter(Boolean).join('\n');
+  return `https://wa.me/${destination}?${new URLSearchParams({text})}`;
+ }
+ function whatsappButton(title){const url=whatsappLink(title);return url?`<a class="text-button room-whatsapp" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Consultar a pousada no WhatsApp ↗</a>`:'';}
  function render(){
   $('#rooms').innerHTML=showcases.length?showcases.map(s=>{
-   const rows=rowsFor(s),best=rows[0],price=best?(lastQuery?best.total:best.price):null;
-   const label=lastQuery?(best?`${plural(rows.length,'opção disponível','opções disponíveis')} · até ${best.capacity} hóspedes`:'Sem disponibilidade nestas datas'):(s.eyebrow||'Acomodações Flor de Lótus');
+   const rows=rowsFor(s),best=rows[0],reference=inventoryFor(s)[0],quoted=Boolean(lastQuery&&best),price=quoted?best.total:reference?.price??null;
+   const label=lastQuery?(best?`${plural(rows.length,'opção disponível','opções disponíveis')} · até ${best.capacity} hóspedes`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
    const cost=price!==null?money(price):(lastQuery?'Experimente outras datas.':'Escolha as datas para consultar os valores.');
    const index=(photoIndices.get(s.slug)||0)%s.photos.length;
-   return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li><i class="bi bi-${/^[a-z0-9-]+$/.test(f.icon)?f.icon:'check2'}" aria-hidden="true"></i><span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button" data-details="${esc(s.slug)}">Mais detalhes e fotos</button><div class="room-cost"><small>${price!==null?(lastQuery?`Total para ${plural(nights,'noite','noites')}${rows.length>1?' · a partir de':''}`:'Diária por quarto · a partir de'):'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button></div></div></article>`;
+   return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li><i class="bi bi-${/^[a-z0-9-]+$/.test(f.icon)?f.icon:'check2'}" aria-hidden="true"></i><span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button" data-details="${esc(s.slug)}">Mais detalhes e fotos</button><div class="room-cost"><small>${price!==null?(quoted?`Total para ${plural(nights,'noite','noites')}${rows.length>1?' · a partir de':''}`:'Diária de referência por quarto · a partir de'):'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button>${whatsappButton(s.title)}</div></div></article>`;
   }).join(''):'<p class="empty">Não foi possível carregar as acomodações. Atualize a consulta ou converse com a pousada.</p>';
   setupCarousels();
   const priced=(lastQuery?available:inventory).map(r=>lastQuery?r.total:r.price).filter(n=>Number.isFinite(n)&&n>0);
@@ -129,7 +144,7 @@
  }
  function detailOptions(){
   if(!detail)return;const rows=rowsFor(detail);
-  $('#details-options').innerHTML=lastQuery&&rows.length?rows.map(r=>`<div class="room-option"><p><strong>${esc(r.name)}</strong><br>Até ${r.capacity} hóspedes · ${nights} noites<br>${money(r.total)} no total</p><button type="button" class="gold-button" data-book="${r.id}">Escolher este quarto</button></div>`).join(''):`<p class="room-meta">${lastQuery?'Sem disponibilidade neste período. Escolha outras datas para consultar.':'Selecione as datas e a quantidade de hóspedes para verificar as opções.'}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>`;
+  $('#details-options').innerHTML=lastQuery&&rows.length?rows.map(r=>`<div class="room-option"><p><strong>${esc(r.name)}</strong><br>Até ${r.capacity} hóspedes · ${nights} noites<br>${money(r.total)} no total</p><button type="button" class="gold-button" data-book="${r.id}">Escolher este quarto</button></div>`).join(''):`<p class="room-meta">${lastQuery?esc(unavailableReason(detail)):'Selecione as datas e a quantidade de hóspedes para verificar as opções.'}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`;
  }
  function openDetails(slug){
   detail=showcases.find(s=>s.slug===slug);if(!detail)return;const d=detail.details||{};
@@ -155,8 +170,8 @@
   if(button.hasAttribute('data-search-focus')){$('#room-details').close();focusSearch();}
   if(button.hasAttribute('data-book')&&lastQuery){
    const room=available.find(r=>r.id===Number(button.dataset.book));if(!room)return;
-   selection={room:{...room},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=!guestAuthenticated;
-   $('#booking-summary').textContent=`${room.name} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();
+   selection={room:{...room,presentation:detail?.title||room.name},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=!guestAuthenticated;
+   $('#booking-summary').textContent=`${room.name} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();document.dispatchEvent(new Event('lotus:refresh-guest-session'));
   }
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
@@ -165,10 +180,16 @@
   event.preventDefault();if(!selection)return;if(!guestAuthenticated){$('#booking-error').textContent='Entre com Google para finalizar sua reserva.';return;}const button=event.submitter;button.disabled=true;const selected=selection;
   try{
    const q=selected.query,result=await api('bookings',{room_id:selected.room.id,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
-   document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();message(`Solicitação #${result.id} recebida! Total: ${money(result.total)}. As datas estão bloqueadas; aguarde o contato da pousada para confirmação e pagamento.`);await search(true);
+   document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();
+   const receipt=$('#booking-receipt');receipt.hidden=false;
+   $('#booking-receipt-summary').textContent=`Solicitação #${result.id} · ${selected.room.presentation} · unidade ${selected.room.name} · ${dateLabel(q.start)} a ${dateLabel(q.end)} · ${plural(q.guests,'hóspede','hóspedes')} · Total: ${money(result.total)}.`;
+   const contact=$('#booking-receipt-whatsapp'),url=whatsappLink(`${selected.room.presentation} · unidade ${selected.room.name}`,q,result);contact.hidden=!url;if(url)contact.href=url;
+   message('Sua solicitação foi registrada na conta Google. Aguarde a confirmação da pousada.');await search(true);
+   receipt.focus({preventScroll:true});receipt.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
   }catch(e){$('#booking-error').textContent=e.message;if(e.status===409){selection=null;await search(true);}}
   finally{button.disabled=!selection||!guestAuthenticated;}
  };
+  document.querySelector('[data-booking-refresh-login]').onclick=()=>{document.dispatchEvent(new Event('lotus:refresh-guest-session'));};
  $('#search').onsubmit=event=>{event.preventDefault();search();};$('#search').addEventListener('change',invalidate);
  $('#checkin').min=today;$('#checkout').min=nextDay(today);$('#checkin').addEventListener('change',()=>{if(!$('#checkin').value)return;$('#checkout').min=nextDay($('#checkin').value);if($('#checkout').value<=$('#checkin').value)$('#checkout').value=$('#checkout').min;});
  $('#refresh-rooms').onclick=()=>search();
@@ -178,7 +199,9 @@
  };
  // Fill the URL search immediately; a slow catalog must not overwrite later edits.
  const params=new URLSearchParams(location.search),bootstrapSequence=sequence;
+ if(!params.has('start'))$('#checkin').value=today;
  for(const [key,id] of [['start','checkin'],['end','checkout'],['guests','guests']])if(params.has(key))$('#'+id).value=params.get(key);
+ if(!params.has('end'))$('#checkout').value=nextDay($('#checkin').value||today);
  if($('#checkin').value)$('#checkout').min=nextDay($('#checkin').value);
  api('catalog').then(data=>{
   if(lastQuery)return;

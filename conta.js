@@ -7,7 +7,7 @@
    document.dispatchEvent(new CustomEvent('lotus:guest-session',{detail:{authenticated:Boolean(result.user),name:result.user?.name||''}}));
   }).catch(()=>{});
   document.querySelectorAll('[data-guest-account]').forEach(link=>link.addEventListener('click',()=>{const menu=document.getElementById('home-menu');if(menu?.open)menu.close();}));
-  refreshHeader();document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHeader();});
+  refreshHeader();window.addEventListener('focus',refreshHeader);document.addEventListener('lotus:refresh-guest-session',refreshHeader);document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHeader();});
   const state=new URL(location.href).searchParams.get('conta');if(state)location.replace('/minha-conta?'+new URLSearchParams({conta:state}));
   return;
  }
