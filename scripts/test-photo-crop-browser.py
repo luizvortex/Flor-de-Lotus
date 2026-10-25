@@ -12,6 +12,13 @@ with sync_playwright() as p:
  page.wait_for_function('old=>document.querySelector(\'[data-cms-field="gallery.photos.0.url"]\').value!==old',arg=old)
  page.locator('[data-cms-crop="gallery.photos.0.url"]').click();page.locator('.cms-crop[open]').wait_for()
  assert page.locator('[data-crop-ratio]').is_disabled()
+ assert page.get_by_role('button',name='Diminuir zoom',exact=True).is_disabled()
+ page.get_by_role('button',name='Aumentar zoom',exact=True).click();assert page.locator('[data-crop-zoom]').input_value()=='1.1'
+ assert page.locator('[data-crop-percent]').inner_text()=='110%'
+ page.get_by_role('button',name='Diminuir zoom',exact=True).click();assert page.locator('[data-crop-zoom]').input_value()=='1'
+ page.locator('[data-crop-zoom]').fill('3');assert page.get_by_role('button',name='Aumentar zoom',exact=True).is_disabled()
+ page.get_by_role('button',name='Centralizar',exact=True).click()
+
  frame=page.locator('.cms-crop-frame');box=frame.bounding_box()
  page.mouse.move(box['x']+box['width']-10,box['y']+box['height']/2);page.mouse.down();page.mouse.move(box['x']-1000,box['y']+box['height']/2,steps=10);page.mouse.up()
  old=page.locator(field).input_value();page.get_by_role('button',name='Aplicar enquadramento',exact=True).click()
