@@ -10,18 +10,23 @@ state=dict(rooms=rooms,packages=[],bookings=[dict(id=101,room_id=15,room_name='1
 payloads=[]
 sold_out=False
 fail_availability=False
+missing_price=False
 def route(r):
  from urllib.parse import urlparse,parse_qs,unquote
  u=urlparse(r.request.url);path=u.path
  if path.startswith('/api/'):
   key=path[5:];data={}
-  if key=='catalog':data=dict(rooms=rooms,packages=[],showcases=showcases)
+  if key=='catalog':data=dict(rooms=rooms,packages=[],showcases=showcases,starting_rates=[dict(floor=f,guests=g,amount=g*10000) for f in ['terreo','superior'] for g in range(1,7)])
   elif key=='availability':
    if fail_availability:return r.fulfill(status=503,json={'error':'Consulta temporariamente indisponível.'})
    if sold_out:return r.fulfill(status=200,json={'rooms':[],'nights':1})
-   q=parse_qs(u.query);data={'nights':1,'rooms':[dict(x,total=x['price'],quote_example=False) for x in rooms if x['floor']==q['floor'][0] and x['capacity']>=int(q['guests'][0])]}
+   q=parse_qs(u.query)
+   party=json.loads(q.get('party',['[]'])[0]);base=10000*sum(r['adults']+sum(a>6 for a in r['children_ages']) for r in party) if party else int(q['guests'][0])*10000
+   from datetime import date
+   nights=(date.fromisoformat(q['end'][0])-date.fromisoformat(q['start'][0])).days
+   data={'nights':nights,'rooms':[dict(x,total=None if missing_price else base*nights,starting_price=base,quote_example=False) for x in rooms if x['floor']==q['floor'][0] and x['capacity']>=int(q['guests'][0])]}
   elif key=='guest/session':data={'google_enabled':True,'user':{'name':'Teste'}}
-  elif key=='bookings':payloads.append(r.request.post_data_json);data={'id':101,'status':'pendente','total':12000,'floor':'superior'}
+  elif key=='bookings':payloads.append(r.request.post_data_json);data={'id':101,'status':'pendente','total':r.request.post_data_json['expected_total'],'floor':'superior'}
   elif key=='session':data={'authenticated':True}
   elif key=='admin':data=state
   elif key=='rates':data={'rates':[dict(id=1,floor='terreo',guests=1,amount=10000,example=True,revision=1,start=None,end=None)]}
@@ -45,6 +50,9 @@ with sync_playwright() as p:
  page.goto('http://qa.test/quartos');page.wait_for_selector('[data-slug="familia"]')
  assert page.locator('.catalog-room').count()==4
  assert page.locator('select#package').count()==0
+ assert page.locator('[data-slug="duplo"] .room-cost small').inner_text()=='A partir de'
+ assert '100,00' in page.locator('[data-slug="duplo"] .room-price').inner_text()
+ assert '100,00' in page.locator('[data-slug="familia"] .room-price').inner_text()
  assert page.locator('#floor').get_attribute('required') is not None
  assert page.locator('#floor').input_value()==''
  assert page.locator('#floor option[value=""]').is_disabled()
@@ -94,6 +102,15 @@ with sync_playwright() as p:
  assert 'unidade' not in page.locator('#booking-receipt-summary').inner_text().lower()
  # Empty inventory uses the centered notification, with a working calendar CTA.
  page.locator('#booking-success [data-close-success]').first.click()
+ missing_price=True
+ page.locator('#search [type="submit"]').click()
+ page.wait_for_selector('[data-options="familia"]')
+ page.locator('[data-options="familia"]').click()
+ assert page.locator('#details-options .starting-price small').inner_text()=='A partir de'
+ assert '600,00' in page.locator('#details-options .starting-price p').inner_text()
+ assert 'Preço ainda não cadastrado' not in page.locator('#details-options').inner_text()
+ page.locator('#room-details [data-close-details]').click()
+ missing_price=False
  sold_out=True
  page.locator('#search [type="submit"]').click()
  page.wait_for_selector('#no-availability:not([hidden])')
