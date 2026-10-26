@@ -8,6 +8,8 @@ photo={'url':'/img casal/casal.jpg','alt':'Quarto'}
 showcases=[dict(slug=s,title=t,description='Quarto da pousada',photos=[photo]*3,features=[]) for s,t in [('duplo','Quarto Standard'),('triplo','Quarto Superior'),('triplo-standard','Quarto Triplo Standard'),('familia','Quarto Família')]]
 state=dict(rooms=rooms,packages=[],bookings=[dict(id=101,room_id=15,room_name='15',room_floor='superior',room_assigned=False,requested_category='familia',status='pendente',guest='Teste',phone='55000000000',guests=6,start='2026-11-10',end='2026-11-11',total=12000,created='2026-10-26T10:00:00Z')],showcases=showcases)
 payloads=[]
+sold_out=False
+fail_availability=False
 def route(r):
  from urllib.parse import urlparse,parse_qs,unquote
  u=urlparse(r.request.url);path=u.path
@@ -15,6 +17,8 @@ def route(r):
   key=path[5:];data={}
   if key=='catalog':data=dict(rooms=rooms,packages=[],showcases=showcases)
   elif key=='availability':
+   if fail_availability:return r.fulfill(status=503,json={'error':'Consulta temporariamente indisponível.'})
+   if sold_out:return r.fulfill(status=200,json={'rooms':[],'nights':1})
    q=parse_qs(u.query);data={'nights':1,'rooms':[dict(x,total=x['price'],quote_example=False) for x in rooms if x['floor']==q['floor'][0] and x['capacity']>=int(q['guests'][0])]}
   elif key=='guest/session':data={'google_enabled':True,'user':{'name':'Teste'}}
   elif key=='bookings':payloads.append(r.request.post_data_json);data={'id':101,'status':'pendente','total':12000,'floor':'superior'}
@@ -73,6 +77,24 @@ with sync_playwright() as p:
  page.locator('#guest').fill('Teste de fluxo');page.locator('#phone').fill('65999999999');page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
  assert payloads[0]['category_slug']=='familia' and 'room_id' not in payloads[0]
  assert 'unidade' not in page.locator('#booking-receipt-summary').inner_text().lower()
+ # Empty inventory uses the centered notification, with a working calendar CTA.
+ page.locator('#booking-success [data-close-success]').first.click()
+ sold_out=True
+ page.locator('#search [type="submit"]').click()
+ page.wait_for_selector('#no-availability:not([hidden])')
+ assert page.locator('.results-heading').is_hidden()
+ assert page.locator('#message').inner_text()==''
+ assert page.locator('.catalog-room').count()==4
+ for width in [320,1440]:
+  page.set_viewport_size({'width':width,'height':950})
+  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+ page.locator('#choose-other-dates').click()
+ assert page.locator('#dates-picker').is_visible()
+ page.keyboard.press('Escape')
+ fail_availability=True
+ page.locator('#search [type="submit"]').click()
+ page.wait_for_selector('#message.error')
+ assert page.locator('#no-availability').is_hidden()
  page.goto('http://qa.test/admin');page.wait_for_selector('[data-tab="rates"]');page.locator('[data-tab="rates"]').click();page.wait_for_selector('[data-base="superior:6"]')
  assert page.locator('[data-base]').count()==12
  page.locator('[data-base="terreo:1"]').click();assert page.locator('#rate-dialog input[name="amount"]').input_value()=='100';page.locator('#rate-dialog [data-close]').click()

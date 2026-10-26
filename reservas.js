@@ -149,6 +149,10 @@
  }
  function whatsappButton(title){const url=whatsappLink(title);return url?`<a class="text-button room-whatsapp" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Consultar a pousada no WhatsApp ↗</a>`:'';}
  function render(){
+  const noAvailability=Boolean(lastQuery&&available.length===0);
+  $('#no-availability').hidden=!noAvailability;
+  $('.results-heading').hidden=noAvailability;
+
   $('#rooms').innerHTML=showcases.length?showcases.map(s=>{
    const rows=rowsFor(s),best=rows[0],reference=inventoryFor(s)[0],quoted=Boolean(lastQuery&&best&&Number.isFinite(best.total)),price=lastQuery?(quoted?best.total:null):reference?.price??null;
    const label=lastQuery?(best?`${plural(rows.length,'opção disponível','opções disponíveis')} · ${floorLabel(lastQuery.floor)}`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
@@ -172,7 +176,7 @@
    if(request!==sequence)return;applyCatalog(catalog);lastQuery=q;available=data.rooms||[];nights=data.nights;render();
    $('#result-count').textContent=`${plural(available.length,'quarto disponível','quartos disponíveis')} · ${plural(nights,'noite','noites')} · ${plural(q.guests,'hóspede','hóspedes')}${q.floor?' · '+floorLabel(q.floor):''}`;
    history.replaceState(null,'',location.pathname+'?'+new URLSearchParams(q));
-   if(!silent)message(available.length?'Disponibilidade atualizada. Escolha uma acomodação abaixo.':'Não encontramos vagas para estas datas e hóspedes. Você pode conhecer as acomodações abaixo e consultar outro período.');
+   if(!available.length)message('');else if(!silent)message('Disponibilidade atualizada. Escolha uma acomodação abaixo.');
   }catch(e){if(request!==sequence||e.name==='AbortError')return;lastQuery=null;available=[];render();$('#result-count').textContent='Disponibilidade ainda não confirmada.';message(e.message,true);}
   finally{if(request===sequence){button.disabled=false;$('#rooms').removeAttribute('aria-busy');}}
  }
@@ -237,6 +241,7 @@
  $('#search').onsubmit=event=>{event.preventDefault();search();};$('#search').addEventListener('change',event=>{if(event.target.matches('#checkin,#checkout'))$('#package').value='';invalidate();});
  $('#checkin').min=today;$('#checkout').min=nextDay(today);$('#checkin').addEventListener('change',()=>{if(!$('#checkin').value)return;$('#checkout').min=nextDay($('#checkin').value);if($('#checkout').value<=$('#checkin').value)$('#checkout').value=$('#checkout').min;});
  $('#refresh-rooms').onclick=()=>search();
+ $('#choose-other-dates').onclick=focusSearch;
  $('#packages').onclick=event=>{
   const button=event.target.closest('[data-package]');if(!button)return;const p=packages.find(p=>p.id===Number(button.dataset.package));if(!p)return;
   $('#package').value='';$('#checkin').value=p.start<today?today:p.start;$('#checkout').value=nextDay($('#checkin').value,p.nights);$('#checkout').min=nextDay($('#checkin').value);$('#guests').value={solteiro:1,casal:2,casal_mais_um:3,quadruplo:4,familia:5}[p.type];search();focusSearch();
