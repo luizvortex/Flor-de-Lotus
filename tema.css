@@ -12,3 +12,16 @@
     --line: #e3e7df;
     --gold: #bd955c;
 }
+
+/* Click/touch has no focus ring; keyboard navigation keeps a gold indicator. */
+html[data-focus-input="pointer"] :focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+html[data-focus-input="pointer"] :is(.rv-search,.explore-search):focus-within {
+    outline: none !important;
+}
+html[data-focus-input="keyboard"] :focus-visible {
+    outline: 2px solid var(--gold, #bd955c) !important;
+    outline-offset: 3px;
+}

@@ -56,6 +56,14 @@ with sync_playwright() as p:
  assert page.locator('#floor').get_attribute('required') is not None
  assert page.locator('#floor').input_value()==''
  assert page.locator('#floor option[value=""]').is_disabled()
+ # Pointer focus has no ring, but Tab focus stays visibly highlighted.
+ page.locator('#floor').click();page.keyboard.press('Escape')
+ assert page.locator('#floor').evaluate('(el)=>getComputedStyle(el).outlineStyle')=='none'
+ assert page.locator('#floor').evaluate('(el)=>getComputedStyle(el).boxShadow')=='none'
+ page.keyboard.press('Tab')
+ assert page.evaluate('document.documentElement.dataset.focusInput')=='keyboard'
+ assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='solid'
+ assert page.evaluate('getComputedStyle(document.activeElement).outlineWidth')=='2px'
  # Children require their ages and room count expands a separate composition.
  page.locator('#guests-trigger').click()
  page.locator('#guests-picker').screenshot(path=str(ROOT/'work/party-selector.png'))
@@ -132,6 +140,7 @@ with sync_playwright() as p:
  page.goto('http://qa.test/',wait_until='domcontentloaded',timeout=60000)
  page.locator('.showcase-more .showcase-rates').first.click()
  assert page.locator('#availability-dialog').is_visible()
+ assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='none'
  assert page.locator('#floor').input_value()==''
  assert not page.locator('#search').evaluate('(form)=>form.checkValidity()')
  for width in [320,390,1440]:
@@ -168,6 +177,11 @@ with sync_playwright() as p:
  filtered.close()
  page.goto('http://qa.test/admin');page.wait_for_selector('[data-tab="rates"]');page.locator('[data-tab="rates"]').click();page.wait_for_selector('[data-base="superior:6"]')
  assert page.locator('[data-base]').count()==12
+ page.locator('[data-base="superior:6"]').click()
+ assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='none'
+ page.keyboard.press('Tab')
+ assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='solid'
+ page.locator('#rate-dialog [data-close]').click()
  page.locator('[data-base="terreo:1"]').click();assert page.locator('#rate-dialog input[name="amount"]').input_value()=='100';page.locator('#rate-dialog [data-close]').click()
  page.locator('[data-tab="bookings"]').click();assert page.locator('[data-confirm="101"]').count()==0;page.locator('[data-assign="101"]').click();page.locator('#assignment-dialog [type="submit"]').click();page.wait_for_selector('[data-confirm="101"]')
  assert payloads[-1]['room_id']==15
