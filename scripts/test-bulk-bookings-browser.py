@@ -25,12 +25,12 @@ with ns['sync_playwright']() as p:
  confirm=page.locator('[data-booking-bulk="confirm"]');delete=page.locator('[data-booking-bulk="delete"]')
  assert confirm.is_disabled() and delete.is_disabled()
  page.locator('[data-booking-select][value="101"]').check()
- assert page.locator('[data-booking-select-all]').evaluate('(el)=>el.indeterminate')
+ assert page.locator('.booking-bulk [data-booking-select-all]').evaluate('(el)=>el.indeterminate')
  assert '(1)' in confirm.inner_text()
  # Auto-refresh preserves an explicit selection, without selecting newly appearing rows.
  page.evaluate("document.dispatchEvent(new Event('lotus:admin-refresh'))")
  page.wait_for_timeout(200);assert page.locator('[data-booking-select][value="101"]').is_checked()
- page.locator('[data-booking-select-all]').check()
+ page.locator('.booking-bulk [data-booking-select-all]').check()
  assert '5 reservas selecionadas' in page.locator('[data-bulk-count]').inner_text()
  assert '(2)' in confirm.inner_text() and '(2)' in delete.inner_text()
  page.once('dialog',lambda dialog:dialog.dismiss());delete.click();assert calls==[]

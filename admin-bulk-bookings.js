@@ -1,13 +1,18 @@
 'use strict';
 (() => {
  const selected=new Set();let rows=[],callbacks={},busy=false;
- const toolbar=()=>`<div class="booking-bulk"><p data-bulk-count role="status">0 reservas selecionadas</p><div class="booking-bulk-actions"><button type="button" class="btn" data-booking-bulk="confirm" disabled>Confirmar selecionadas</button><button type="button" class="btn danger" data-booking-bulk="delete" disabled>Excluir selecionadas</button><button type="button" class="btn secondary" data-booking-clear disabled>Limpar seleção</button></div><p class="hint">Confirme pendentes com quarto definido. Para excluir, cancele a reserva antes. Até 100 reservas por ação.</p></div>`;
+ const toolbar=()=>`<div class="booking-bulk"><label class="booking-bulk-select-all"><input type="checkbox" data-booking-select-all data-booking-select-scope="all">Selecionar todas</label><p data-bulk-count role="status">0 reservas selecionadas</p><div class="booking-bulk-actions"><button type="button" class="btn" data-booking-bulk="confirm" disabled>Confirmar selecionadas</button><button type="button" class="btn danger" data-booking-bulk="delete" disabled>Excluir selecionadas</button><button type="button" class="btn secondary" data-booking-clear disabled>Limpar seleção</button></div><p class="hint">Confirme pendentes com quarto definido. Para excluir, cancele a reserva antes. Até 100 reservas por ação.</p></div>`;
  const eligible=action=>rows.filter(b=>selected.has(b.id)&&(action==='confirm'?b.status==='pendente'&&b.room_assigned!==false:b.status==='cancelada'));
+ function scopeIds(input){
+  return input.dataset.bookingSelectScope==='all'?rows.map(b=>b.id):[...input.closest('table').querySelectorAll('[data-booking-select]')].map(row=>Number(row.value));
+ }
  function sync(){
   const host=document.querySelector('.booking-bulk');if(!host)return;
   document.querySelectorAll('[data-booking-select]').forEach(input=>{input.checked=selected.has(Number(input.value));input.disabled=busy;input.closest('tr').classList.toggle('booking-selected',input.checked);});
-  const all=document.querySelector('[data-booking-select-all]');
-  if(all){all.checked=rows.length>0&&selected.size===rows.length;all.indeterminate=selected.size>0&&selected.size<rows.length;all.disabled=busy||!rows.length;}
+  document.querySelectorAll('[data-booking-select-all]').forEach(input=>{
+   const ids=scopeIds(input),count=ids.filter(id=>selected.has(id)).length;
+   input.checked=ids.length>0&&count===ids.length;input.indeterminate=count>0&&count<ids.length;input.disabled=busy||!ids.length;
+  });
   host.querySelector('[data-bulk-count]').textContent=`${selected.size} reserva${selected.size===1?'':'s'} selecionada${selected.size===1?'':'s'}`;
   host.setAttribute('aria-busy',String(busy));
   host.querySelectorAll('[data-booking-bulk]').forEach(button=>{
@@ -27,7 +32,7 @@
   if(event.target.matches('[data-booking-select]')){
    const id=Number(event.target.value);if(event.target.checked)selected.add(id);else selected.delete(id);sync();
   }else if(event.target.matches('[data-booking-select-all]')){
-   selected.clear();if(event.target.checked)rows.forEach(b=>selected.add(b.id));sync();
+   scopeIds(event.target).forEach(id=>{if(event.target.checked)selected.add(id);else selected.delete(id);});sync();
   }
  });
  document.addEventListener('click',async event=>{

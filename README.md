@@ -334,7 +334,7 @@ Verificação: `python3 scripts/test-site-language-browser.py` usa o dicionário
 
 ### Ações em lote no histórico de reservas
 
-Em **Reservas**, selecione linhas ou use a caixa do cabeçalho. **Confirmar selecionadas** inclui apenas pendentes com quarto definido; **Excluir selecionadas** inclui apenas canceladas e exige confirmação de exclusão definitiva. Os contadores dos botões mostram quantas reservas se aplicam à ação. A seleção é preservada nas atualizações automáticas e as ações aceitam até 100 reservas por lote.
+Em **Reservas**, o histórico tem três painéis: pendentes, confirmadas e canceladas. As confirmadas ficam em ordem numérica de quarto (1, 2, 3… 18); reservas do mesmo quarto seguem pela entrada. A atribuição de quarto ou mudança de status atualiza a posição após o refresh. Selecione linhas, todas as reservas de um painel pelo cabeçalho da tabela ou todas as reservas pela barra de ações. **Confirmar selecionadas** inclui apenas pendentes com quarto definido; **Excluir selecionadas** inclui apenas canceladas e exige confirmação de exclusão definitiva. Os contadores dos botões mostram quantas reservas se aplicam à ação. A seleção é preservada nas atualizações automáticas e as ações aceitam até 100 reservas por lote.
 
 `POST /api/bookings/bulk` chama `lotus_bulk_booking_api`, cujo acesso exige administrador com sessão válida. A função privada valida todos os IDs, bloqueia as linhas em ordem e executa a ação em uma transação; seleção desatualizada rejeita o lote inteiro. Confirmar reaproveita o caminho de status existente, preservando tarifas e notificações. Excluir remove reservas canceladas e seus vínculos/notificações dependentes por cascade. Nenhuma reserva real é removida pela implantação da função.
 

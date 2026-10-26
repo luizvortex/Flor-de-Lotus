@@ -67,3 +67,7 @@ Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `
 ## Conta Google nas reservas
 
 O usuário removeu a vinculação manual do painel administrativo. Não reintroduzir “Vincular conta Google”, o diálogo ou orientações para o proprietário fazer esse vínculo. Reservas públicas exigem autenticação e já vinculam a conta Google na mesma transação de criação. Preservar os vínculos existentes e esse fluxo automático.
+
+## Organização do histórico de reservas
+
+Na aba Reservas, manter três painéis nesta ordem: pendentes, confirmadas e canceladas. As confirmadas são ordenadas pelo número no nome do quarto (ordem numérica, inclusive nomes como “Quarto 2”), depois nome/entrada/ID; unidades ainda não atribuídas ficam ao final. Usar cópias das listas, sem alterar o estado recebido. Seleção global e seleção de cada tabela são independentes e preservam seleções nos outros painéis. Bloqueios permanecem disponíveis em uma seção recolhível identificada, sem contar como reservas confirmadas. Testes: `scripts/test-booking-panels-browser.py` e `scripts/test-bulk-bookings-browser.py`.
