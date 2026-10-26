@@ -30,6 +30,7 @@ def route(r):
   elif key=='policies':data={}
   return r.fulfill(status=200,json=data)
  if u.hostname!='qa.test':return r.abort()
+ if path.endswith(('.mp4','.webm','.mov')):return r.fulfill(status=204,body='')
  p=ROOT/unquote(path).lstrip('/')
  if path in ['/quartos','/reservas']:p=ROOT/'reservas.html'
  if path=='/admin':p=ROOT/'admin.html'
@@ -47,6 +48,18 @@ with sync_playwright() as p:
  assert page.locator('#floor').get_attribute('required') is not None
  assert page.locator('#floor').input_value()==''
  assert page.locator('#floor option[value=""]').is_disabled()
+ # Children require their ages and room count expands a separate composition.
+ page.locator('#guests-trigger').click()
+ page.locator('#guests-picker').screenshot(path=str(ROOT/'work/party-selector.png'))
+ page.locator('[data-party-field="children"][data-party-step="1"]').click()
+ assert page.locator('[data-child-room="0"]').get_attribute('required') is not None
+ page.locator('[data-child-room="0"]').select_option('6')
+ page.locator('[data-party-field="rooms"][data-party-step="1"]').click()
+ assert len(page.evaluate('window.stayParty.get()'))==2
+ assert '2 quartos' in page.locator('#guests-summary').inner_text()
+ page.locator('[data-party-field="rooms"][data-party-step="-1"]').click()
+ page.locator('[data-party-field="children"][data-party-step="-1"]').click()
+ page.locator('#apply-guests').click()
  # Date range picker: two months, pending selection, keyboard and responsive bounds.
  from datetime import date,timedelta
  start_date=date.fromisoformat(page.locator('#checkin').input_value())+timedelta(days=2)
@@ -72,11 +85,12 @@ with sync_playwright() as p:
   rect=page.locator('#dates-picker').bounding_box()
   assert rect['x']>=0 and rect['x']+rect['width']<=width+1,f'calendar overflow at {width}'
   page.keyboard.press('Escape')
- page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();page.locator('#guests').fill('6');page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
+ page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(4)];page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
  page.wait_for_selector('[data-options="familia"]');page.locator('[data-options="familia"]').click();page.locator('[data-book-category="familia"]').click()
  assert 'Unidade' not in page.locator('#booking-summary').inner_text()
  page.locator('#guest').fill('Teste de fluxo');page.locator('#phone').fill('65999999999');page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
  assert payloads[0]['category_slug']=='familia' and 'room_id' not in payloads[0]
+ assert payloads[0]['party']==[{'adults':6,'children_ages':[]}]
  assert 'unidade' not in page.locator('#booking-receipt-summary').inner_text().lower()
  # Empty inventory uses the centered notification, with a working calendar CTA.
  page.locator('#booking-success [data-close-success]').first.click()
@@ -98,7 +112,7 @@ with sync_playwright() as p:
  assert page.locator('#no-availability').is_hidden()
  # Home tariffs open the same picker and a new tab with all filters.
  sold_out=False;fail_availability=False
- page.goto('http://qa.test/')
+ page.goto('http://qa.test/',wait_until='domcontentloaded',timeout=60000)
  page.locator('.showcase-more .showcase-rates').first.click()
  assert page.locator('#availability-dialog').is_visible()
  assert page.locator('#floor').input_value()==''
@@ -113,17 +127,26 @@ with sync_playwright() as p:
   page.keyboard.press('Escape')
   assert page.locator('#availability-dialog').is_visible()
  page.locator('#floor').select_option('superior')
- page.locator('#guests-trigger').click();page.locator('#guests').fill('6');page.locator('#apply-guests').click()
+ page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(4)];page.locator('#apply-guests').click()
+ # At six adults there is no capacity for an additional child.
+ page.locator('#guests-trigger').click()
+ assert page.locator('[data-party-field="children"][data-party-step="1"]').is_disabled()
+ for _ in range(5):page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="-1"]').click()
+ page.locator('[data-party-field="children"][data-party-step="1"]').click()
+ page.locator('[data-child-room="0"]').select_option('6')
+ page.locator('#apply-guests').click()
  expected_start=page.locator('#checkin').input_value();expected_end=page.locator('#checkout').input_value()
  with context.expect_page() as new_tab:
   page.locator('#search [type="submit"]').click()
  filtered=new_tab.value;filtered.wait_for_load_state()
  from urllib.parse import urlparse,parse_qs
  query=parse_qs(urlparse(filtered.url).query)
- assert query=={'start':[expected_start],'end':[expected_end],'guests':['6'],'floor':['superior']}
+ assert query['start']==[expected_start] and query['end']==[expected_end] and query['guests']==['2'] and query['floor']==['superior']
+ assert json.loads(query['party'][0])==[{'adults':1,'children_ages':[6]}]
  filtered.wait_for_selector('[data-options="familia"]')
  assert filtered.locator('#floor').input_value()=='superior'
- assert filtered.locator('#guests').input_value()=='6'
+ assert filtered.locator('#guests').input_value()=='2'
+ assert filtered.evaluate('window.stayParty.get()')==[{'adults':1,'children_ages':[6]}]
  assert page.url=='http://qa.test/' and page.locator('#availability-dialog').is_hidden()
  filtered.close()
  page.goto('http://qa.test/admin');page.wait_for_selector('[data-tab="rates"]');page.locator('[data-tab="rates"]').click();page.wait_for_selector('[data-base="superior:6"]')

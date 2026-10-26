@@ -12,6 +12,7 @@
  const nights=()=>start&&end?Math.round((date(end)-date(start))/86400000):0;
  function sync(){
   $('#dates-summary').textContent=entry.value&&exit.value?`${short(entry.value)} - ${short(exit.value)}`:'Escolha as datas';
+  if(window.stayParty){window.stayParty.sync();return;}
   const n=Number(guests.value);$('#guests-summary').textContent=`${n||1} ${n===1?'hóspede':'hóspedes'}, 1 quarto`;
   form.querySelector('[data-guests-step="-1"]').disabled=n<=1;form.querySelector('[data-guests-step="1"]').disabled=n>=6;
  }
@@ -20,7 +21,7 @@
   close(panel===calendar?guestPanel:calendar);panel.hidden=false;
   (panel===calendar?$('#dates-trigger'):$('#guests-trigger')).setAttribute('aria-expanded','true');
   if(panel===calendar){start=entry.value;end=exit.value;selectingEnd=false;view=monthStart(start||today);render();calendar.querySelector('[data-day]:not([disabled])')?.focus({preventScroll:true});}
-  else guestPanel.querySelector('[data-guests-step="1"]').focus({preventScroll:true});
+  else guestPanel.querySelector('[data-party-step="1"],[data-guests-step="1"]').focus({preventScroll:true});
  }
  function render(){
   const minimum=monthStart(today);calendar.querySelector('[data-calendar-prev]').disabled=view<=minimum;
@@ -60,7 +61,7 @@
  };
  $('#apply-dates').onclick=()=>{if(!start||!end||nights()<1)return;entry.value=start;exit.value=end;exit.min=add(start,1);entry.dispatchEvent(new Event('change',{bubbles:true}));exit.dispatchEvent(new Event('change',{bubbles:true}));sync();close(calendar,true);};
  guestPanel.addEventListener('click',event=>{const b=event.target.closest('[data-guests-step]');if(!b)return;guests.value=Math.min(6,Math.max(1,Number(guests.value||1)+Number(b.dataset.guestsStep)));guests.dispatchEvent(new Event('change',{bubbles:true}));});
- $('#apply-guests').onclick=()=>{if(!guests.reportValidity())return;sync();close(guestPanel,true);};
+ if(!window.stayParty)$('#apply-guests').onclick=()=>{if(!guests.reportValidity())return;sync();close(guestPanel,true);};
  form.addEventListener('change',sync);form.addEventListener('input',sync);
  document.addEventListener('lotus:search-updated',sync);
  document.addEventListener('pointerdown',event=>{if(!event.target.closest('.dates-control'))close(calendar);if(!event.target.closest('.guests-control'))close(guestPanel);});

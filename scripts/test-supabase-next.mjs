@@ -100,6 +100,10 @@ try {
   assert.equal(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_rate_api').data.p_data.amount,25000);
   r = await request('availability?start=2026-11-10&end=2026-11-11&guests=3&floor=superior');assert.equal(r.status,200);
   const quoteRequest=received.findLast(x=>x.data.p_operation==='availability');assert.equal(quoteRequest.path,'/rest/v1/rpc/lotus_rate_api');assert.equal(quoteRequest.data.p_data.guests,3);assert.equal(quoteRequest.data.p_data.floor,'superior');
+  r=await request('availability?start=2026-11-10&end=2026-11-11&guests=3&floor=superior&party='+encodeURIComponent(JSON.stringify([{adults:2,children_ages:[6]}])));assert.equal(r.status,200);
+  assert.deepEqual(received.findLast(x=>x.data.p_operation==='availability').data.p_data.party,[{adults:2,children_ages:[6]}]);
+  r=await request('availability?floor=terreo&party=invalid-json');assert.equal(r.status,400);
+
   r = await request('bookings/101/assignment',{room_id:15},{method:'PUT',headers:{Cookie:cookies}});assert.equal(r.status,200);
   assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_assignment_api').data,{p_data:{booking_id:101,room_id:15}});
 
@@ -149,7 +153,7 @@ try {
   r = await request('logout', {}, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert(r.headers.getSetCookie().every(c => /max-age=0/i.test(c)));
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=access-admin' } }); assert.equal((await r.json()).authenticated, false);
-  console.log('Next.js/Supabase adapter: 34 scenarios passed (mock HTTP; real database contract tested separately).');
+  console.log('Next.js/Supabase adapter: all scenarios passed (mock HTTP; real database contract tested separately).');
 } finally {
   app.kill(); await once(app, 'exit'); await new Promise(resolve => mock.close(resolve));
 }

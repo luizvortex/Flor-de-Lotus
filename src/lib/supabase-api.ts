@@ -254,6 +254,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       data.start = params.get('start'); data.end = params.get('end');
       data.guests = params.has('guests') ? Number(params.get('guests')) : 1;
       data.floor = params.get('floor') || '';
+      if (params.has('party')) { try { data.party = JSON.parse(params.get('party') || ''); } catch { throw new ApiError(400, 'Confira os adultos, crianças e quartos.'); } }
       data.package_id = params.get('package_id') ? Number(params.get('package_id')) : null;
     }
     if (path === 'rates' && ['GET','POST','DELETE'].includes(method)) {

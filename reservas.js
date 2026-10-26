@@ -119,9 +119,9 @@
   const data=await response.json();if(!response.ok){const error=new Error(data.error||'Não foi possível concluir a consulta.');error.status=response.status;throw error;}return data;
  }
  function message(text,error=false){$('#message').textContent=text;$('#message').className=error?'error':'';}
- function query(){return {start:$('#checkin').value,end:$('#checkout').value,guests:Number($('#guests').value),package_id:$('#package').value||'',floor:$('#floor').value||''};}
+ function query(){return {start:$('#checkin').value,end:$('#checkout').value,guests:Number($('#guests').value),package_id:$('#package').value||'',floor:$('#floor').value||'',party:JSON.stringify(window.stayParty.get())};}
  function focusSearch(){ $('#search').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});$('#dates-trigger').focus({preventScroll:true});if($('#dates-trigger').getAttribute('aria-expanded')==='false')$('#dates-trigger').click(); }
- function categoryRooms(row,rooms){return rooms.filter(r=>row.slug==='duplo'?r.floor==='terreo':row.slug==='triplo'?r.floor==='superior':row.slug==='triplo-standard'?r.floor==='terreo'&&r.capacity>=3:row.slug==='familia'?r.capacity>=5:defaultSlug(r)===row.slug);}
+ function categoryRooms(row,rooms){return rooms.filter(r=>r.category_slug?r.category_slug===row.slug:row.slug==='duplo'?r.floor==='terreo':row.slug==='triplo'?r.floor==='superior':row.slug==='triplo-standard'?r.floor==='terreo'&&r.capacity>=3:row.slug==='familia'?r.capacity>=5:defaultSlug(r)===row.slug);}
  function rowsFor(row){return categoryRooms(row,lastQuery?available:inventory).sort((a,b)=>(lastQuery?a.total:a.price)-(lastQuery?b.total:b.price));}
  function applyCatalog(data){
   inventory=Array.isArray(data.rooms)?data.rooms:[];
@@ -139,6 +139,7 @@
   const rooms=inventoryFor(row),capacity=rooms.length?Math.max(...rooms.map(room=>room.capacity)):0;
   if(!rooms.length)return 'Esta categoria ainda não possui uma unidade ativa para reserva. Consulte a pousada.';
   if(lastQuery?.floor&&!rooms.some(room=>room.floor===lastQuery.floor))return `Não há unidades desta categoria cadastradas no ${floorLabel(lastQuery.floor).toLowerCase()}. Consulte outro andar ou converse com a pousada.`;
+  if(lastQuery&&JSON.parse(lastQuery.party).length>1)return 'Não há quartos suficientes nesta categoria para a composição escolhida. Ajuste os quartos ou consulte a pousada.';
   if(lastQuery&&Number(lastQuery.guests)>capacity)return `Esta categoria está cadastrada para até ${plural(capacity,'hóspede','hóspedes')}. Ajuste a quantidade de pessoas ou consulte a pousada.`;
   return 'Sem disponibilidade para estas datas e hóspedes. Consulte outro período ou converse com a pousada.';
  }
@@ -155,7 +156,7 @@
 
   $('#rooms').innerHTML=showcases.length?showcases.map(s=>{
    const rows=rowsFor(s),best=rows[0],reference=inventoryFor(s)[0],quoted=Boolean(lastQuery&&best&&Number.isFinite(best.total)),price=lastQuery?(quoted?best.total:null):reference?.price??null;
-   const label=lastQuery?(best?`${plural(rows.length,'opção disponível','opções disponíveis')} · ${floorLabel(lastQuery.floor)}`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
+   const label=lastQuery?(best?`Disponível para ${JSON.parse(lastQuery.party).length} quarto(s) · ${floorLabel(lastQuery.floor)}`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
    const cost=price!==null?`${lastQuery?(best?.quote_example?'Exemplo · ':''):'A partir de '}${money(price)}`:(lastQuery&&best?'Valor sob consulta.':lastQuery?'Experimente outras datas.':'Consulte os valores com a pousada.');
    const index=(photoIndices.get(s.slug)||0)%s.photos.length;
    return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li><i class="bi bi-${/^[a-z0-9-]+$/.test(f.icon)?f.icon:'check2'}" aria-hidden="true"></i><span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button" data-details="${esc(s.slug)}">Mais detalhes e fotos</button><div class="room-cost"><small>${price!==null?(quoted?`Total para ${plural(nights,'noite','noites')}${rows.length>1?' · a partir de':''}`:'Diária de referência por quarto · a partir de'):'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button>${whatsappButton(s.title)}</div></div></article>`;
@@ -167,14 +168,14 @@
  function invalidate(){sequence++;controller?.abort();$('#rooms').removeAttribute('aria-busy');lastQuery=null;available=[];selection=null;$('#result-count').textContent='Escolha as datas, hóspedes e andar para consultar.';message('');render();$('#search [type="submit"]').disabled=false;}
  async function search(silent=false){
   document.dispatchEvent(new Event('lotus:search-updated'));
-  const q=query();if(!$('#search').reportValidity())return;
+  const q=query();if(!window.stayParty.validate()||!$('#search').reportValidity())return;
   if(q.end<=q.start){message('A saída deve ser depois da entrada.',true);return;}
   const request=++sequence;controller?.abort();controller=new AbortController();const button=$('#search [type="submit"]');button.disabled=true;
   if(!silent){message('Consultando disponibilidade…');$('#rooms').setAttribute('aria-busy','true');}
   try{
    const [catalog,data]=await Promise.all([api('catalog',null,controller.signal),api('availability?'+new URLSearchParams(q),null,controller.signal)]);
    if(request!==sequence)return;applyCatalog(catalog);lastQuery=q;available=data.rooms||[];nights=data.nights;render();
-   $('#result-count').textContent=`${plural(available.length,'quarto disponível','quartos disponíveis')} · ${plural(nights,'noite','noites')} · ${plural(q.guests,'hóspede','hóspedes')}${q.floor?' · '+floorLabel(q.floor):''}`;
+   $('#result-count').textContent=`Opções para ${plural(nights,'noite','noites')} · ${plural(q.guests,'hóspede','hóspedes')} · ${JSON.parse(q.party).length} quarto(s)${q.floor?' · '+floorLabel(q.floor):''}`;
    history.replaceState(null,'',location.pathname+'?'+new URLSearchParams(q));
    if(!available.length)message('');else if(!silent)message('Disponibilidade atualizada. Escolha uma acomodação abaixo.');
   }catch(e){if(request!==sequence||e.name==='AbortError')return;lastQuery=null;available=[];render();$('#result-count').textContent='Disponibilidade ainda não confirmada.';message(e.message,true);}
@@ -187,7 +188,7 @@
  function detailOptions(){
   if(!detail)return;const rows=rowsFor(detail);
   const best=rows[0],canBook=best&&Number.isFinite(best.total)&&!best.quote_example;
-  $('#details-options').innerHTML=lastQuery&&canBook?`<div class="room-option"><p><strong>${esc(detail.title)} · ${esc(floorLabel(lastQuery.floor))}</strong><br>${plural(lastQuery.guests,'hóspede','hóspedes')} · ${plural(nights,'noite','noites')}<br>${money(best.total)} no total</p><button type="button" class="gold-button" data-book-category="${esc(detail.slug)}">Solicitar reserva</button></div>`:`<p class="room-meta">${lastQuery&&best?(best.quote_example?'Valor de exemplo. Consulte a pousada para confirmar o preço da estadia.':'Preço ainda não cadastrado para estas datas e quantidade de hóspedes. Consulte a pousada.'):lastQuery?esc(unavailableReason(detail)):'Selecione as datas, a quantidade de hóspedes e o andar para consultar.'}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`;
+  $('#details-options').innerHTML=lastQuery&&canBook?`<div class="room-option"><p><strong>${esc(detail.title)} · ${esc(floorLabel(lastQuery.floor))}</strong><br>${plural(lastQuery.guests,'hóspede','hóspedes')} · ${JSON.parse(lastQuery.party).length} quarto(s) · ${plural(nights,'noite','noites')}<br>${money(best.total)} no total</p><button type="button" class="gold-button" data-book-category="${esc(detail.slug)}">Solicitar reserva</button></div>`:`<p class="room-meta">${lastQuery&&best?(best.quote_example?'Valor de exemplo. Consulte a pousada para confirmar o preço da estadia.':'Preço ainda não cadastrado para estas datas e quantidade de hóspedes. Consulte a pousada.'):lastQuery?esc(unavailableReason(detail)):'Selecione as datas, a quantidade de hóspedes e o andar para consultar.'}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`;
 
  }
  function openDetails(slug){
@@ -215,7 +216,7 @@
   if(button.hasAttribute('data-book-category')&&lastQuery){
    const room=rowsFor(detail)[0];if(!room)return;
    selection={category:detail.slug,room:{...room,presentation:detail.title},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=false;
-   $('#booking-summary').textContent=`${detail.title} · ${floorLabel(lastQuery.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${money(room.total)} no total.`;$('#booking-dialog').showModal();if(!guestAuthenticated)openBookingLogin();else document.dispatchEvent(new Event('lotus:refresh-guest-session'));
+   $('#booking-summary').textContent=`${detail.title} · ${floorLabel(lastQuery.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${JSON.parse(lastQuery.party).length} quarto(s) · ${money(room.total)} no total.`;$('#booking-dialog').showModal();if(!guestAuthenticated)openBookingLogin();else document.dispatchEvent(new Event('lotus:refresh-guest-session'));
   }
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
@@ -225,10 +226,10 @@
  $('#booking-form').onsubmit=async event=>{
   event.preventDefault();if(!selection)return;if(!guestAuthenticated){openBookingLogin();return;}if(bookingSubmitting)return;const button=event.submitter;bookingSubmitting=true;button.disabled=true;const selected=selection;
   try{
-   const q=selected.query,result=await api('bookings',{category_slug:selected.category,expected_total:selected.room.total,floor:q.floor,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
+   const q=selected.query,result=await api('bookings',{category_slug:selected.category,party:JSON.parse(q.party),expected_total:selected.room.total,floor:q.floor,start:q.start,end:q.end,guests:q.guests,package_id:q.package_id?Number(q.package_id):null,guest:$('#guest').value,phone:$('#phone').value});
    document.dispatchEvent(new Event('lotus:booking-created'));$('#booking-dialog').close();event.target.reset();
    const receipt=$('#booking-receipt');receipt.hidden=false;
-   $('#booking-receipt-summary').textContent=`Solicitação #${result.id} · ${selected.room.presentation} · ${floorLabel(result.floor||selected.room.floor)} · ${dateLabel(q.start)} a ${dateLabel(q.end)} · ${plural(q.guests,'hóspede','hóspedes')} · Total: ${money(result.total)}.`;
+   $('#booking-receipt-summary').textContent=`Solicitação #${result.id} · ${selected.room.presentation} · ${floorLabel(result.floor||selected.room.floor)} · ${dateLabel(q.start)} a ${dateLabel(q.end)} · ${plural(q.guests,'hóspede','hóspedes')} · ${result.room_count||1} quarto(s) · Total: ${money(result.total)}.`;
    const contact=$('#booking-receipt-whatsapp'),url=whatsappLink(`${selected.room.presentation}`,{...q,floor:result.floor||selected.room.floor||q.floor},result);contact.hidden=!url;if(url)contact.href=url;
    $('#booking-success-summary').textContent=$('#booking-receipt-summary').textContent;
    const successContact=$('#booking-success-whatsapp');successContact.hidden=!url;if(url)successContact.href=url;
@@ -244,7 +245,7 @@
  $('#choose-other-dates').onclick=focusSearch;
  $('#packages').onclick=event=>{
   const button=event.target.closest('[data-package]');if(!button)return;const p=packages.find(p=>p.id===Number(button.dataset.package));if(!p)return;
-  $('#package').value='';$('#checkin').value=p.start<today?today:p.start;$('#checkout').value=nextDay($('#checkin').value,p.nights);$('#checkout').min=nextDay($('#checkin').value);$('#guests').value={solteiro:1,casal:2,casal_mais_um:3,quadruplo:4,familia:5}[p.type];search();focusSearch();
+  $('#package').value='';$('#checkin').value=p.start<today?today:p.start;$('#checkout').value=nextDay($('#checkin').value,p.nights);$('#checkout').min=nextDay($('#checkin').value);window.stayParty.setSingleAdults({solteiro:1,casal:2,casal_mais_um:3,quadruplo:4,familia:5}[p.type]);search();focusSearch();
  };
  // Fill the URL search immediately; a slow catalog must not overwrite later edits.
  const params=new URLSearchParams(location.search),bootstrapSequence=sequence;

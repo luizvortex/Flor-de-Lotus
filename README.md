@@ -305,3 +305,12 @@ O catálogo mostra todas as apresentações. A consulta exige térreo ou piso su
 **Diárias e temporadas** no painel cadastra valores por quarto/noite para cada andar e 1–6 hóspedes. Períodos substituem a diária padrão nas noites correspondentes (saída exclusiva), com proteção contra sobreposição e edições concorrentes. O catálogo informa “a partir de”; a consulta calcula as noites pela ocupação selecionada. `database/occupancy-rates.sql` inclui apenas os exemplos autorizados de R$ 100 (térreo) e R$ 120 (superior) para uma pessoa; são explicitamente demonstrativos e não permitem reservas. O proprietário deve substituí-los por preços reais e cadastrar as demais ocupações. Ausência de preço gera consulta à pousada, sem total fictício. Valores de reservas existentes não são recalculados.
 
 Verificação: executar `database/test-category-bookings.sql` dentro de `BEGIN`/`ROLLBACK` depois das duas fontes SQL acima. `python3 scripts/test-category-booking-browser.py` testa o catálogo e painel em Chromium com APIs simuladas, sem reservas reais.
+
+
+### Adultos, crianças e múltiplos quartos
+
+Seletor compartilhado na home e catálogo em `stay-party.js`. Cada quarto tem pelo menos um adulto, número de crianças e idades na data da entrada (0–17). As idades são obrigatórias. A composição completa segue no parâmetro `party`, sem aceitar número de pagantes calculado pelo cliente.
+
+`database/party-bookings.sql` separa total de pessoas, quantidade usada na capacidade e pagantes. Crianças de 0 a 6 anos são isentas; a partir de 7 anos entram na quantidade tarifada. Solicitações de vários quartos fazem bloqueios distintos em uma única transação, mantendo a atribuição física pelo proprietário. As idades e a composição ficam nos registros privados e no histórico autenticado. Preços ausentes ou demonstrativos não geram reservas. Verificações de dados sintéticos devem usar `database/test-party-bookings.sql` dentro de BEGIN/ROLLBACK.
+
+**Regra confirmada:** todas as crianças contam na lotação, inclusive as de até 6 anos que não pagam. Assim, 4 adultos e uma criança precisam de capacidade para pelo menos 5 pessoas.

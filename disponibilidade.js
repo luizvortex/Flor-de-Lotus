@@ -21,7 +21,7 @@
  // Keep the native GET submission: it opens a new tab within the user's click
  // and carries start/end/guests/floor without relying on window.open or a timer.
  form.addEventListener('submit',event=>{
-  if(!form.reportValidity()){event.preventDefault();return;}
+  if(!window.stayParty.validate()||!form.reportValidity()){event.preventDefault();return;}
   if(end.value<=start.value){event.preventDefault();dialog.querySelector('[role="alert"]').textContent='A saída deve ser depois da entrada.';return;}
   dialog.close();
  });
