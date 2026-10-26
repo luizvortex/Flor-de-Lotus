@@ -127,8 +127,7 @@
   showcases=(data.showcases||[]).filter(s=>typeof s.title==='string'&&Array.isArray(s.photos)&&s.photos.some(p=>photoUrl(p.url))).map(s=>({...s,photos:s.photos.filter(p=>photoUrl(p.url)),features:Array.isArray(s.features)?s.features:[]}));
   showcases=showcases.filter(s=>inventory.some(room=>defaultSlug(room)===s.slug));
   packages=(data.packages||[]).filter(p=>p.end>today);
-  const selected=$('#package').value;$('#package').innerHTML='<option value="">Diárias padrão</option>'+packages.map(p=>`<option value="${p.id}">${esc(p.name)} · ${p.nights} noites</option>`).join('');
-  if(packages.some(p=>String(p.id)===selected))$('#package').value=selected;
+  if(!packages.some(p=>String(p.id)===$('#package').value))$('#package').value='';
   if(showcases[0]&&!$('#catalog-cover').dataset.cmsCover)$('#catalog-cover').src=showcases[0].photos[0].url;
   $('#special-packages').hidden=!packages.length;
   $('#more-packages').hidden=packages.length<=3;
@@ -231,7 +230,7 @@
   finally{bookingSubmitting=false;button.disabled=!selection;}
  };
   document.querySelector('[data-booking-refresh-login]').onclick=()=>{loginStatus('Verificando seu acesso…');document.dispatchEvent(new Event('lotus:refresh-guest-session'));};
- $('#search').onsubmit=event=>{event.preventDefault();search();};$('#search').addEventListener('change',invalidate);
+ $('#search').onsubmit=event=>{event.preventDefault();search();};$('#search').addEventListener('change',event=>{if(event.target.matches('#checkin,#checkout'))$('#package').value='';invalidate();});
  $('#checkin').min=today;$('#checkout').min=nextDay(today);$('#checkin').addEventListener('change',()=>{if(!$('#checkin').value)return;$('#checkout').min=nextDay($('#checkin').value);if($('#checkout').value<=$('#checkin').value)$('#checkout').value=$('#checkout').min;});
  $('#refresh-rooms').onclick=()=>search();
  $('#packages').onclick=event=>{
