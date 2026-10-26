@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 
-<head><script src="/focus-mode.js" defer></script>
+<head><script src="/focus-mode.js" defer></script><script src="/room-amenities.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pousada Flor de Lotus</title>
@@ -24,7 +24,7 @@
     <link rel="preload" as="image" href="/media/jardim-final.jpg" fetchpriority="high">
     <script>try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches&&!sessionStorage.getItem("lotus-intro-seen")){sessionStorage.setItem("lotus-intro-seen","1");document.documentElement.classList.add("intro-enabled");setTimeout(function(){document.documentElement.classList.add("intro-complete")},1600)}}catch{}</script>
     <link rel="icon" type="image" href="img Pousada/flordelotuslogo.png">
-</head>
+<link rel="stylesheet" href="/room-modal.css"></head>
 
 <body class="home-page">
     <a class="skip-home" href="#conteudo-principal">Pular para o conteúdo</a>
@@ -169,10 +169,10 @@
  <div class="stay-control floor-control"><label for="floor">Andar</label><select id="floor" name="floor" required><option value="" disabled selected>Selecione o andar</option><option value="terreo">Térreo</option><option value="superior">Piso superior</option></select></div><p role="alert" class="availability-error"></p><button class="gold-button stay-search" type="submit">Ver disponibilidade</button>
 </form></section>
     </dialog>
-    <dialog id="showcase-album" class="showcase-album" aria-labelledby="showcase-album-title">
+    <dialog id="showcase-album" class="showcase-album room-modal" aria-labelledby="showcase-album-title">
             <div class="showcase-album-header"><h2 id="showcase-album-title">Fotos do quarto</h2><button type="button" class="showcase-album-close" aria-label="Fechar detalhes do quarto">×</button></div>
-            <div class="showcase-album-body">
-                <div class="showcase-album-gallery">
+            <div class="showcase-album-body room-modal-body">
+                <div class="showcase-album-gallery room-modal-gallery">
                     <div class="showcase-album-stage">
                         <img class="showcase-album-image" alt="">
                         <button type="button" data-album-prev aria-label="Foto anterior"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button>
@@ -181,7 +181,7 @@
                     </div>
                     <div class="showcase-album-thumbs" role="group" aria-label="Escolher foto"></div>
                 </div>
-                <div class="showcase-album-details">
+                <div class="showcase-album-details room-modal-copy">
                     <h3 data-room-heading></h3>
                     <ul class="showcase-album-highlights" aria-label="Destaques do quarto"></ul>
                     <p class="showcase-album-beds" data-room-beds hidden></p>

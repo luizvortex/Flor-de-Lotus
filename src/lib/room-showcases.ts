@@ -30,19 +30,19 @@ const mobileRoomWave = `<div class="room-wave room-wave-between" aria-hidden="tr
 </div>`;
 export function renderShowcases(rows: Showcase[]): string {
   return rows.map((row, index) => `<article class="room-showcase" aria-labelledby="room-title-${escape(row.slug)}">
-    <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-room="${escape(JSON.stringify({ title: row.title, eyebrow: row.eyebrow, description: row.description, features: row.features, details: row.details || {} }))}" data-photos="${escape(JSON.stringify(row.photos))}">
+    <div class="room-showcase-gallery" data-title="${escape(row.title)}" data-room="${escape(JSON.stringify({ title: row.title, eyebrow: row.eyebrow, description: row.description, features: row.features, amenities: row.amenities, details: row.details || {} }))}" data-photos="${escape(JSON.stringify(row.photos))}">
       <div class="showcase-main">
         <button type="button" class="showcase-main-open" aria-label="Ampliar fotos de ${escape(row.title)}"><img class="showcase-main-image" src="${escape(row.photos[0].url)}" alt="${escape(row.photos[0].alt)}" loading="lazy" width="900" height="700"></button>
         <button type="button" class="showcase-view-photos"><i class="bi bi-images" aria-hidden="true"></i> Ver ${row.photos.length} fotos</button>
         <button type="button" class="showcase-arrow showcase-prev" aria-label="Foto anterior de ${escape(row.title)}">${arrow('left')}</button>
         <button type="button" class="showcase-arrow showcase-next" aria-label="Próxima foto de ${escape(row.title)}">${arrow('right')}</button>
       </div>
-      <div class="showcase-thumbs">${row.photos.slice(1,3).map((photo,i) => `<button type="button" class="showcase-thumb" data-photo-index="${i+1}" aria-label="Destacar ${escape(photo.alt)}"><img src="${escape(photo.url)}" alt="${escape(photo.alt)}" loading="lazy" width="300" height="350"></button>`).join('')}</div>
+      <div class="showcase-thumbs">${row.photos.slice(1,3).map((photo,i) => `<button type="button" class="showcase-thumb" data-photo-index="${i+1}" aria-label="Ver foto: ${escape(photo.alt)}"><img src="${escape(photo.url)}" alt="${escape(photo.alt)}" loading="lazy" width="300" height="350"></button>`).join('')}</div>
       <span class="visually-hidden showcase-photo-status" aria-live="polite"></span>
     </div>
     <div class="showcase-copy">${row.eyebrow ? `<p class="showcase-eyebrow">${escape(row.eyebrow)}</p>` : ''}<h3 id="room-title-${escape(row.slug)}">${escape(row.title)}</h3>
       <p class="showcase-description">${escape(row.description)}</p>
-      <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><i class="bi bi-${escape(feature.icon)}" aria-hidden="true"></i><span>${escape(feature.label)}</span></li>`).join('')}</ul>
+      <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><span data-room-icon="${escape(feature.icon)}" aria-hidden="true"></span><span>${escape(feature.label)}</span></li>`).join('')}</ul>
     </div>
     ${index < rows.length - 1 ? mobileRoomWave : '<div class="showcase-more"><a class="showcase-rates" href="/quartos" data-availability-open aria-haspopup="dialog" aria-controls="availability-dialog">Ver tarifas<span class="visually-hidden"> (abrir consulta de disponibilidade)</span></a></div>'}
   </article>`).join('\n');

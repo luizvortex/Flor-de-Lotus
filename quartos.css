@@ -278,3 +278,5 @@ body.showcase-album-open { overflow: hidden; }
  .home-page .room-showcase:not(:last-child) { padding-bottom: 0; }
  .room-wave-between { display: block; margin-bottom: 0; }
 }
+
+@media(hover:hover){.room-showcase-gallery:hover{transform:none!important}}

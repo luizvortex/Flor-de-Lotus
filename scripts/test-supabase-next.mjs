@@ -130,8 +130,9 @@ try {
   r = await fetch(base + '/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '[' }); assert.equal(r.status, 400);
   r = await request('showcases'); assert.equal(r.status, 200);
   r = await request('showcases/duplo', { title: 'Novo título' }, { method: 'PUT' }); assert.equal(r.status, 401);
-  r = await request('showcases/duplo', { title: 'Novo título', details: { beds: '1 cama de casal', bathroom: ['Chuveiro'] } }, { method: 'PUT', headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  r = await request('showcases/duplo', { title: 'Novo título', details: { beds: '1 cama de casal', bathroom: ['Chuveiro'] }, amenities: [{icon:'hair-dryer',label:'Secador de cabelo'}] }, { method: 'PUT', headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   assert.deepEqual(received.findLast(x => x.data.p_operation === 'save').data.p_data.details, { beds: '1 cama de casal', bathroom: ['Chuveiro'] });
+  assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_showcase_api'&&x.data.p_operation==='save').data.p_data.amenities,[{icon:'hair-dryer',label:'Secador de cabelo'}]);
   r = await request('showcases'); assert.equal((await r.json()).showcases[0].title, 'Novo título');
   r = await request('policies'); assert.equal(r.status, 200); assert.equal((await r.json()).policies.checkin, 'A partir das 14h.');
   r = await request('policies', { policies:{checkin:'15h'}, revision:1 }, { method:'PUT' }); assert.equal(r.status, 401);

@@ -47,3 +47,7 @@ O preço público agora vem de `lotus_private.occupancy_rates`, por andar, 1–6
 ## Adultos, crianças e quartos
 
 O seletor compartilhado separa adultos (18+) e crianças (0–17) por quarto e exige as idades na entrada. **Decisão explícita:** crianças de até 6 anos não pagam, mas TODAS contam na lotação. A tarifa usa adultos + crianças a partir de 7 anos. Nunca subtrair crianças isentas da capacidade física. Dados autoritativos passam pelo JSON `party`; o servidor recalcula total, lotação e pagantes. Múltiplos quartos são reservados atomicamente e vinculados por `booking_group`, com atribuição de cada unidade pelo proprietário. Fonte: `database/party-bookings.sql`; testes sintéticos em rollback: `database/test-party-bookings.sql`.
+
+## Galeria e ícones de comodidades
+
+As galerias da home e do catálogo usam `room-modal.css` e o catálogo local de SVGs em `room-amenities.js`. O proprietário escolhe os destaques (`features`, até 16) e as comodidades (`amenities`, até 32) em **Conteúdo dos quartos**. São listas independentes por apresentação; uma lista vazia é intencional e não deve ser reposta por fallback. `amenities=null` mantém a leitura dos detalhes antigos. Fotos, miniaturas e indicadores usam o álbum real, sem opções de refeições ou taxas de café. O usuário confirmou café da manhã incluso, adicionado uma vez aos destaques pela migração `database/room-amenity-icons.sql`. Ícones de elevador, aquecimento e outros ficam disponíveis para escolha, sem presumir que estejam presentes em todos os quartos.

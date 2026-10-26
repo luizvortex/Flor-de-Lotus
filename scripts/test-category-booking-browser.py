@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1]
 (ROOT/'work').mkdir(exist_ok=True)
 rooms=[dict(id=1,name='1',type='casal',price=10000,active=1,capacity=4,floor='terreo',presentation_slug='duplo'),dict(id=15,name='15',type='casal',price=12000,active=1,capacity=6,floor='superior',presentation_slug='duplo')]
 photo={'url':'/img casal/casal.jpg','alt':'Quarto'}
-showcases=[dict(slug=s,title=t,description='Quarto da pousada',photos=[photo]*3,features=[]) for s,t in [('duplo','Quarto Standard'),('triplo','Quarto Superior'),('triplo-standard','Quarto Triplo Standard'),('familia','Quarto Família')]]
+showcases=[dict(slug=s,title=t,description='Quarto da pousada',photos=[photo]*3,features=[{'icon':'breakfast','label':'Café da manhã incluso'},{'icon':'wifi','label':'Wi-Fi grátis'}],eyebrow='17 m²',revision=1,details={'beds':'1 cama de casal','description':'Descrição da acomodação','bathroom':['Banheiro privativo'],'amenities':['Toalhas']},amenities=[{'icon':'bath','label':'Banheiro privativo'},{'icon':'shower','label':'Chuveiro'}]) for s,t in [('duplo','Quarto Standard'),('triplo','Quarto Superior'),('triplo-standard','Quarto Triplo Standard'),('familia','Quarto Família')]]
 state=dict(rooms=rooms,packages=[],bookings=[dict(id=101,room_id=15,room_name='15',room_floor='superior',room_assigned=False,requested_category='familia',status='pendente',guest='Teste',phone='55000000000',guests=6,start='2026-11-10',end='2026-11-11',total=12000,created='2026-10-26T10:00:00Z')],showcases=showcases)
 payloads=[]
 sold_out=False
@@ -29,6 +29,9 @@ def route(r):
   elif key=='bookings':payloads.append(r.request.post_data_json);data={'id':101,'status':'pendente','total':r.request.post_data_json['expected_total'],'floor':'superior'}
   elif key=='session':data={'authenticated':True}
   elif key=='admin':data=state
+  elif key=='showcases':data={'showcases':showcases}
+  elif key.startswith('showcases/'):
+   body=r.request.post_data_json;row=next(x for x in showcases if x['slug']==key.split('/')[1]);row.update(body);row['revision']+=1;payloads.append(body);data={'showcase':row}
   elif key=='rates':data={'rates':[dict(id=1,floor='terreo',guests=1,amount=10000,example=True,revision=1,start=None,end=None)]}
   elif key.endswith('/assignment'):
    payloads.append(r.request.post_data_json);state['bookings'][0]['room_assigned']=True;data={'ok':True}
@@ -42,7 +45,11 @@ def route(r):
  if path=='/':p=ROOT/'index.html'
  if p.is_file():
   mime={'.html':'text/html','.js':'application/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp'}.get(p.suffix,'application/octet-stream')
-  return r.fulfill(body=p.read_bytes(),content_type=mime)
+  body=p.read_bytes()
+  if path=='/':
+   import re,html
+   body=re.sub(r'data-room="[^"]*"',lambda m:'data-room="'+html.escape(json.dumps(showcases[0]),quote=True)+'"',body.decode(),count=1).encode()
+  return r.fulfill(body=body,content_type=mime)
  r.fulfill(status=404,body='')
 with sync_playwright() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
@@ -64,6 +71,21 @@ with sync_playwright() as p:
  assert page.evaluate('document.documentElement.dataset.focusInput')=='keyboard'
  assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='solid'
  assert page.evaluate('getComputedStyle(document.activeElement).outlineWidth')=='2px'
+ # Gallery matches the reference and includes editable icon badges and amenities.
+ page.locator('[data-details="duplo"]').first.click()
+ assert page.locator('#details-highlights').get_by_text('Café da manhã incluso').is_visible()
+ assert page.locator('#details-facts .room-icon').count()==2
+ assert page.locator('#details-thumbs button').count()==3
+ page.locator('[data-detail-next]').click();assert '2 / 3' in page.locator('#details-counter').inner_text()
+ page.locator('#details-thumbs button').first.click();assert '1 / 3' in page.locator('#details-counter').inner_text()
+ assert 'Opções de refeições' not in page.locator('#room-details').inner_text()
+ for width in [320,390,768,1440]:
+  page.set_viewport_size({'width':width,'height':950})
+  rect=page.locator('#room-details').bounding_box()
+  assert rect['x']>=0 and rect['x']+rect['width']<=width+1
+  assert page.locator('.room-modal-body').evaluate('(el)=>el.scrollWidth<=el.clientWidth')
+ page.locator('#room-details').screenshot(path=str(ROOT/'work/room-modal-reference.png'))
+ page.keyboard.press('Escape')
  # Children require their ages and room count expands a separate composition.
  page.locator('#guests-trigger').click()
  page.locator('#guests-picker').screenshot(path=str(ROOT/'work/party-selector.png'))
@@ -138,6 +160,19 @@ with sync_playwright() as p:
  # Home tariffs open the same picker and a new tab with all filters.
  sold_out=False;fail_availability=False
  page.goto('http://qa.test/',wait_until='domcontentloaded',timeout=60000)
+ page.locator('.showcase-view-photos').first.hover()
+ page.locator('.showcase-view-photos').first.click()
+ page.wait_for_selector('#showcase-album[open]')
+ assert page.locator('.showcase-album-highlights').get_by_text('Café da manhã incluso').is_visible()
+ assert page.locator('.showcase-album-thumbs button').count()==3
+ page.locator('[data-album-next]').click();assert '2 / 3' in page.locator('.showcase-album-count').inner_text()
+ page.keyboard.press('Escape')
+ thumbnail=page.locator('.showcase-thumb').first
+ expected_photo=int(thumbnail.get_attribute('data-photo-index'))+1
+ thumbnail.click()
+ assert page.locator('#showcase-album').is_visible()
+ assert page.locator('.showcase-album-count').inner_text().startswith(str(expected_photo)+' /')
+ page.keyboard.press('Escape')
  page.locator('.showcase-more .showcase-rates').first.click()
  assert page.locator('#availability-dialog').is_visible()
  assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='none'
@@ -183,6 +218,29 @@ with sync_playwright() as p:
  assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='solid'
  page.locator('#rate-dialog [data-close]').click()
  page.locator('[data-base="terreo:1"]').click();assert page.locator('#rate-dialog input[name="amount"]').input_value()=='100';page.locator('#rate-dialog [data-close]').click()
+ # The owner can add/remove each amenity and choose every reference icon.
+ page.locator('[data-tab="showcases"]').click()
+ page.locator('[data-edit-showcase="duplo"]').click()
+ options=page.locator('#showcase-icon-0 option').evaluate_all('(els)=>els.map(x=>x.value)')
+ assert set(['elevator','heating','kettle','bath','shower','safe','minibar','desk','wardrobe','paper','toiletries','no-smoking','hair-dryer','towels','tv','toilet','wifi','breakfast']).issubset(options)
+ page.locator('#showcase-add-amenity').click()
+ page.locator('[data-amenity-icon]').last.select_option('hair-dryer')
+ page.locator('[data-amenity-label]').last.fill('Secador de cabelo')
+ page.locator('[data-remove-amenity]').first.click()
+ page.locator('#showcase-save').click()
+ page.wait_for_selector('#showcase-editor:not([open])',state='attached')
+ saved=payloads[-1]
+ assert any(x['icon']=='hair-dryer' for x in saved['amenities'])
+ assert not any(x['icon']=='bath' for x in saved['amenities'])
+ page.goto('http://qa.test/quartos')
+ page.locator('[data-details="duplo"]').first.click()
+ assert page.locator('#details-facts').get_by_text('Secador de cabelo').is_visible()
+ assert 'Banheiro privativo' not in page.locator('#details-facts').inner_text()
+ page.keyboard.press('Escape')
+ page.locator('[data-details="triplo"]').first.click()
+ assert 'Secador de cabelo' not in page.locator('#details-facts').inner_text()
+ page.keyboard.press('Escape')
+ page.goto('http://qa.test/admin')
  page.locator('[data-tab="bookings"]').click();assert page.locator('[data-confirm="101"]').count()==0;page.locator('[data-assign="101"]').click();page.locator('#assignment-dialog [type="submit"]').click();page.wait_for_selector('[data-confirm="101"]')
  assert payloads[-1]['room_id']==15
  assert not errors,errors

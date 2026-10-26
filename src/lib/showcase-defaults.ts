@@ -1,5 +1,5 @@
 export type ShowcaseDetails = { beds?: string; description?: string; bathroom?: string[]; views?: string[]; amenities?: string[]; smoking?: string };
-export type Showcase = { slug: string; position: number; title: string; eyebrow: string; description: string; photos: {url: string; alt: string}[]; features: {icon: string; label: string}[]; details?: ShowcaseDetails; revision: number };
+export type Showcase = { amenities?: {icon: string; label: string}[] | null; slug: string; position: number; title: string; eyebrow: string; description: string; photos: {url: string; alt: string}[]; features: {icon: string; label: string}[]; details?: ShowcaseDetails; revision: number };
 
 export const showcaseDefaults: Showcase[] = [
   {
@@ -202,3 +202,9 @@ export const showcaseDefaults: Showcase[] = [
     }
   }
 ];
+
+// Breakfast is included in the stay, as confirmed by the property.
+for (const room of showcaseDefaults) {
+ if(!room.features.some(f=>f.icon==='breakfast'))room.features.push({icon:'breakfast',label:'Café da manhã incluso'});
+ if(room.details?.bathroom?.length&&!room.features.some(f=>f.icon==='bath'))room.features.push({icon:'bath',label:'Banheiro privativo'});
+}

@@ -314,3 +314,10 @@ Seletor compartilhado na home e catálogo em `stay-party.js`. Cada quarto tem pe
 `database/party-bookings.sql` separa total de pessoas, quantidade usada na capacidade e pagantes. Crianças de 0 a 6 anos são isentas; a partir de 7 anos entram na quantidade tarifada. Solicitações de vários quartos fazem bloqueios distintos em uma única transação, mantendo a atribuição física pelo proprietário. As idades e a composição ficam nos registros privados e no histórico autenticado. Preços ausentes ou demonstrativos não geram reservas. Verificações de dados sintéticos devem usar `database/test-party-bookings.sql` dentro de BEGIN/ROLLBACK.
 
 **Regra confirmada:** todas as crianças contam na lotação, inclusive as de até 6 anos que não pagam. Assim, 4 adultos e uma criança precisam de capacidade para pelo menos 5 pessoas.
+
+
+### Galeria clara e comodidades com ícones
+
+Fotos da home (inclusive miniaturas) e “Mais detalhes e fotos” no catálogo abrem uma galeria centralizada com foto grande, setas circulares, miniaturas, destaques e lista de comodidades em duas colunas. A galeria mantém reserva e preços no catálogo, sem seleção de refeições ou tarifa extra de café da manhã. O café da manhã incluso foi confirmado pelo usuário.
+
+Em **Conteúdo dos quartos**, o proprietário edita os destaques (0–16) e a lista completa de comodidades (0–32), escolhendo ícone e texto para cada item. Todos os ícones de referência são SVGs locais no catálogo `room-amenities.js`, sem dependência de fontes externas. A lista é persistida por apresentação em `lotus_private.room_showcases.amenities`; arrays vazios permanecem vazios, enquanto registros antigos sem esse campo usam seus detalhes existentes. O controle de revisão protege edições simultâneas e editores antigos preservam a nova lista. Fonte e teste em rollback: `database/room-amenity-icons.sql` e `database/test-room-amenity-icons.sql`.

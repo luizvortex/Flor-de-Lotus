@@ -119,7 +119,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       }
     }
     const isUpload = path === 'showcase-upload' && method === 'POST';
-    const data = method === 'GET' || isUpload ? {} : await body(request, path === 'policies' ? 65536 : ['site-content','site-preview'].includes(path) ? 200000 : 16384);
+    const data = method === 'GET' || isUpload ? {} : await body(request, path === 'policies' || path.startsWith('showcases/') ? 65536 : ['site-content','site-preview'].includes(path) ? 200000 : 16384);
     if (path === 'login' && method === 'POST') {
       const login = requiredText(data, 'email', 254).trim();
       const email = login.toLowerCase() === 'admin' ? (process.env.ADMIN_LOGIN_EMAIL || 'zilterpacheoni17@gmail.com') : login;
