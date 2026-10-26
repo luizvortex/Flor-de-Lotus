@@ -71,3 +71,9 @@ O usuário removeu a vinculação manual do painel administrativo. Não reintrod
 ## Organização do histórico de reservas
 
 Na aba Reservas, manter três painéis nesta ordem: pendentes, confirmadas e canceladas. As confirmadas são ordenadas pelo número no nome do quarto (ordem numérica, inclusive nomes como “Quarto 2”), depois nome/entrada/ID; unidades ainda não atribuídas ficam ao final. Usar cópias das listas, sem alterar o estado recebido. Seleção global e seleção de cada tabela são independentes e preservam seleções nos outros painéis. Bloqueios permanecem disponíveis em uma seção recolhível identificada, sem contar como reservas confirmadas. Testes: `scripts/test-booking-panels-browser.py` e `scripts/test-bulk-bookings-browser.py`.
+
+## Excursões e relatórios
+
+`/grupos` é a exceção explícita à reserva por categoria: o organizador escolhe quartos físicos dos dois andares e informa participantes por quarto. Não alterar a regra das reservas individuais. `database/excursions.sql` cria solicitações atômicas pendentes com vínculo Google, idempotência e capacidade/cotação autoritativas. Nomes acessíveis somente ao organizador com sessão viva ou administrador; não persistir dados pessoais no localStorage. A aba Grupos e excursões confirma/cancela grupos e gera lista privada para impressão/PDF somente após confirmação.
+
+`database/reports.sql` e `admin-reports.js` separam valor das reservas confirmadas (por entrada) de recebimentos manuais (pela data do dinheiro recebido). Registrar recebimento não cobra nem confirma a reserva. Anulação preserva histórico; reservas com recebimentos vinculados são preservadas por FK. Início da operação é configurável, não remove testes; nenhum dado existente foi apagado. Testes SQL sempre BEGIN/ROLLBACK. Estudo HQBeds em `docs/integracao-hqbeds.md`: API ainda não validada, nenhuma sincronização ativa.

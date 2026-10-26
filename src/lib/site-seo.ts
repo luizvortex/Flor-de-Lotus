@@ -10,6 +10,7 @@ export function applySiteSeo($: CheerioAPI, content: SiteContent, page: string) 
   reservas:['/quartos',`Quartos e disponibilidade | ${brand}`,'Conheça nossas acomodações em Itacaré, escolha as datas e consulte os valores e a disponibilidade para sua estadia.'],
   itacare:['/itacare',`${content.beaches.pageTitle} | ${brand}`,String(content.beaches.pageDescription)],
   avaliacoes:['/avaliacoes',`Avaliações dos hóspedes | ${brand}`,String(content.reviews.pageDescription)],
+  grupos:['/grupos',`Grupos e excursões | ${brand}`,'Organize os hóspedes por quarto e solicite a hospedagem do seu grupo ou excursão em Itacaré.'],
   pacotes:['/pacotes',`Pacotes e datas especiais | ${brand}`,'Conheça os pacotes de hospedagem da Flor de Lótus e consulte as condições para suas datas em Itacaré.'],
   'minha-conta':['/minha-conta',`Minha conta | ${brand}`,'Acompanhe suas solicitações, reservas e histórico de estadias.'],
   privacidade:['/privacidade',`Privacidade | ${brand}`,'Saiba como os dados da sua conta, contatos e solicitações de reserva são utilizados pela pousada.'],

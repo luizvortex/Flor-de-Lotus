@@ -1,3 +1,4 @@
+import {guestExcursionOperation} from './guest-excursions';
 import { NextRequest, NextResponse } from 'next/server';
 import { guestBookingOperation, hasGuestSession } from './guest-bookings';
 import { randomUUID } from 'node:crypto';
@@ -24,6 +25,7 @@ async function call(path: string, method: string, data?: Json, token?: string): 
   if (!response.ok) {
     const code = String(result.code || '');
     if (/^PT(400|401|403|404|409)$/.test(code)) throw new ApiError(Number(code.slice(2)), String(result.message));
+    if (code === '23503') throw new ApiError(409,'Esta reserva possui registros vinculados, como recebimentos, e deve ser preservada.');
     if (response.status === 429) throw new ApiError(429, 'Muitas tentativas. Aguarde antes de tentar novamente.');
     if (response.status === 401 || response.status === 403 || code === 'invalid_credentials') {
       throw new ApiError(401, 'E-mail ou senha incorretos, ou sessão encerrada.');
@@ -119,7 +121,7 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       }
     }
     const isUpload = path === 'showcase-upload' && method === 'POST';
-    const data = method === 'GET' || isUpload ? {} : await body(request, path === 'policies' || path.startsWith('showcases/') ? 65536 : ['site-content','site-preview'].includes(path) ? 200000 : 16384);
+    const data = method === 'GET' || isUpload ? {} : await body(request, path.startsWith('excursions') || path === 'policies' || path.startsWith('showcases/') ? 65536 : ['site-content','site-preview'].includes(path) ? 200000 : 16384);
     if (path === 'login' && method === 'POST') {
       const login = requiredText(data, 'email', 254).trim();
       const email = login.toLowerCase() === 'admin' ? (process.env.ADMIN_LOGIN_EMAIL || 'zilterpacheoni17@gmail.com') : login;
@@ -133,6 +135,14 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       rotated = tokens;
       return finish({ ok: true });
     }
+    if (path === 'excursions/rooms' && method === 'GET') {
+      return finish(await call('/rest/v1/rpc/lotus_excursion_api','POST',{p_operation:'rooms',p_data:{start:request.nextUrl.searchParams.get('start'),end:request.nextUrl.searchParams.get('end')}}));
+    }
+    if (path === 'excursions/quote' && method === 'POST') return finish(await call('/rest/v1/rpc/lotus_excursion_api','POST',{p_operation:'quote',p_data:data}));
+    if (path === 'excursions' && method === 'POST') return guestExcursionOperation(request,'create',data);
+    if (path === 'excursions/mine' && method === 'GET') return guestExcursionOperation(request,'mine');
+    const guestManifest=/^excursions\/([0-9a-f-]{36})\/manifest$/.exec(path);
+    if (guestManifest && method === 'GET') return guestExcursionOperation(request,'manifest',{id:guestManifest[1]});
     if (path === 'bookings' && method === 'POST' && !Object.hasOwn(data, 'status')) {
       if (!hasGuestSession(request)) throw new ApiError(401, 'Entre com Google para finalizar sua reserva.');
       delete data.id;
@@ -260,6 +270,16 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
     if (path === 'rates' && ['GET','POST','DELETE'].includes(method)) {
       if (!token) throw new ApiError(401, 'Entre no painel para editar valores.');
       return finish(await call('/rest/v1/rpc/lotus_rate_api', 'POST', { p_operation: method === 'GET' ? 'read' : method === 'DELETE' ? 'delete' : 'save', p_data: data }, token));
+    }
+    if ((path === 'reports' && method === 'GET') || (['reports/settings','reports/receipt','reports/void'].includes(path) && method === 'POST')) {
+      if (!token) throw new ApiError(401,'Entre no painel para consultar relatórios.');
+      const params=new URL(request.url).searchParams;
+      return finish(await call('/rest/v1/rpc/lotus_report_api','POST',{p_operation:path==='reports'?'read':path.split('/')[1],p_data:method==='GET'?{start:params.get('start')||'',end:params.get('end')||''}:data},token));
+    }
+    const excursionAction=/^admin-excursions\/([0-9a-f-]{36})\/(confirm|cancel|manifest)$/.exec(path);
+    if ((path === 'admin-excursions' && method === 'GET') || (excursionAction && ((method==='POST'&&excursionAction[2]!=='manifest')||(method==='GET'&&excursionAction[2]==='manifest')))) {
+      if (!token) throw new ApiError(401,'Entre no painel para gerenciar excursões.');
+      return finish(await call('/rest/v1/rpc/lotus_excursion_api','POST',{p_operation:excursionAction?.[2]||'admin',p_data:excursionAction?{id:excursionAction[1]}:{}},token));
     }
     if (path === 'bookings/bulk' && method === 'POST') {
       if (!token) throw new ApiError(401, 'Entre no painel para alterar reservas.');

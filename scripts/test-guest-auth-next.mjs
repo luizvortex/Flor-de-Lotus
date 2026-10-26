@@ -14,6 +14,10 @@ const mock = createServer(async (req, res) => {
  let raw='';for await(const chunk of req)raw+=chunk;
  const body=raw?JSON.parse(raw):{};
  const send=(status,data)=>{res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));};
+ if(req.url==='/rest/v1/rpc/lotus_excursion_api'){
+  if(req.headers.authorization!==`Bearer ${token}`||revoked)return send(401,{code:'PT401',message:'Entre com Google.'});
+  return send(200,body.p_operation==='mine'?{groups:[]}:{id,status:'pendente'});
+ }
  if(req.url==='/rest/v1/rpc/lotus_guest_booking_api'){
   if(req.headers.authorization!==`Bearer ${token}`||revoked)return send(401,{code:'PT401',message:'Entre com Google.'});
   if(body.p_operation==='read'){guestReads++;return send(200,{today:'2026-10-23',bookings:guestRows,notifications:[]});}
@@ -55,6 +59,11 @@ try{
  r=await call('/auth/callback?code=valid-code&next=https://malicious.invalid');assert.match(r.headers.get('Location'),new RegExp('^'+base.replaceAll('.','\\.')+'/minha-conta\\?conta=conectada$'));absorb(r);
  assert(r.headers.getSetCookie().some(c=>c.startsWith('lotus_guest_auth=')&&/HttpOnly/i.test(c)));assert(!r.headers.getSetCookie().some(c=>c.startsWith('lotus_access=')));
  r=await call('/api/guest/session');let result=await r.json();assert.equal(result.user.name,'Hóspede de teste');assert.equal(result.user.email,'guest@example.invalid');assert.equal(result.user.avatar_url,'https://lh3.googleusercontent.com/mock-avatar');assert(!JSON.stringify(result).includes(token));
+ for(const path of ['/api/excursions/mine','/api/excursions/'+id+'/manifest']) {
+  r=await call(path);assert.equal(r.status,200);assert.match(r.headers.get('Cache-Control'),/private.*no-store/);
+ }
+ r=await call('/api/excursions',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:JSON.stringify({request_id:id,rooms:[]})});assert.equal(r.status,201);
+ r=await call('/api/excursions',{method:'POST',headers:{Origin:'https://malicious.invalid','Content-Type':'application/json'},body:'{}'});assert.equal(r.status,403);
  unsafeAvatar=true;r=await call('/api/guest/session');assert.equal((await r.json()).user.avatar_url,null);unsafeAvatar=false;
  r=await call('/api/guest/bookings');assert.equal(r.status,200);assert.deepEqual((await r.json()).bookings,[]);assert.match(r.headers.get('Cache-Control'),/private.*no-store/);
  r=await call('/api/bookings',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:JSON.stringify({room_id:1,start:'2027-02-10',end:'2027-02-12',guests:2,guest:'Hóspede de teste',phone:'55000000000',user_id:'ignored'})});assert.equal(r.status,201);assert.equal((await r.json()).status,'pendente');
@@ -68,6 +77,7 @@ try{
  r=await call('/api/guest/logout',{method:'POST',headers:{Origin:base}});assert.equal(r.status,200);absorb(r);assert(revoked);assert(r.headers.getSetCookie().some(c=>/Max-Age=0/i.test(c)));
  r=await call('/api/guest/session');assert.equal((await r.json()).user,null);
  r=await call('/api/guest/bookings');assert.equal(r.status,401);
+ r=await call('/api/excursions/mine');assert.equal(r.status,401);
  r=await call('/auth/callback?error=access_denied&error_description=untrusted');assert.match(r.headers.get('Location'),/conta=erro/);assert(!r.headers.get('Location').includes('untrusted'));
  assert(exchanged>=1);console.log('Guest OAuth and bookings: PKCE, cookies, ownership adapter, booking link, notifications, logout, CSRF and admin isolation passed (mock Auth HTTP).');
 }finally{if(app.exitCode===null){app.kill();await once(app,'exit');}await new Promise(r=>mock.close(r));}

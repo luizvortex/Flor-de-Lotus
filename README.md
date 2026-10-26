@@ -339,3 +339,13 @@ Em **Reservas**, o histórico tem três painéis: pendentes, confirmadas e cance
 `POST /api/bookings/bulk` chama `lotus_bulk_booking_api`, cujo acesso exige administrador com sessão válida. A função privada valida todos os IDs, bloqueia as linhas em ordem e executa a ação em uma transação; seleção desatualizada rejeita o lote inteiro. Confirmar reaproveita o caminho de status existente, preservando tarifas e notificações. Excluir remove reservas canceladas e seus vínculos/notificações dependentes por cascade. Nenhuma reserva real é removida pela implantação da função.
 
 Fonte: `database/bulk-bookings.sql`. Verificações: `database/test-bulk-bookings.sql` dentro de BEGIN/ROLLBACK, `scripts/test-bulk-bookings-browser.py` com fixtures e `scripts/test-supabase-next.mjs` com servidor HTTP simulado.
+
+### Grupos, excursões e relatórios
+
+A home destaca grupos e direciona a `/grupos`. O organizador autenticado via Google informa datas, responsável e participantes por quarto físico, nos dois andares. Crianças até 6 anos não pagam e contam na capacidade. Solicitações são atômicas e pendentes, bloqueiam estoque e aparecem na aba **Grupos e excursões**. Após confirmação, organizador e equipe podem gerar lista por quarto para imprimir/salvar PDF. Cancelar libera estoque; nomes são privados.
+
+A aba **Relatórios e recebimentos** oferece filtros de datas, últimos 12/24 meses e desde o início. Reservas confirmadas são contabilizadas por entrada; diárias representam suas estadias completas. Recebimentos são lançamentos manuais datados, independentes de confirmação e sem cobrança automática. Anular preserva o histórico. Configure o início da operação para limitar relatórios; testes existentes não são excluídos e testes com entrada posterior continuam aparecendo até gestão explícita pelo proprietário.
+
+Aplicar `database/excursions.sql` após `party-bookings.sql` e `database/reports.sql`. Contratos em `database/test-excursions.sql` devem rodar dentro de BEGIN/ROLLBACK; navegador: `scripts/test-excursions-browser.py`. Estudo de integração externa e pendências do fornecedor: [HQBeds](docs/integracao-hqbeds.md).
+
+Verificação de segurança após a migração: nenhuma advertência sobre tabelas/funções novas. Permanece o aviso preexistente de [proteção contra senhas comprometidas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) na configuração do Supabase Auth.

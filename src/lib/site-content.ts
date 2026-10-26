@@ -86,5 +86,6 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
    const newBlock=$(`<section id="extra-${esc(block.id)}" class="cms-block cms-tone-${esc(block.tone)} cms-image-${esc(block.position)}"><div class="cms-block-inner">${block.image?`<img src="${esc(block.image)}" alt="${esc(block.alt)}" loading="lazy" width="900" height="650">`:''}<div><h2>${esc(block.title)}</h2><p class="cms-paragraph">${esc(block.description)}</p>${block.button&&block.url?`<a class="showcase-rates" href="${esc(block.url)}">${esc(block.button)}</a>`:''}</div></div></section>`);anchor.after(newBlock);anchor=newBlock;
   }
  }
+ $('#quartos').after($('#grupos-excursoes').remove());
  return $.html();
 }

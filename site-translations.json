@@ -1639,7 +1639,7 @@
     ],
     "Idade na entrada": [
       "Age at check-in",
-      "גיל בתאריך ההגעה"
+      "גיל בעת הצ׳ק-אין"
     ],
     "Escolha a saída": [
       "Choose check-out",
@@ -2312,6 +2312,206 @@
     "Esta página explica o uso de dados no site da Pousada Flor de Lótus, em Rua Hibisco, 33\nPraia da Concha · Itacaré, Bahia.": [
       "This page explains the use of data on the website of Pousada Flor de Lótus, at Rua Hibisco, 33\nPraia da Concha · Itacaré, Bahia.",
       "עמוד זה מסביר את השימוש בנתונים באתר של Pousada Flor de Lótus, בכתובת Rua Hibisco, 33\nPraia da Concha · Itacaré, Bahia."
+    ],
+    "VIAGENS QUE APROXIMAM": [
+      "TRIPS THAT BRING PEOPLE TOGETHER",
+      "טיולים שמקרבים בין אנשים"
+    ],
+    "Seu grupo tem lugar em Itacaré.": [
+      "Your group has a place in Itacaré.",
+      "יש מקום לקבוצה שלכם באיטקרה."
+    ],
+    "Recebemos grupos e excursões. Organize os hóspedes por quarto e combine sua estadia com a nossa equipe.": [
+      "We welcome groups and tours. Arrange guests by room and plan your stay with our team.",
+      "אנו מארחים קבוצות וטיולים מאורגנים. חלקו את האורחים לחדרים ותאמו את השהייה עם הצוות שלנו."
+    ],
+    "Planejar uma excursão →": [
+      "Plan a group trip →",
+      "לתכנון טיול קבוצתי ←"
+    ],
+    "Quartos nos dois andares": [
+      "Rooms on both floors",
+      "חדרים בשתי הקומות"
+    ],
+    "Lista de hóspedes por quarto": [
+      "Guest list by room",
+      "רשימת אורחים לפי חדר"
+    ],
+    "Grupos e excursões": [
+      "Groups and tours",
+      "קבוצות וטיולים מאורגנים"
+    ],
+    "VIAJAR JUNTO, CHEGAR COM TUDO ORGANIZADO": [
+      "TRAVEL TOGETHER, ARRIVE WITH EVERYTHING ARRANGED",
+      "נוסעים יחד, מגיעים כשהכול מאורגן"
+    ],
+    "Escolha as datas, distribua os hóspedes pelos quartos e envie a solicitação para a pousada conferir.": [
+      "Choose your dates, assign guests to rooms and send your request for the inn to review.",
+      "בחרו תאריכים, חלקו את האורחים לחדרים ושלחו בקשה לבדיקה על ידי צוות האכסניה."
+    ],
+    "Conta do organizador": [
+      "Organizer account",
+      "חשבון מארגן הקבוצה"
+    ],
+    "Já entrei, atualizar acesso": [
+      "I have signed in, refresh access",
+      "כבר התחברתי, רענון הגישה"
+    ],
+    "1. Datas e responsável": [
+      "1. Dates and organizer",
+      "1. תאריכים ואיש קשר"
+    ],
+    "Nome do grupo ou excursão": [
+      "Group or tour name",
+      "שם הקבוצה או הטיול"
+    ],
+    "Nome do responsável": [
+      "Organizer name",
+      "שם איש הקשר"
+    ],
+    "Ex.: Excursão de amigos": [
+      "E.g. Friends group trip",
+      "לדוגמה: טיול חברים"
+    ],
+    "Ver disponibilidade dos quartos": [
+      "Check room availability",
+      "בדיקת זמינות חדרים"
+    ],
+    "2. Distribuição dos hóspedes": [
+      "2. Guest room assignments",
+      "2. חלוקת האורחים לחדרים"
+    ],
+    "Selecione os quartos e informe o nome de cada pessoa.": [
+      "Select rooms and enter each guest’s name.",
+      "בחרו חדרים והזינו את השם של כל אורח."
+    ],
+    "Crianças de até 6 anos não pagam, mas contam na lotação. Informe a idade na entrada. Cada quarto deve ter pelo menos um adulto.": [
+      "Children aged 6 and under stay free but count toward room capacity. Enter their age at check-in. Each room must have at least one adult.",
+      "ילדים עד גיל 6 מתארחים ללא תשלום, אך נספרים בתפוסת החדר. ציינו את הגיל בעת הצ׳ק-אין. בכל חדר נדרש לפחות מבוגר אחד."
+    ],
+    "Consulte as datas para carregar os quartos.": [
+      "Check your dates to load the rooms.",
+      "בדקו תאריכים להצגת החדרים."
+    ],
+    "3. Conferir e solicitar": [
+      "3. Review and request",
+      "3. בדיקה ושליחת בקשה"
+    ],
+    "A solicitação fica pendente até a confirmação da pousada. Os quartos selecionados ficam bloqueados após o envio.": [
+      "Your request remains pending until the inn confirms it. Selected rooms are held after submission.",
+      "הבקשה ממתינה לאישור האכסניה. החדרים שנבחרו נשמרים לאחר השליחה."
+    ],
+    "Conferir orçamento do grupo": [
+      "Review group quote",
+      "בדיקת הצעת המחיר לקבוצה"
+    ],
+    "Enviar solicitação do grupo": [
+      "Submit group request",
+      "שליחת בקשה לקבוצה"
+    ],
+    "Meus grupos e excursões": [
+      "My groups and tours",
+      "הקבוצות והטיולים שלי"
+    ],
+    "Conta conectada. Você pode enviar a solicitação.": [
+      "Account connected. You can submit your request.",
+      "החשבון מחובר. ניתן לשלוח את הבקשה."
+    ],
+    "Entre com Google para enviar e acompanhar seu grupo. O acesso abre em outra aba.": [
+      "Sign in with Google to submit and track your group. Sign-in opens in another tab.",
+      "התחברו באמצעות Google לשליחת בקשה ולמעקב אחר הקבוצה. ההתחברות נפתחת בכרטיסייה אחרת."
+    ],
+    "Disponibilidade atualizada. Selecione os quartos do grupo.": [
+      "Availability updated. Select your group’s rooms.",
+      "הזמינות עודכנה. בחרו חדרים לקבוצה."
+    ],
+    "Disponível": [
+      "Available",
+      "זמין"
+    ],
+    "Indisponível no período": [
+      "Unavailable for these dates",
+      "לא זמין בתאריכים אלה"
+    ],
+    "Pessoas neste quarto": [
+      "People in this room",
+      "מספר אנשים בחדר"
+    ],
+    "Tipo": [
+      "Type",
+      "סוג"
+    ],
+    "Adulto": [
+      "Adult",
+      "מבוגר"
+    ],
+    "Criança": [
+      "Child",
+      "ילד"
+    ],
+    "Quarto / andar": [
+      "Room / floor",
+      "חדר / קומה"
+    ],
+    "Status": [
+      "Status",
+      "מצב"
+    ],
+    "Total da solicitação": [
+      "Request total",
+      "סכום הבקשה"
+    ],
+    "Confira os nomes e a distribuição antes de enviar.": [
+      "Check the names and room assignments before submitting.",
+      "בדקו את השמות ואת חלוקת החדרים לפני השליחה."
+    ],
+    "Orçamento conferido. Envie para a pousada analisar.": [
+      "Quote reviewed. Submit it for the inn to review.",
+      "הצעת המחיר נבדקה. שלחו אותה לבדיקת האכסניה."
+    ],
+    "Solicitação do grupo recebida": [
+      "Group request received",
+      "הבקשה לקבוצה התקבלה"
+    ],
+    "Aguarde a confirmação da pousada. Consulte a distribuição e o andamento em Meus grupos e excursões.": [
+      "Please wait for the inn’s confirmation. View assignments and progress under My groups and tours.",
+      "המתינו לאישור האכסניה. ניתן לצפות בחלוקה ובמצב הבקשה באזור הקבוצות והטיולים שלי."
+    ],
+    "Organizar outro grupo": [
+      "Organize another group",
+      "ארגון קבוצה נוספת"
+    ],
+    "Gerar lista de check-in": [
+      "Generate check-in list",
+      "יצירת רשימת צ׳ק-אין"
+    ],
+    "A lista para check-in será liberada após a confirmação do grupo.": [
+      "The check-in list will be available once the group is confirmed.",
+      "רשימת הצ׳ק-אין תהיה זמינה לאחר אישור הקבוצה."
+    ],
+    "Você ainda não enviou uma solicitação de grupo.": [
+      "You have not submitted a group request yet.",
+      "עדיין לא שלחתם בקשה לקבוצה."
+    ],
+    "Pendente": [
+      "Pending",
+      "ממתין"
+    ],
+    "Confirmada": [
+      "Confirmed",
+      "מאושר"
+    ],
+    "Cancelada": [
+      "Cancelled",
+      "מבוטל"
+    ],
+    "Confirmação parcial": [
+      "Partially confirmed",
+      "אישור חלקי"
+    ],
+    "Pular para organizar o grupo": [
+      "Skip to group planning",
+      "דילוג לתכנון הקבוצה"
     ]
   }
 }

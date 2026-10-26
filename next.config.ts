@@ -13,7 +13,7 @@ const config: NextConfig = {
   ]},{source:'/api/:path*',headers:[{key:'X-Robots-Tag',value:'noindex, nofollow'}]},{source:'/auth/:path*',headers:[{key:'X-Robots-Tag',value:'noindex, nofollow'}]}];},
   // The compatibility routes read these templates at runtime on Vercel.
   outputFileTracingIncludes: {
-    '/*': ['./index.html', './reservas.html', './admin.html', './avaliacoes.html', './minha-conta.html', './pacotes.html', './itacare.html','./informacoes.html'],
+    '/*': ['./grupos.html', './index.html', './reservas.html', './admin.html', './avaliacoes.html', './minha-conta.html', './pacotes.html', './itacare.html','./informacoes.html'],
   },
 };
 export default config;

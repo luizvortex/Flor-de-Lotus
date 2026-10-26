@@ -26,6 +26,15 @@ const mock = createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
   if (req.url.startsWith('/auth/v1/user')) return json(200, { email: 'admin@example.invalid' });
   if (req.url.startsWith('/storage/v1/object/lotus-showcase/')) return json(token === 'access-admin' ? 200 : 403, {});
+  if (req.url === '/rest/v1/rpc/lotus_excursion_api') {
+    if (['rooms','quote'].includes(data.p_operation)) return json(200,{rooms:[],total:0});
+    if(token!=='access-admin'||revoked)return json(401,{code:'PT401'});
+    return json(200,{groups:[],operation:data.p_operation});
+  }
+  if (req.url === '/rest/v1/rpc/lotus_report_api') {
+    if(token!=='access-admin'||revoked)return json(401,{code:'PT401'});
+    return json(200,{stats:{},operation:data.p_operation});
+  }
   if (req.url === '/rest/v1/rpc/lotus_bulk_booking_api') {
     if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
     return json(200,{ok:true,count:data.p_data.ids.length,action:data.p_data.action});
@@ -81,6 +90,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   assert(ready);
+  const home=await (await fetch(base)).text();assert(home.indexOf('id="grupos-excursoes"')>home.indexOf('id="quartos"'));
+  assert.equal((await fetch(base+'/grupos')).status,200);
   let r = await request('catalog'); assert.equal(r.status, 200); assert.deepEqual(await r.json(), { rooms: [], packages: [] });
   r = await request('admin'); assert.equal(r.status, 401);
   r = await request('rates'); assert.equal(r.status,401);
@@ -100,6 +111,23 @@ try {
   for (const cookie of setCookies) { assert.match(cookie, /httponly/i); assert.match(cookie, /samesite=strict/i); assert.match(cookie, /secure/i); }
   const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
   r = await request('admin', undefined, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  for (const path of ['admin-excursions','reports']) {
+    assert.equal((await request(path)).status,401);
+    r=await request(path,undefined,{headers:{Cookie:cookies}});assert.equal(r.status,200);assert.match(r.headers.get('cache-control'),/no-store/);
+  }
+  const excursionId='00000000-0000-4000-8000-000000000018';
+  for(const action of ['confirm','cancel']) {
+    r=await request('admin-excursions/'+excursionId+'/'+action,{}, {headers:{Cookie:cookies}});assert.equal(r.status,200);
+    assert.equal(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_excursion_api').data.p_operation,action);
+  }
+  r=await request('admin-excursions/'+excursionId+'/manifest',undefined,{headers:{Cookie:cookies}});assert.equal(r.status,200);
+  for(const path of ['reports/settings','reports/receipt','reports/void','admin-excursions/'+excursionId+'/confirm']) {
+    r=await request(path,{}, {headers:{Cookie:cookies,Origin:'https://malicious.invalid'}});assert.equal(r.status,403);
+  }
+  r=await request('reports?start=2026-01-01&end=2026-10-26',undefined,{headers:{Cookie:cookies}});assert.equal(r.status,200);
+  assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_report_api').data,{p_operation:'read',p_data:{start:'2026-01-01',end:'2026-10-26'}});
+  r=await request('excursions/rooms?start=2027-01-01&end=2027-01-02');assert.equal(r.status,200);
+  r=await request('excursions/quote',{rooms:[]});assert.equal(r.status,200);
   r = await request('bookings/bulk',{action:'confirm',ids:[101,102]},{headers:{Cookie:cookies}});assert.equal(r.status,200);
   assert.deepEqual(await r.json(),{ok:true,count:2,action:'confirm'});
   assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_bulk_booking_api').data,{p_data:{action:'confirm',ids:[101,102]}});
