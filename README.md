@@ -311,9 +311,9 @@ Verificação: executar `database/test-category-bookings.sql` dentro de `BEGIN`/
 
 Seletor compartilhado na home e catálogo em `stay-party.js`. Cada quarto tem pelo menos um adulto, número de crianças e idades na data da entrada (0–17). As idades são obrigatórias. A composição completa segue no parâmetro `party`, sem aceitar número de pagantes calculado pelo cliente.
 
-`database/party-bookings.sql` separa total de pessoas, quantidade usada na capacidade e pagantes. Crianças de 0 a 6 anos são isentas; a partir de 7 anos entram na quantidade tarifada. Solicitações de vários quartos fazem bloqueios distintos em uma única transação, mantendo a atribuição física pelo proprietário. As idades e a composição ficam nos registros privados e no histórico autenticado. Preços ausentes ou demonstrativos não geram reservas. Verificações de dados sintéticos devem usar `database/test-party-bookings.sql` dentro de BEGIN/ROLLBACK.
+`database/party-bookings.sql` separa total de pessoas, quantidade usada na capacidade e pagantes. Crianças de 0 a 5 anos são isentas; a partir de 6 anos entram na quantidade tarifada. Solicitações de vários quartos fazem bloqueios distintos em uma única transação, mantendo a atribuição física pelo proprietário. As idades e a composição ficam nos registros privados e no histórico autenticado. Preços ausentes ou demonstrativos não geram reservas. Verificações de dados sintéticos devem usar `database/test-party-bookings.sql` dentro de BEGIN/ROLLBACK.
 
-**Regra confirmada:** todas as crianças contam na lotação, inclusive as de até 6 anos que não pagam. Assim, 4 adultos e uma criança precisam de capacidade para pelo menos 5 pessoas.
+**Regra confirmada:** todas as crianças contam na lotação, inclusive as de até 5 anos que não pagam. Assim, 4 adultos e uma criança precisam de capacidade para pelo menos 5 pessoas.
 
 
 ### Galeria clara e comodidades com ícones
@@ -342,7 +342,7 @@ Fonte: `database/bulk-bookings.sql`. Verificações: `database/test-bulk-booking
 
 ### Grupos, excursões e relatórios
 
-A home destaca grupos e direciona a `/grupos`. O organizador autenticado via Google informa datas, responsável e participantes por quarto físico, nos dois andares. Crianças até 6 anos não pagam e contam na capacidade. Solicitações são atômicas e pendentes, bloqueiam estoque e aparecem na aba **Grupos e excursões**. Após confirmação, organizador e equipe podem gerar lista por quarto para imprimir/salvar PDF. Cancelar libera estoque; nomes são privados.
+A home destaca grupos e direciona a `/grupos`. O organizador autenticado via Google informa datas, responsável e participantes por quarto físico, nos dois andares. Crianças até 5 anos não pagam e contam na capacidade. Solicitações são atômicas e pendentes, bloqueiam estoque e aparecem na aba **Grupos e excursões**. Após confirmação, organizador e equipe podem gerar lista por quarto para imprimir/salvar PDF. Cancelar libera estoque; nomes são privados.
 
 A aba **Relatórios e recebimentos** oferece filtros de datas, últimos 12/24 meses e desde o início. Reservas confirmadas são contabilizadas por entrada; diárias representam suas estadias completas. Recebimentos são lançamentos manuais datados, independentes de confirmação e sem cobrança automática. Anular preserva o histórico. Configure o início da operação para limitar relatórios; testes existentes não são excluídos e testes com entrada posterior continuam aparecendo até gestão explícita pelo proprietário.
 

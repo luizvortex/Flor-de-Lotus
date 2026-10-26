@@ -12,7 +12,7 @@ def route(r):
  if path=='/api/guest/session':return r.fulfill(json=session)
  if path=='/api/excursions/rooms':return r.fulfill(json={'rooms':rooms})
  if path=='/api/excursions/quote':
-  data=r.request.post_data_json;return r.fulfill(json={'rooms':[dict(x,guests=len(x['people'])) for x in data['rooms']],'nights':1,'total':sum(sum(p['age'] is None or p['age']>6 for p in x['people']) for x in data['rooms'])*10000})
+  data=r.request.post_data_json;return r.fulfill(json={'rooms':[dict(x,guests=len(x['people'])) for x in data['rooms']],'nights':1,'total':sum(sum(p['age'] is None or p['age']>5 for p in x['people']) for x in data['rooms'])*10000})
  if path=='/api/excursions' and r.request.method=='POST':
   data=r.request.post_data_json;submitted.append(data);g=dict(id=data['request_id'],name=data['name'],guest=data['guest'],phone=data['phone'],start=data['start'],end=data['end'],status='pendente',guest_count=sum(len(x['people']) for x in data['rooms']),room_count=len(data['rooms']),rooms=[dict(x,room_name=str(x['room_id']),floor=rooms[x['room_id']-1]['floor'],booking_id=i+900,status='pendente',room_assigned=True) for i,x in enumerate(data['rooms'])]);groups.append(g);return r.fulfill(status=201,json=g)
  if path in ['/api/excursions/mine','/api/admin-excursions']:return r.fulfill(json={'groups':groups})
@@ -39,12 +39,12 @@ with ns['sync_playwright']() as p:
   for index in range(count):page.locator(f'[data-person-name="{room["id"]}"][data-person-index="{index}"]').fill(f'Person {room["id"]} {index}')
   total+=count
  assert total==60
- # A six-year-old still occupies one of the 60 places, while the quote excludes that child.
- page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child');page.locator('[data-person-age="1"][data-person-index="1"]').select_option('6')
+ # A five-year-old still occupies one of the 60 places, while the quote excludes that child.
+ page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child');page.locator('[data-person-age="1"][data-person-index="1"]').select_option('5')
  assert '60 pessoas' in page.locator('#group-counter').inner_text();page.locator('#group-quote').click();page.locator('#group-submit').wait_for(state='visible');assert '5.900,00' in page.locator('#group-quote-summary').inner_text()
  # Changing a name invalidates the previous quote.
  page.locator('[data-person-name="1"][data-person-index="0"]').fill('<img src=x onerror=alert(1)>');assert page.locator('#group-submit').is_hidden();page.locator('#group-quote').click();page.locator('#group-submit').click();page.locator('#group-form').wait_for(state='hidden');assert len(submitted)==1
- assert submitted[0]['rooms'][0]['people'][1]['age']==6 and submitted[0]['expected_total']==590000
+ assert submitted[0]['rooms'][0]['people'][1]['age']==5 and submitted[0]['expected_total']==590000
  assert any(rooms[x['room_id']-1]['floor']=='superior' for x in submitted[0]['rooms'])
  assert page.locator('[data-group-print]').count()==0
  assert page.locator('#group-mine img').count()==0,'Names must be escaped'

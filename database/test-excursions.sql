@@ -10,11 +10,11 @@ begin
  insert into lotus_private.occupancy_rates(floor,guests,amount) values('terreo',1,100),('terreo',2,200),('terreo',3,300),('terreo',4,400),('superior',1,150),('superior',2,250)
  on conflict(floor,guests) where start is null do update set amount=excluded.amount,example=false;
  perform set_config('request.jwt.claims','{}',true);
- payload:=jsonb_build_object('request_id',eid,'name','Synthetic excursion','guest','Synthetic organizer','phone','55000000000','start',starts,'end',starts+2,'rooms',jsonb_build_array(jsonb_build_object('room_id',rid1,'people','[{"name":"Adult Ground","age":null},{"name":"Free child","age":6}]'::jsonb),jsonb_build_object('room_id',rid2,'people','[{"name":"Adult Upper","age":null},{"name":"Paying child","age":7}]'::jsonb)),'expected_total',700);
+ payload:=jsonb_build_object('request_id',eid,'name','Synthetic excursion','guest','Synthetic organizer','phone','55000000000','start',starts,'end',starts+2,'rooms',jsonb_build_array(jsonb_build_object('room_id',rid1,'people','[{"name":"Adult Ground","age":null},{"name":"Free child","age":5}]'::jsonb),jsonb_build_object('room_id',rid2,'people','[{"name":"Adult Upper","age":null},{"name":"Paying child","age":6}]'::jsonb)),'expected_total',700);
  result:=public.lotus_excursion_api('quote',payload);assert (result->>'total')::integer=700,'Free child uses a bed, not a paying slot';
  begin perform public.lotus_excursion_api('create',payload);raise exception 'Anonymous create accepted';exception when sqlstate 'PT401' then null;end;
  begin perform public.lotus_excursion_api('admin');raise exception 'Anonymous admin accepted';exception when sqlstate 'PT401' then null;end;
- begin perform public.lotus_excursion_api('quote',jsonb_set(payload,'{rooms,0,people}','[{"name":"A","age":null},{"name":"B","age":null},{"name":"C","age":null},{"name":"D","age":null},{"name":"Child","age":6}]'));raise exception 'Free child over capacity accepted';exception when sqlstate 'PT400' then null;end;
+ begin perform public.lotus_excursion_api('quote',jsonb_set(payload,'{rooms,0,people}','[{"name":"A","age":null},{"name":"B","age":null},{"name":"C","age":null},{"name":"D","age":null},{"name":"Child","age":5}]'));raise exception 'Free child over capacity accepted';exception when sqlstate 'PT400' then null;end;
  perform set_config('request.jwt.claims',jsonb_build_object('sub',uid,'role','authenticated','session_id',sid)::text,true);
  begin perform public.lotus_excursion_api('create',payload||'{"expected_total":1}');raise exception 'Tampered quote accepted';exception when sqlstate 'PT409' then null;end;
  result:=public.lotus_excursion_api('create',payload);assert result->>'status'='pendente' and (result->>'room_count')::integer=2 and (result->>'guest_count')::integer=4;

@@ -21,7 +21,7 @@ def route(r):
    if fail_availability:return r.fulfill(status=503,json={'error':'Consulta temporariamente indisponível.'})
    if sold_out:return r.fulfill(status=200,json={'rooms':[],'nights':1})
    q=parse_qs(u.query)
-   party=json.loads(q.get('party',['[]'])[0]);base=10000*sum(r['adults']+sum(a>6 for a in r['children_ages']) for r in party) if party else int(q['guests'][0])*10000
+   party=json.loads(q.get('party',['[]'])[0]);base=10000*sum(r['adults']+sum(a>5 for a in r['children_ages']) for r in party) if party else int(q['guests'][0])*10000
    from datetime import date
    nights=(date.fromisoformat(q['end'][0])-date.fromisoformat(q['start'][0])).days
    data={'nights':nights,'rooms':[dict(x,total=None if missing_price else base*nights,starting_price=base,quote_example=False) for x in rooms if x['floor']==q['floor'][0] and x['capacity']>=int(q['guests'][0])]}

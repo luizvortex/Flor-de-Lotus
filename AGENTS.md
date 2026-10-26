@@ -46,7 +46,7 @@ O preço público agora vem de `lotus_private.occupancy_rates`, por andar, 1–6
 
 ## Adultos, crianças e quartos
 
-O seletor compartilhado separa adultos (18+) e crianças (0–17) por quarto e exige as idades na entrada. **Decisão explícita:** crianças de até 6 anos não pagam, mas TODAS contam na lotação. A tarifa usa adultos + crianças a partir de 7 anos. Nunca subtrair crianças isentas da capacidade física. Dados autoritativos passam pelo JSON `party`; o servidor recalcula total, lotação e pagantes. Múltiplos quartos são reservados atomicamente e vinculados por `booking_group`, com atribuição de cada unidade pelo proprietário. Fonte: `database/party-bookings.sql`; testes sintéticos em rollback: `database/test-party-bookings.sql`.
+O seletor compartilhado separa adultos (18+) e crianças (0–17) por quarto e exige as idades na entrada. **Decisão explícita:** crianças de até 5 anos não pagam, mas TODAS contam na lotação. A tarifa usa adultos + crianças a partir de 6 anos. Nunca subtrair crianças isentas da capacidade física. Dados autoritativos passam pelo JSON `party`; o servidor recalcula total, lotação e pagantes. Múltiplos quartos são reservados atomicamente e vinculados por `booking_group`, com atribuição de cada unidade pelo proprietário. Fonte: `database/party-bookings.sql`; testes sintéticos em rollback: `database/test-party-bookings.sql`.
 
 ## Galeria e ícones de comodidades
 

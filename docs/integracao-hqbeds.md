@@ -18,7 +18,7 @@ Não enviar senhas pessoais. Credenciais de integração devem ser específicas,
 
 ## Se houver API compatível
 
-1. Mapear os 18 quartos ativos, seus identificadores nos dois sistemas, categorias, andares, capacidades e tarifas por pagante. Não presumir que número do quarto é ID técnico. Preservar crianças de até 6 anos sem cobrança, mas contando na lotação.
+1. Mapear os 18 quartos ativos, seus identificadores nos dois sistemas, categorias, andares, capacidades e tarifas por pagante. Não presumir que número do quarto é ID técnico. Preservar crianças de até 5 anos sem cobrança, mas contando na lotação.
 2. Validar regras de pré-reserva, bloqueio de estoque e confirmação manual. A reserva pendente do site já bloqueia noites; confirmar como representar isso no HQBeds antes de vender em ambos.
 3. Consultar disponibilidade e preço autoritativos, criar a reserva uma única vez com identificador externo/idempotência e persistir o ID do fornecedor. Tratar falhas parciais: nunca mostrar sucesso sem saber se a reserva foi criada.
 4. Receber eventos autenticados, tratar duplicações, cancelamentos e mudanças de quarto. Usar fila de reprocessamento e reconciliação periódica; registrar divergências no painel sem expor dados de hóspedes em logs.

@@ -333,9 +333,9 @@
       "Copy this link and send it to your travel companions",
       "העתיקו את הקישור ושלחו אותו לשותפים שלכם לנסיעה"
     ],
-    "Crianças de até 6 anos não pagam, mas contam na lotação. Informe a idade na data da entrada.": [
-      "Children aged 6 and under stay free, but count towards room capacity. Enter their age on the check-in date.",
-      "ילדים עד גיל 6 מתארחים ללא תשלום, אך נכללים בתפוסת החדר. ציינו את גילם בתאריך ההגעה."
+    "Crianças de até 5 anos não pagam, mas contam na lotação. Informe a idade na data da entrada.": [
+      "Children aged 5 and under stay free, but count towards room capacity. Enter their age on the check-in date.",
+      "ילדים עד גיל 5 מתארחים ללא תשלום, אך נכללים בתפוסת החדר. ציינו את גילם בתאריך ההגעה."
     ],
     "Cultura do surfe": [
       "Surf culture",
@@ -2385,9 +2385,9 @@
       "Select rooms and enter each guest’s name.",
       "בחרו חדרים והזינו את השם של כל אורח."
     ],
-    "Crianças de até 6 anos não pagam, mas contam na lotação. Informe a idade na entrada. Cada quarto deve ter pelo menos um adulto.": [
-      "Children aged 6 and under stay free but count toward room capacity. Enter their age at check-in. Each room must have at least one adult.",
-      "ילדים עד גיל 6 מתארחים ללא תשלום, אך נספרים בתפוסת החדר. ציינו את הגיל בעת הצ׳ק-אין. בכל חדר נדרש לפחות מבוגר אחד."
+    "Crianças de até 5 anos não pagam, mas contam na lotação. Informe a idade na entrada. Cada quarto deve ter pelo menos um adulto.": [
+      "Children aged 5 and under stay free but count toward room capacity. Enter their age at check-in. Each room must have at least one adult.",
+      "ילדים עד גיל 5 מתארחים ללא תשלום, אך נספרים בתפוסת החדר. ציינו את הגיל בעת הצ׳ק-אין. בכל חדר נדרש לפחות מבוגר אחד."
     ],
     "Consulte as datas para carregar os quartos.": [
       "Check your dates to load the rooms.",

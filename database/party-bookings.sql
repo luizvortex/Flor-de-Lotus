@@ -21,9 +21,9 @@ begin
   for age in select value from jsonb_array_elements(ages) loop
    if jsonb_typeof(age) is distinct from 'number' then raise sqlstate 'PT400' using message='Informe a idade de cada criança na entrada.';end if;
    if age::numeric not between 0 and 17 or age::numeric<>trunc(age::numeric) then raise sqlstate 'PT400' using message='A idade das crianças deve ser de 0 a 17 anos.';end if;
-   if age::numeric>6 then paying:=paying+1;end if;
+   if age::numeric>5 then paying:=paying+1;end if;
   end loop;
-  -- Confirmed policy: every child counts toward room capacity, including free ages 0–6.
+  -- Confirmed policy: every child counts toward room capacity, including free ages 0–5.
   occupied:=adults+jsonb_array_length(ages);
   result:=result||jsonb_build_array(jsonb_build_object('adults',adults,'children_ages',ages,'total',adults+jsonb_array_length(ages),'paying',paying,'capacity',occupied));
  end loop;
