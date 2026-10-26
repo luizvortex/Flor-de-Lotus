@@ -120,7 +120,7 @@
  }
  function message(text,error=false){$('#message').textContent=text;$('#message').className=error?'error':'';}
  function query(){return {start:$('#checkin').value,end:$('#checkout').value,guests:Number($('#guests').value),package_id:$('#package').value||'',floor:$('#floor').value||''};}
- function focusSearch(){ $('#search').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});$('#checkin').focus({preventScroll:true}); }
+ function focusSearch(){ $('#search').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});$('#dates-trigger').focus({preventScroll:true});if($('#dates-trigger').getAttribute('aria-expanded')==='false')$('#dates-trigger').click(); }
  function categoryRooms(row,rooms){return rooms.filter(r=>row.slug==='duplo'?r.floor==='terreo':row.slug==='triplo'?r.floor==='superior':row.slug==='triplo-standard'?r.floor==='terreo'&&r.capacity>=3:row.slug==='familia'?r.capacity>=5:defaultSlug(r)===row.slug);}
  function rowsFor(row){return categoryRooms(row,lastQuery?available:inventory).sort((a,b)=>(lastQuery?a.total:a.price)-(lastQuery?b.total:b.price));}
  function applyCatalog(data){
@@ -162,6 +162,7 @@
  }
  function invalidate(){sequence++;controller?.abort();$('#rooms').removeAttribute('aria-busy');lastQuery=null;available=[];selection=null;$('#result-count').textContent='Escolha as datas, hóspedes e andar para consultar.';message('');render();$('#search [type="submit"]').disabled=false;}
  async function search(silent=false){
+  document.dispatchEvent(new Event('lotus:search-updated'));
   const q=query();if(!$('#search').reportValidity())return;
   if(q.end<=q.start){message('A saída deve ser depois da entrada.',true);return;}
   const request=++sequence;controller?.abort();controller=new AbortController();const button=$('#search [type="submit"]');button.disabled=true;

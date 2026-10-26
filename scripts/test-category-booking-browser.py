@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1]
+(ROOT/'work').mkdir(exist_ok=True)
 rooms=[dict(id=1,name='1',type='casal',price=10000,active=1,capacity=4,floor='terreo',presentation_slug='duplo'),dict(id=15,name='15',type='casal',price=12000,active=1,capacity=6,floor='superior',presentation_slug='duplo')]
 photo={'url':'/img casal/casal.jpg','alt':'Quarto'}
 showcases=[dict(slug=s,title=t,description='Quarto da pousada',photos=[photo]*3,features=[]) for s,t in [('duplo','Quarto Standard'),('triplo','Quarto Superior'),('triplo-standard','Quarto Triplo Standard'),('familia','Quarto Família')]]
@@ -41,10 +42,32 @@ with sync_playwright() as p:
  assert page.locator('#floor').get_attribute('required') is not None
  assert page.locator('#floor').input_value()==''
  assert page.locator('#floor option[value=""]').is_disabled()
+ # Date range picker: two months, pending selection, keyboard and responsive bounds.
+ from datetime import date,timedelta
+ start_date=date.fromisoformat(page.locator('#checkin').input_value())+timedelta(days=2)
+ end_date=start_date+timedelta(days=2)
+ page.locator('#dates-trigger').click()
+ assert page.locator('.calendar-month').count()==2
+ page.locator('#dates-picker').screenshot(path=str(ROOT/'work/stay-calendar.png'))
+ page.locator(f'[data-day="{start_date}"]:not([disabled])').click()
+ assert page.locator('#apply-dates').is_disabled()
+ page.locator(f'[data-day="{end_date}"]:not([disabled])').click()
+ assert '2 noites' in page.locator('#apply-dates').inner_text()
+ page.locator('#apply-dates').click()
+ assert page.locator('#checkin').input_value()==str(start_date)
+ assert page.locator('#checkout').input_value()==str(end_date)
+ assert page.locator('#dates-picker').is_hidden()
+ page.locator('#dates-trigger').click();page.keyboard.press('Escape')
+ assert page.locator('#dates-trigger').evaluate('(el)=>el===document.activeElement')
+
  for width in [320,390,1024,1440]:
   page.set_viewport_size({'width':width,'height':950})
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),f'overflow at {width}'
- page.locator('#floor').select_option('superior');page.locator('#guests').fill('6');page.locator('#search button').click()
+  page.locator('#dates-trigger').click()
+  rect=page.locator('#dates-picker').bounding_box()
+  assert rect['x']>=0 and rect['x']+rect['width']<=width+1,f'calendar overflow at {width}'
+  page.keyboard.press('Escape')
+ page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();page.locator('#guests').fill('6');page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
  page.wait_for_selector('[data-options="familia"]');page.locator('[data-options="familia"]').click();page.locator('[data-book-category="familia"]').click()
  assert 'Unidade' not in page.locator('#booking-summary').inner_text()
  page.locator('#guest').fill('Teste de fluxo');page.locator('#phone').fill('65999999999');page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
