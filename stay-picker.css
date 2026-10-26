@@ -26,3 +26,6 @@
 .rooms-page #search .stay-trigger{box-sizing:border-box;height:48px;min-height:48px;padding:4px 16px}
 .rooms-page #search .floor-control{box-sizing:border-box;height:48px;min-height:48px;padding:3px 12px}
 .rooms-page #search .floor-control #floor{min-height:22px;line-height:22px}
+
+/* Campos e botão formam uma única faixa no catálogo, inclusive ao empilhar. */
+.rooms-page #search{gap:0}
