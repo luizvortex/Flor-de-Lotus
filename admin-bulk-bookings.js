@@ -16,7 +16,7 @@
    button.textContent=`${button.dataset.bookingBulk==='confirm'?'Confirmar':'Excluir'} selecionadas${count?' ('+count+')':''}`;
   });
   host.querySelector('[data-booking-clear]').disabled=busy||!selected.size;
-  document.querySelectorAll('#content [data-confirm],#content [data-cancel],#content [data-assign],#content [data-link-guest],#content #refresh').forEach(button=>{
+  document.querySelectorAll('#content [data-confirm],#content [data-cancel],#content [data-assign],#content #refresh').forEach(button=>{
    if(busy&&!button.hasAttribute('data-bulk-disabled')){button.dataset.bulkDisabled=String(button.disabled);button.disabled=true;}
    else if(!busy&&button.hasAttribute('data-bulk-disabled')){button.disabled=button.dataset.bulkDisabled==='true';delete button.dataset.bulkDisabled;}
   });

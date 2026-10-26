@@ -63,3 +63,7 @@ A aba Reservas tem seleção múltipla em `admin-bulk-bookings.js`, carregado an
 ## Filtro do catálogo público
 
 Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Cinco ou seis pessoas em um quarto exibem apenas Família; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
+
+## Conta Google nas reservas
+
+O usuário removeu a vinculação manual do painel administrativo. Não reintroduzir “Vincular conta Google”, o diálogo ou orientações para o proprietário fazer esse vínculo. Reservas públicas exigem autenticação e já vinculam a conta Google na mesma transação de criação. Preservar os vínculos existentes e esse fluxo automático.
