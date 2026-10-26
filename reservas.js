@@ -165,7 +165,7 @@
   const priced=(lastQuery?available:inventory).map(r=>lastQuery?r.total:r.price).filter(n=>Number.isFinite(n)&&n>0);
   $('#from-price').hidden=!priced.length;$('#from-price').textContent=priced.length?`A partir de ${money(Math.min(...priced))}${lastQuery?' / estadia':' / noite'}`:'';
  }
- function invalidate(){sequence++;controller?.abort();$('#rooms').removeAttribute('aria-busy');lastQuery=null;available=[];selection=null;$('#result-count').textContent='Escolha as datas, hóspedes e andar para consultar.';message('');render();$('#search [type="submit"]').disabled=false;}
+ function invalidate(){sequence++;controller?.abort();$('#rooms').removeAttribute('aria-busy');lastQuery=null;available=[];selection=null;$('#result-count').textContent='';message('');render();$('#search [type="submit"]').disabled=false;}
  async function search(silent=false){
   document.dispatchEvent(new Event('lotus:search-updated'));
   const q=query();if(!window.stayParty.validate()||!$('#search').reportValidity())return;

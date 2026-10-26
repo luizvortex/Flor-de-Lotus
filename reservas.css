@@ -155,3 +155,5 @@ dialog::backdrop { background: #14201d80; }
 
 
 .no-availability{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#f3f0ea;text-align:center;padding:24px 20px;margin:0 0 28px;min-height:200px}.no-availability[hidden],.results-heading[hidden]{display:none}.no-availability-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#e4d9c6;color:#263b4b}.no-availability p{margin:0;font-size:13px;line-height:1.6;color:#172c34}.no-availability .gold-button{background:#b0966b;border:0;border-radius:0;font-size:12px;font-weight:600;padding:10px 24px;min-height:38px}.no-availability .gold-button:hover{background:#947a53}@media(max-width:600px){.no-availability{padding:24px 16px}.no-availability p{font-size:13px}}
+
+#result-count:empty{display:none}#refresh-rooms{margin-left:auto}
