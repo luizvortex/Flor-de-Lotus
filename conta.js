@@ -33,9 +33,32 @@
  const money=value=>(Number(value)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  const states={pendente:'Aguardando confirmação',confirmada:'Confirmada',cancelada:'Cancelada'};
  let requestId=0, pendingSession,bookingRequest;
+ function bookingWhatsapp(booking){
+  const destination=document.body.dataset.contactWhatsapp;
+  if(!/^\d{10,15}$/.test(destination||''))return '';
+  const floor={terreo:'Térreo',superior:'Piso superior'}[booking.floor];
+  const text=[
+   `Olá! Gostaria de falar sobre a reserva #${booking.id}.`,
+   `Status: ${states[booking.status]||booking.status}`,
+   `Hóspede: ${booking.guest}`,
+   `Contato: ${booking.phone}`,
+   `Acomodação: ${booking.presentation||booking.room_name}`,
+   `Quarto: ${booking.room_name}`,
+   floor?`Andar: ${floor}`:'',
+   `Entrada: ${date(booking.start)}, a partir das ${checkinTime.replace(':','h')} (Bahia)`,
+   `Saída: ${date(booking.end)}, até as ${checkoutTime.replace(':','h')} (Bahia)`,
+   `Estadia: ${booking.nights} noite(s) · ${booking.guests} hóspede(s)`,
+   booking.adults!==null&&booking.adults!==undefined?`Composição: ${booking.adults} adulto(s) e ${(booking.children_ages||[]).length} criança(s)${booking.children_ages?.length?' · idades: '+booking.children_ages.map(age=>age+' anos').join(', '):''}`:'',
+   booking.group_room_count>1?`Quarto ${booking.group_room_index} de ${booking.group_room_count} da solicitação`:'',
+   booking.package_name?`Pacote: ${booking.package_name}`:'',
+   `Total da reserva: ${money(booking.total)}`
+  ].filter(Boolean).join('\n');
+  return `https://wa.me/${destination}?${new URLSearchParams({text})}`;
+ }
  function bookingCard(booking){
+  const contact=bookingWhatsapp(booking);
   const completed=new Date(booking.checkout_at||booking.end+'T12:00:00-03:00').getTime()<=accountNow&&booking.status==='confirmada';
-  return `<article class="guest-booking"><div class="guest-booking-heading"><div><span class="guest-booking-number">Reserva #${esc(booking.id)}</span><h4>${esc(booking.presentation||booking.room_name)}</h4></div><span class="guest-booking-status ${esc(booking.status)}">${completed?'Estadia concluída':esc(states[booking.status]||booking.status)}</span></div><dl><div><dt>Entrada</dt><dd>${esc(date(booking.start))}<small>A partir das ${esc(checkinTime.replace(':','h'))} · horário da Bahia</small></dd></div><div><dt>Saída</dt><dd>${esc(date(booking.end))}<small>Até as ${esc(checkoutTime.replace(':','h'))} · horário da Bahia</small></dd></div><div><dt>Estadia</dt><dd>${esc(booking.nights)} noite(s) · ${esc(booking.guests)} hóspede(s)${booking.adults!==null&&booking.adults!==undefined?`<small>${esc(booking.adults)} adulto(s) · ${(booking.children_ages||[]).length} criança(s)${booking.children_ages?.length?' · idades: '+booking.children_ages.map(a=>esc(a)+' anos').join(', '):''}</small>`:''}${booking.group_room_count>1?`<small>Quarto ${esc(booking.group_room_index)} de ${esc(booking.group_room_count)} da sua solicitação</small>`:''}</dd></div><div><dt>Quarto</dt><dd>${esc(booking.room_name)}${booking.floor&&booking.floor!=='nao_informado'?`<small>${esc({terreo:'Térreo',superior:'Piso superior'}[booking.floor]||'')}</small>`:''}</dd></div><div><dt>Hóspede</dt><dd>${esc(booking.guest)}</dd></div><div><dt>Contato</dt><dd>${esc(booking.phone)}</dd></div><div><dt>Total da reserva</dt><dd>${esc(money(booking.total))}</dd></div>${booking.package_name?`<div><dt>Tarifa</dt><dd>${esc(booking.package_name)}</dd></div>`:''}</dl>${booking.status==='pendente'?'<p class="guest-booking-note">Aguarde a confirmação da equipe da pousada. Sua solicitação já bloqueia essas datas.</p>':''}<a class="guest-booking-contact" href="/#fale-conosco">Falar com a pousada sobre esta reserva</a></article>`;
+  return `<article class="guest-booking"><div class="guest-booking-heading"><div><span class="guest-booking-number">Reserva #${esc(booking.id)}</span><h4>${esc(booking.presentation||booking.room_name)}</h4></div><span class="guest-booking-status ${esc(booking.status)}">${completed?'Estadia concluída':esc(states[booking.status]||booking.status)}</span></div><dl><div><dt>Entrada</dt><dd>${esc(date(booking.start))}<small>A partir das ${esc(checkinTime.replace(':','h'))} · horário da Bahia</small></dd></div><div><dt>Saída</dt><dd>${esc(date(booking.end))}<small>Até as ${esc(checkoutTime.replace(':','h'))} · horário da Bahia</small></dd></div><div><dt>Estadia</dt><dd>${esc(booking.nights)} noite(s) · ${esc(booking.guests)} hóspede(s)${booking.adults!==null&&booking.adults!==undefined?`<small>${esc(booking.adults)} adulto(s) · ${(booking.children_ages||[]).length} criança(s)${booking.children_ages?.length?' · idades: '+booking.children_ages.map(a=>esc(a)+' anos').join(', '):''}</small>`:''}${booking.group_room_count>1?`<small>Quarto ${esc(booking.group_room_index)} de ${esc(booking.group_room_count)} da sua solicitação</small>`:''}</dd></div><div><dt>Quarto</dt><dd>${esc(booking.room_name)}${booking.floor&&booking.floor!=='nao_informado'?`<small>${esc({terreo:'Térreo',superior:'Piso superior'}[booking.floor]||'')}</small>`:''}</dd></div><div><dt>Hóspede</dt><dd>${esc(booking.guest)}</dd></div><div><dt>Contato</dt><dd>${esc(booking.phone)}</dd></div><div><dt>Total da reserva</dt><dd>${esc(money(booking.total))}</dd></div>${booking.package_name?`<div><dt>Tarifa</dt><dd>${esc(booking.package_name)}</dd></div>`:''}</dl>${booking.status==='pendente'?'<p class="guest-booking-note">Aguarde a confirmação da equipe da pousada. Sua solicitação já bloqueia essas datas.</p>':''}${contact?`<a class="guest-booking-contact" href="${esc(contact)}" target="_blank" rel="noopener noreferrer">Falar com a pousada sobre esta reserva</a>`:''}</article>`;
  }
  let accountNow,checkinTime='14:00',checkoutTime='12:00';
  async function loadBookings(id){
