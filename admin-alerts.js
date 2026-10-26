@@ -19,7 +19,7 @@
  }
  function chime(){
   if(!soundWanted||audio?.state!=='running')return;
-  [523.25,659.25,783.99].forEach((frequency,index)=>{const oscillator=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+index*.14;oscillator.type='sine';oscillator.frequency.value=frequency;gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(.075,start+.025);gain.gain.exponentialRampToValueAtTime(.001,start+.27);oscillator.connect(gain);gain.connect(audio.destination);oscillator.start(start);oscillator.stop(start+.3);});
+  [523.25,659.25,783.99].forEach((frequency,index)=>{const oscillator=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+index*.14;oscillator.type='sine';oscillator.frequency.value=frequency;gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(.3,start+.025);gain.gain.exponentialRampToValueAtTime(.001,start+.27);oscillator.connect(gain);gain.connect(audio.destination);oscillator.start(start);oscillator.stop(start+.3);});
  }
  dialog.querySelector('[data-alert-sound]').onclick=async()=>{
   try{
