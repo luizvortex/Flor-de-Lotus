@@ -22,6 +22,9 @@ export async function legacyPage(name: string, preview?:SiteContent): Promise<Re
     html = html.replace(/<!--ROOM_SHOWCASES_START-->[\s\S]*?<!--ROOM_SHOWCASES_END-->/, () => `<!--ROOM_SHOWCASES_START-->${content}<!--ROOM_SHOWCASES_END-->`);
   }
   if(contentPromise)html=renderSiteContent(html,await contentPromise,name);
+  if (!['admin','minha-conta'].includes(name) && !html.includes('src="/site-language.js"')) {
+    html = html.replace('</head>', '<link rel="stylesheet" href="/site-language.css"><script src="/site-language.js" defer></script></head>');
+  }
   return new Response(html, { headers: {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-store',

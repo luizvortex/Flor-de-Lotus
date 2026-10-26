@@ -51,3 +51,7 @@ O seletor compartilhado separa adultos (18+) e crianças (0–17) por quarto e e
 ## Galeria e ícones de comodidades
 
 As galerias da home e do catálogo usam `room-modal.css` e o catálogo local de SVGs em `room-amenities.js`. O proprietário escolhe os destaques (`features`, até 16) e as comodidades (`amenities`, até 32) em **Conteúdo dos quartos**. São listas independentes por apresentação; uma lista vazia é intencional e não deve ser reposta por fallback. `amenities=null` mantém a leitura dos detalhes antigos. Fotos, miniaturas e indicadores usam o álbum real, sem opções de refeições ou taxas de café. O usuário confirmou café da manhã incluso, adicionado uma vez aos destaques pela migração `database/room-amenity-icons.sql`. Ícones de elevador, aquecimento e outros ficam disponíveis para escolha, sem presumir que estejam presentes em todos os quartos.
+
+## Idiomas públicos
+
+`site-language.js` / `site-language.css`: português padrão, inglês e hebraico (`he` na interface, `iw` no Google Translate). Home tem seletor à direita de Contato/abaixo de Minha Conta e no menu móvel. `legacy-page.ts` injeta os assets nas outras páginas públicas; nunca em `/admin` ou `/minha-conta`. Preferência local `lotus-language`; Google só é carregado para traduzir. Preservar a atribuição e a barra do fornecedor e os domínios específicos da CSP. O conteúdo publicado no painel segue em português; a tradução não grava nem sobrescreve o CMS. Teste de integração simulado: `scripts/test-site-language-browser.py`.
