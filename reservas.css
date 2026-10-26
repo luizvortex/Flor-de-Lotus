@@ -62,6 +62,8 @@ input,select { width: 100%; min-width: 0; min-height: 46px; padding: 10px 12px; 
 .room-features i { color: #89714f; width: 18px; flex-shrink: 0; }
 .room-description { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
 .room-body .text-button { align-self: start; margin-bottom: 16px; }
+.room-body .room-details-link { display: inline-flex; align-items: center; gap: 3px; text-decoration: none; }
+.room-details-link svg { flex-shrink: 0; }
 .room-cost { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
 .room-cost small { display: block; color: var(--muted); font-size: 11px; }
 .room-price { font: 500 26px/1.4 'Playfair Display',serif; margin: 4px 0 14px; }
