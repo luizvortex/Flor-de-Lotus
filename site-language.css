@@ -1,4 +1,4 @@
-/* Local flag artwork; translation is loaded only after choosing another language. */
+/* Local flag artwork and local translation dictionary. */
 .site-language { position: relative; color: inherit; font: 400 11px/1.4 'DM Sans',sans-serif; text-align: start; letter-spacing: 0; text-transform: none; direction: ltr; }
 .site-language summary { display: flex; align-items: center; gap: 7px; min-height: 40px; padding: 8px 0; cursor: pointer; list-style: none; white-space: nowrap; }
 .site-language summary::-webkit-details-marker { display: none; }
@@ -11,11 +11,8 @@
 .language-options button:hover,.language-options button[aria-pressed="true"] { background: #f2eee5; }
 .language-check { margin-left: auto; visibility: hidden; color: #89714f; }
 [aria-pressed="true"]>.language-check { visibility: visible; }
-.language-credit { display: block; padding: 9px 10px 3px; border-top: 1px solid #e3dccc; font-size: 10px; color: #64736d !important; text-decoration: none; }
-.language-provider { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .language-status { position: fixed; inset: auto 16px 18px auto; max-width: min(340px,calc(100vw - 32px)); z-index: 4500; padding: 14px 18px; margin: 0; background: #fffdf9; color: #263d38; border: 1px solid #d7c9b0; box-shadow: 0 4px 22px #14262120; font: 13px/1.5 'DM Sans',sans-serif; }
 .language-status[hidden] { display: none; }
-.home-page #cabecalho.home-header { top: var(--translation-toolbar-offset,0px); }
 .home-header,.home-menu-top { direction: ltr; }
 .home-quick-nav { position: relative; padding-inline: 165px; }
 .home-language { position: absolute; right: 42px; top: 50%; transform: translateY(-50%); }
@@ -40,3 +37,5 @@ html[dir="rtl"] .home-nav-links { direction: rtl; }
  .mobile-language .language-options { right: auto; left: 0; }
  .public-language { right: 12px; bottom: 12px; }
 }
+html[lang="he"] :is(body,h1,h2,h3,h4,button,input,select,textarea){font-family:Arial,sans-serif}
+html[lang="he"] .home-hero-copy h1{font-family:'Playfair Display',Georgia,serif}

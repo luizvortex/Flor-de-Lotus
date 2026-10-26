@@ -54,7 +54,7 @@ As galerias da home e do catálogo usam `room-modal.css` e o catálogo local de 
 
 ## Idiomas públicos
 
-`site-language.js` / `site-language.css`: português padrão, inglês e hebraico (`he` na interface, `iw` no Google Translate). Home tem seletor à direita de Contato/abaixo de Minha Conta e no menu móvel. `legacy-page.ts` injeta os assets nas outras páginas públicas; nunca em `/admin` ou `/minha-conta`. Preferência local `lotus-language`; Google só é carregado para traduzir. Preservar a atribuição e a barra do fornecedor e os domínios específicos da CSP. O conteúdo publicado no painel segue em português; a tradução não grava nem sobrescreve o CMS. Teste de integração simulado: `scripts/test-site-language-browser.py`.
+`site-language.js` / `site-language.css` e `site-translations.json`: português padrão, inglês e hebraico (`he`). O widget Google Translate foi substituído por traduções locais após falhar no site público. Não reintroduzir a dependência, os cookies ou as permissões de CSP do Google Translate. A home tem seletor à direita de Contato/abaixo de Minha Conta e no menu móvel; `legacy-page.ts` injeta os assets nas outras páginas públicas, exceto `/admin` e `/minha-conta`. Preferência local `lotus-language`; dicionário carregado do próprio site; retorno ao português sem reload. Novos textos editoriais precisam receber versões no JSON; na ausência delas, preservar o português. A tradução não grava no CMS nem altera valores dos formulários. A aplicação observa conteúdo dinâmico, guarda os originais e mantém RTL em hebraico. Teste com traduções reais, sem provedor simulado: `scripts/test-site-language-browser.py`.
 
 ## Reservas em lote
 

@@ -324,11 +324,13 @@ Em **Conteúdo dos quartos**, o proprietário edita os destaques (0–16) e a li
 
 ### Idiomas nas páginas públicas
 
-O seletor do cabeçalho da home (e do menu no celular) oferece Português, English e עברית, com bandeiras SVG locais. As demais páginas públicas recebem o mesmo seletor discreto. Português é o idioma inicial; a preferência fica em `localStorage` (`lotus-language`). Hebraico usa `lang="he"` e `dir="rtl"`. Administração e Minha Conta não carregam o tradutor.
+O seletor do cabeçalho da home (e do menu no celular) oferece Português, English e עברית, com bandeiras SVG locais. As demais páginas públicas recebem o mesmo seletor. Português é o idioma inicial; a preferência fica em `localStorage` (`lotus-language`). Hebraico usa `lang="he"` e `dir="rtl"`. Administração e Minha Conta não carregam o tradutor.
 
-`site-language.js` carrega o Website Translator do Google somente ao escolher inglês/hebraico, para traduzir também conteúdo editorial alterado pelo proprietário. O fornecedor usa `iw` para hebraico. A atribuição Google Translate fica na lista e a barra do fornecedor é preservada; o cabeçalho acompanha seu deslocamento. Voltar ao português recarrega o HTML original com a URL atual. O serviço depende de acesso aos domínios Google autorizados especificamente na CSP; falha de carregamento apresenta nova tentativa sem marcar o idioma como aplicado. Não exige chave privada ou alteração do banco.
+`site-language.js` carrega `/site-translations.json?v=2` do próprio site ao escolher inglês/hebraico. O antigo widget Google Translate foi removido, junto com suas permissões na CSP; a implantação anterior não traduzia de forma confiável. A troca utiliza traduções locais dos textos públicos atuais, incluindo descrições, comodidades, avaliações, políticas e mensagens dos seletores. Um observador aplica o idioma ao conteúdo dinâmico. Datas, hóspedes, crianças e campos preenchidos preservam seus valores. Voltar ao português restaura o texto original sem recarregar a página.
 
-Verificação: `python3 scripts/test-site-language-browser.py` cobre bandeiras, posição, teclado, menu móvel, RTL, persistência entre páginas, retorno ao português e falha do provedor. O teste simula o Google; não comprova a qualidade nem a disponibilidade externa da tradução. Na rede do ambiente de desenvolvimento, `translate.google.com` foi bloqueado pelo proxy, sem tentativa de contorno.
+**Manutenção:** novas frases ou alterações editoriais no painel precisam ter versões em inglês e hebraico em `site-translations.json` (chave: texto em português; valor: `[inglês, hebraico]`). Textos ainda sem tradução permanecem no original; não há serviço de tradução automática. Formatos numéricos conhecidos, calendários e resumos dos hóspedes são tratados pelo cliente. Não usar traduções para alterar dados de reservas, URLs, preços numéricos ou conteúdo armazenado no CMS.
+
+Verificação: `python3 scripts/test-site-language-browser.py` usa o dicionário real, sem simular um tradutor. Cobre textos em inglês/hebraico, conteúdo criado depois do carregamento, controles de crianças, retorno ao português, formulário preservado, navegação, teclado e celular. A build Next.js também foi testada em HTTP com CSP ativa e conteúdo editorial público em fixture, sem chamadas a um serviço de tradução externo.
 
 ### Ações em lote no histórico de reservas
 
