@@ -59,3 +59,7 @@ As galerias da home e do catálogo usam `room-modal.css` e o catálogo local de 
 ## Reservas em lote
 
 A aba Reservas tem seleção múltipla em `admin-bulk-bookings.js`, carregado antes de `admin.js`. A seleção persiste nas atualizações; o refresh automático pausa enquanto há uma ação em andamento. `POST /api/bookings/bulk` / `database/bulk-bookings.sql` permitem confirmar somente pendentes com unidade atribuída e excluir definitivamente somente canceladas, até 100 IDs. A exclusão é iniciada pelo proprietário no painel, com confirmação; não executar sobre dados reais como teste. Toda a operação é atômica e exige `lotus_private.is_admin()` com sessão válida. Testes de banco sempre em rollback e fixtures sintéticas.
+
+## Filtro do catálogo público
+
+Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Cinco ou seis pessoas em um quarto exibem apenas Família; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.

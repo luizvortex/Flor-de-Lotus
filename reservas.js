@@ -163,11 +163,14 @@
  }
  function whatsappButton(title){const url=whatsappLink(title);return url?`<a class="text-button room-whatsapp" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Consultar a pousada no WhatsApp ↗</a>`:'';}
  function render(){
-  const noAvailability=Boolean(lastQuery&&available.length===0);
+  // Capacity applies per room, including children who are exempt from the rate.
+  const largestParty=lastQuery?Math.max(...JSON.parse(lastQuery.party).map(room=>room.adults+room.children_ages.length)):0;
+  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(largestParty<=4||s.slug==='familia')):showcases;
+  const noAvailability=Boolean(lastQuery&&showcases.length&&visibleShowcases.length===0);
   $('#no-availability').hidden=!noAvailability;
   $('.results-heading').hidden=noAvailability;
 
-  $('#rooms').innerHTML=showcases.length?showcases.map(s=>{
+  $('#rooms').innerHTML=showcases.length?visibleShowcases.map(s=>{
    const rows=rowsFor(s),best=rows[0],price=startingPrice(s);
    const label=lastQuery?(best?`Disponível para ${JSON.parse(lastQuery.party).length} quarto(s) · ${floorLabel(lastQuery.floor)}`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
    const cost=price!==null?money(price):(lastQuery&&best?'Valor sob consulta.':lastQuery?'Experimente outras datas.':'Consulte os valores com a pousada.');
@@ -175,7 +178,7 @@
    return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li>${window.roomAmenities.icon(f.icon)}<span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button room-details-link" data-details="${esc(s.slug)}">Mais detalhes<svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button><div class="room-cost"><small>${price!==null?'A partir de':'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button>${whatsappButton(s.title)}</div></div></article>`;
   }).join(''):'<p class="empty">Não foi possível carregar as acomodações. Atualize a consulta ou converse com a pousada.</p>';
   setupCarousels();
-  const priced=showcases.map(startingPrice).filter(n=>Number.isFinite(n)&&n>0);
+  const priced=visibleShowcases.map(startingPrice).filter(n=>Number.isFinite(n)&&n>0);
   $('#from-price').hidden=!priced.length;$('#from-price').textContent=priced.length?`A partir de ${money(Math.min(...priced))} / noite`:'';
  }
  function invalidate(){sequence++;controller?.abort();$('#rooms').removeAttribute('aria-busy');lastQuery=null;available=[];selection=null;$('#result-count').textContent='';message('');render();$('#search [type="submit"]').disabled=false;}
@@ -190,7 +193,7 @@
    if(request!==sequence)return;applyCatalog(catalog);lastQuery=q;available=data.rooms||[];nights=data.nights;render();
    $('#result-count').textContent=`Opções para ${plural(nights,'noite','noites')} · ${plural(q.guests,'hóspede','hóspedes')} · ${JSON.parse(q.party).length} quarto(s)${q.floor?' · '+floorLabel(q.floor):''}`;
    history.replaceState(null,'',location.pathname+'?'+new URLSearchParams(q));
-   if(!available.length)message('');else if(!silent)message('Disponibilidade atualizada. Escolha uma acomodação abaixo.');
+   if(!$('#no-availability').hidden)message('');else if(!silent)message('Disponibilidade atualizada. Escolha uma acomodação abaixo.');
   }catch(e){if(request!==sequence||e.name==='AbortError')return;lastQuery=null;available=[];render();$('#result-count').textContent='Disponibilidade ainda não confirmada.';message(e.message,true);}
   finally{if(request===sequence){button.disabled=false;$('#rooms').removeAttribute('aria-busy');}}
  }

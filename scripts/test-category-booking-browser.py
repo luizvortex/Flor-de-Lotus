@@ -124,7 +124,7 @@ with sync_playwright() as p:
   assert rect['x']>=0 and rect['x']+rect['width']<=width+1,f'calendar overflow at {width}'
   page.keyboard.press('Escape')
  page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(4)];page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
- page.wait_for_selector('[data-options="familia"]');page.locator('[data-options="familia"]').click();page.locator('[data-book-category="familia"]').click()
+ page.wait_for_selector('[data-options="familia"]');assert page.locator('.catalog-room').count()==1;page.locator('[data-options="familia"]').click();page.locator('[data-book-category="familia"]').click()
  assert 'Unidade' not in page.locator('#booking-summary').inner_text()
  page.locator('#guest').fill('Teste de fluxo');page.locator('#phone').fill('65999999999');page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
  assert payloads[0]['category_slug']=='familia' and 'room_id' not in payloads[0]
@@ -146,7 +146,7 @@ with sync_playwright() as p:
  page.wait_for_selector('#no-availability:not([hidden])')
  assert page.locator('.results-heading').is_hidden()
  assert page.locator('#message').inner_text()==''
- assert page.locator('.catalog-room').count()==4
+ assert page.locator('.catalog-room').count()==0
  for width in [320,1440]:
   page.set_viewport_size({'width':width,'height':950})
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
@@ -205,6 +205,7 @@ with sync_playwright() as p:
  assert query['start']==[expected_start] and query['end']==[expected_end] and query['guests']==['2'] and query['floor']==['superior']
  assert json.loads(query['party'][0])==[{'adults':1,'children_ages':[6]}]
  filtered.wait_for_selector('[data-options="familia"]')
+ assert filtered.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo','familia']
  assert filtered.locator('#floor').input_value()=='superior'
  assert filtered.locator('#guests').input_value()=='2'
  assert filtered.evaluate('window.stayParty.get()')==[{'adults':1,'children_ages':[6]}]
