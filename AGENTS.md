@@ -37,3 +37,9 @@ O usuário escolheu o projeto Supabase `asojfispuomhbfapqdmi` na conexão MCP Zi
 ## Conteúdo editável do site
 
 O painel `/admin` tem a aba **Editar site**, implementada em `admin-site.js`. O conteúdo é persistido no documento privado `lotus_private.site_content` (API pública de leitura editorial `lotus_site_api`) e aplicado no servidor por `src/lib/site-content.ts`, com validação descrita em `site-content-schema.ts`. O JSON `site-content-defaults.json` é somente o conteúdo inicial/fallback; após a primeira publicação, editar apenas textos/imagens de `index.html` não substitui o conteúdo salvo no painel. Preserve as publicações e o histórico; não resemeie nem sobrescreva o documento com os defaults. As imagens/vídeos enviados pelo editor ficam no bucket público `lotus-site`, com escrita administrativa por URL assinada. Os quartos continuam no editor e banco próprios. Veja README.md e `database/site-content.sql` para persistência, limites e testes.
+
+## Reserva por categoria e preços por ocupação
+
+O hóspede escolhe categoria, datas, hóspedes e andar obrigatório (térreo/superior). Não escolhe unidade física. Novas reservas por categoria fazem um bloqueio de estoque provisório e privado; o proprietário atribui a unidade pelo botão **Definir quarto**, antes de confirmar. Não mostrar esse bloqueio como uma escolha do hóspede. Preservar a constraint de exclusão e o total originalmente cotado.
+
+O preço público agora vem de `lotus_private.occupancy_rates`, por andar, 1–6 hóspedes e período, editável em **Diárias e temporadas**. Não voltar a usar `rooms.price` como tarifa pública. Os exemplos R$ 100/R$ 120 para uma pessoa são marcados `example` e não permitem reservar; faltam preços reais a preencher pelo proprietário. O catálogo mostra “a partir de” e explica variação por temporada/ocupação/andar. Não inventar os outros preços. Fontes: `database/occupancy-rates.sql`, `database/category-bookings.sql`.

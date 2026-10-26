@@ -294,3 +294,14 @@ No botão **Avisos** do administrador, ative o som por uma ação do usuário e 
 O destinatário dos alertas WhatsApp pode ser salvo no diálogo de Avisos e fica em configuração **privada**, não no conteúdo público do site. Salvar o número não ativa o envio. A API Business, remetente e modelo precisam ser conectados e validados em etapa posterior; não há credenciais, provedor ou worker de envio configurados nesta implementação, e nenhum WhatsApp foi enviado. As pendências também estão explicadas em Configuração e pendências. Não colocar segredos no editor público.
 
 Validação: `database/test-admin-booking-alerts.sql` executado com a instalação em transação revertida; verificou evento único, fila externa sem envio, leituras por administrador, cancelamento, telefone e acesso anônimo negado. `node scripts/test-site-editor.mjs --alerts-only` usa o Next real e serviços isolados para conferir contador 1/2, leitura, som, permissão, preservação de edição, destinatário privado, recarga, logout, CSRF e layout móvel. Som e notificações do sistema são simulados no teste; não disparam mensagens reais.
+
+
+### Reservas por categoria, andar e ocupação
+
+O catálogo mostra todas as apresentações. A consulta exige térreo ou piso superior. Standard usa estoque do térreo; Superior usa estoque do piso superior; Triplo Standard usa unidades térreas com capacidade mínima de três; Família usa unidades com capacidade mínima de cinco. As apresentações compartilham o estoque físico e nunca multiplicam vagas. O hóspede solicita uma categoria e andar, sem escolher uma unidade.
+
+`database/category-bookings.sql` mantém um bloqueio interno provisório de estoque com a constraint de exclusão existente. A reserva aparece como “A definir pela pousada” até o administrador usar **Definir quarto**. A atribuição verifica andar, categoria, capacidade e conflitos; preserva o total e é obrigatória antes de confirmar novas solicitações. Reservas anteriores permanecem atribuídas.
+
+**Diárias e temporadas** no painel cadastra valores por quarto/noite para cada andar e 1–6 hóspedes. Períodos substituem a diária padrão nas noites correspondentes (saída exclusiva), com proteção contra sobreposição e edições concorrentes. O catálogo informa “a partir de”; a consulta calcula as noites pela ocupação selecionada. `database/occupancy-rates.sql` inclui apenas os exemplos autorizados de R$ 100 (térreo) e R$ 120 (superior) para uma pessoa; são explicitamente demonstrativos e não permitem reservas. O proprietário deve substituí-los por preços reais e cadastrar as demais ocupações. Ausência de preço gera consulta à pousada, sem total fictício. Valores de reservas existentes não são recalculados.
+
+Verificação: executar `database/test-category-bookings.sql` dentro de `BEGIN`/`ROLLBACK` depois das duas fontes SQL acima. `python3 scripts/test-category-booking-browser.py` testa o catálogo e painel em Chromium com APIs simuladas, sem reservas reais.

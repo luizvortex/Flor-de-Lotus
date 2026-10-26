@@ -26,6 +26,16 @@ const mock = createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
   if (req.url.startsWith('/auth/v1/user')) return json(200, { email: 'admin@example.invalid' });
   if (req.url.startsWith('/storage/v1/object/lotus-showcase/')) return json(token === 'access-admin' ? 200 : 403, {});
+  if (req.url === '/rest/v1/rpc/lotus_assignment_api') {
+    if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
+    return json(200,{ok:true});
+  }
+  if (req.url === '/rest/v1/rpc/lotus_rate_api') {
+    if (data.p_operation === 'catalog') return json(200,{rooms:[],packages:[]});
+    if (data.p_operation === 'availability') return json(200,{rooms:[],nights:1});
+    if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
+    return json(200,{rates:[]});
+  }
   if (req.url === '/rest/v1/rpc/lotus_guest_booking_api') {
     if (token !== 'access-admin' || revoked) return json(401, { code:'PT401', message:'Entre no painel.' });
     assert.equal(data.p_operation,'link'); return json(200,{ok:true});
@@ -69,6 +79,8 @@ try {
   assert(ready);
   let r = await request('catalog'); assert.equal(r.status, 200); assert.deepEqual(await r.json(), { rooms: [], packages: [] });
   r = await request('admin'); assert.equal(r.status, 401);
+  r = await request('rates'); assert.equal(r.status,401);
+  r = await request('bookings/101/assignment',{room_id:5},{method:'PUT'});assert.equal(r.status,401);
   r = await request('session'); assert.deepEqual(await r.json(), { authenticated: false });
   r = await request('login', { email: 'admin@example.invalid', password: 'wrong' }); assert.equal(r.status, 401);
   const before = received.length;
@@ -83,6 +95,14 @@ try {
   for (const cookie of setCookies) { assert.match(cookie, /httponly/i); assert.match(cookie, /samesite=strict/i); assert.match(cookie, /secure/i); }
   const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
   r = await request('admin', undefined, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  r = await request('rates',undefined,{headers:{Cookie:cookies}});assert.equal(r.status,200);
+  r = await request('rates',{floor:'superior',guests:3,amount:25000,example:false},{headers:{Cookie:cookies}});assert.equal(r.status,200);
+  assert.equal(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_rate_api').data.p_data.amount,25000);
+  r = await request('availability?start=2026-11-10&end=2026-11-11&guests=3&floor=superior');assert.equal(r.status,200);
+  const quoteRequest=received.findLast(x=>x.data.p_operation==='availability');assert.equal(quoteRequest.path,'/rest/v1/rpc/lotus_rate_api');assert.equal(quoteRequest.data.p_data.guests,3);assert.equal(quoteRequest.data.p_data.floor,'superior');
+  r = await request('bookings/101/assignment',{room_id:15},{method:'PUT',headers:{Cookie:cookies}});assert.equal(r.status,200);
+  assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_assignment_api').data,{p_data:{booking_id:101,room_id:15}});
+
   r = await request('rooms', { name: 'Quarto de teste', type: 'casal', capacity: 2, price: 10000, active: 1, showcase_slug: 'triplo' }, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
   const roomSave = received.findLast(x => x.data.p_operation === 'save_room');
   assert.equal(roomSave.path, '/rest/v1/rpc/lotus_room_catalog_api'); assert.equal(roomSave.data.p_data.showcase_slug, 'triplo');

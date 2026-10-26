@@ -23,8 +23,6 @@
   pending?.abort();const controller=new AbortController();pending=controller;
   const timeout=setTimeout(()=>controller.abort(),15000);button.disabled=true;button.textContent='Consultando…';
   try{
-   const response=await fetch('/api/availability?'+query,{signal:controller.signal});
-   const result=await response.json();if(!response.ok)throw Error(result.error||'Não foi possível consultar as datas.');
    if(dialog.open&&pending===controller)location.assign('/quartos?'+query);
   }catch(e){if(dialog.open&&pending===controller)error.textContent=e.name==='AbortError'?'A consulta demorou mais que o esperado. Tente novamente.':e.message;}
   finally{clearTimeout(timeout);if(pending===controller){pending=null;reset();}}

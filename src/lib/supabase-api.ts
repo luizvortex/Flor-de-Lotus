@@ -36,7 +36,7 @@ async function call(path: string, method: string, data?: Json, token?: string): 
   return result;
 }
 function rpc(operation: string, data: Json, token?: string) {
-  const endpoint = ['catalog', 'availability', 'admin', 'save_room'].includes(operation) ? 'lotus_room_catalog_api' : 'lotus_api';
+  const endpoint = ['catalog','availability'].includes(operation) ? 'lotus_rate_api' : ['admin','save_room'].includes(operation) ? 'lotus_room_catalog_api' : 'lotus_api';
   return call(`/rest/v1/rpc/${endpoint}`, 'POST', { p_operation: operation, p_data: data }, token);
 }
 function setTokens(response: NextResponse, tokens: Tokens) {
@@ -255,6 +255,15 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       data.guests = params.has('guests') ? Number(params.get('guests')) : 1;
       data.floor = params.get('floor') || '';
       data.package_id = params.get('package_id') ? Number(params.get('package_id')) : null;
+    }
+    if (path === 'rates' && ['GET','POST','DELETE'].includes(method)) {
+      if (!token) throw new ApiError(401, 'Entre no painel para editar valores.');
+      return finish(await call('/rest/v1/rpc/lotus_rate_api', 'POST', { p_operation: method === 'GET' ? 'read' : method === 'DELETE' ? 'delete' : 'save', p_data: data }, token));
+    }
+    const assignment = /^bookings\/([1-9][0-9]*)\/assignment$/.exec(path);
+    if (assignment && method === 'PUT') {
+      if (!token) throw new ApiError(401, 'Entre no painel para definir o quarto.');
+      return finish(await call('/rest/v1/rpc/lotus_assignment_api', 'POST', { p_data: { booking_id: Number(assignment[1]), room_id: data.room_id } }, token));
     }
     const guestLink = /^bookings\/([1-9][0-9]*)\/account$/.exec(path);
     if (guestLink && method === 'PUT') {
