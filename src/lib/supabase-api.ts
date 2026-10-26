@@ -261,6 +261,13 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       if (!token) throw new ApiError(401, 'Entre no painel para editar valores.');
       return finish(await call('/rest/v1/rpc/lotus_rate_api', 'POST', { p_operation: method === 'GET' ? 'read' : method === 'DELETE' ? 'delete' : 'save', p_data: data }, token));
     }
+    if (path === 'bookings/bulk' && method === 'POST') {
+      if (!token) throw new ApiError(401, 'Entre no painel para alterar reservas.');
+      if (!['confirm','delete'].includes(String(data.action)) || !Array.isArray(data.ids) || data.ids.length < 1 || data.ids.length > 100 || data.ids.some(id => !Number.isSafeInteger(id) || Number(id) < 1 || Number(id) > 999999999) || new Set(data.ids).size !== data.ids.length) {
+        throw new ApiError(400, 'Selecione de 1 a 100 reservas válidas por ação.');
+      }
+      return finish(await call('/rest/v1/rpc/lotus_bulk_booking_api', 'POST', { p_data: { action: data.action, ids: data.ids } }, token));
+    }
     const assignment = /^bookings\/([1-9][0-9]*)\/assignment$/.exec(path);
     if (assignment && method === 'PUT') {
       if (!token) throw new ApiError(401, 'Entre no painel para definir o quarto.');

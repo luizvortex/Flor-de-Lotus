@@ -55,3 +55,7 @@ As galerias da home e do catálogo usam `room-modal.css` e o catálogo local de 
 ## Idiomas públicos
 
 `site-language.js` / `site-language.css`: português padrão, inglês e hebraico (`he` na interface, `iw` no Google Translate). Home tem seletor à direita de Contato/abaixo de Minha Conta e no menu móvel. `legacy-page.ts` injeta os assets nas outras páginas públicas; nunca em `/admin` ou `/minha-conta`. Preferência local `lotus-language`; Google só é carregado para traduzir. Preservar a atribuição e a barra do fornecedor e os domínios específicos da CSP. O conteúdo publicado no painel segue em português; a tradução não grava nem sobrescreve o CMS. Teste de integração simulado: `scripts/test-site-language-browser.py`.
+
+## Reservas em lote
+
+A aba Reservas tem seleção múltipla em `admin-bulk-bookings.js`, carregado antes de `admin.js`. A seleção persiste nas atualizações; o refresh automático pausa enquanto há uma ação em andamento. `POST /api/bookings/bulk` / `database/bulk-bookings.sql` permitem confirmar somente pendentes com unidade atribuída e excluir definitivamente somente canceladas, até 100 IDs. A exclusão é iniciada pelo proprietário no painel, com confirmação; não executar sobre dados reais como teste. Toda a operação é atômica e exige `lotus_private.is_admin()` com sessão válida. Testes de banco sempre em rollback e fixtures sintéticas.

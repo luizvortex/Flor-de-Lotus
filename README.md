@@ -329,3 +329,11 @@ O seletor do cabeçalho da home (e do menu no celular) oferece Português, Engli
 `site-language.js` carrega o Website Translator do Google somente ao escolher inglês/hebraico, para traduzir também conteúdo editorial alterado pelo proprietário. O fornecedor usa `iw` para hebraico. A atribuição Google Translate fica na lista e a barra do fornecedor é preservada; o cabeçalho acompanha seu deslocamento. Voltar ao português recarrega o HTML original com a URL atual. O serviço depende de acesso aos domínios Google autorizados especificamente na CSP; falha de carregamento apresenta nova tentativa sem marcar o idioma como aplicado. Não exige chave privada ou alteração do banco.
 
 Verificação: `python3 scripts/test-site-language-browser.py` cobre bandeiras, posição, teclado, menu móvel, RTL, persistência entre páginas, retorno ao português e falha do provedor. O teste simula o Google; não comprova a qualidade nem a disponibilidade externa da tradução. Na rede do ambiente de desenvolvimento, `translate.google.com` foi bloqueado pelo proxy, sem tentativa de contorno.
+
+### Ações em lote no histórico de reservas
+
+Em **Reservas**, selecione linhas ou use a caixa do cabeçalho. **Confirmar selecionadas** inclui apenas pendentes com quarto definido; **Excluir selecionadas** inclui apenas canceladas e exige confirmação de exclusão definitiva. Os contadores dos botões mostram quantas reservas se aplicam à ação. A seleção é preservada nas atualizações automáticas e as ações aceitam até 100 reservas por lote.
+
+`POST /api/bookings/bulk` chama `lotus_bulk_booking_api`, cujo acesso exige administrador com sessão válida. A função privada valida todos os IDs, bloqueia as linhas em ordem e executa a ação em uma transação; seleção desatualizada rejeita o lote inteiro. Confirmar reaproveita o caminho de status existente, preservando tarifas e notificações. Excluir remove reservas canceladas e seus vínculos/notificações dependentes por cascade. Nenhuma reserva real é removida pela implantação da função.
+
+Fonte: `database/bulk-bookings.sql`. Verificações: `database/test-bulk-bookings.sql` dentro de BEGIN/ROLLBACK, `scripts/test-bulk-bookings-browser.py` com fixtures e `scripts/test-supabase-next.mjs` com servidor HTTP simulado.

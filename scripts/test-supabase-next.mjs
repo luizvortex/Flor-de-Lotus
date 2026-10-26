@@ -26,6 +26,10 @@ const mock = createServer(async (req, res) => {
   if (req.url.startsWith('/auth/v1/logout')) { if (token === 'access-admin') revoked = true; return json(200, {}); }
   if (req.url.startsWith('/auth/v1/user')) return json(200, { email: 'admin@example.invalid' });
   if (req.url.startsWith('/storage/v1/object/lotus-showcase/')) return json(token === 'access-admin' ? 200 : 403, {});
+  if (req.url === '/rest/v1/rpc/lotus_bulk_booking_api') {
+    if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
+    return json(200,{ok:true,count:data.p_data.ids.length,action:data.p_data.action});
+  }
   if (req.url === '/rest/v1/rpc/lotus_assignment_api') {
     if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
     return json(200,{ok:true});
@@ -81,6 +85,7 @@ try {
   r = await request('admin'); assert.equal(r.status, 401);
   r = await request('rates'); assert.equal(r.status,401);
   r = await request('bookings/101/assignment',{room_id:5},{method:'PUT'});assert.equal(r.status,401);
+  r = await request('bookings/bulk',{action:'delete',ids:[1]});assert.equal(r.status,401);
   r = await request('session'); assert.deepEqual(await r.json(), { authenticated: false });
   r = await request('login', { email: 'admin@example.invalid', password: 'wrong' }); assert.equal(r.status, 401);
   const before = received.length;
@@ -95,6 +100,16 @@ try {
   for (const cookie of setCookies) { assert.match(cookie, /httponly/i); assert.match(cookie, /samesite=strict/i); assert.match(cookie, /secure/i); }
   const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
   r = await request('admin', undefined, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
+  r = await request('bookings/bulk',{action:'confirm',ids:[101,102]},{headers:{Cookie:cookies}});assert.equal(r.status,200);
+  assert.deepEqual(await r.json(),{ok:true,count:2,action:'confirm'});
+  assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_bulk_booking_api').data,{p_data:{action:'confirm',ids:[101,102]}});
+  r = await request('bookings/bulk',{action:'delete',ids:[103,104]},{headers:{Cookie:cookies}});assert.equal(r.status,200);
+  for(const payload of [{action:'delete',ids:[]},{action:'delete',ids:[1,1]},{action:'delete',ids:['1']},{action:'cancel',ids:[1]},{action:'delete',ids:Array.from({length:101},(_,i)=>i+1)}]){
+    const beforeBulk=received.filter(x=>x.path==='/rest/v1/rpc/lotus_bulk_booking_api').length;
+    r=await request('bookings/bulk',payload,{headers:{Cookie:cookies}});assert.equal(r.status,400);
+    assert.equal(received.filter(x=>x.path==='/rest/v1/rpc/lotus_bulk_booking_api').length,beforeBulk);
+  }
+  r=await request('bookings/bulk',{action:'delete',ids:[1]},{headers:{Cookie:cookies,Origin:'https://malicious.invalid'}});assert.equal(r.status,403);
   r = await request('rates',undefined,{headers:{Cookie:cookies}});assert.equal(r.status,200);
   r = await request('rates',{floor:'superior',guests:3,amount:25000,example:false},{headers:{Cookie:cookies}});assert.equal(r.status,200);
   assert.equal(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_rate_api').data.p_data.amount,25000);
