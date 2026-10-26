@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./main.css">
     <link rel="stylesheet" href="./inicio.css">
     <link rel="stylesheet" href="./quartos.css">
-    <link rel="stylesheet" href="./disponibilidade.css">
+    <link rel="stylesheet" href="./disponibilidade.css"><link rel="stylesheet" href="./stay-picker.css">
     <link rel="stylesheet" href="./galeria-pousada.css">
     <link rel="stylesheet" href="./conta.css">
     <link rel="stylesheet" href="./lazer.css">
@@ -151,7 +151,7 @@
       <p class="showcase-description">Seu descanso com o charme de Itacaré. Em 17 m², a cama de casal, o banheiro privativo e a varanda com vista para o jardim compõem um ambiente acolhedor para aproveitar a estadia.</p>
       <ul class="showcase-features" aria-label="Comodidades"><li><i class="bi bi-wifi" aria-hidden="true"></i><span>Conexão Wi-Fi de alta velocidade</span></li><li><i class="bi bi-tv" aria-hidden="true"></i><span>Smart TV para curtir seus streamings</span></li><li><i class="bi bi-snow" aria-hidden="true"></i><span>Clima agradável com Split silencioso</span></li><li><i class="bi bi-door-open" aria-hidden="true"></i><span>Varanda privativa com rede para relaxar</span></li></ul>
     </div>
-  <div class="showcase-more"><a class="showcase-rates" href="/quartos" target="_blank" rel="noopener">Ver tarifas<span class="visually-hidden"> (abre em nova aba)</span></a></div>
+  <div class="showcase-more"><a class="showcase-rates" href="/quartos" data-availability-open aria-haspopup="dialog" aria-controls="availability-dialog">Ver tarifas<span class="visually-hidden"> (abrir consulta de disponibilidade)</span></a></div>
 </article><!--ROOM_SHOWCASES_END-->
             </div>
             <div class="room-wave" aria-hidden="true">
@@ -162,9 +162,12 @@
         </section>
         <dialog id="availability-dialog" class="availability-dialog" aria-labelledby="availability-title">
         <div class="availability-heading"><h2 id="availability-title">Escolha as datas para ver os preços</h2><button type="button" data-availability-close aria-label="Fechar consulta">×</button></div>
-        <form><div class="availability-dates"><label>Entrada<input type="date" name="start" required></label><label>Saída<input type="date" name="end" required></label></div>
-        <label>Hóspedes<input type="number" name="guests" min="1" max="20" value="2" required></label>
-        <p>Consulte as acomodações disponíveis para uma estadia em um quarto.</p><p role="alert"></p><button type="submit">Ver disponibilidade</button></form>
+<section class="search-panel" aria-label="Consultar disponibilidade"><form id="search" action="/quartos" method="get" target="_blank" rel="noopener">
+ <div class="stay-control dates-control"><button class="stay-trigger" id="dates-trigger" type="button" aria-expanded="false" aria-controls="dates-picker"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="1"/><path d="M8 3v4m8-4v4M4 10h16"/></svg><span><small>Datas</small><strong id="dates-summary">Escolha as datas</strong></span></button><input type="date" id="checkin" name="start" required hidden><input type="date" id="checkout" name="end" required hidden>
+ <div id="dates-picker" class="stay-popover calendar-popover" role="dialog" aria-label="Escolha entrada e saída" hidden><div class="calendar-nav"><button type="button" data-calendar-prev aria-label="Mês anterior">‹</button><p id="calendar-instruction" aria-live="polite">Escolha a entrada</p><button type="button" data-calendar-next aria-label="Próximo mês">›</button></div><div class="calendar-months" id="calendar-months"></div><div class="calendar-footer"><span id="calendar-range-status" role="status"></span><button type="button" id="apply-dates" class="gold-button">Selecionar datas</button></div></div></div>
+ <div class="stay-control guests-control"><button class="stay-trigger" id="guests-trigger" type="button" aria-expanded="false" aria-controls="guests-picker"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M5 21v-3a7 7 0 0 1 14 0v3Z"/></svg><span><small>Hóspedes</small><strong id="guests-summary">2 hóspedes, 1 quarto</strong></span><svg class="stay-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div id="guests-picker" class="stay-popover guests-popover" role="dialog" aria-label="Quantidade de hóspedes" hidden><div class="guest-stepper"><label for="guests">Hóspedes<small>Até 6 pessoas por quarto</small></label><button type="button" data-guests-step="-1" aria-label="Diminuir hóspedes">−</button><input type="number" id="guests" name="guests" min="1" max="6" value="2" required aria-label="Quantidade de hóspedes"><button type="button" data-guests-step="1" aria-label="Aumentar hóspedes">+</button></div><p>1 quarto</p><button type="button" id="apply-guests" class="gold-button">Aplicar</button></div></div>
+ <div class="stay-control floor-control"><label for="floor">Andar</label><select id="floor" name="floor" required><option value="" disabled selected>Selecione o andar</option><option value="terreo">Térreo</option><option value="superior">Piso superior</option></select></div><p role="alert" class="availability-error"></p><button class="gold-button stay-search" type="submit">Ver disponibilidade</button>
+</form></section>
     </dialog>
     <dialog id="showcase-album" class="showcase-album" aria-labelledby="showcase-album-title">
             <div class="showcase-album-header"><h2 id="showcase-album-title">Fotos do quarto</h2><button type="button" class="showcase-album-close" aria-label="Fechar detalhes do quarto">×</button></div>
@@ -577,7 +580,7 @@
     </main>
     <script src="./inicio.js"></script>
     <script src="./quartos.js"></script>
-    <script src="./disponibilidade.js"></script>
+    <script src="./disponibilidade.js"></script><script src="./stay-picker.js"></script>
     <script src="./galeria-pousada.js"></script>
     <script src="./conta.js"></script>
     <script src="./lazer.js"></script>

@@ -15,3 +15,15 @@
 .availability-dialog button:disabled { opacity: .6; cursor: wait; }
 .availability-dialog :focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 @media(max-width:380px) { .availability-heading,.availability-dialog form { padding: 16px; } .availability-heading h2 { font-size: 18px; } .availability-dates { grid-template-columns: 1fr; gap: 0; } }
+
+.availability-dialog{width:min(540px,calc(100% - 24px));border-radius:0;background:#fff;overflow-y:auto}
+.availability-heading{padding:16px 20px}.availability-heading h2{font-size:16px;font-weight:500;text-align:center;flex:1}.availability-heading button{width:28px;height:28px;font-size:18px}
+.availability-dialog .search-panel{padding:18px 16px 12px;margin:0}.availability-dialog #search{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:0}
+.availability-dialog .stay-trigger{min-height:58px}.availability-dialog .floor-control{min-height:58px}.availability-dialog .floor-control>label{display:block;margin:0;font-size:11px;gap:0}.availability-dialog #floor{width:100%;color:var(--ink);font-family:inherit;cursor:pointer}
+.availability-dialog .stay-popover{position:relative;top:auto;left:auto;max-width:100%;width:100%;box-sizing:border-box;box-shadow:none;padding:10px;margin-top:4px}
+.availability-dialog .calendar-months{gap:12px}.availability-dialog .calendar-month h3{font-size:11px}.availability-dialog .calendar-days>button{height:30px;font-size:10px}.availability-dialog .calendar-nav>p{font-size:11px}
+.availability-dialog .guest-stepper label{display:block;gap:0;margin:0}.availability-dialog .guest-stepper input{border:0;border-radius:0;background:transparent;font-family:inherit}.availability-dialog .guest-stepper>button{padding:0}
+.availability-dialog #search .stay-search{grid-column:1/-1;background:#b0966b;margin-top:8px;min-height:42px;font-size:12px;white-space:normal}
+.availability-dialog .availability-error{margin:0}.availability-dialog .availability-error:empty{display:none}.availability-dialog .stay-popover p{margin:0}
+.availability-dialog button:disabled{cursor:default}.availability-dialog [type="submit"]:disabled{cursor:wait}
+@media(max-width:600px){.availability-dialog .calendar-days>button{height:34px}.availability-dialog .calendar-month h3{font-size:12px}}

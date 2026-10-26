@@ -33,6 +33,7 @@ def route(r):
  p=ROOT/unquote(path).lstrip('/')
  if path in ['/quartos','/reservas']:p=ROOT/'reservas.html'
  if path=='/admin':p=ROOT/'admin.html'
+ if path=='/':p=ROOT/'index.html'
  if p.is_file():
   mime={'.html':'text/html','.js':'application/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp'}.get(p.suffix,'application/octet-stream')
   return r.fulfill(body=p.read_bytes(),content_type=mime)
@@ -95,6 +96,36 @@ with sync_playwright() as p:
  page.locator('#search [type="submit"]').click()
  page.wait_for_selector('#message.error')
  assert page.locator('#no-availability').is_hidden()
+ # Home tariffs open the same picker and a new tab with all filters.
+ sold_out=False;fail_availability=False
+ page.goto('http://qa.test/')
+ page.locator('.showcase-more .showcase-rates').first.click()
+ assert page.locator('#availability-dialog').is_visible()
+ assert page.locator('#floor').input_value()==''
+ assert not page.locator('#search').evaluate('(form)=>form.checkValidity()')
+ for width in [320,390,1440]:
+  page.set_viewport_size({'width':width,'height':950})
+  rect=page.locator('#availability-dialog').bounding_box()
+  assert rect['x']>=0 and rect['x']+rect['width']<=width+1
+  page.locator('#dates-trigger').click()
+  assert page.locator('#dates-picker').is_visible()
+  assert page.locator('#availability-dialog').evaluate('(el)=>el.scrollWidth<=el.clientWidth')
+  page.keyboard.press('Escape')
+  assert page.locator('#availability-dialog').is_visible()
+ page.locator('#floor').select_option('superior')
+ page.locator('#guests-trigger').click();page.locator('#guests').fill('6');page.locator('#apply-guests').click()
+ expected_start=page.locator('#checkin').input_value();expected_end=page.locator('#checkout').input_value()
+ with context.expect_page() as new_tab:
+  page.locator('#search [type="submit"]').click()
+ filtered=new_tab.value;filtered.wait_for_load_state()
+ from urllib.parse import urlparse,parse_qs
+ query=parse_qs(urlparse(filtered.url).query)
+ assert query=={'start':[expected_start],'end':[expected_end],'guests':['6'],'floor':['superior']}
+ filtered.wait_for_selector('[data-options="familia"]')
+ assert filtered.locator('#floor').input_value()=='superior'
+ assert filtered.locator('#guests').input_value()=='6'
+ assert page.url=='http://qa.test/' and page.locator('#availability-dialog').is_hidden()
+ filtered.close()
  page.goto('http://qa.test/admin');page.wait_for_selector('[data-tab="rates"]');page.locator('[data-tab="rates"]').click();page.wait_for_selector('[data-base="superior:6"]')
  assert page.locator('[data-base]').count()==12
  page.locator('[data-base="terreo:1"]').click();assert page.locator('#rate-dialog input[name="amount"]').input_value()=='100';page.locator('#rate-dialog [data-close]').click()

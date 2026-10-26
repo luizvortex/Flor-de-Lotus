@@ -44,6 +44,6 @@ export function renderShowcases(rows: Showcase[]): string {
       <p class="showcase-description">${escape(row.description)}</p>
       <ul class="showcase-features" aria-label="Comodidades">${row.features.map(feature => `<li><i class="bi bi-${escape(feature.icon)}" aria-hidden="true"></i><span>${escape(feature.label)}</span></li>`).join('')}</ul>
     </div>
-    ${index < rows.length - 1 ? mobileRoomWave : '<div class="showcase-more"><a class="showcase-rates" href="/quartos" target="_blank" rel="noopener">Ver tarifas<span class="visually-hidden"> (abre em nova aba)</span></a></div>'}
+    ${index < rows.length - 1 ? mobileRoomWave : '<div class="showcase-more"><a class="showcase-rates" href="/quartos" data-availability-open aria-haspopup="dialog" aria-controls="availability-dialog">Ver tarifas<span class="visually-hidden"> (abrir consulta de disponibilidade)</span></a></div>'}
   </article>`).join('\n');
 }
