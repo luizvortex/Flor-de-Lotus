@@ -54,7 +54,7 @@
  form.onsubmit=async event=>{
   event.preventDefault();if(!form.reportValidity())return;
   const data=payload();if(!data.rooms.length){message('Selecione pelo menos um quarto.',true);return;}
-  if(data.rooms.length>18){message('Selecione até 18 quartos.',true);return;}
+  if(data.rooms.length>19){message('Selecione até 19 quartos.',true);return;}
   if(availabilityKey!==data.start+'|'+data.end){message('Atualize a disponibilidade após mudar as datas.',true);return;}
   if(selectedRooms().some(room=>!room.available)){message('Desmarque os quartos sem disponibilidade para este período.',true);return;}
   const version=draftVersion;$('#group-quote').disabled=true;message('Conferindo o orçamento…');

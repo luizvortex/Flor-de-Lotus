@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 import copy
 source=Path(__file__).with_name('test-category-booking-browser.py').read_text().split('with sync_playwright() as p:')[0]
 ns={'__file__':str(Path(__file__).with_name('test-category-booking-browser.py'))};exec(source,ns)
-rooms=[dict(id=i,name=str(i),floor='terreo' if i<=7 or i in [16,17,18] else 'superior',capacity=6 if i in [15,18] else 2 if i in [16,17] else 4,available=True) for i in range(1,19)]
+rooms=[dict(id=i,name=str(i),floor='terreo' if i<=7 or i in [16,17,18,19] else 'superior',capacity=5 if i in [15,19] else 2 if i in [16,17] else 4 if i==18 else 3,available=True) for i in range(1,20)]
 groups=[];submitted=[];session={'user':{'name':'Synthetic organizer'},'google_enabled':True};original=ns['route']
 def route(r):
  path=urlparse(r.request.url).path
@@ -28,7 +28,7 @@ def route(r):
  return original(r)
 with ns['sync_playwright']() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--unsafely-treat-insecure-origin-as-secure=http://qa.test']);context=browser.new_context(viewport={'width':1440,'height':1000});context.route('**/*',route);page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
- page.goto('http://qa.test/grupos');page.locator('[data-room-select="18"]').wait_for();assert page.locator('[data-room-select]').count()==18
+ page.goto('http://qa.test/grupos');page.locator('[data-room-select="18"]').wait_for();assert page.locator('[data-room-select]').count()==19
  assert page.locator('#group-refresh-session').is_hidden() and page.locator('#group-login-form').is_hidden()
  assert page.locator('#group-account').is_visible()
  assert page.locator('#group-organizer-name').inner_text()=='Synthetic organizer'
@@ -56,7 +56,7 @@ with ns['sync_playwright']() as p:
  phone.fill('(73) 9 1234-5678');assert phone.input_value()=='(73) 9 1234-5678'
  phone.fill('73abc912345678');assert phone.input_value()=='(73) 9 1234-5678'
  page.locator('#group-name').fill('Synthetic excursion')
- # Sixteen rooms with four occupants plus the two doubles = 68 potential places. Build a 60-person request.
+ # The 19 active rooms have exactly 60 places at the current capacities.
  total=0
  for room in rooms:
   count=min(room['capacity'],60-total)
@@ -69,7 +69,7 @@ with ns['sync_playwright']() as p:
  page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child');page.locator('[data-person-age="1"][data-person-index="1"]').select_option('5')
  assert '60 pessoas' in page.locator('#group-counter').inner_text();page.locator('#group-quote').click();page.locator('#group-submit').wait_for(state='visible');assert '5.900,00' in page.locator('#group-quote-summary').inner_text()
  # Changing a name invalidates the previous quote.
- page.locator('[data-person-name="1"][data-person-index="0"]').fill('<img src=x onerror=alert(1)>');assert page.locator('#group-submit').is_hidden();page.locator('#group-quote').click();page.locator('#group-submit').click();page.locator('#group-form').wait_for(state='hidden');assert len(submitted)==1
+ page.locator('[data-person-name="1"][data-person-index="0"]').fill('<img src=x onerror=alert(1)>');assert page.locator('#group-submit').is_hidden();page.locator('#group-quote').click();page.locator('#group-submit').click();page.locator('#group-form').wait_for(state='hidden');assert len(submitted)==1 and len(submitted[0]['rooms'])==19
  assert submitted[0]['rooms'][0]['people'][1]['age']==5 and submitted[0]['expected_total']==590000
  assert any(rooms[x['room_id']-1]['floor']=='superior' for x in submitted[0]['rooms'])
  assert page.locator('[data-group-print]').count()==0

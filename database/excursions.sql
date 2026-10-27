@@ -25,7 +25,7 @@ declare dates daterange:=lotus_private.period(d);row jsonb;person jsonb;people j
  r lotus_private.rooms;ids bigint[]:='{}';rid bigint;quoted jsonb;total bigint:=0;plan jsonb:='[]';age jsonb;
 begin
  if jsonb_typeof(d->'rooms') is distinct from 'array' then raise sqlstate 'PT400' using message='Escolha os quartos do grupo.';end if;
- if jsonb_array_length(d->'rooms') not between 1 and 18 then raise sqlstate 'PT400' using message='Selecione entre 1 e 18 quartos.';end if;
+ if jsonb_array_length(d->'rooms') not between 1 and 19 then raise sqlstate 'PT400' using message='Selecione entre 1 e 19 quartos.';end if;
  for row in select value from jsonb_array_elements(d->'rooms') loop
   rid:=lotus_private.int_value(row,'room_id');
   if rid=any(ids) then raise sqlstate 'PT400' using message='Um quarto foi informado mais de uma vez.';end if;
@@ -96,7 +96,7 @@ begin
   vname:=lotus_private.text_value(d,'name',120);vguest:=lotus_private.text_value(d,'guest',120);vphone:=lotus_private.text_value(d,'phone',40);
   if length(regexp_replace(vphone,'[^0-9]','','g'))<8 then raise sqlstate 'PT400' using message='Informe um telefone válido.';end if;
   if jsonb_typeof(d->'rooms') is distinct from 'array' then raise sqlstate 'PT400' using message='Escolha os quartos.';end if;
-  if jsonb_array_length(d->'rooms') not between 1 and 18 then raise sqlstate 'PT400' using message='Selecione entre 1 e 18 quartos.';end if;
+  if jsonb_array_length(d->'rooms') not between 1 and 19 then raise sqlstate 'PT400' using message='Selecione entre 1 e 19 quartos.';end if;
   select array_agg((value->>'room_id')::bigint order by (value->>'room_id')::bigint) into ids from jsonb_array_elements(d->'rooms');
   perform 1 from lotus_private.rooms where id=any(ids) order by id for update;
   plan:=lotus_private.excursion_plan(d);
