@@ -4,6 +4,18 @@
  const form=$('#group-form'),roomState=new Map();let rooms=[],quote=null,draftVersion=0,availabilitySequence=0,availabilityKey='',user=null,sessionSequence=0,mineSequence=0,sending=false,requestId=null;
  const money=value=>(Number(value)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bahia',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+ const phone=$('#group-phone');
+ function formatPhone(){
+  const cursor=phone.selectionStart??phone.value.length,digitsBefore=phone.value.slice(0,cursor).replace(/[^0-9]/g,'').length;
+  const digits=phone.value.replace(/[^0-9]/g,'').slice(0,11);
+  let formatted=digits.length?'('+digits.slice(0,2):'';
+  if(digits.length>2){const local=digits.slice(2);formatted+=') '+(local.length>8?local[0]+' '+local.slice(1,5)+'-'+local.slice(5):local.slice(0,4)+(local.length>4?'-'+local.slice(4):''));}
+  phone.value=formatted;
+  let position=0,count=0;while(position<formatted.length&&count<digitsBefore){if(/[0-9]/.test(formatted[position]))count++;position++;}
+  phone.setSelectionRange(position,position);
+ }
+ phone.addEventListener('input',formatPhone);
+ phone.addEventListener('change',formatPhone);
  const tomorrow=new Date(today+'T12:00:00Z');tomorrow.setUTCDate(tomorrow.getUTCDate()+1);
  $('#group-start').value=today;$('#group-start').min=today;$('#group-end').value=tomorrow.toISOString().slice(0,10);$('#group-end').min=tomorrow.toISOString().slice(0,10);
  function message(text,error=false){const box=$('#group-message');box.hidden=!text;box.textContent=text;box.classList.toggle('error',error);}

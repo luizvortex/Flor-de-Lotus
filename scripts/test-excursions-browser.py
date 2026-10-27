@@ -32,7 +32,14 @@ with ns['sync_playwright']() as p:
  assert page.locator('#group-refresh-session').is_hidden() and page.locator('#group-login-form').is_hidden()
  assert page.locator('#group-account').is_visible()
  assert page.locator('#group-organizer-name').inner_text()=='Synthetic organizer'
- page.locator('#group-name').fill('Synthetic excursion');page.locator('#group-phone').fill('55000000000')
+ phone=page.locator('#group-phone')
+ phone.fill('safdsdj');assert phone.input_value()=='' and not phone.evaluate('(el)=>el.checkValidity()')
+ phone.fill('739123');assert not phone.evaluate('(el)=>el.checkValidity()')
+ phone.fill('7333334444');assert phone.input_value()=='(73) 3333-4444' and phone.evaluate('(el)=>el.checkValidity()')
+ phone.fill('73912345678');assert phone.input_value()=='(73) 9 1234-5678' and phone.evaluate('(el)=>el.checkValidity()')
+ phone.fill('(73) 9 1234-5678');assert phone.input_value()=='(73) 9 1234-5678'
+ phone.fill('73abc912345678');assert phone.input_value()=='(73) 9 1234-5678'
+ page.locator('#group-name').fill('Synthetic excursion')
  # Sixteen rooms with four occupants plus the two doubles = 68 potential places. Build a 60-person request.
  total=0
  for room in rooms:
