@@ -71,9 +71,13 @@ with sync_playwright() as p:
  assert page.locator('[data-cms-field="about.title"]').input_value()=='Rascunho não publicado'
  page.locator('[data-tab="overview"]').click();page.locator('[data-tab="site"]').click()
  assert page.locator('[data-cms-field="about.title"]').input_value()=='Rascunho não publicado'
- # Discard instead of publishing the intentionally incomplete block.
- page.on('dialog',lambda d:d.accept())
- page.locator('[data-cms-action="reload"]').click()
+ # The two removed actions stay absent; a fresh browser opens only published content.
+ assert page.locator('[data-cms-action="history"],[data-cms-action="reload"]').count()==0
+ page.close()
+ context=browser.new_context(viewport={'width':1440,'height':1000})
+ context.add_cookies([{'name':'lotus_access','value':'admin-test','url':base}])
+ page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)));page.route('https://**',lambda r:r.abort())
+ page.goto(base+'/admin',wait_until='networkidle');page.locator('[data-tab="site"]').click();page.locator('[data-cms-section="about"]').click()
  page.wait_for_function("() => document.querySelector('[data-cms-field=\"about.title\"]')?.value==='Pousada editada pelo painel'")
  # Replace the hero video through the same upload interface, including an automatic cover.
  page.locator('[data-cms-section="hero"]').click()

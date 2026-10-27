@@ -349,3 +349,15 @@ A aba **Relatórios e recebimentos** oferece filtros de datas, últimos 12/24 me
 Aplicar `database/excursions.sql` após `party-bookings.sql` e `database/reports.sql`. Contratos em `database/test-excursions.sql` devem rodar dentro de BEGIN/ROLLBACK; navegador: `scripts/test-excursions-browser.py`. Estudo de integração externa e pendências do fornecedor: [HQBeds](docs/integracao-hqbeds.md).
 
 Verificação de segurança após a migração: nenhuma advertência sobre tabelas/funções novas. Permanece o aviso preexistente de [proteção contra senhas comprometidas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) na configuração do Supabase Auth.
+
+### Calendário administrativo por apartamento
+
+Em **Calendário de reservas**, o proprietário vê datas no topo e os apartamentos em ordem numérica à esquerda, com a indicação de andar. A primeira consulta inicia hoje e cobre 14 dias; é possível selecionar um mês inteiro ou informar início/fim (até 93 dias por consulta), inclusive datas futuras. Confirmadas ficam verdes, pendentes amarelas e estadias encerradas vermelhas. Bloqueios são cinza; canceladas não ocupam a grade. A saída libera a noite para a próxima entrada. Reservas sem atribuição final mostram a unidade provisória de estoque com tracejado e permitem acessar **Definir quarto**.
+
+As reservas aparecem automaticamente pelo estado administrativo autenticado, atualizado a cada 15 segundos. Filtros, campos em edição e rolagem são preservados nas atualizações; sair da conta limpa a grade. O calendário não muda status, datas, valores ou regras de estoque. Testes sintéticos sem escrita em produção: `scripts/test-admin-calendar-browser.py` (cores, períodos futuros, adjacência, filtros, atualização, atribuição, privacidade e celular) e `scripts/test-booking-panels-browser.py` (compatibilidade do histórico).
+
+### Prioridade dos tópicos do painel
+
+**Organizar menu ↕** abre a lista dos tópicos com setas e posição numérica. O número 1 aparece no topo; clique **Salvar ordem** para aplicar. A preferência fica no banco privado e é carregada nos outros dispositivos; cancelar não altera o menu. A revisão impede sobrescrever uma mudança de outra aba. A aba atual e seus eventos são preservados. O menu tem rolagem para manter todos os tópicos e a saída da conta acessíveis.
+
+`database/admin-menu-order.sql` cria a configuração/RPC privada; testes de permissão e concorrência em `database/test-admin-menu-order.sql` com BEGIN/ROLLBACK. Testes de navegação: `scripts/test-admin-menu-browser.py`. Em Editar site foram removidos os botões de histórico/restauração e de descarte/recarregamento; o histórico interno, a prévia, os rascunhos e a publicação continuam preservados. Verificação direcionada: `node scripts/test-site-editor.mjs --editor-controls-only`.

@@ -267,6 +267,10 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       if (params.has('party')) { try { data.party = JSON.parse(params.get('party') || ''); } catch { throw new ApiError(400, 'Confira os adultos, crianças e quartos.'); } }
       data.package_id = params.get('package_id') ? Number(params.get('package_id')) : null;
     }
+    if (path === 'admin-menu' && ['GET','PUT'].includes(method)) {
+      if (!token) throw new ApiError(401,'Entre no painel para organizar o menu.');
+      return finish(await call('/rest/v1/rpc/lotus_admin_ui_api','POST',{p_operation:method==='GET'?'read':'save',p_data:data},token));
+    }
     if (path === 'rates' && ['GET','POST','DELETE'].includes(method)) {
       if (!token) throw new ApiError(401, 'Entre no painel para editar valores.');
       return finish(await call('/rest/v1/rpc/lotus_rate_api', 'POST', { p_operation: method === 'GET' ? 'read' : method === 'DELETE' ? 'delete' : 'save', p_data: data }, token));

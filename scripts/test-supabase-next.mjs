@@ -35,6 +35,10 @@ const mock = createServer(async (req, res) => {
     if(token!=='access-admin'||revoked)return json(401,{code:'PT401'});
     return json(200,{stats:{},operation:data.p_operation});
   }
+  if (req.url === '/rest/v1/rpc/lotus_admin_ui_api') {
+    if(token!=='access-admin'||revoked)return json(401,{code:'PT401'});
+    return json(200,{order:data.p_data.order||[],revision:1});
+  }
   if (req.url === '/rest/v1/rpc/lotus_bulk_booking_api') {
     if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
     return json(200,{ok:true,count:data.p_data.ids.length,action:data.p_data.action});
@@ -111,10 +115,13 @@ try {
   for (const cookie of setCookies) { assert.match(cookie, /httponly/i); assert.match(cookie, /samesite=strict/i); assert.match(cookie, /secure/i); }
   const cookies = setCookies.map(c => c.split(';')[0]).join('; ');
   r = await request('admin', undefined, { headers: { Cookie: cookies } }); assert.equal(r.status, 200);
-  for (const path of ['admin-excursions','reports']) {
+  for (const path of ['admin-excursions','reports','admin-menu']) {
     assert.equal((await request(path)).status,401);
     r=await request(path,undefined,{headers:{Cookie:cookies}});assert.equal(r.status,200);assert.match(r.headers.get('cache-control'),/no-store/);
   }
+  r=await request('admin-menu',{order:['calendar'],revision:0},{method:'PUT',headers:{Cookie:cookies}});assert.equal(r.status,200);
+  assert.deepEqual(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_admin_ui_api').data,{p_operation:'save',p_data:{order:['calendar'],revision:0}});
+  r=await request('admin-menu',{order:[],revision:0},{method:'PUT',headers:{Cookie:cookies,Origin:'https://malicious.invalid'}});assert.equal(r.status,403);
   const excursionId='00000000-0000-4000-8000-000000000018';
   for(const action of ['confirm','cancel']) {
     r=await request('admin-excursions/'+excursionId+'/'+action,{}, {headers:{Cookie:cookies}});assert.equal(r.status,200);
