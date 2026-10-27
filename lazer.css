@@ -61,9 +61,9 @@
 }
 @media(prefers-reduced-motion:reduce) { .leisure-preview { transition:none; } }
 
-/* One shared colour keeps the room exit wave joined to the leisure section. */
+/* The room exit wave now joins the excursion section that follows it. */
 .home-page #quartos > .room-wave:last-child {
- background:var(--leisure-tone,#f7f7f2);
+ background:var(--groups-background,#f3eee7);
  height:clamp(64px,5vw,96px);
  transition:background-color .65s ease;
 }
