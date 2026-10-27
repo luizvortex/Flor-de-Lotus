@@ -32,6 +32,22 @@ with ns['sync_playwright']() as p:
  assert page.locator('#group-refresh-session').is_hidden() and page.locator('#group-login-form').is_hidden()
  assert page.locator('#group-account').is_visible()
  assert page.locator('#group-organizer-name').inner_text()=='Synthetic organizer'
+ page.locator('#dates-trigger').click();page.locator('#dates-picker').wait_for(state='visible')
+ assert page.locator('.calendar-month').count()==2
+ assert page.locator('[data-calendar-prev]').is_disabled()
+ page.locator('[data-calendar-next]').click()
+ days=page.locator('.calendar-month').first.locator('[data-day]:not([disabled])')
+ first=days.nth(4).get_attribute('data-day');last=days.nth(7).get_attribute('data-day')
+ page.locator('[data-day="'+first+'"]').first.click();assert page.locator('#apply-dates').is_disabled()
+ page.locator('[data-day="'+last+'"]').first.click();assert page.locator('#apply-dates').inner_text()=='Buscar 3 noites'
+ page.locator('#apply-dates').click();assert page.locator('#dates-picker').is_hidden()
+ assert page.locator('#group-start').input_value()==first and page.locator('#group-end').input_value()==last
+ assert 'Disponibilidade atualizada' in page.locator('#group-message').inner_text()
+ for width in [320,390,768,1440]:
+  page.set_viewport_size({'width':width,'height':1000});page.locator('#dates-trigger').click()
+  assert page.locator('#dates-picker').is_visible()
+  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),str(width)
+  page.keyboard.press('Escape');assert page.locator('#dates-picker').is_hidden()
  phone=page.locator('#group-phone')
  phone.fill('safdsdj');assert phone.input_value()=='' and not phone.evaluate('(el)=>el.checkValidity()')
  phone.fill('739123');assert not phone.evaluate('(el)=>el.checkValidity()')

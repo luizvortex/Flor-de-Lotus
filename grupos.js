@@ -50,7 +50,7 @@
   if(input.dataset.personAge){roomState.get(Number(input.dataset.personAge)).people[Number(input.dataset.personIndex)].age=input.value===''?'':Number(input.value);}
   if(input.id==='group-start'&&input.value){const next=new Date(input.value+'T12:00:00Z');next.setUTCDate(next.getUTCDate()+1);$('#group-end').min=next.toISOString().slice(0,10);}
  });
- $('#group-availability').onclick=availability;
+ $('#group-availability').onclick=availability;form.addEventListener('lotus:dates-applied',availability);
  form.onsubmit=async event=>{
   event.preventDefault();if(!form.reportValidity())return;
   const data=payload();if(!data.rooms.length){message('Selecione pelo menos um quarto.',true);return;}

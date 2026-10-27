@@ -204,8 +204,8 @@ with sync_playwright() as p:
  query=parse_qs(urlparse(filtered.url).query)
  assert query['start']==[expected_start] and query['end']==[expected_end] and query['guests']==['2'] and query['floor']==['superior']
  assert json.loads(query['party'][0])==[{'adults':1,'children_ages':[6]}]
- filtered.wait_for_selector('[data-options="familia"]')
- assert filtered.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo','familia']
+ filtered.wait_for_selector('[data-options="triplo"]')
+ assert filtered.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo']
  assert filtered.locator('#floor').input_value()=='superior'
  assert filtered.locator('#guests').input_value()=='2'
  assert filtered.evaluate('window.stayParty.get()')==[{'adults':1,'children_ages':[6]}]

@@ -2,3 +2,6 @@
 .report-fields{display:flex;gap:16px;align-items:end;flex-wrap:wrap;margin:20px 0}.report-fields label{display:grid;gap:8px;flex:1 1 160px;font-size:12px}.report-fields input,.report-fields select{width:100%;box-sizing:border-box;min-height:44px;padding:10px;border:1px solid #d7dfd6;background:white;color:#263d38}.report-fields .btn{min-height:44px}
 
 #group-organizer-name{font-size:16px;font-weight:600;color:#263d38;margin:0 0 6px;overflow-wrap:anywhere}
+
+.group-fields>.dates-control{grid-column:span 2;align-self:end}.group-page .dates-control .stay-trigger{box-sizing:border-box;min-height:56px;color:#263d38;font-family:inherit}.group-page .calendar-popover{box-sizing:border-box;max-width:calc(100vw - 64px)}.group-page .calendar-nav p{margin:0;font-size:11px}.group-page .calendar-month h3{font-size:12px}.group-page .calendar-footer .gold-button{color:white}
+@media(max-width:650px){.group-fields>.dates-control{grid-column:auto}}
