@@ -14,8 +14,8 @@ export async function getShowcases(): Promise<Showcase[]> {
     });
     if (!response.ok) return showcaseDefaults;
     const result = await response.json() as { showcases?: Showcase[] };
-    // Accept the three existing blocks while the fourth is being provisioned.
-    if (!Array.isArray(result.showcases) || ![3, 4].includes(result.showcases.length)) return showcaseDefaults;
+    // Preserve existing editorial content while accepting the six room categories.
+    if (!Array.isArray(result.showcases) || ![3, 4, 6].includes(result.showcases.length)) return showcaseDefaults;
     const slugs = new Set(result.showcases.map(row => row.slug));
     if (slugs.size !== result.showcases.length || !['duplo', 'triplo', 'familia'].every(slug => slugs.has(slug))) return showcaseDefaults;
     if (!result.showcases.every(row => showcaseDefaults.some(d => d.slug === row.slug) && typeof row.title === 'string' && typeof row.description === 'string' && Array.isArray(row.photos) && row.photos.length >= 3 && row.photos.every(p => typeof p.url === 'string' && safeShowcasePhoto(p.url)) && Array.isArray(row.features) && row.features.every(f => /^[a-z0-9-]+$/.test(f.icon) && typeof f.label === 'string'))) return showcaseDefaults;

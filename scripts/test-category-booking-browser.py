@@ -5,8 +5,8 @@ ROOT=Path(__file__).resolve().parents[1]
 (ROOT/'work').mkdir(exist_ok=True)
 rooms=[dict(id=1,name='1',type='casal',price=10000,active=1,capacity=4,floor='terreo',presentation_slug='duplo'),dict(id=15,name='15',type='casal',price=12000,active=1,capacity=6,floor='superior',presentation_slug='duplo')]
 photo={'url':'/img casal/casal.jpg','alt':'Quarto'}
-showcases=[dict(slug=s,title=t,description='Quarto da pousada',photos=[photo]*3,features=[{'icon':'breakfast','label':'Café da manhã incluso'},{'icon':'wifi','label':'Wi-Fi grátis'}],eyebrow='17 m²',revision=1,details={'beds':'1 cama de casal','description':'Descrição da acomodação','bathroom':['Banheiro privativo'],'amenities':['Toalhas']},amenities=[{'icon':'bath','label':'Banheiro privativo'},{'icon':'shower','label':'Chuveiro'}]) for s,t in [('duplo','Quarto Standard'),('triplo','Quarto Superior'),('triplo-standard','Quarto Triplo Standard'),('familia','Quarto Família')]]
-state=dict(rooms=rooms,packages=[],bookings=[dict(id=101,room_id=15,room_name='15',room_floor='superior',room_assigned=False,requested_category='familia',status='pendente',guest='Teste',phone='55000000000',guests=6,start='2026-11-10',end='2026-11-11',total=12000,created='2026-10-26T10:00:00Z')],showcases=showcases)
+showcases=[dict(slug=s,title=t,description='Quarto da pousada',photos=[photo]*3,features=[{'icon':'breakfast','label':'Café da manhã incluso'},{'icon':'wifi','label':'Wi-Fi grátis'}],eyebrow='17 m²',revision=1,details={'beds':'1 cama de casal','description':'Descrição da acomodação','bathroom':['Banheiro privativo'],'amenities':['Toalhas']},amenities=[{'icon':'bath','label':'Banheiro privativo'},{'icon':'shower','label':'Chuveiro'}]) for s,t in [('duplo','Quarto Standard'),('triplo','Quarto Standard Superior'),('triplo-standard','Quarto Triplo Standard'),('triplo-superior','Quarto Triplo Superior'),('familia','Quarto Família'),('familia-superior','Quarto Família Superior')]]
+state=dict(rooms=rooms,packages=[],bookings=[dict(id=101,room_id=15,room_name='15',room_floor='superior',room_assigned=False,requested_category='familia-superior',status='pendente',guest='Teste',phone='55000000000',guests=6,start='2026-11-10',end='2026-11-11',total=12000,created='2026-10-26T10:00:00Z')],showcases=showcases)
 payloads=[]
 sold_out=False
 fail_availability=False
@@ -55,7 +55,7 @@ with sync_playwright() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
  context=browser.new_context();context.route('**/*',route);page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto('http://qa.test/quartos');page.wait_for_selector('[data-slug="familia"]')
- assert page.locator('.catalog-room').count()==4
+ assert page.locator('.catalog-room').count()==6
  assert page.locator('select#package').count()==0
  assert page.locator('[data-slug="duplo"] .room-cost small').inner_text()=='A partir de'
  assert '100,00' in page.locator('[data-slug="duplo"] .room-price').inner_text()
@@ -124,18 +124,18 @@ with sync_playwright() as p:
   assert rect['x']>=0 and rect['x']+rect['width']<=width+1,f'calendar overflow at {width}'
   page.keyboard.press('Escape')
  page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(4)];page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
- page.wait_for_selector('[data-options="familia"]');assert page.locator('.catalog-room').count()==1;page.locator('[data-options="familia"]').click();page.locator('[data-book-category="familia"]').click()
+ page.wait_for_selector('[data-options="familia-superior"]');assert page.locator('.catalog-room').count()==1;page.locator('[data-options="familia-superior"]').click();page.locator('[data-book-category="familia-superior"]').click()
  assert 'Unidade' not in page.locator('#booking-summary').inner_text()
  page.locator('#guest').fill('Teste de fluxo');page.locator('#phone').fill('65999999999');page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
- assert payloads[0]['category_slug']=='familia' and 'room_id' not in payloads[0]
+ assert payloads[0]['category_slug']=='familia-superior' and 'room_id' not in payloads[0]
  assert payloads[0]['party']==[{'adults':6,'children_ages':[]}]
  assert 'unidade' not in page.locator('#booking-receipt-summary').inner_text().lower()
  # Empty inventory uses the centered notification, with a working calendar CTA.
  page.locator('#booking-success [data-close-success]').first.click()
  missing_price=True
  page.locator('#search [type="submit"]').click()
- page.wait_for_selector('[data-options="familia"]')
- page.locator('[data-options="familia"]').click()
+ page.wait_for_selector('[data-options="familia-superior"]')
+ page.locator('[data-options="familia-superior"]').click()
  assert page.locator('#details-options .starting-price small').inner_text()=='A partir de'
  assert '600,00' in page.locator('#details-options .starting-price p').inner_text()
  assert 'Preço ainda não cadastrado' not in page.locator('#details-options').inner_text()
@@ -205,7 +205,7 @@ with sync_playwright() as p:
  assert query['start']==[expected_start] and query['end']==[expected_end] and query['guests']==['2'] and query['floor']==['superior']
  assert json.loads(query['party'][0])==[{'adults':1,'children_ages':[6]}]
  filtered.wait_for_selector('[data-options="triplo"]')
- assert filtered.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo']
+ assert filtered.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo','triplo-superior']
  assert filtered.locator('#floor').input_value()=='superior'
  assert filtered.locator('#guests').input_value()=='2'
  assert filtered.evaluate('window.stayParty.get()')==[{'adults':1,'children_ages':[6]}]
@@ -245,5 +245,5 @@ with sync_playwright() as p:
  page.locator('[data-tab="bookings"]').click();assert page.locator('[data-confirm="101"]').count()==0;page.locator('[data-assign="101"]').click();page.locator('#assignment-dialog [type="submit"]').click();page.wait_for_selector('[data-confirm="101"]')
  assert payloads[-1]['room_id']==15
  assert not errors,errors
- print('PASS: four categories, mandatory floor, no tariff selector, responsive layout, category request, rates editor, owner assignment and confirmation gate. No JavaScript errors.')
+ print('PASS: six categories, mandatory floor, no tariff selector, responsive layout, category request, rates editor, owner assignment and confirmation gate. No JavaScript errors.')
  browser.close()

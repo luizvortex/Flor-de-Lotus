@@ -162,6 +162,10 @@ try {
   assert.equal(roomSave.path, '/rest/v1/rpc/lotus_room_catalog_api'); assert.equal(roomSave.data.p_data.showcase_slug, 'triplo');
   r = await request('bookings/101/account', { email:'guest@example.invalid' }, { method:'PUT' }); assert.equal(r.status,401);
   r = await request('bookings/101/account', { email:'guest@example.invalid' }, { method:'PUT', headers:{Cookie:cookies} }); assert.equal(r.status,200);
+  for(const slug of ['triplo-superior','familia-superior']) {
+    r=await request('showcases/'+slug,{title:'Categoria superior'},{method:'PUT',headers:{Cookie:cookies}});assert.equal(r.status,200);
+    assert.equal(received.findLast(x=>x.path==='/rest/v1/rpc/lotus_showcase_api').data.p_data.slug,slug);
+  }
   const accountLink=received.findLast(x=>x.path==='/rest/v1/rpc/lotus_guest_booking_api');assert.equal(accountLink.data.p_data.booking_id,101);assert.equal(accountLink.data.p_data.email,'guest@example.invalid');
   r = await request('session', undefined, { headers: { Cookie: 'lotus_access=expired; lotus_refresh=refresh-admin' } });
   assert.equal(r.status, 200); assert.equal((await r.json()).authenticated, true); assert.equal(r.headers.getSetCookie().length, 2);

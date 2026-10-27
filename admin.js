@@ -77,7 +77,7 @@ document.addEventListener('lotus:admin-refresh',()=>{if(!window.adminBookingBulk
 
 function openAssignment(id){
  const booking=state.bookings.find(b=>b.id===id);if(!booking)return;
- const category=r=>booking.requested_category==='duplo'?r.floor==='terreo':booking.requested_category==='triplo'?r.floor==='superior':booking.requested_category==='triplo-standard'?r.floor==='terreo'&&r.capacity>=3:booking.requested_category==='familia'?r.capacity>=5:true;
+ const category=r=>{const rules={duplo:['terreo',1],triplo:['superior',1],'triplo-standard':['terreo',3],'triplo-superior':['superior',3],familia:['terreo',5],'familia-superior':['superior',5]},rule=rules[booking.requested_category];return !rule||(r.floor===rule[0]&&r.capacity>=rule[1]);};
  const rooms=state.rooms.filter(r=>r.active&&r.floor===booking.room_floor&&r.capacity>=booking.guests&&category(r)&&!state.bookings.some(b=>b.id!==id&&b.room_id===r.id&&b.status!=='cancelada'&&b.start<booking.end&&b.end>booking.start));
  let dialog=document.getElementById('assignment-dialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='assignment-dialog';dialog.className='editor';document.body.append(dialog);}
  dialog.innerHTML=`<form><h2>Definir quarto · reserva #${id}</h2><p>${esc(booking.guest)} · ${esc(floors[booking.room_floor])} · ${booking.guests} hóspedes</p><label>Quarto disponível<select name="room_id" required>${rooms.map(r=>`<option value="${r.id}">Unidade ${esc(r.name)} · até ${r.capacity} pessoas</option>`).join('')}</select></label><p role="alert"></p><button type="submit" class="btn" ${rooms.length?'':'disabled'}>Salvar atribuição</button><button type="button" class="btn secondary" data-close>Fechar</button></form>`;
