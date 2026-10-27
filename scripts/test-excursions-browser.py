@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 import copy
 source=Path(__file__).with_name('test-category-booking-browser.py').read_text().split('with sync_playwright() as p:')[0]
 ns={'__file__':str(Path(__file__).with_name('test-category-booking-browser.py'))};exec(source,ns)
-rooms=[dict(id=i,name=str(i),floor='terreo' if i<=9 or i==18 else 'superior',capacity=6 if i in [15,18] else 2 if i in [16,17] else 4,available=True) for i in range(1,19)]
+rooms=[dict(id=i,name=str(i),floor='terreo' if i<=7 or i in [16,17,18] else 'superior',capacity=6 if i in [15,18] else 2 if i in [16,17] else 4,available=True) for i in range(1,19)]
 groups=[];submitted=[];session={'user':{'name':'Synthetic organizer'},'google_enabled':True};original=ns['route']
 def route(r):
  path=urlparse(r.request.url).path
