@@ -165,7 +165,7 @@
  function render(){
   // Capacity applies per room, including children who are exempt from the rate.
   const largestParty=lastQuery?Math.max(...JSON.parse(lastQuery.party).map(room=>room.adults+room.children_ages.length)):0;
-  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(largestParty<=4||s.slug==='familia')):showcases;
+  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(s.slug==='familia'?largestParty>=5:largestParty<=4)):showcases;
   const noAvailability=Boolean(lastQuery&&showcases.length&&visibleShowcases.length===0);
   $('#no-availability').hidden=!noAvailability;
   $('.results-heading').hidden=noAvailability;

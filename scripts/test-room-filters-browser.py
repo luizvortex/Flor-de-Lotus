@@ -25,14 +25,18 @@ with ns['sync_playwright']() as p:
   page.goto('http://qa.test/quartos?'+urlencode(params))
   page.wait_for_function("document.querySelector('#result-count').textContent.startsWith('Opções para')")
   return page.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')
- assert search('terreo',[{'adults':2,'children_ages':[]}])==['duplo','triplo-standard','familia']
- assert search('superior',[{'adults':2,'children_ages':[]}])==['triplo','familia']
+ assert search('terreo',[{'adults':2,'children_ages':[]}])==['duplo','triplo-standard']
+ assert search('superior',[{'adults':2,'children_ages':[]}])==['triplo']
  page.locator('#rooms').screenshot(path=str(ns['ROOT']/'work/filtered-superior.png'))
  for floor in ['terreo','superior']:
+  for size in [1,2,3,4]:
+   assert 'familia' not in search(floor,[{'adults':size,'children_ages':[]}])
+  assert search(floor,[{'adults':5,'children_ages':[]}])==['familia']
+  assert 'familia' not in search(floor,[{'adults':3,'children_ages':[5]}])
   assert search(floor,[{'adults':6,'children_ages':[]}])==['familia']
   assert search(floor,[{'adults':4,'children_ages':[5]}])==['familia'],'Free child occupies a bed'
  # Six people in two rooms can use the normal categories: capacity is per room.
- assert search('terreo',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['duplo','triplo-standard','familia']
+ assert search('terreo',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['duplo','triplo-standard']
  sold_out=True
  assert search('terreo',[{'adults':2,'children_ages':[]}])==[]
  assert page.locator('#no-availability').is_visible()
@@ -42,7 +46,7 @@ with ns['sync_playwright']() as p:
  assert page.locator('.catalog-room').count()==4,'Editing filters invalidates the previous results'
  page.locator('#search [type="submit"]').click()
  page.wait_for_function("document.querySelector('#result-count').textContent.startsWith('Opções para')")
- assert page.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo','familia']
+ assert page.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo']
  for width in [390,768,1440]:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
  assert errors==[],errors

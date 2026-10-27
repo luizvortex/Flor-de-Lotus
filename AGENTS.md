@@ -62,7 +62,7 @@ A aba Reservas tem seleção múltipla em `admin-bulk-bookings.js`, carregado an
 
 ## Filtro do catálogo público
 
-Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Cinco ou seis pessoas em um quarto exibem apenas Família; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
+Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Família aparece nas buscas somente a partir de cinco pessoas no mesmo quarto; cinco ou seis pessoas exibem apenas Família; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
 
 ## Conta Google nas reservas
 
