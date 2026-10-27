@@ -80,4 +80,4 @@ Na aba Reservas, manter três painéis nesta ordem: pendentes, confirmadas e can
 
 ## Andares dos quartos físicos
 
-Distribuição confirmada pelo usuário: térreo 1–7 e 16–19; superior 8–15. O quarto 19 permanece desativado. Correção em `database/correct-room-floors.sql`, inclusive os rótulos de andar das excursões ativas já vinculadas às unidades, preservando valores, datas, capacidade e atribuição. A interface lê esse cadastro; não usar faixas antigas nem inferir o andar pelo ID do banco.
+Distribuição confirmada pelo usuário: térreo 1–7 e 16–19; superior 8–15. O quarto 19 foi reativado pelo usuário (térreo, até 2 pessoas); agora são 19 quartos ativos. A ativação posterior está em `database/activate-room-19.sql`. Correção em `database/correct-room-floors.sql`, inclusive os rótulos de andar das excursões ativas já vinculadas às unidades, preservando valores, datas, capacidade e atribuição. A interface lê esse cadastro; não usar faixas antigas nem inferir o andar pelo ID do banco.
