@@ -73,10 +73,13 @@
  async function refreshSession(){
   const sequence=++sessionSequence;
   try{const response=await fetch('/api/guest/session',{cache:'no-store'});if(!response.ok)throw Error('Não foi possível verificar sua conta.');const data=await response.json();if(sequence!==sessionSequence)return;user=data.user||null;
-   $('#group-login').hidden=Boolean(user);$('#group-session-status').textContent=user?'Conta conectada. Você pode enviar a solicitação.':'Entre com Google para enviar e acompanhar seu grupo. O acesso abre em outra aba.';
+   $('#group-login-form').hidden=Boolean(user);$('#group-refresh-session').hidden=Boolean(user);$('#group-account').hidden=!user;
+   $('#group-organizer-name').hidden=!user;$('#group-organizer-name').textContent=user?.name||'';
+   $('#group-session-status').textContent=user?'Conta conectada. Você pode enviar a solicitação.':'Entre com Google para enviar e acompanhar seu grupo. O acesso abre em outra aba.';
    if(user&&!$('#group-leader').value)$('#group-leader').value=user.name||'';await loadMine();
-  }catch(error){$('#group-session-status').textContent=error.message;}
+  }catch(error){if(sequence!==sessionSequence)return;user=null;$('#group-login-form').hidden=true;$('#group-refresh-session').hidden=false;$('#group-account').hidden=true;$('#group-organizer-name').hidden=true;$('#group-organizer-name').textContent='';$('#group-session-status').textContent=error.message;await loadMine();}
  }
  $('#group-refresh-session').onclick=refreshSession;window.addEventListener('focus',()=>{if(!sending)refreshSession();});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!sending)refreshSession();});
  refreshSession();availability();
 })();

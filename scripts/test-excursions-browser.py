@@ -29,6 +29,9 @@ def route(r):
 with ns['sync_playwright']() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--unsafely-treat-insecure-origin-as-secure=http://qa.test']);context=browser.new_context(viewport={'width':1440,'height':1000});context.route('**/*',route);page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto('http://qa.test/grupos');page.locator('[data-room-select="18"]').wait_for();assert page.locator('[data-room-select]').count()==18
+ assert page.locator('#group-refresh-session').is_hidden() and page.locator('#group-login-form').is_hidden()
+ assert page.locator('#group-account').is_visible()
+ assert page.locator('#group-organizer-name').inner_text()=='Synthetic organizer'
  page.locator('#group-name').fill('Synthetic excursion');page.locator('#group-phone').fill('55000000000')
  # Sixteen rooms with four occupants plus the two doubles = 68 potential places. Build a 60-person request.
  total=0
@@ -58,6 +61,10 @@ with ns['sync_playwright']() as p:
  page.goto('http://qa.test/grupos');page.locator('[data-group-print]').wait_for(state='attached');page.locator('.group-mine-card summary').click();page.locator('[data-group-print]').wait_for()
  for width in [320,390,1440]:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),str(width)
+ session['user']=None;page.dispatch_event('body','click');page.evaluate("window.dispatchEvent(new Event('focus'))");page.locator('#group-login-form').wait_for(state='visible')
+ assert page.locator('#group-refresh-session').is_visible() and page.locator('#group-account').is_hidden()
+ assert page.locator('#group-organizer-name').is_hidden() and page.locator('#group-organizer-name').inner_text()==''
+ assert page.locator('#group-mine').is_hidden()
  page.screenshot(path=str(ns['ROOT']/'work/excursions-page.png'),full_page=True)
  assert errors==[],errors
  browser.close();print('PASS: 60 guests, mixed floors, child capacity/free rate, quote invalidation, atomic payload, escaped private roster, confirmation, printable list, separate financial totals and mobile widths.')
