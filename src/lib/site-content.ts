@@ -7,6 +7,7 @@ import {unstable_cache,revalidateTag} from 'next/cache';
 import {applySiteSeo} from './site-seo';
 import {applyInformation} from './site-information';
 import {applyAbout} from './about-content';
+import {renderRomance} from './romance-content';
 import {renderInstagram} from './instagram-content';
 export async function getSiteDocument():Promise<{content:SiteContent;revision:number}> {
  const response=await fetch(`${supabaseUrl}/rest/v1/rpc/lotus_site_api`,{method:'POST',cache:'no-store',signal:AbortSignal.timeout(4000),headers:{apikey:supabaseKey,'Content-Type':'application/json'},body:JSON.stringify({p_operation:'read',p_data:{}})});
@@ -50,6 +51,13 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  text('#special-packages h2',k.packagesTitle);text('#special-packages > .eyebrow',k.packagesEyebrow);text('#location-title',k.locationTitle);text('.location-copy .eyebrow',k.locationEyebrow);text('#policies-title',k.policiesTitle);text('#politicas > .eyebrow',k.policiesEyebrow);
  if(page==='avaliacoes')applyReviewsPage($,c);
  if(page==='itacare')applyExplorePage($,c);
+ if(['index','quartos','reservas'].includes(page)){
+  const romantic=renderRomance(c,page==='index');
+  if(romantic){
+   $('head').append('<link rel="stylesheet" href="/romance.css"><script src="/romance.js" defer></script>');
+   if(page==='index')$('#quartos').after(romantic);else $('#rooms').after(romantic);
+  }
+ }
  if(page!=='index')return $.html();
  $('head').append('<link rel="stylesheet" href="/itacare.css">');
  const hero=c.hero;
@@ -76,12 +84,12 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  text('#contact-title',c.contact.title);text('.contact-eyebrow',c.contact.eyebrow);text('[data-contact-description]',c.contact.description);text('[data-contact-form-title]',c.contact.formTitle);text('[data-contact-intro]',c.contact.intro);text('[data-contact-button]',c.contact.buttonLabel);
  text('[data-contact-address-title]',c.contact.addressTitle);text('[data-contact-social-title]',c.contact.socialTitle);text('.contact-address',b.address);
  $('#whatsapp-form').attr('data-default-message',String(c.contact.defaultMessage)).attr('action',`https://wa.me/${b.whatsapp}`);link('[data-contact-maps]',b.maps);
- const ids:Record<string,string>={hero:'inicio',about:'sobre-a-pousada',gallery:'galeria-pousada',rooms:'quartos',leisure:'area-de-lazer',instagram:'instagram',beaches:'praias',reviews:'avaliacoes',contact:'fale-conosco'};
+ const ids:Record<string,string>={hero:'inicio',about:'sobre-a-pousada',gallery:'galeria-pousada',rooms:'quartos',romance:'decoracao-romantica',leisure:'area-de-lazer',instagram:'instagram',beaches:'praias',reviews:'avaliacoes',contact:'fale-conosco'};
  for(const [key,id] of Object.entries(ids)){if(c[key].visible===false){$('#'+id).attr('hidden','').attr('data-cms-hidden','true');$(`.home-header a[href="#${id}"],.home-menu a[href="#${id}"]`).attr('hidden','');}}
  const sections=new Map(Object.entries(ids).filter(([key])=>key!=='hero').map(([key,id])=>[key,$('#'+id).remove()]));
  let anchor=$('#inicio') as ReturnType<typeof $>;
  for(const key of String(c.layout.order).split(/\s+/).filter(Boolean)){
-  const node=sections.get(key);if(!node)continue;anchor.after(node);anchor=node;
+  const node=sections.get(key);if(!node?.length)continue;anchor.after(node);anchor=node;
   for(const block of (c.layout.blocks as Item[]).filter(b=>b.after===key&&b.visible)){
    const newBlock=$(`<section id="extra-${esc(block.id)}" class="cms-block cms-tone-${esc(block.tone)} cms-image-${esc(block.position)}"><div class="cms-block-inner">${block.image?`<img src="${esc(block.image)}" alt="${esc(block.alt)}" loading="lazy" width="900" height="650">`:''}<div><h2>${esc(block.title)}</h2><p class="cms-paragraph">${esc(block.description)}</p>${block.button&&block.url?`<a class="showcase-rates" href="${esc(block.url)}">${esc(block.button)}</a>`:''}</div></div></section>`);anchor.after(newBlock);anchor=newBlock;
   }

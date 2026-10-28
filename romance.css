@@ -1,0 +1,42 @@
+/* Shared experience, separate from physical room categories and booking stock. */
+.romance-section{background:#eee8e0;color:#263d38;scroll-margin-top:100px;box-sizing:border-box}
+.home-page main>.romance-section{padding:88px 28px}
+.romance-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;gap:72px}
+.romance-copy{max-width:460px}
+.romance-eyebrow{font:500 11px/1.8 'DM Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#82694a;margin:0 0 18px}
+.romance-copy h2{font:500 clamp(34px,3.8vw,52px)/1.16 'Playfair Display',Georgia,serif;color:#263d38;margin:0 0 24px}
+.romance-rule{display:block;width:52px;height:1px;background:#a38a65;margin-bottom:24px}
+.romance-description{font:400 15px/1.9 'DM Sans',sans-serif;white-space:pre-line;margin:0 0 26px}
+.romance-notice{font:400 13px/1.8 'DM Sans',sans-serif;color:#5c655c;padding-inline-start:16px;border-inline-start:2px solid #b49a73;margin:0 0 26px;white-space:pre-line}
+.romance-cta{display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:48px;box-sizing:border-box;padding:13px 22px;background:#826d4c;color:#fffdf9;text-decoration:none;font:500 14px/1.6 'DM Sans',sans-serif}
+.romance-cta:hover{background:#6b573b;color:#fffdf9;text-decoration:none}
+.romance-cta svg{flex-shrink:0}
+.romance-section :focus-visible{outline:2px solid #28584b;outline-offset:5px}
+.romance-gallery{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;min-width:0}
+.romance-photo{position:relative;display:block;padding:0;border:0;background:#e4dbcf;min-width:0;overflow:hidden;cursor:pointer;aspect-ratio:4/3}
+.romance-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.romance-home .romance-photo:first-child{grid-row:span 2;aspect-ratio:auto;min-height:380px}
+.romance-home .romance-photo:only-child{min-height:400px}
+.romance-home .romance-photo:nth-child(2):last-child{align-self:center;aspect-ratio:4/5}
+.romance-home .romance-gallery{position:relative;padding:22px 0 22px 22px}
+.romance-home .romance-gallery::before{content:"";position:absolute;inset:0 34px 0 0;border:1px solid #af967b66;pointer-events:none}
+.romance-enlarge{position:absolute;inset-inline-end:12px;bottom:12px;display:grid;place-items:center;width:32px;height:32px;color:#263d38;background:#fffdf9eb;font:24px/1 sans-serif;border-radius:50%}
+.romance-single{grid-template-columns:1fr}
+.romance-catalog{margin:64px 0;padding:48px}
+.romance-catalog .romance-inner{gap:40px;align-items:start}
+.romance-catalog .romance-copy{position:sticky;top:100px}
+.romance-catalog .romance-photo:first-child{grid-column:1/-1}
+.romance-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.romance-dialog{box-sizing:border-box;width:min(960px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:0;border:1px solid #e3e7df;background:#fffdf9;color:#263d38;overflow:auto}
+.romance-dialog::backdrop{background:#122c25cf}
+.romance-dialog header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 22px;border-bottom:1px solid #e3e7df}
+.romance-dialog header h2{font:500 21px/1.3 'Playfair Display',Georgia,serif;margin:0}
+.romance-dialog button{display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid #d7dcd3;background:#fffdf9;color:#263d38;cursor:pointer;font:26px/1 sans-serif}
+.romance-dialog button[hidden]{display:none}
+.romance-dialog figure{margin:0;padding:18px 22px 0}
+.romance-dialog figure img{display:block;width:100%;height:auto;max-height:65dvh;object-fit:contain}
+.romance-dialog figcaption{font:14px/1.7 'DM Sans',sans-serif;margin-top:12px;white-space:pre-line}
+.romance-dialog-controls{display:flex;justify-content:center;align-items:center;gap:20px;padding:16px 22px;font:13px/1.6 'DM Sans',sans-serif}
+.romance-dialog [data-romance-prev] svg{transform:rotate(180deg)}
+@media(max-width:900px){.romance-inner{gap:36px;grid-template-columns:1fr 1fr}.romance-catalog{padding:32px}.romance-home .romance-photo:first-child{min-height:320px}.romance-gallery{gap:10px}}
+@media(max-width:650px){.home-page main>.romance-section{padding:48px 22px}.romance-inner{grid-template-columns:1fr;gap:30px}.romance-copy{max-width:none}.romance-copy h2{font-size:36px}.romance-catalog{margin:40px 0;padding:28px 20px}.romance-catalog .romance-copy{position:static}.romance-home .romance-photo:first-child{min-height:280px}.romance-home .romance-photo:only-child{min-height:280px}.romance-home .romance-gallery{padding:14px 0 14px 14px}.romance-cta{width:100%;gap:12px}.romance-dialog header,.romance-dialog figure{padding-inline:14px}}

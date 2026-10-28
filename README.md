@@ -365,3 +365,11 @@ As reservas aparecem automaticamente pelo estado administrativo autenticado, atu
 ### Catálogo com seis categorias
 
 As opções aparecem em ordem: Standard, Standard Superior, Triplo Standard, Triplo Superior, Família e Família Superior. O andar é parte da elegibilidade de cada categoria; as duas opções Família são mostradas nas buscas somente para 5 ou mais pessoas por quarto, contando todas as crianças. As apresentações usam o mesmo estoque físico já cadastrado e os preços existentes por andar/ocupação. As novas variantes superiores começam com as fotos e comodidades atuais, editáveis em **Conteúdo dos quartos**; não foram criados quartos físicos adicionais. Migração `database/six-room-categories.sql`, verificação sintética em rollback `database/test-six-room-categories.sql`.
+
+### Decoração romântica
+
+Em **Editar site → Decoração romântica**, cadastre somente fotos reais da decoração, suas descrições alternativas e os textos. Use **Usar como principal** para levar uma foto à primeira posição; as setas ordenam as demais. Upload, otimização em 4:3 e recorte preservam a origem para novos ajustes. Ative **Exibir esta seção**, confira em **Pré-visualizar** e publique. Sem fotos, a seção permanece ausente nas duas páginas, mesmo com a exibição ativada.
+
+O cadastro compartilhado `romance` alimenta o destaque da home e a galeria em `/quartos#decoracao-romantica` (também em `/reservas`). O botão da home leva à galeria; a consulta usa o WhatsApp de **Identidade e contatos** e a mensagem editável, sem tarifas fictícias ou promessa de itens inclusos. A primeira foto é a principal, até duas complementares aparecem na home e todas aparecem no catálogo, com ampliação em diálogo acessível. A ordem da home pode ser alterada em **Ordem e blocos extras**. As publicações anteriores recebem os campos novos na leitura, desativados e sem fotos, sem resemeadura do documento nem alteração de quartos, preços ou reservas. Não houve alteração de esquema ou permissões no banco.
+
+Verificação com Next compilado e API/storage isolados: `node scripts/test-site-editor.mjs --romance-only`. Fotografias sintéticas usadas nesse teste ficam somente no serviço de teste em memória, nunca na publicação real.

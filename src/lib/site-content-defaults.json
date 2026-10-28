@@ -678,7 +678,7 @@
     "policiesEyebrow": "PARA UMA ESTADIA TRANQUILA"
   },
   "layout": {
-    "order": "about\ngallery\nrooms\nleisure\ninstagram\nbeaches\nreviews\ncontact",
+    "order": "about\ngallery\nrooms\nromance\nleisure\ninstagram\nbeaches\nreviews\ncontact",
     "blocks": []
   },
   "operations": {
@@ -689,5 +689,18 @@
     "silbeckChecked": false,
     "bookingFlowChecked": false,
     "backupsChecked": false
+  },
+  "romance": {
+    "visible": false,
+    "eyebrow": "Momentos especiais a dois",
+    "title": "Surpreenda quem você ama",
+    "description": "Transforme sua estadia em uma lembrança especial. Consulte as possibilidades de decoração romântica para celebrar a dois.",
+    "buttonLabel": "Conheça a decoração romântica",
+    "pageTitle": "Decoração romântica",
+    "pageDescription": "Um cuidado especial para celebrar a dois. Converse com a pousada para conhecer as possibilidades de decoração para sua estadia.",
+    "notice": "Opções, valores e disponibilidade da decoração devem ser consultados diretamente com a pousada.",
+    "whatsappLabel": "Consultar pelo WhatsApp",
+    "whatsappMessage": "Olá! Gostaria de conhecer as opções de decoração romântica da Pousada Flor de Lótus e consultar valores e disponibilidade.",
+    "photos": []
   }
 }
