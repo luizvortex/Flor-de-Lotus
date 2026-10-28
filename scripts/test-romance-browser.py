@@ -88,6 +88,17 @@ with sync_playwright() as p:
   expected={'en':'Explore options','he':'גלו את האפשרויות','pt':'Conhecer opções'}[lang]
   expect(page.locator('.romance-cta')).to_contain_text(expected)
   if lang=='he':expect(page.locator('html')).to_have_attribute('dir','rtl')
+ # A single romantic photo must not force the package's text/button outside its card.
+ single=copy.deepcopy(saved['content']);single['romance']['photos']=single['romance']['photos'][:1]
+ response=context.request.put(base+'/api/site-content',data={'content':single,'revision':saved['revision']});assert response.status==200
+ saved=context.request.get(base+'/api/site-content').json()
+ page.goto(base+'/quartos',wait_until='networkidle')
+ for width in [320,390,543,768,1024,1280,1440,1920]:
+  page.set_viewport_size({'width':width,'height':1000})
+  page.locator('#catalog-offers').screenshot(path=f'work/package-button-{width}.png')
+  bounds=page.locator('.package-card').first.evaluate('card=>{const r=card.getBoundingClientRect(),b=card.querySelector("[data-package]").getBoundingClientRect();return {bottom:r.bottom,buttonBottom:b.bottom,left:r.left,right:r.right,buttonLeft:b.left,buttonRight:b.right};}')
+  assert bounds['buttonBottom']<=bounds['bottom']-20,(width,bounds)
+  assert bounds['buttonLeft']>=bounds['left']+20 and bounds['buttonRight']<=bounds['right']-20,(width,bounds)
  package_fixture['enabled']=False
  page.goto(base+'/quartos',wait_until='networkidle');expect(page.locator('#special-packages')).not_to_be_visible()
  assert page.locator('.romance-section').bounding_box()['width']>500
