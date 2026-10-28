@@ -312,6 +312,10 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
     if (!operation) throw new ApiError(404, 'Operação não encontrada.');
     if (operation === 'book' && (!token || !Object.hasOwn(data, 'status')) && hasGuestSession(request)) return await guestBookingOperation(request, 'book', data);
     const result = await rpc(operation, data, token);
+    if(operation==='admin'&&token){
+      try{const decor=await call('/rest/v1/rpc/lotus_romance_api','POST',{p_operation:'admin_orders',p_data:{}},token);const orders=decor.orders as Json[];result.bookings=(result.bookings as Json[]).map(b=>{const order=orders.find(o=>o.booking_id===b.id);return order?{...b,romance_id:order.id,romance_operational:order.operational,romance_stay_total:order.stay_total,romance_decoration_total:order.decoration_total}:b;});}
+      catch{result.romance_available=false;}
+    }
     return finish(result, operation === 'book' ? 201 : 200);
   } catch (error) {
     if (error instanceof ApiError) return finish({ error: error.message }, error.status);

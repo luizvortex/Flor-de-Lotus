@@ -64,8 +64,8 @@ with sync_playwright() as p:
  expect(page.locator('.romance-gallery img').first).to_have_attribute('alt','Imagem sintética de teste 3')
  href=page.locator('.romance-cta').get_attribute('href')
  from urllib.parse import urlparse,parse_qs
- assert urlparse(href).path=='/'+str(original['branding']['whatsapp'])
- assert parse_qs(urlparse(href).query)['text']==[original['romance']['whatsappMessage']]
+ assert urlparse(href).path=='/experiencias/decoracao-romantica'
+ expect(page.locator('.romance-cta')).to_have_attribute('target','_blank')
  assert page.locator('#rooms').evaluate('el=>el.nextElementSibling.id')=='catalog-offers'
  expect(page.locator('#special-packages')).to_be_visible()
  page.locator('[data-package="91"]').click();expect(page.locator('#checkin')).to_have_value('2035-12-20');expect(page.locator('#checkout')).to_have_value('2035-12-24')

@@ -79,7 +79,8 @@
     ],
     "Acompanhar em Minha conta": [
       "Track in My account",
-      "מעקב בחשבון שלי"
+      "מעקב בחשבון שלי",
+      "Consultar en Mi cuenta"
     ],
     "Acompanhar minha solicitação": [
       "Track my request",
@@ -111,7 +112,8 @@
     ],
     "Andar": [
       "Floor",
-      "קומה"
+      "קומה",
+      "Planta"
     ],
     "Antes de solicitar, consulte as": [
       "Before requesting a booking, check the",
@@ -427,7 +429,8 @@
     ],
     "Entrada": [
       "Check-in",
-      "הגעה"
+      "הגעה",
+      "Entrada"
     ],
     "Entrada da Pousada Flor de Lótus": [
       "Entrance to Pousada Flor de Lótus",
@@ -435,7 +438,8 @@
     ],
     "Entrar com Google": [
       "Sign in with Google",
-      "כניסה עם Google"
+      "כניסה עם Google",
+      "Iniciar sesión con Google"
     ],
     "Entrar com Google para continuar": [
       "Sign in with Google to continue",
@@ -471,7 +475,8 @@
     ],
     "Escolha a entrada": [
       "Choose check-in",
-      "בחרו תאריך הגעה"
+      "בחרו תאריך הגעה",
+      "Elige la entrada"
     ],
     "Escolha a praia:": [
       "Choose a beach:",
@@ -479,7 +484,8 @@
     ],
     "Escolha as datas": [
       "Choose your dates",
-      "בחרו תאריכים"
+      "בחרו תאריכים",
+      "Elige las fechas"
     ],
     "Escolha as datas para ver os preços": [
       "Choose dates to see prices",
@@ -667,7 +673,8 @@
     ],
     "Hóspedes": [
       "Guests",
-      "אורחים"
+      "אורחים",
+      "Huéspedes"
     ],
     "Informações | Pousada Flor de Lótus": [
       "Information · Pousada Flor de Lótus",
@@ -735,7 +742,8 @@
     ],
     "Minha conta": [
       "My account",
-      "החשבון שלי"
+      "החשבון שלי",
+      "Mi cuenta"
     ],
     "Mirante de Itacarezinho": [
       "Itacarezinho viewpoint",
@@ -751,7 +759,8 @@
     ],
     "Mês anterior": [
       "Previous month",
-      "החודש הקודם"
+      "החודש הקודם",
+      "Mes anterior"
     ],
     "Natureza ao redor": [
       "Nature all around",
@@ -919,7 +928,8 @@
     ],
     "Piso superior": [
       "Upper floor",
-      "קומה עליונה"
+      "קומה עליונה",
+      "Planta superior"
     ],
     "Planejar estadia": [
       "Plan your stay",
@@ -999,7 +1009,8 @@
     ],
     "Próximo mês": [
       "Next month",
-      "החודש הבא"
+      "החודש הבא",
+      "Mes siguiente"
     ],
     "Pular para as avaliações": [
       "Skip to reviews",
@@ -1047,7 +1058,8 @@
     ],
     "Quartos": [
       "Rooms",
-      "חדרים"
+      "חדרים",
+      "Habitaciones"
     ],
     "Quartos com varanda": [
       "Rooms with balconies",
@@ -1099,7 +1111,8 @@
     ],
     "Saída": [
       "Check-out",
-      "עזיבה"
+      "עזיבה",
+      "Salida"
     ],
     "Se a janela não abrir,": [
       "If the window doesn't open,",
@@ -1107,11 +1120,13 @@
     ],
     "Selecionar datas": [
       "Select dates",
-      "בחירת תאריכים"
+      "בחירת תאריכים",
+      "Seleccionar fechas"
     ],
     "Selecione": [
       "Select",
-      "בחירה"
+      "בחירה",
+      "Selecciona"
     ],
     "Selecione o andar": [
       "Select a floor",
@@ -1227,7 +1242,8 @@
     ],
     "Telefone / WhatsApp": [
       "Phone / WhatsApp",
-      "טלפון / WhatsApp"
+      "טלפון / WhatsApp",
+      "Teléfono / WhatsApp"
     ],
     "Tempo para estar junto.": [
       "Time to be together.",
@@ -1259,7 +1275,8 @@
     ],
     "Térreo": [
       "Ground floor",
-      "קומת קרקע"
+      "קומת קרקע",
+      "Planta baja"
     ],
     "UM DESTINO, MUITOS CAMINHOS": [
       "ONE DESTINATION, MANY PATHS",
@@ -1607,11 +1624,13 @@
     ],
     "Adultos": [
       "Adults",
-      "מבוגרים"
+      "מבוגרים",
+      "Adultos"
     ],
     "Crianças": [
       "Children",
-      "ילדים"
+      "ילדים",
+      "Niños"
     ],
     "A partir de 18 anos": [
       "Aged 18 and over",
@@ -1631,7 +1650,8 @@
     ],
     "Idade da criança": [
       "Child's age",
-      "גיל הילד"
+      "גיל הילד",
+      "Edad del niño"
     ],
     "Selecione a idade": [
       "Select an age",
@@ -1643,7 +1663,8 @@
     ],
     "Escolha a saída": [
       "Choose check-out",
-      "בחרו תאריך עזיבה"
+      "בחרו תאריך עזיבה",
+      "Elige la salida"
     ],
     "Selecione a saída": [
       "Select check-out",
@@ -2354,8 +2375,9 @@
       "חשבון מארגן הקבוצה"
     ],
     "Já entrei, atualizar acesso": [
-      "I have signed in, refresh access",
-      "כבר התחברתי, רענון הגישה"
+      "Already signed in, refresh access",
+      "כבר נכנסתי, עדכון הגישה",
+      "Ya inicié sesión, actualizar acceso"
     ],
     "1. Datas e responsável": [
       "1. Dates and organizer",
@@ -2559,7 +2581,8 @@
     ],
     "Decoração romântica": [
       "Romantic room decoration",
-      "עיצוב רומנטי לחדר"
+      "עיצוב רומנטי לחדר",
+      "Decoración romántica"
     ],
     "Um cuidado especial para celebrar a dois. Converse com a pousada para conhecer as possibilidades de decoração para sua estadia.": [
       "A special touch for a celebration together. Contact the pousada to discover the decoration options for your stay.",
@@ -2651,7 +2674,8 @@
     ],
     "Conhecer opções": [
       "Explore options",
-      "גלו את האפשרויות"
+      "גלו את האפשרויות",
+      "Conocer opciones"
     ],
     "EXPERIÊNCIAS EM GRUPO": [
       "GROUP EXPERIENCES",
@@ -2724,6 +2748,426 @@
     "Fachada da Pousada Flor de Lótus em Itacaré": [
       "Pousada Flor de Lótus facade in Itacaré",
       "חזית פוסאדה פלור דה לוטוס באיטקרה"
+    ],
+    "FLOR DE LÓTUS · MOMENTOS ESPECIAIS": [
+      "FLOR DE LÓTUS · SPECIAL MOMENTS",
+      "פלור דה לוטוס · רגעים מיוחדים",
+      "FLOR DE LÓTUS · MOMENTOS ESPECIALES"
+    ],
+    "O amor merece um cenário inesquecível.": [
+      "Love deserves an unforgettable setting.",
+      "לאהבה מגיעה תפאורה בלתי נשכחת.",
+      "El amor merece un escenario inolvidable."
+    ],
+    "Transforme sua estadia em uma surpresa repleta de carinho, beleza e detalhes preparados especialmente para vocês.": [
+      "Turn your stay into a surprise filled with care, beauty and details prepared especially for you.",
+      "הפכו את השהות שלכם להפתעה מלאה באהבה, יופי ופרטים שהוכנו במיוחד עבורכם.",
+      "Transforma tu estancia en una sorpresa llena de cariño, belleza y detalles preparados especialmente para ustedes."
+    ],
+    "Começar nossa experiência": [
+      "Begin our experience",
+      "מתחילים את החוויה שלנו",
+      "Comenzar nuestra experiencia"
+    ],
+    "Descobrir as possibilidades": [
+      "Discover the possibilities",
+      "גלו את האפשרויות",
+      "Descubrir las posibilidades"
+    ],
+    "Cada detalhe conta uma parte da sua história.": [
+      "Every detail tells a part of your story.",
+      "כל פרט מספר חלק מהסיפור שלכם.",
+      "Cada detalle cuenta una parte de su historia."
+    ],
+    "01 · HOSPEDAGEM": [
+      "01 · YOUR STAY",
+      "01 · האירוח",
+      "01 · ALOJAMIENTO"
+    ],
+    "Primeiro, o cenário perfeito.": [
+      "First, the perfect setting.",
+      "קודם כול, התפאורה המושלמת.",
+      "Primero, el escenario perfecto."
+    ],
+    "Escolha quando viver esse momento e o quarto que irá receber sua surpresa.": [
+      "Choose when to share this moment and the room for your surprise.",
+      "בחרו מתי לחוות את הרגע ובאיזה חדר תמתין ההפתעה.",
+      "Elige cuándo vivir este momento y la habitación que recibirá tu sorpresa."
+    ],
+    "Categoria do quarto": [
+      "Room category",
+      "קטגוריית חדר",
+      "Categoría de habitación"
+    ],
+    "Todas as categorias": [
+      "All categories",
+      "כל הקטגוריות",
+      "Todas las categorías"
+    ],
+    "Preferência de andar": [
+      "Floor preference",
+      "העדפת קומה",
+      "Preferencia de planta"
+    ],
+    "Sem preferência": [
+      "No preference",
+      "ללא העדפה",
+      "Sin preferencia"
+    ],
+    "Consultar quartos disponíveis": [
+      "Check available rooms",
+      "בדיקת חדרים זמינים",
+      "Consultar habitaciones disponibles"
+    ],
+    "A unidade será atribuída pela pousada antes da confirmação. Nenhuma data é bloqueada apenas pela consulta.": [
+      "The pousada will assign the room before confirmation. A search alone does not hold any dates.",
+      "הפוסאדה תקצה חדר לפני האישור. חיפוש בלבד אינו שומר תאריכים.",
+      "La posada asignará la habitación antes de confirmar. La consulta por sí sola no bloquea fechas."
+    ],
+    "02 · A SUA SURPRESA": [
+      "02 · YOUR SURPRISE",
+      "02 · ההפתעה שלכם",
+      "02 · TU SORPRESA"
+    ],
+    "Agora, dê vida à sua surpresa.": [
+      "Now, bring your surprise to life.",
+      "עכשיו, הפכו את ההפתעה למציאות.",
+      "Ahora, dale vida a tu sorpresa."
+    ],
+    "Escolha os pequenos detalhes que transformarão esse momento em uma lembrança para sempre.": [
+      "Choose the little details that will turn this moment into a lasting memory.",
+      "בחרו את הפרטים הקטנים שיהפכו את הרגע לזיכרון לכל החיים.",
+      "Elige los pequeños detalles que convertirán este momento en un recuerdo para siempre."
+    ],
+    "Brindes especiais": [
+      "Special toasts",
+      "הרמות כוסית מיוחדות",
+      "Brindis especiales"
+    ],
+    "Pequenas delícias": [
+      "Little delights",
+      "פינוקים קטנים",
+      "Pequeñas delicias"
+    ],
+    "Um quarto apaixonante": [
+      "A romantic room",
+      "חדר מלא רומנטיקה",
+      "Una habitación para enamorarse"
+    ],
+    "Nossas lembranças": [
+      "Our memories",
+      "הזיכרונות שלנו",
+      "Nuestros recuerdos"
+    ],
+    "03 · NOSSAS LEMBRANÇAS": [
+      "03 · OUR MEMORIES",
+      "03 · הזיכרונות שלנו",
+      "03 · NUESTROS RECUERDOS"
+    ],
+    "Suas memórias também fazem parte da surpresa.": [
+      "Your memories are part of the surprise too.",
+      "גם הזיכרונות שלכם הם חלק מההפתעה.",
+      "Sus recuerdos también forman parte de la sorpresa."
+    ],
+    "Envie as fotografias que contam a história de vocês e diga como gostaria de apresentá-las.": [
+      "Upload the photos that tell your story and tell us how you would like them displayed.",
+      "העלו תמונות שמספרות את הסיפור שלכם וספרו לנו איך תרצו להציג אותן.",
+      "Envía las fotografías que cuentan su historia e indica cómo te gustaría presentarlas."
+    ],
+    "Escolher fotografias": [
+      "Choose photographs",
+      "בחירת תמונות",
+      "Elegir fotografías"
+    ],
+    "JPG, PNG ou WebP, até 3 MB por foto. As fotos são privadas.": [
+      "JPG, PNG or WebP, up to 3 MB per photo. Photos are private.",
+      "JPG, PNG או WebP, עד 3 MB לתמונה. התמונות פרטיות.",
+      "JPG, PNG o WebP, hasta 3 MB por foto. Las fotos son privadas."
+    ],
+    "Conte como você imagina suas fotos.": [
+      "Tell us how you imagine your photos.",
+      "ספרו לנו איך תרצו להציג את התמונות.",
+      "Cuéntanos cómo imaginas tus fotos."
+    ],
+    "Gostaria de uma foto maior ao centro e duas menores nas laterais, representando nossos momentos favoritos.": [
+      "I would like a larger photo in the center and two smaller ones at the sides, showing our favorite moments.",
+      "הייתי רוצה תמונה גדולה במרכז ושתי תמונות קטנות בצדדים, המציגות את הרגעים האהובים עלינו.",
+      "Me gustaría una foto más grande en el centro y dos más pequeñas a los lados, con nuestros momentos favoritos."
+    ],
+    "04 · REVISÃO E CONTATO": [
+      "04 · REVIEW AND CONTACT",
+      "04 · סיכום ופרטי קשר",
+      "04 · REVISIÓN Y CONTACTO"
+    ],
+    "Prontos para viver esse momento?": [
+      "Ready for this moment?",
+      "מוכנים לחוות את הרגע?",
+      "¿Listos para vivir este momento?"
+    ],
+    "Entre com Google para finalizar sua experiência.": [
+      "Sign in with Google to complete your experience.",
+      "היכנסו עם Google להשלמת החוויה.",
+      "Inicia sesión con Google para finalizar tu experiencia."
+    ],
+    "Autorizo o uso das fotos e instruções exclusivamente para preparar minha experiência.": [
+      "I authorize the use of my photos and instructions solely to prepare my experience.",
+      "אני מאשר שימוש בתמונות ובהנחיות רק לצורך הכנת החוויה שלי.",
+      "Autorizo el uso de las fotos e instrucciones exclusivamente para preparar mi experiencia."
+    ],
+    "A equipe da pousada terá acesso às fotos para a preparação. Você pode removê-las antes do envio. Para solicitar exclusão posterior, fale com a pousada.": [
+      "The pousada team can access the photos for preparation. You can remove them before submitting. Contact the pousada to request deletion later.",
+      "צוות הפוסאדה יוכל לצפות בתמונות לצורך ההכנה. ניתן להסירן לפני השליחה. לבקשת מחיקה בהמשך, פנו לפוסאדה.",
+      "El equipo de la posada tendrá acceso a las fotos para la preparación. Puedes eliminarlas antes de enviar. Para solicitar su eliminación posterior, contacta con la posada."
+    ],
+    "A solicitação ficará aguardando confirmação da pousada. Nenhum pagamento será cobrado nesta página.": [
+      "Your request will await confirmation from the pousada. No payment will be charged on this page.",
+      "הבקשה תמתין לאישור הפוסאדה. לא יתבצע חיוב בעמוד זה.",
+      "La solicitud quedará pendiente de confirmación de la posada. No se cobrará ningún pago en esta página."
+    ],
+    "Sua experiência, do jeitinho que imaginou.": [
+      "Your experience, just as you imagined.",
+      "החוויה שלכם, בדיוק כפי שדמיינתם.",
+      "Tu experiencia, tal como la imaginaste."
+    ],
+    "Escolha uma hospedagem e personalize sua surpresa.": [
+      "Choose your stay and personalize your surprise.",
+      "בחרו את האירוח והתאימו את ההפתעה שלכם.",
+      "Elige tu alojamiento y personaliza tu sorpresa."
+    ],
+    "Finalizar minha experiência": [
+      "Complete my experience",
+      "השלמת החוויה שלי",
+      "Finalizar mi experiencia"
+    ],
+    "Hospedagem": [
+      "Accommodation",
+      "אירוח",
+      "Alojamiento"
+    ],
+    "Entrada / Saída": [
+      "Check-in / Check-out",
+      "כניסה / יציאה",
+      "Entrada / Salida"
+    ],
+    "Andar da oferta": [
+      "Offered floor",
+      "הקומה המוצעת",
+      "Planta de la oferta"
+    ],
+    "Valor da hospedagem": [
+      "Accommodation total",
+      "מחיר האירוח",
+      "Importe del alojamiento"
+    ],
+    "Decoração": [
+      "Decoration",
+      "עיצוב",
+      "Decoración"
+    ],
+    "Subtotal dos adicionais": [
+      "Add-ons subtotal",
+      "סכום התוספות",
+      "Subtotal de adicionales"
+    ],
+    "Taxas / descontos": [
+      "Fees / discounts",
+      "עמלות / הנחות",
+      "Tasas / descuentos"
+    ],
+    "Escolha seus adicionais.": [
+      "Choose your add-ons.",
+      "בחרו את התוספות שלכם.",
+      "Elige tus adicionales."
+    ],
+    "Valores conferidos. A disponibilidade será verificada novamente ao enviar.": [
+      "Prices checked. Availability will be checked again on submission.",
+      "המחירים נבדקו. הזמינות תיבדק שוב בעת השליחה.",
+      "Valores verificados. La disponibilidad se comprobará de nuevo al enviar."
+    ],
+    "Validando valores e disponibilidade…": [
+      "Checking prices and availability…",
+      "בודקים מחירים וזמינות…",
+      "Verificando valores y disponibilidad…"
+    ],
+    "Consulte novamente para atualizar a hospedagem.": [
+      "Search again to update your stay.",
+      "חפשו שוב כדי לעדכן את האירוח.",
+      "Consulta de nuevo para actualizar el alojamiento."
+    ],
+    "Consultando quartos…": [
+      "Checking rooms…",
+      "בודקים חדרים…",
+      "Consultando habitaciones…"
+    ],
+    "Escolha uma hospedagem disponível.": [
+      "Choose an available room.",
+      "בחרו חדר זמין.",
+      "Elige un alojamiento disponible."
+    ],
+    "Não encontramos disponibilidade para essas datas e hóspedes.": [
+      "No availability for these dates and guests.",
+      "אין זמינות לתאריכים ולהרכב האורחים שנבחרו.",
+      "No encontramos disponibilidad para estas fechas y huéspedes."
+    ],
+    "Escolher este quarto": [
+      "Choose this room",
+      "בחירת החדר הזה",
+      "Elegir esta habitación"
+    ],
+    "✓ Quarto selecionado": [
+      "✓ Room selected",
+      "✓ החדר נבחר",
+      "✓ Habitación seleccionada"
+    ],
+    "Período completo": [
+      "Full stay",
+      "כל תקופת השהות",
+      "Período completo"
+    ],
+    "Carregando opções…": [
+      "Loading options…",
+      "טוענים אפשרויות…",
+      "Cargando opciones…"
+    ],
+    "As opções de decoração estão sendo preparadas. Consulte a pousada para conhecer as possibilidades.": [
+      "Decoration options are being prepared. Contact the pousada to learn more.",
+      "אפשרויות העיצוב נמצאות בהכנה. פנו לפוסאדה לפרטים נוספים.",
+      "Las opciones de decoración se están preparando. Consulta las posibilidades con la posada."
+    ],
+    "As opções ainda não estão disponíveis para contratação. Consulte a pousada.": [
+      "Options are not yet available to book. Contact the pousada.",
+      "עדיין לא ניתן להזמין אפשרויות עיצוב. פנו לפוסאדה.",
+      "Las opciones aún no están disponibles para contratar. Consulta con la posada."
+    ],
+    "Conta conectada. Você pode enviar sua solicitação.": [
+      "Account connected. You can submit your request.",
+      "החשבון מחובר. ניתן לשלוח את הבקשה.",
+      "Cuenta conectada. Puedes enviar tu solicitud."
+    ],
+    "Sua surpresa começou.": [
+      "Your surprise has begun.",
+      "ההפתעה שלכם התחילה.",
+      "Tu sorpresa ha comenzado."
+    ],
+    "Aguardando confirmação da pousada.": [
+      "Awaiting confirmation from the pousada.",
+      "ממתינים לאישור הפוסאדה.",
+      "Pendiente de confirmación de la posada."
+    ],
+    "Nenhum pagamento foi cobrado. A equipe irá conferir a hospedagem e combinar os próximos passos.": [
+      "No payment was charged. The team will review your stay and arrange the next steps.",
+      "לא בוצע חיוב. הצוות יבדוק את האירוח ויתאם את הצעדים הבאים.",
+      "No se ha cobrado ningún pago. El equipo revisará el alojamiento y acordará los siguientes pasos."
+    ],
+    "Iniciar outra experiência": [
+      "Start another experience",
+      "התחלת חוויה נוספת",
+      "Iniciar otra experiencia"
+    ],
+    "Suas experiências": [
+      "Your experiences",
+      "החוויות שלכם",
+      "Tus experiencias"
+    ],
+    "Confirmado": [
+      "Confirmed",
+      "אושר",
+      "Confirmado"
+    ],
+    "Em preparação": [
+      "Being prepared",
+      "בהכנה",
+      "En preparación"
+    ],
+    "Preparado": [
+      "Prepared",
+      "מוכן",
+      "Preparado"
+    ],
+    "Concluído": [
+      "Completed",
+      "הושלם",
+      "Completado"
+    ],
+    "Cancelado": [
+      "Cancelled",
+      "בוטל",
+      "Cancelado"
+    ],
+    "Nome do hóspede": [
+      "Guest name",
+      "שם האורח",
+      "Nombre del huésped"
+    ],
+    "Entre com Google para personalizar sua reserva.": [
+      "Sign in with Google to personalize your booking.",
+      "היכנסו עם Google כדי להתאים את ההזמנה.",
+      "Inicia sesión con Google para personalizar tu reserva."
+    ],
+    "O valor mudou. Revise o resumo e clique novamente para enviar.": [
+      "The price changed. Review the summary and click again to submit.",
+      "המחיר השתנה. בדקו את הסיכום ולחצו שוב לשליחה.",
+      "El precio cambió. Revisa el resumen y pulsa de nuevo para enviar."
+    ],
+    "Preencha seu nome e um telefone válido.": [
+      "Enter your name and a valid phone number.",
+      "הזינו שם ומספר טלפון תקין.",
+      "Introduce tu nombre y un teléfono válido."
+    ],
+    "Confira as fotos e a autorização de uso.": [
+      "Check the photos and consent.",
+      "בדקו את התמונות ואת אישור השימוש.",
+      "Revisa las fotos y la autorización de uso."
+    ],
+    "Use fotografias JPG, PNG ou WebP de até 3 MB.": [
+      "Use JPG, PNG or WebP photos up to 3 MB.",
+      "השתמשו בתמונות JPG, PNG או WebP עד 3 MB.",
+      "Utiliza fotografías JPG, PNG o WebP de hasta 3 MB."
+    ],
+    "Envie somente a quantidade de fotos solicitada pelos itens selecionados.": [
+      "Upload only the number of photos required by your selected items.",
+      "העלו רק את מספר התמונות הנדרש לפריטים שנבחרו.",
+      "Envía solo la cantidad de fotos requerida por los artículos seleccionados."
+    ],
+    "Consulte a pousada para acomodar mais pessoas no mesmo quarto.": [
+      "Contact the pousada to accommodate more people in one room.",
+      "פנו לפוסאדה כדי לארח יותר אנשים באותו חדר.",
+      "Consulta con la posada para alojar a más personas en la misma habitación."
+    ],
+    "Escolha entrada e saída válidas.": [
+      "Choose valid check-in and check-out dates.",
+      "בחרו תאריכי כניסה ויציאה תקינים.",
+      "Elige fechas de entrada y salida válidas."
+    ],
+    "Confira as quantidades dos adicionais.": [
+      "Check the add-on quantities.",
+      "בדקו את כמויות התוספות.",
+      "Revisa las cantidades de los adicionales."
+    ],
+    "Diminuir quantidade": [
+      "Decrease quantity",
+      "הפחתת כמות",
+      "Disminuir cantidad"
+    ],
+    "Aumentar quantidade": [
+      "Increase quantity",
+      "הגדלת כמות",
+      "Aumentar cantidad"
+    ],
+    "por unidade": [
+      "per unit",
+      "ליחידה",
+      "por unidad"
+    ],
+    "Quantidade:": [
+      "Quantity:",
+      "כמות:",
+      "Cantidad:"
+    ],
+    "Pular para a hospedagem": [
+      "Skip to accommodation",
+      "דילוג לבחירת האירוח",
+      "Ir al alojamiento"
     ]
   }
 }

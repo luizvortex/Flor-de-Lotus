@@ -18,6 +18,10 @@ export async function guestBookingOperation(request: NextRequest, operation: 're
       const match = /^PT(400|401|403|404|409)$/.exec(error.code || '');
       return reply({ error: match ? error.message : 'Não foi possível consultar suas reservas. Tente novamente.' }, match ? Number(match[1]) : 503);
     }
+    if(operation==='read'){
+      const {data:decor,error:decorError}=await supabase.rpc('lotus_romance_api',{p_operation:'mine',p_data:{}});
+      if(!decorError&&Array.isArray(decor?.orders)&&Array.isArray(result?.bookings)){result.bookings=result.bookings.map((booking:Record<string,unknown>)=>{const order=decor.orders.find((o:Record<string,unknown>)=>o.booking_id===booking.id);return order?{...booking,romance:{id:order.id,stay_total:order.stay_total,decoration_total:order.decoration_total,operational:order.operational,items:order.items}}:booking;});}
+    }
     return reply(result, operation === 'book' ? 201 : 200);
   } catch { return reply({ error: 'Não foi possível conectar às suas reservas. Tente novamente.' }, 503); }
 }

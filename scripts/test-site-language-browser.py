@@ -31,7 +31,7 @@ with sync_playwright() as p:
  original=page.locator('.home-hero-tagline').inner_text()
  original_about=page.locator('.about-description p').first.inner_text()
  summary=page.locator('.home-language summary');summary.click()
- assert page.locator('.home-language [data-language]').count()==3
+ assert page.locator('.home-language [data-language]').count()==4
  box=summary.bounding_box();contact=page.locator('.home-nav-links a').last.bounding_box();account=page.locator('.home-account').bounding_box()
  assert box['x']>contact['x']+contact['width'] and box['y']>account['y']
  page.keyboard.press('Escape');assert not page.locator('.home-language').evaluate('(el)=>el.open')

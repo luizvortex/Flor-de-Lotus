@@ -1,10 +1,17 @@
-# Integração com HQBeds — levantamento inicial
+# Integração com HQBeds / HQBooking — levantamento técnico
 
 Sistema identificado pelo logotipo enviado pelo proprietário: **HQBeds**.
 
-## O que foi verificado em 26/10/2026
+## Fontes oficiais verificadas em 28/10/2026
 
-A pesquisa web deste ambiente falhou. A tentativa de acessar `https://hqbeds.com.br` foi bloqueada pelo proxy (HTTP CONNECT 403); esse endereço é uma tentativa de localização, não uma fonte oficial validada. A pesquisa pelo Google exigiu uma etapa de acesso e não disponibilizou resultados utilizáveis. Não foi possível verificar documentação oficial, API, parceiros, valores ou funcionalidades do plano da pousada. Não há integração implementada ou ativa.
+O acesso falhou no levantamento inicial de 26/10; a pesquisa posterior permitiu consultar as páginas oficiais abaixo. Elas comprovam recursos do produto, sem comprovar acesso de integração do plano da pousada.
+
+- [Integrar o motor HQBooking ao site](https://ajuda.hqbeds.com.br/pt-br/como-integrar-o-motor-de-reservas-hqbookings-com-o-seu-site): link de venda em Propriedade → Setup → hqbookings → Principal e gerador em Setup → Widget. O endereço específico da pousada deve ser fornecido pelo proprietário.
+- [Anúncios de produtos e serviços no HQBooking](https://ajuda.hqbeds.com.br/pt-br/como-criar-an%C3%BAncios-de-servi%C3%A7os-ou-produtos-para-vendas-no-hqbookings): cadastro de anúncios vinculados a produtos do estoque, com preço, limite de compra, escopo, tradução, fotografia e ativação. Adicionais são discriminados na revisão/email e vinculados à operação do HQBeds. O artigo informa restrição de atributos/variantes à Loja Virtual; não presumir suporte equivalente por API no motor.
+- [Taxas extras e formas de pagamento](https://ajuda.hqbeds.com.br/pt-br/como-configurar-taxas-extras-e-formas-de-pagamento-no-motor-hqbookings): HQpagamentos permite PIX/cartão quando contratado; depósito manual mantém a reserva sujeita à confirmação. Não há credenciais ou gateway contratado/configurado neste projeto.
+- [Apresentação do motor](https://www.hqbeds.com/booking-engine) e [integrações](https://www.hqbeds.com.br/integracoes): confirmam ofertas de integração, pagamentos e adicionais, mas não estabelecem endpoints, autenticação ou um contrato de API para checkout próprio.
+
+Nenhuma API pública oficial compatível com o fluxo personalizado foi validada. Não confundir **HQBeds** com **Hotelbeds**, outro fornecedor. Nenhuma sincronização ou cobrança externa está ativa no site.
 
 ## Caminho recomendado
 
@@ -18,7 +25,7 @@ Não enviar senhas pessoais. Credenciais de integração devem ser específicas,
 
 ## Se houver API compatível
 
-1. Mapear os 18 quartos ativos, seus identificadores nos dois sistemas, categorias, andares, capacidades e tarifas por pagante. Não presumir que número do quarto é ID técnico. Preservar crianças de até 5 anos sem cobrança, mas contando na lotação.
+1. Mapear os 19 quartos ativos, seus identificadores nos dois sistemas, categorias, andares, capacidades e tarifas por pagante. Não presumir que número do quarto é ID técnico. Preservar crianças de até 5 anos sem cobrança, mas contando na lotação.
 2. Validar regras de pré-reserva, bloqueio de estoque e confirmação manual. A reserva pendente do site já bloqueia noites; confirmar como representar isso no HQBeds antes de vender em ambos.
 3. Consultar disponibilidade e preço autoritativos, criar a reserva uma única vez com identificador externo/idempotência e persistir o ID do fornecedor. Tratar falhas parciais: nunca mostrar sucesso sem saber se a reserva foi criada.
 4. Receber eventos autenticados, tratar duplicações, cancelamentos e mudanças de quarto. Usar fila de reprocessamento e reconciliação periódica; registrar divergências no painel sem expor dados de hóspedes em logs.
@@ -35,3 +42,9 @@ Não enviar senhas pessoais. Credenciais de integração devem ser específicas,
 ## Impacto nos relatórios
 
 O site distingue valor de reservas confirmadas de recebimentos efetivamente registrados. Caso o HQBeds já tenha financeiro, definir a origem dos lançamentos antes de importar; cada pagamento externo deve ter ID único para impedir contagem em dobro. A lista de participantes de excursões é privada e só deve ser sincronizada se a API e as permissões autorizarem.
+
+## Experiência romântica do site
+
+A implementação preparada em outubro utiliza o motor nativo da pousada e pedidos complementares ligados ao ID real da reserva nativa, com valores históricos e estados operacional/financeiro separados. Uma referência HQBeds pode ser registrada para conferência manual, mas não representa sincronização. Ainda é necessário obter do fornecedor documentação e autorização para disponibilidade, tarifas, criação/cancelamento, cobranças, identificadores externos, idempotência e webhooks. Veja [implementação e pendências](experiencia-romantica.md).
+
+Alternativa comprovada pelo fornecedor: usar o link/widget oficial e os anúncios de adicionais no próprio HQBooking, após validar o plano e a configuração da pousada. Isso exigiria adaptar a jornada, o retorno da reserva, os uploads privados e a lista de grupos; não basta juntar bancos. Para um checkout próprio, dependemos de API oficial homologada. Adicionais que não possam ser lançados no HQBeds precisam permanecer em pedidos vinculados ao identificador externo real, com reconciliação, sem dupla contagem financeira.
