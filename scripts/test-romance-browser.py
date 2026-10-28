@@ -78,26 +78,26 @@ with sync_playwright() as p:
   page.locator('#catalog-offers').screenshot(path=f'work/catalog-offers-{width}.png')
   strip,left,right=page.locator('#catalog-offers').evaluate('el=>[el,el.querySelector("#special-packages"),el.querySelector(".romance-section")].map(item=>{const r=item.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};})')
   assert abs(strip['x'])<1 and abs(strip['width']-width)<1,(width,strip)
-  if width>900:
-   assert abs(left['y']-right['y'])<1 and abs(left['x']+left['width']-right['x'])<1
-   assert abs(right['x']+right['width']-width)<1
-  else:assert abs(left['y']+left['height']-right['y'])<1,(width,left,right,strip)
+  if width>1024:
+   assert abs(left['y']-right['y'])<1 and abs(right['x']-left['x']-left['width']-36)<1
+   assert abs(left['width']-right['width'])<1
+  else:assert abs(left['y']+left['height']+28-right['y'])<1,(width,left,right,strip)
  for lang,title in [('en','Romantic room decoration'),('he','עיצוב רומנטי לחדר'),('pt','Decoração romântica')]:
   page.locator('.site-language summary').first.click();page.locator(f'.site-language [data-language="{lang}"]').first.click()
   expect(page.locator('#romance-title')).to_have_text(title)
-  expected={'en':'Ask us on WhatsApp','he':'פנו אלינו בוואטסאפ','pt':'Consultar pelo WhatsApp'}[lang]
+  expected={'en':'Explore options','he':'גלו את האפשרויות','pt':'Conhecer opções'}[lang]
   expect(page.locator('.romance-cta')).to_contain_text(expected)
   if lang=='he':expect(page.locator('html')).to_have_attribute('dir','rtl')
  package_fixture['enabled']=False
  page.goto(base+'/quartos',wait_until='networkidle');expect(page.locator('#special-packages')).not_to_be_visible()
- assert abs(page.locator('.romance-section').bounding_box()['width']-page.viewport_size['width'])<1
+ assert page.locator('.romance-section').bounding_box()['width']>500
  package_fixture['enabled']=True
  context.request.put(base+'/api/site-content',data={'content':dict(saved['content'],romance=dict(saved['content']['romance'],visible=False)),'revision':saved['revision']})
  for route in ['/','/quartos','/reservas']:
   page.goto(base+route,wait_until='networkidle');expect(page.locator('.romance-section')).to_have_count(0)
   if route!='/':
    expect(page.locator('#special-packages')).to_be_visible()
-   assert abs(page.locator('#special-packages').bounding_box()['width']-page.viewport_size['width'])<1
+   assert page.locator('#special-packages').bounding_box()['width']>500
  package_fixture['enabled']=False
  page.goto(base+'/quartos',wait_until='networkidle');expect(page.locator('#catalog-offers')).not_to_be_visible()
  assert not errors,errors

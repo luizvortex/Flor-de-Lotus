@@ -138,7 +138,7 @@
   const packagePhotos=['/img Pousada/FlordeLotus6.jpg','/img Pousada/interiorpousada.jpg','/img Pousada/FlordeLotus9.jpg'];
   $('#packages').innerHTML=packages.slice(0,3).map((p,index)=>`<article class="package-card">
    <div class="package-media"><img src="${esc(packagePhotos[index])}" alt="" width="800" height="600" loading="lazy"><span class="package-duration">${p.nights+1} dias <span aria-hidden="true">·</span> ${p.nights} ${p.nights===1?'noite':'noites'}</span></div>
-   <div class="package-copy"><p class="package-kicker">Sua próxima estadia</p><h3>${esc(p.name)}</h3>
+   <div class="package-copy"><p class="package-kicker">PACOTES ESPECIAIS</p><h3>${esc(p.name)}</h3>
     <div class="package-period"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="1"/><path d="M8 3v4m8-4v4M4 10h16"/></svg><div><span>Período do pacote</span><p><time datetime="${esc(p.start)}">${esc(dateLabel(p.start))}</time> a <time datetime="${esc(p.end)}">${esc(dateLabel(p.end))}</time></p></div></div>
     <div class="package-booking"><div class="package-price"><small>Pacote por quarto</small><p>${esc(money(p.price))}</p></div><button type="button" class="gold-button" data-package="${p.id}">Consultar pacote <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></button></div>
    </div></article>`).join('');

@@ -1,35 +1,42 @@
-/* One viewport-wide strip: packages on the left, romantic decoration on the right. */
-.catalog-main>.catalog-offers{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr);margin:64px 0 16px;background:#f3eee7;direction:ltr;min-width:0}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+.catalog-main>.catalog-offers{grid-column:1/-1;margin:64px 0 16px;padding:80px max(24px,calc((100% - 1240px)/2));box-sizing:border-box;background:#faf8f3;color:#1f3c4d;display:grid;grid-template-columns:minmax(0,1fr);gap:36px;direction:ltr;min-width:0;font-family:'Poppins',sans-serif;scroll-margin-top:100px}
 .catalog-offers:not(:has(>section:not([hidden]))){display:none}
 .catalog-offers:has(>#special-packages:not([hidden])):has(>.romance-section){grid-template-columns:repeat(2,minmax(0,1fr))}
-.catalog-offers>section{box-sizing:border-box;min-width:0}
-:root[dir=rtl] .catalog-offers>section{direction:rtl}
-#catalog-offers #special-packages{margin:0;padding:clamp(28px,3.2vw,60px);border:0;background:#f3eee7}
-#catalog-offers .romance-catalog{margin:0;padding:clamp(28px,3.2vw,60px);background:#eee8e0}
-#catalog-offers .romance-inner{gap:28px;max-width:1280px;align-items:center}
-#catalog-offers .romance-copy{position:static;max-width:none}
-#catalog-offers .romance-copy h2,#catalog-offers #special-packages>h2{font-size:clamp(30px,2.5vw,44px)}
-#catalog-offers .romance-gallery{gap:10px}
-#catalog-offers #special-packages .package-cards{grid-template-columns:minmax(0,1fr);gap:20px}
-#catalog-offers #special-packages .package-card{display:grid;grid-template-columns:1fr 1fr;grid-column:auto}
-#catalog-offers #special-packages .package-media{min-height:320px;aspect-ratio:auto}
-#catalog-offers #special-packages .package-copy{padding:28px;min-width:0}
-#catalog-offers #special-packages .package-card h3{font-size:clamp(26px,2vw,34px)}
-#catalog-offers #special-packages .package-booking .gold-button{min-width:0;max-width:none;gap:12px}
-#catalog-offers:has(>#special-packages:not([hidden]))>.romance-section{border-inline-start:1px solid #d9d0c2}
-@media(min-width:901px) and (max-width:1350px){
- .catalog-offers:has(>#special-packages:not([hidden])) .romance-inner{grid-template-columns:minmax(0,1fr)}
- #catalog-offers:has(>.romance-section) #special-packages .package-card{grid-template-columns:minmax(0,1fr)}
- #catalog-offers:has(>.romance-section) #special-packages .package-media{min-height:0;aspect-ratio:4/3}
-}
-@media(max-width:900px){
- .catalog-main>.catalog-offers:has(>#special-packages:not([hidden])):has(>.romance-section){grid-template-columns:minmax(0,1fr)}
- #catalog-offers:has(>#special-packages:not([hidden]))>.romance-section{border-inline-start:0;border-block-start:1px solid #d9d0c2}
-}
-@media(max-width:600px){
- .catalog-main>.catalog-offers{margin:40px 0 8px}
- #catalog-offers #special-packages,#catalog-offers .romance-catalog{padding:32px 20px}
- #catalog-offers #special-packages .package-card,#catalog-offers .romance-inner{grid-template-columns:minmax(0,1fr)}
- #catalog-offers #special-packages .package-media{min-height:0;aspect-ratio:4/3}
- #catalog-offers #special-packages .package-copy{padding:24px 20px}
-}
+.experience-heading{grid-column:1/-1;text-align:center;max-width:800px;margin:0 auto 16px}
+.experience-heading p{font-size:11px;letter-spacing:.2em;color:#88632f;margin:0 0 18px}
+.experience-heading h2{font:500 clamp(32px,3.3vw,48px)/1.2 'Playfair Display',Georgia,serif;color:#1f3c4d;margin:0 0 20px}
+.experience-heading span{font-size:14px;line-height:1.9;color:#60717a}
+.catalog-offers>section{min-width:0;box-sizing:border-box}
+:root[dir=rtl] .catalog-offers>section,:root[dir=rtl] .experience-heading{direction:rtl}
+#catalog-offers #special-packages{margin:0;padding:0;border:0;background:none;display:flex;flex-direction:column}
+#catalog-offers #special-packages[hidden]{display:none}
+#catalog-offers #special-packages>.eyebrow,#catalog-offers #special-packages>h2{display:none}
+#catalog-offers #special-packages .package-cards{display:flex;flex-direction:column;gap:28px;flex:1}
+#catalog-offers #special-packages .package-card,#catalog-offers .romance-inner{display:flex;flex-direction:column;min-width:0;flex:1;background:#fff;border:1px solid #e9e5dc;border-radius:6px;overflow:hidden;box-shadow:0 5px 20px #1f3c4d06;transition:transform .3s,box-shadow .3s}
+#catalog-offers .romance-catalog{margin:0;padding:0;background:none;display:flex;flex-direction:column}
+#catalog-offers .romance-inner{gap:0;max-width:none;width:100%}
+#catalog-offers .romance-gallery{order:-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%;background:#f5ebdd}
+#catalog-offers .romance-photo:first-child{grid-column:1/-1;aspect-ratio:3/2}
+#catalog-offers .romance-photo:not(:first-child){aspect-ratio:4/3}
+#catalog-offers #special-packages .package-media,#catalog-offers #special-packages .package-card:only-child .package-media{aspect-ratio:3/2;min-height:0;flex:none}
+#catalog-offers .romance-photo img,#catalog-offers .package-media img{transition:transform .6s;object-fit:cover}
+#catalog-offers .romance-copy,#catalog-offers #special-packages .package-copy,#catalog-offers #special-packages .package-card:only-child .package-copy{padding:32px;position:static;max-width:none;width:100%;box-sizing:border-box;display:flex;flex-direction:column;flex:1;align-items:stretch}
+#catalog-offers .romance-eyebrow,#catalog-offers .package-kicker{font:500 10px/1.7 'Poppins',sans-serif;letter-spacing:.17em;color:#88632f;margin:0 0 14px}
+#catalog-offers .romance-copy h2,#catalog-offers #special-packages .package-card h3{font:500 30px/1.25 'Playfair Display',Georgia,serif;color:#1f3c4d;margin:0 0 20px}
+#catalog-offers .romance-rule{display:none}
+#catalog-offers .romance-description{font:400 14px/1.9 'Poppins',sans-serif;color:#60717a;margin-bottom:22px}
+#catalog-offers .romance-notice{font:400 12px/1.8 'Poppins',sans-serif;border:0;padding:0;color:#88632f;margin:0 0 28px}
+#catalog-offers .romance-cta{margin-top:auto;align-self:stretch}
+#catalog-offers .romance-cta,#catalog-offers #special-packages .package-booking .gold-button{background:#88632f;color:#fff;border:0;border-radius:3px;min-height:48px;width:100%;max-width:none;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 20px;box-sizing:border-box;font:500 12px/1.7 'Poppins',sans-serif;transition:background .3s}
+#catalog-offers .romance-cta:hover,#catalog-offers #special-packages .gold-button:hover{background:#1f3c4d}
+#catalog-offers a svg,#catalog-offers button svg{transition:transform .3s;flex-shrink:0}
+#catalog-offers .romance-cta:hover svg,#catalog-offers .gold-button:hover svg{transform:translateX(4px)}
+#catalog-offers :focus-visible{outline:2px solid #88632f;outline-offset:4px}
+#catalog-offers #special-packages .package-price p{color:#1f3c4d}
+#catalog-offers .more-packages{align-self:center}
+@media(hover:hover){#catalog-offers .package-card:hover,#catalog-offers .romance-inner:hover{transform:translateY(-4px);box-shadow:0 12px 30px #1f3c4d12}#catalog-offers .package-media:hover img,#catalog-offers .romance-photo:hover img{transform:scale(1.04)}}
+.catalog-offers.experience-entering .experience-heading,.catalog-offers.experience-entering>section{opacity:0;transform:translateY(18px)}
+.catalog-offers.experience-revealed .experience-heading,.catalog-offers.experience-revealed>section{opacity:1;transform:none;transition:opacity .6s,transform .6s}
+@media(max-width:1024px){.catalog-main>.catalog-offers:has(>#special-packages:not([hidden])):has(>.romance-section){grid-template-columns:minmax(0,1fr)}.catalog-main>.catalog-offers{padding:52px max(24px,calc((100% - 640px)/2));gap:28px}}
+@media(max-width:600px){.catalog-main>.catalog-offers{margin-top:40px;padding:44px 20px}.experience-heading{margin-bottom:8px}#catalog-offers .romance-copy,#catalog-offers #special-packages .package-copy,#catalog-offers #special-packages .package-card:only-child .package-copy{padding:26px 22px}}
+@media(prefers-reduced-motion:reduce){#catalog-offers *,#catalog-offers.experience-entering>section,#catalog-offers.experience-entering .experience-heading{transition:none!important;transform:none!important;opacity:1!important}}

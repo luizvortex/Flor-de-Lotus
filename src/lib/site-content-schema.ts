@@ -80,6 +80,9 @@ export function validateSiteContent(input:unknown):SiteContent {
   if(index>=0){order.splice(index+1,0,'instagram');input={...(input as SiteContent),layout:{...oldLayout,order:order.join('\n')}};}
  }
  if(!Object.hasOwn(input as object,'romance'))input={...(input as SiteContent),romance:structuredClone(siteDefaults.romance)};
+ const experienceRomance={...(input as SiteContent).romance};
+ for(const [key,previous] of Object.entries({pageDescription:'Um cuidado especial para celebrar a dois. Converse com a pousada para conhecer as possibilidades de decoração para sua estadia.',notice:'Opções, valores e disponibilidade da decoração devem ser consultados diretamente com a pousada.',whatsappLabel:'Consultar pelo WhatsApp'}))if(experienceRomance[key]===previous)experienceRomance[key]=siteDefaults.romance[key];
+ input={...(input as SiteContent),romance:experienceRomance};
  // Keep the saved experience, but retire its position in the home layout.
  const roomOnlyLayout=(input as SiteContent).layout;
  if(roomOnlyLayout&&typeof roomOnlyLayout.order==='string'){

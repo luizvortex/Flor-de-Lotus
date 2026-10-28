@@ -58,8 +58,8 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
    $('head').append('<link rel="stylesheet" href="/romance.css"><script src="/romance.js" defer></script>');
    $('#rooms').after(romantic);
   }
-  $('head').append('<link rel="stylesheet" href="/catalog-offers.css">');
-  const offers=$('<div id="catalog-offers" class="catalog-offers"></div>');
+  $('head').append('<link rel="stylesheet" href="/catalog-offers.css"><script src="/catalog-offers.js" defer></script>');
+  const offers=$('<div id="catalog-offers" class="catalog-offers"><header class="experience-heading"><p>FLOR DE LÓTUS · EXPERIÊNCIAS EXCLUSIVAS</p><h2>Momentos que merecem ser vividos</h2><span>Descubra maneiras especiais de aproveitar sua estadia em Itacaré.</span></header></div>');
   $('#rooms').after(offers);
   offers.append($('#special-packages').remove());
   offers.append($('#decoracao-romantica').remove());
