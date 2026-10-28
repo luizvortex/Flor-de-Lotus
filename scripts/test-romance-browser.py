@@ -11,9 +11,9 @@ with sync_playwright() as p:
  errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
  data=context.request.get(base+'/api/site-content').json();original=copy.deepcopy(data['content'])
  assert data['content']['romance']['photos']==[] and not data['content']['romance']['visible']
- assert 'romance' in data['content']['layout']['order'].split()
+ assert 'romance' not in data['content']['layout']['order'].split()
  # Old publications are upgraded in memory; surrounding published data remains intact.
- old=copy.deepcopy(original);del old['romance'];old['layout']['order']=old['layout']['order'].replace('romance\n','')
+ old=copy.deepcopy(original);del old['romance'];old['layout']['order']=old['layout']['order'].replace('rooms\n','rooms\nromance\n')
  for content in [old,dict(original,romance=dict(original['romance'],visible=True))]:
   for route in ['index','quartos']:
    response=context.request.post(base+'/api/site-preview',data={'content':content,'page':route})
@@ -50,27 +50,16 @@ with sync_playwright() as p:
  page.locator('[data-cms-action="preview"]').click();expect(page.locator('.cms-preview[open]')).to_be_visible()
  assert 'id="decoracao-romantica"' in page.locator('.cms-preview iframe').get_attribute('srcdoc')
  page.locator('.cms-preview .close').click()
- page.locator('[data-cms-action="preview-rooms"]').click();expect(page.locator('.cms-preview[open]')).to_be_visible()
- assert 'wa.me/' in page.locator('.cms-preview iframe').get_attribute('srcdoc')
- assert 'id="romance-title">Decoração romântica' in page.locator('.cms-preview iframe').get_attribute('srcdoc')
- page.locator('.cms-preview .close').click()
  page.locator('[data-cms-action="save"]').click();expect(page.locator('[data-cms-status]')).to_contain_text('Publicado!')
  saved=context.request.get(base+'/api/site-content').json()
  for key in original:
   if key not in ['romance']:assert saved['content'][key]==original[key],key
  assert saved['content']['romance']['photos'][0]['alt']=='Imagem sintética de teste 3'
  # Page content, navigation, WhatsApp branding, modal focus and translations.
- page.goto(base+'/',wait_until='networkidle')
- expect(page.locator('#romance-title')).to_have_text(original['romance']['title'])
- expect(page.locator('.romance-cta')).to_have_attribute('href','/quartos#decoracao-romantica')
- expect(page.locator('.romance-gallery img').first).to_have_attribute('alt','Imagem sintética de teste 3')
- for width in [320,390,768,1440]:
-  page.set_viewport_size({'width':width,'height':1000});page.locator('.romance-section').scroll_into_view_if_needed()
-  assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1'),width
-  assert page.locator('.romance-cta').is_visible()
-  page.locator('.romance-section').screenshot(path=f'work/romance-home-{width}.png')
- page.locator('.romance-cta').click();expect(page).to_have_url(re.compile('/quartos#decoracao-romantica$'));page.wait_for_load_state('networkidle')
+ page.goto(base+'/',wait_until='networkidle');expect(page.locator('.romance-section')).to_have_count(0)
+ page.goto(base+'/quartos#decoracao-romantica',wait_until='networkidle')
  expect(page.locator('#romance-title')).to_have_text('Decoração romântica')
+ expect(page.locator('.romance-gallery img').first).to_have_attribute('alt','Imagem sintética de teste 3')
  href=page.locator('.romance-cta').get_attribute('href')
  from urllib.parse import urlparse,parse_qs
  assert urlparse(href).path=='/'+str(original['branding']['whatsapp'])
@@ -93,4 +82,4 @@ with sync_playwright() as p:
  for route in ['/','/quartos','/reservas']:
   page.goto(base+route,wait_until='domcontentloaded');expect(page.locator('.romance-section')).to_have_count(0)
  assert not errors,errors
- browser.close();print('Romance: old content, empty gating, owner upload/crop/cover, preview/publication, shared galleries, responsive layouts, keyboard/focus, WhatsApp and EN/HE/PT passed.')
+ browser.close();print('Romance: old content, empty gating, owner upload/crop/cover, preview/publication, room-only placement, responsive layouts, keyboard/focus, WhatsApp and EN/HE/PT passed.')

@@ -52,11 +52,11 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  text('#special-packages h2',k.packagesTitle);text('#special-packages > .eyebrow',k.packagesEyebrow);text('#location-title',k.locationTitle);text('.location-copy .eyebrow',k.locationEyebrow);text('#policies-title',k.policiesTitle);text('#politicas > .eyebrow',k.policiesEyebrow);
  if(page==='avaliacoes')applyReviewsPage($,c);
  if(page==='itacare')applyExplorePage($,c);
- if(['index','quartos','reservas'].includes(page)){
-  const romantic=renderRomance(c,page==='index');
+ if(['quartos','reservas'].includes(page)){
+  const romantic=renderRomance(c,false);
   if(romantic){
    $('head').append('<link rel="stylesheet" href="/romance.css"><script src="/romance.js" defer></script>');
-   if(page==='index')$('#quartos').after(romantic);else $('#rooms').after(romantic);
+   $('#rooms').after(romantic);
   }
  }
  if(page!=='index')return $.html();
@@ -87,7 +87,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  text('#contact-title',c.contact.title);text('.contact-eyebrow',c.contact.eyebrow);text('[data-contact-description]',c.contact.description);text('[data-contact-form-title]',c.contact.formTitle);text('[data-contact-intro]',c.contact.intro);text('[data-contact-button]',c.contact.buttonLabel);
  text('[data-contact-address-title]',c.contact.addressTitle);text('[data-contact-social-title]',c.contact.socialTitle);text('.contact-address',b.address);
  $('#whatsapp-form').attr('data-default-message',String(c.contact.defaultMessage)).attr('action',`https://wa.me/${b.whatsapp}`);link('[data-contact-maps]',b.maps);
- const ids:Record<string,string>={hero:'inicio',about:'sobre-a-pousada',gallery:'galeria-pousada',rooms:'quartos',fishing:'pescadores',romance:'decoracao-romantica',leisure:'area-de-lazer',instagram:'instagram',beaches:'praias',reviews:'avaliacoes',contact:'fale-conosco'};
+ const ids:Record<string,string>={hero:'inicio',about:'sobre-a-pousada',gallery:'galeria-pousada',rooms:'quartos',fishing:'pescadores',leisure:'area-de-lazer',instagram:'instagram',beaches:'praias',reviews:'avaliacoes',contact:'fale-conosco'};
  for(const [key,id] of Object.entries(ids)){if(c[key].visible===false){$('#'+id).attr('hidden','').attr('data-cms-hidden','true');$(`.home-header a[href="#${id}"],.home-menu a[href="#${id}"]`).attr('hidden','');}}
  const sections=new Map(Object.entries(ids).filter(([key])=>key!=='hero').map(([key,id])=>[key,$('#'+id).remove()]));
  let anchor=$('#inicio') as ReturnType<typeof $>;
