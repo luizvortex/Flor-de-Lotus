@@ -107,3 +107,7 @@ Ordem pública e do editor: `duplo` (Standard/térreo), `triplo` (Standard Super
 ## Pescadores e grupos de pesca
 
 `fishing` no documento editorial alimenta `#pescadores` na home por `fishing-content.ts` e `fishing.css`. Só renderizar com `visible=true` e fotos próprias cadastradas; não usar imagens genéricas/geradas nem fotos de outras seções. Primeira foto é principal, com o mesmo upload/recorte e botão **Usar como principal** do CMS. Default após quartos, junto do destaque de grupos; ordem editável. WhatsApp deriva de branding, mensagem editável; Organizar meu grupo aponta para `/grupos`. Diferencial confirmado: freezer para guardar os peixes durante a estadia. Não inventar capacidade, exclusividade, preço, limpeza/preparo/transporte, passeios ou equipamentos. Sem alterações nas reservas. Teste: `node scripts/test-site-editor.mjs --fishing-only`.
+
+## Faixa de pacotes e decoração
+
+No catálogo, `#catalog-offers` agrupa pacotes à esquerda e decoração à direita, em largura total (grid-column 1/-1) após `#rooms`. `catalog-offers.css` é carregado depois de romance.css para definir o enquadramento. Abaixo de 901 px os painéis se empilham; se um estiver ausente/oculto, o outro ocupa toda a faixa. Sem conteúdo, a faixa desaparece por CSS :has. Preservar os IDs usados por reservas.js e romance.js e o carregamento dinâmico de pacotes. Teste: `node scripts/test-site-editor.mjs --romance-only`.

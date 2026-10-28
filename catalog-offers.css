@@ -1,0 +1,35 @@
+/* One viewport-wide strip: packages on the left, romantic decoration on the right. */
+.catalog-main>.catalog-offers{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr);margin:64px 0 16px;background:#f3eee7;direction:ltr;min-width:0}
+.catalog-offers:not(:has(>section:not([hidden]))){display:none}
+.catalog-offers:has(>#special-packages:not([hidden])):has(>.romance-section){grid-template-columns:repeat(2,minmax(0,1fr))}
+.catalog-offers>section{box-sizing:border-box;min-width:0}
+:root[dir=rtl] .catalog-offers>section{direction:rtl}
+#catalog-offers #special-packages{margin:0;padding:clamp(28px,3.2vw,60px);border:0;background:#f3eee7}
+#catalog-offers .romance-catalog{margin:0;padding:clamp(28px,3.2vw,60px);background:#eee8e0}
+#catalog-offers .romance-inner{gap:28px;max-width:1280px;align-items:center}
+#catalog-offers .romance-copy{position:static;max-width:none}
+#catalog-offers .romance-copy h2,#catalog-offers #special-packages>h2{font-size:clamp(30px,2.5vw,44px)}
+#catalog-offers .romance-gallery{gap:10px}
+#catalog-offers #special-packages .package-cards{grid-template-columns:minmax(0,1fr);gap:20px}
+#catalog-offers #special-packages .package-card{display:grid;grid-template-columns:1fr 1fr;grid-column:auto}
+#catalog-offers #special-packages .package-media{min-height:320px;aspect-ratio:auto}
+#catalog-offers #special-packages .package-copy{padding:28px;min-width:0}
+#catalog-offers #special-packages .package-card h3{font-size:clamp(26px,2vw,34px)}
+#catalog-offers #special-packages .package-booking .gold-button{min-width:0;max-width:none;gap:12px}
+#catalog-offers:has(>#special-packages:not([hidden]))>.romance-section{border-inline-start:1px solid #d9d0c2}
+@media(min-width:901px) and (max-width:1350px){
+ .catalog-offers:has(>#special-packages:not([hidden])) .romance-inner{grid-template-columns:minmax(0,1fr)}
+ #catalog-offers:has(>.romance-section) #special-packages .package-card{grid-template-columns:minmax(0,1fr)}
+ #catalog-offers:has(>.romance-section) #special-packages .package-media{min-height:0;aspect-ratio:4/3}
+}
+@media(max-width:900px){
+ .catalog-main>.catalog-offers:has(>#special-packages:not([hidden])):has(>.romance-section){grid-template-columns:minmax(0,1fr)}
+ #catalog-offers:has(>#special-packages:not([hidden]))>.romance-section{border-inline-start:0;border-block-start:1px solid #d9d0c2}
+}
+@media(max-width:600px){
+ .catalog-main>.catalog-offers{margin:40px 0 8px}
+ #catalog-offers #special-packages,#catalog-offers .romance-catalog{padding:32px 20px}
+ #catalog-offers #special-packages .package-card,#catalog-offers .romance-inner{grid-template-columns:minmax(0,1fr)}
+ #catalog-offers #special-packages .package-media{min-height:0;aspect-ratio:4/3}
+ #catalog-offers #special-packages .package-copy{padding:24px 20px}
+}

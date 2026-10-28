@@ -58,6 +58,11 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
    $('head').append('<link rel="stylesheet" href="/romance.css"><script src="/romance.js" defer></script>');
    $('#rooms').after(romantic);
   }
+  $('head').append('<link rel="stylesheet" href="/catalog-offers.css">');
+  const offers=$('<div id="catalog-offers" class="catalog-offers"></div>');
+  $('#rooms').after(offers);
+  offers.append($('#special-packages').remove());
+  offers.append($('#decoracao-romantica').remove());
  }
  if(page!=='index')return $.html();
  $('head').append('<link rel="stylesheet" href="/itacare.css">');

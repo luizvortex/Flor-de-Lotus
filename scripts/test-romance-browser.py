@@ -8,6 +8,8 @@ with sync_playwright() as p:
  context=browser.new_context(viewport={'width':1440,'height':1000})
  context.add_cookies([{'name':'lotus_access','value':'admin-test','url':base}])
  page=context.new_page();page.route('https://**',lambda r:r.abort())
+ package_fixture={'enabled':True}
+ page.route(base+'/api/catalog*',lambda route:route.fulfill(json={'rooms':[],'showcases':[],'starting_rates':[],'packages':[{'id':91,'name':'Pacote sintético de teste','start':'2035-12-20','end':'2035-12-25','nights':4,'price':500000,'type':'casal'}] if package_fixture['enabled'] else []}))
  errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
  data=context.request.get(base+'/api/site-content').json();original=copy.deepcopy(data['content'])
  assert data['content']['romance']['photos']==[] and not data['content']['romance']['visible']
@@ -64,22 +66,39 @@ with sync_playwright() as p:
  from urllib.parse import urlparse,parse_qs
  assert urlparse(href).path=='/'+str(original['branding']['whatsapp'])
  assert parse_qs(urlparse(href).query)['text']==[original['romance']['whatsappMessage']]
- assert page.locator('#rooms').evaluate('el=>el.nextElementSibling.id')=='decoracao-romantica'
+ assert page.locator('#rooms').evaluate('el=>el.nextElementSibling.id')=='catalog-offers'
+ expect(page.locator('#special-packages')).to_be_visible()
+ page.locator('[data-package="91"]').click();expect(page.locator('#checkin')).to_have_value('2035-12-20');expect(page.locator('#checkout')).to_have_value('2035-12-24')
  trigger=page.locator('[data-romance-photo="0"]');trigger.focus();page.keyboard.press('Enter')
  expect(page.locator('.romance-dialog[open]')).to_be_visible();expect(page.locator('[data-romance-status]')).to_have_text('Foto 1 de 3')
  page.keyboard.press('ArrowRight');expect(page.locator('[data-romance-status]')).to_have_text('Foto 2 de 3')
  page.keyboard.press('Escape');expect(trigger).to_be_focused()
- for width in [320,390,768,1440]:
+ for width in [320,390,768,1024,1440,1920]:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
-  page.locator('.romance-section').screenshot(path=f'work/romance-catalog-{width}.png')
+  page.locator('#catalog-offers').screenshot(path=f'work/catalog-offers-{width}.png')
+  strip,left,right=page.locator('#catalog-offers').evaluate('el=>[el,el.querySelector("#special-packages"),el.querySelector(".romance-section")].map(item=>{const r=item.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};})')
+  assert abs(strip['x'])<1 and abs(strip['width']-width)<1,(width,strip)
+  if width>900:
+   assert abs(left['y']-right['y'])<1 and abs(left['x']+left['width']-right['x'])<1
+   assert abs(right['x']+right['width']-width)<1
+  else:assert abs(left['y']+left['height']-right['y'])<1,(width,left,right,strip)
  for lang,title in [('en','Romantic room decoration'),('he','עיצוב רומנטי לחדר'),('pt','Decoração romântica')]:
   page.locator('.site-language summary').first.click();page.locator(f'.site-language [data-language="{lang}"]').first.click()
   expect(page.locator('#romance-title')).to_have_text(title)
   expected={'en':'Ask us on WhatsApp','he':'פנו אלינו בוואטסאפ','pt':'Consultar pelo WhatsApp'}[lang]
   expect(page.locator('.romance-cta')).to_contain_text(expected)
   if lang=='he':expect(page.locator('html')).to_have_attribute('dir','rtl')
+ package_fixture['enabled']=False
+ page.goto(base+'/quartos',wait_until='networkidle');expect(page.locator('#special-packages')).not_to_be_visible()
+ assert abs(page.locator('.romance-section').bounding_box()['width']-page.viewport_size['width'])<1
+ package_fixture['enabled']=True
  context.request.put(base+'/api/site-content',data={'content':dict(saved['content'],romance=dict(saved['content']['romance'],visible=False)),'revision':saved['revision']})
  for route in ['/','/quartos','/reservas']:
-  page.goto(base+route,wait_until='domcontentloaded');expect(page.locator('.romance-section')).to_have_count(0)
+  page.goto(base+route,wait_until='networkidle');expect(page.locator('.romance-section')).to_have_count(0)
+  if route!='/':
+   expect(page.locator('#special-packages')).to_be_visible()
+   assert abs(page.locator('#special-packages').bounding_box()['width']-page.viewport_size['width'])<1
+ package_fixture['enabled']=False
+ page.goto(base+'/quartos',wait_until='networkidle');expect(page.locator('#catalog-offers')).not_to_be_visible()
  assert not errors,errors
  browser.close();print('Romance: old content, empty gating, owner upload/crop/cover, preview/publication, room-only placement, responsive layouts, keyboard/focus, WhatsApp and EN/HE/PT passed.')
