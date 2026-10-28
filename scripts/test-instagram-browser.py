@@ -8,6 +8,18 @@ with sync_playwright() as p:
  page.goto(base+'/',wait_until='domcontentloaded')
  assert page.locator('#instagram-title').inner_text()=='Conheça nosso Instagram'
  assert page.locator('#instagram .pousada-gallery').count()==0
+ assert page.locator('#instagram .instagram-background').get_attribute('src')
+ assert page.locator('#instagram .instagram-photo').count()==2
+ for width in [320,390,768,1440]:
+  page.set_viewport_size({'width':width,'height':1000})
+  feature=page.locator('#instagram .instagram-feature');feature.scroll_into_view_if_needed()
+  assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
+  assert page.locator('#instagram .instagram-link').is_visible()
+ page.set_viewport_size({'width':1440,'height':1000})
+ page.locator('#instagram').screenshot(path='work/instagram-desktop.png')
+ page.set_viewport_size({'width':390,'height':1000})
+ page.locator('#instagram').screenshot(path='work/instagram-mobile.png')
+ page.set_viewport_size({'width':1440,'height':1000})
  data=context.request.get(base+'/api/site-content').json();content=data['content']
  # Old publications receive the new section without losing their custom order.
  import copy
@@ -24,11 +36,13 @@ with sync_playwright() as p:
  assert gallery.locator('[aria-hidden="true"] a').first.get_attribute('tabindex')=='-1'
  track=gallery.locator('.pousada-gallery-track');original=page.locator('#galeria-pousada .pousada-gallery-track').evaluate('i=>i.style.transform')
  before=track.evaluate('i=>i.style.transform');gallery.locator('[data-gallery-next]').click()
- page.wait_for_function('before=>document.querySelector("#instagram .pousada-gallery-track").style.transform!==before',arg=before)
+ page.wait_for_timeout(1100)
+ assert track.evaluate('i=>i.style.transform')!=before
  assert page.locator('#galeria-pousada .pousada-gallery-track').evaluate('i=>i.style.transform')==original
  assert gallery.locator('[data-gallery-status]').inner_text()=='Foto 2 de 3'
  page.wait_for_timeout(950);before=track.evaluate('i=>i.style.transform')
- page.wait_for_function('before=>document.querySelector("#instagram .pousada-gallery-track").style.transform!==before',arg=before)
+ page.wait_for_timeout(2200)
+ assert track.evaluate('i=>i.style.transform')!=before
  for width in [320,390,1440]:
   page.set_viewport_size({'width':width,'height':1000})
   assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
