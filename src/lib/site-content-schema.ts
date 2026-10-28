@@ -91,6 +91,9 @@ export function validateSiteContent(input:unknown):SiteContent {
   input={...(input as SiteContent),layout:{...roomOnlyLayout,order,blocks}};
  }
  if(!Object.hasOwn(input as object,'fishing'))input={...(input as SiteContent),fishing:structuredClone(siteDefaults.fishing)};
+ const fishingEditorial={...(input as SiteContent).fishing};
+ for(const [key,previous] of Object.entries({"title": "Um lugar para receber você e seu grupo de pesca", "description": "Na Pousada Flor de Lótus, seu grupo encontra acolhimento para aproveitar os dias em Itacaré. Disponibilizamos freezer para guardar os peixes durante a estadia, trazendo mais praticidade à sua viagem.", "highlight": "Freezer disponível para guardar os peixes", "notice": "Consulte a pousada sobre a disponibilidade do freezer e as condições de uso para o seu grupo.", "whatsappMessage": "Olá! Estou organizando uma viagem de pesca e gostaria de consultar hospedagem para o meu grupo na Pousada Flor de Lótus. Também gostaria de saber sobre a disponibilidade do freezer e as condições de uso."}))if(fishingEditorial[key]===previous)fishingEditorial[key]=siteDefaults.fishing[key];
+ input={...(input as SiteContent),fishing:fishingEditorial};
  const fishingLayout=(input as SiteContent).layout;
  if(fishingLayout&&typeof fishingLayout.order==='string'&&!fishingLayout.order.split(/\s+/).includes('fishing')){
   const order=fishingLayout.order.split(/\s+/).filter(Boolean),index=order.indexOf('rooms');

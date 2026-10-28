@@ -102,6 +102,12 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
    const newBlock=$(`<section id="extra-${esc(block.id)}" class="cms-block cms-tone-${esc(block.tone)} cms-image-${esc(block.position)}"><div class="cms-block-inner">${block.image?`<img src="${esc(block.image)}" alt="${esc(block.alt)}" loading="lazy" width="900" height="650">`:''}<div><h2>${esc(block.title)}</h2><p class="cms-paragraph">${esc(block.description)}</p>${block.button&&block.url?`<a class="showcase-rates" href="${esc(block.url)}">${esc(block.button)}</a>`:''}</div></div></section>`);anchor.after(newBlock);anchor=newBlock;
   }
  }
- $('#quartos').after($('#grupos-excursoes').remove());
+ const groupMessage='Olá! Gostaria de organizar uma excursão para a Pousada Flor de Lótus. Poderiam me informar as condições para hospedagem de grupos, disponibilidade de quartos e valores?';
+ $('[data-group-whatsapp]').attr({href:`https://wa.me/${b.whatsapp}?text=${encodeURIComponent(groupMessage)}`,target:'_blank',rel:'noopener noreferrer'});
+ const groupExperience=$('<div id="group-experiences" class="group-experiences"><header class="group-experiences-heading"><p>EXPERIÊNCIAS EM GRUPO</p><h2>As melhores histórias são vividas em boa companhia.</h2><p>Reúna pessoas especiais e descubra uma nova forma de aproveitar Itacaré.</p><span aria-hidden="true"></span></header></div>');
+ $('#quartos').after(groupExperience);
+ groupExperience.append($('#grupos-excursoes').remove());
+ groupExperience.append($('#pescadores').remove());
+ $('head').append('<link rel="stylesheet" href="/fishing.css"><script src="/group-experiences.js" defer></script>');
  return $.html();
 }

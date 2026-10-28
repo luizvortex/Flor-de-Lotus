@@ -706,13 +706,13 @@
   "fishing": {
     "visible": false,
     "eyebrow": "Sua viagem de pesca começa com uma boa estadia",
-    "title": "Um lugar para receber você e seu grupo de pesca",
-    "description": "Na Pousada Flor de Lótus, seu grupo encontra acolhimento para aproveitar os dias em Itacaré. Disponibilizamos freezer para guardar os peixes durante a estadia, trazendo mais praticidade à sua viagem.",
-    "highlight": "Freezer disponível para guardar os peixes",
-    "notice": "Consulte a pousada sobre a disponibilidade do freezer e as condições de uso para o seu grupo.",
+    "title": "A pescaria termina. As boas histórias continuam.",
+    "description": "Depois de um dia de pesca, encontre conforto e praticidade para descansar com sua equipe.",
+    "highlight": "Freezer disponível para armazenamento dos peixes, mediante consulta.",
+    "notice": "Consulte previamente a disponibilidade e as condições de utilização do freezer durante sua estadia.",
     "buttonLabel": "Consultar hospedagem para pescadores",
     "groupLabel": "Organizar meu grupo",
-    "whatsappMessage": "Olá! Estou organizando uma viagem de pesca e gostaria de consultar hospedagem para o meu grupo na Pousada Flor de Lótus. Também gostaria de saber sobre a disponibilidade do freezer e as condições de uso.",
+    "whatsappMessage": "Olá! Gostaria de consultar a hospedagem para um grupo de pescadores na Pousada Flor de Lótus. Poderiam me informar a disponibilidade, os valores e as condições de utilização do freezer?",
     "photos": []
   }
 }

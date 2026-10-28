@@ -49,6 +49,9 @@ with sync_playwright() as p:
  assert page.locator('#pescadores').evaluate('el=>el.previousElementSibling.id')=='grupos-excursoes'
  href=page.locator('.fishing-cta').get_attribute('href');assert urlparse(href).path=='/'+str(original['branding']['whatsapp'])
  assert parse_qs(urlparse(href).query)['text']==[original['fishing']['whatsappMessage']]
+ group_href=page.locator('[data-group-whatsapp]').get_attribute('href')
+ assert urlparse(group_href).path=='/'+str(original['branding']['whatsapp'])
+ assert 'organizar uma excursão' in parse_qs(urlparse(group_href).query)['text'][0]
  # The link follows the shared WhatsApp configuration and owner-edited message.
  changed=copy.deepcopy(saved['content']);changed['branding']['whatsapp']='5573999999999';changed['fishing']['whatsappMessage']='Consulta de teste & grupo + pesca'
  preview=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'});assert preview.status==200
@@ -56,16 +59,26 @@ with sync_playwright() as p:
  # Layout order is independently configurable; published surrounding content is preserved.
  keys=changed['layout']['order'].split();keys.remove('fishing');keys.insert(keys.index('instagram')+1,'fishing');changed['layout']['order']='\n'.join(keys)
  html=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'}).json()['html']
- assert html.index('id="instagram"')<html.index('id="pescadores"')<html.index('id="praias"')
+ assert 'id="group-experiences"' in html and html.index('id="grupos-excursoes"')<html.index('id="pescadores"')
  for width in [320,390,768,1440]:
   page.set_viewport_size({'width':width,'height':1000});page.locator('#pescadores').scroll_into_view_if_needed()
   assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1'),width
-  expect(page.locator('.fishing-cta')).to_be_visible();page.locator('#pescadores').screenshot(path=f'work/fishing-{width}.png')
- for lang,title,label in [('en','A welcoming place for you and your fishing group','Ask about accommodation for anglers'),('he','מקום שמקבל אתכם ואת קבוצת הדיג שלכם','בירור על אירוח לקבוצות דיג'),('pt',original['fishing']['title'],original['fishing']['buttonLabel'])]:
+  expect(page.locator('.fishing-cta')).to_be_visible();
+  copy_box,photo=page.locator('.fishing-copy').bounding_box(),page.locator('.fishing-gallery').bounding_box()
+  if width>=768:assert photo['x']<copy_box['x']
+  else:assert photo['y']<copy_box['y']
+  group_copy,group_photo=page.locator('.group-home-copy').bounding_box(),page.locator('.group-home-photo').bounding_box()
+  if width>=768:assert group_copy['x']<group_photo['x']
+  else:assert group_photo['y']<group_copy['y']
+  page.locator('#group-experiences').screenshot(path=f'work/group-experiences-{width}.png')
+ for lang,title,label in [('en','The fishing ends. The good stories continue.','Ask about accommodation for anglers'),('he','הדיג מסתיים. הסיפורים הטובים ממשיכים.','בירור על אירוח לקבוצות דיג'),('pt',original['fishing']['title'],original['fishing']['buttonLabel'])]:
   page.locator('.site-language summary').first.click();page.locator(f'.site-language [data-language="{lang}"]').first.click()
   expect(page.locator('#fishing-title')).to_have_text(title);expect(page.locator('.fishing-cta')).to_contain_text(label)
   if lang=='he':
    expect(page.locator('html')).to_have_attribute('dir','rtl');assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
+ page.emulate_media(reduced_motion='no-preference')
+ page.goto(base+'/',wait_until='networkidle');page.locator('#pescadores').scroll_into_view_if_needed()
+ expect(page.locator('#pescadores')).to_have_class(re.compile('is-revealed'))
  page.locator('.fishing-group-link').focus();page.keyboard.press('Enter');expect(page).to_have_url(re.compile('/grupos$'));page.wait_for_load_state('networkidle')
  expect(page.locator('#group-form')).to_have_count(1)
  disabled=copy.deepcopy(saved['content']);disabled['fishing']['visible']=False

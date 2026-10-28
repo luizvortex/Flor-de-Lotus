@@ -87,7 +87,7 @@
   });
   const observe = () => observer.observe(document.body, {subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:attributes});
   function loadDictionary() {
-    if (!dictionaryPromise) dictionaryPromise = fetch('/site-translations.json?v=9', {signal:AbortSignal.timeout(15000)})
+    if (!dictionaryPromise) dictionaryPromise = fetch('/site-translations.json?v=10', {signal:AbortSignal.timeout(15000)})
       .then(async response => {
         if (!response.ok) throw Error('Dictionary unavailable');
         const data = await response.json();
