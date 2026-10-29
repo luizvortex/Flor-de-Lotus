@@ -1784,7 +1784,8 @@
     ],
     "Tentar novamente": [
       "Try again",
-      "ניסיון נוסף"
+      "ניסיון נוסף",
+      "Intentar de nuevo"
     ],
     "Confirmar": [
       "Confirm",
@@ -3278,6 +3279,166 @@
       "You removed the items that use photographs. Remove the uploaded photos to continue without them.",
       "הסרת את הפריטים המשתמשים בתמונות. יש להסיר את התמונות שהועלו כדי להמשיך בלעדיהן.",
       "Has quitado los artículos que utilizan fotografías. Elimina las fotos enviadas para continuar sin ellas."
+    ],
+    "Transforme sua estadia em uma lembrança extraordinária. Personalize cada detalhe e surpreenda quem você ama.": [
+      "Turn your stay into an extraordinary memory. Personalize every detail and surprise the one you love.",
+      "הפכו את השהייה לזיכרון יוצא דופן. התאימו כל פרט והפתיעו את מי שאתם אוהבים.",
+      "Convierte tu estadía en un recuerdo extraordinario. Personaliza cada detalle y sorprende a quien amas."
+    ],
+    "Criar minha surpresa": [
+      "Create my surprise",
+      "יצירת ההפתעה שלי",
+      "Crear mi sorpresa"
+    ],
+    "Enviar minha solicitação especial": [
+      "Send my special request",
+      "שליחת הבקשה המיוחדת שלי",
+      "Enviar mi solicitud especial"
+    ],
+    "Uma mensagem especial para quem você ama": [
+      "A special message for the one you love",
+      "מסר מיוחד למי שאתם אוהבים",
+      "Un mensaje especial para quien amas"
+    ],
+    "Escreva aqui uma mensagem que torne esse momento ainda mais inesquecível...": [
+      "Write a message to make this moment even more unforgettable...",
+      "כתבו מסר שיהפוך את הרגע הזה לבלתי נשכח עוד יותר...",
+      "Escribe aquí un mensaje que haga este momento aún más inolvidable..."
+    ],
+    "A mensagem será enviada à equipe junto com sua solicitação.": [
+      "Your message will be sent to the team with your request.",
+      "המסר יישלח לצוות יחד עם הבקשה שלכם.",
+      "El mensaje se enviará al equipo junto con tu solicitud."
+    ],
+    "Esta etapa é opcional para os itens escolhidos. Você pode continuar sem fotografias.": [
+      "This step is optional for your selected items. You can continue without photographs.",
+      "שלב זה אינו חובה עבור הפריטים שבחרתם. אפשר להמשיך ללא תמונות.",
+      "Este paso es opcional para los artículos elegidos. Puedes continuar sin fotografías."
+    ],
+    "Arraste suas fotografias para cá ou escolha na galeria.": [
+      "Drag your photographs here or choose from your gallery.",
+      "גררו לכאן את התמונות שלכם או בחרו מהגלריה.",
+      "Arrastra tus fotografías aquí o elige de tu galería."
+    ],
+    "Entre com Google para enviar suas fotografias.": [
+      "Sign in with Google to upload your photographs.",
+      "יש להתחבר עם Google כדי להעלות תמונות.",
+      "Inicia sesión con Google para enviar tus fotografías."
+    ],
+    "Continuar": [
+      "Continue",
+      "המשך",
+      "Continuar"
+    ],
+    "Revisar solicitação": [
+      "Review request",
+      "סקירת הבקשה",
+      "Revisar solicitud"
+    ],
+    "Editar": [
+      "Edit",
+      "עריכה",
+      "Editar"
+    ],
+    "Etapas da experiência": [
+      "Experience steps",
+      "שלבי החוויה",
+      "Pasos de la experiencia"
+    ],
+    "Progresso da experiência": [
+      "Experience progress",
+      "התקדמות החוויה",
+      "Progreso de la experiencia"
+    ],
+    "Surpresa": [
+      "Surprise",
+      "הפתעה",
+      "Sorpresa"
+    ],
+    "Fotografias": [
+      "Photographs",
+      "תמונות",
+      "Fotografías"
+    ],
+    "Revisão": [
+      "Review",
+      "סקירה",
+      "Revisión"
+    ],
+    "Sua surpresa": [
+      "Your surprise",
+      "ההפתעה שלכם",
+      "Tu sorpresa"
+    ],
+    "Sua hospedagem": [
+      "Your stay",
+      "השהייה שלכם",
+      "Tu hospedaje"
+    ],
+    "Suas memórias": [
+      "Your memories",
+      "הזיכרונות שלכם",
+      "Tus recuerdos"
+    ],
+    "Resumo financeiro": [
+      "Price summary",
+      "סיכום מחירים",
+      "Resumen de precios"
+    ],
+    "Sem fotografias enviadas.": [
+      "No photographs uploaded.",
+      "לא הועלו תמונות.",
+      "No se enviaron fotografías."
+    ],
+    "Não foi possível carregar as opções. Tente novamente.": [
+      "The options could not be loaded. Please try again.",
+      "לא ניתן לטעון את האפשרויות. נסו שוב.",
+      "No se pudieron cargar las opciones. Inténtalo de nuevo."
+    ],
+    "Disponível para o período consultado": [
+      "Available for the requested dates",
+      "זמין לתאריכים המבוקשים",
+      "Disponible para las fechas consultadas"
+    ],
+    "Consulte a disponibilidade e escolha um quarto para continuar.": [
+      "Check availability and choose a room to continue.",
+      "בדקו זמינות ובחרו חדר כדי להמשיך.",
+      "Consulta la disponibilidad y elige un cuarto para continuar."
+    ],
+    "Reduza a mensagem e as instruções para continuar.": [
+      "Shorten your message and instructions to continue.",
+      "קצרו את המסר ואת ההוראות כדי להמשיך.",
+      "Reduce el mensaje y las instrucciones para continuar."
+    ],
+    "Escolha sua hospedagem": [
+      "Choose your stay",
+      "בחירת השהייה שלכם",
+      "Elige tu hospedaje"
+    ],
+    "Etapa 1 de 4 — Hospedagem": [
+      "Step 1 of 4 — Your stay",
+      "שלב 1 מתוך 4 — השהייה שלכם",
+      "Paso 1 de 4 — Hospedaje"
+    ],
+    "Etapa 2 de 4 — Sua surpresa": [
+      "Step 2 of 4 — Your surprise",
+      "שלב 2 מתוך 4 — ההפתעה שלכם",
+      "Paso 2 de 4 — Tu sorpresa"
+    ],
+    "Etapa 3 de 4 — Fotografias": [
+      "Step 3 of 4 — Photographs",
+      "שלב 3 מתוך 4 — תמונות",
+      "Paso 3 de 4 — Fotografías"
+    ],
+    "Etapa 4 de 4 — Revisão": [
+      "Step 4 of 4 — Review",
+      "שלב 4 מתוך 4 — סקירה",
+      "Paso 4 de 4 — Revisión"
+    ],
+    "Etapa concluída": [
+      "Step completed",
+      "השלב הושלם",
+      "Paso completado"
     ]
   }
 }
