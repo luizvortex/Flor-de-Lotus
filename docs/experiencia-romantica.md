@@ -98,3 +98,9 @@ Cada produto abre um painel nativo acessível (`details`/`summary`) com variante
 Verificação adicional: `python3 scripts/test-romance-catalog-migration.py` usa clone descartável do PostgreSQL local para validar seis produtos, quatorze variantes, valores autorizados, catálogo sem fotos, exigência de foto pessoal no porta-retrato e preservação de preços numa segunda execução. O teste de navegador passou a cobrir a expansão dos sete vinhos, o recálculo de R$ 400 de hospedagem + R$ 75 de vinho e o atalho administrativo, além do fluxo completo existente.
 
 Migração do catálogo aplicada em produção com versão `20261029115950`. Conferidos seis produtos ativos, quatorze variantes e preços mínimos de referência iguais aos autorizados. A análise de segurança não apresentou novos avisos. Build, contrato SQL original, teste da migração em clone local e jornada completa no navegador aprovados. O nome do arquivo local acompanha a versão registrada pelo Supabase.
+
+### Seleção compacta por estilo
+
+A pedido do proprietário, os adicionais agora são linhas de largura completa. Ao abrir um item, as variantes aparecem lado a lado como opções de rádio, com um único controle de quantidade à direita (reorganizado no celular). É escolhido um estilo por produto. Trocar o estilo remove o anterior do carrinho e mantém a quantidade, respeitando o limite da nova variante; preço, estoque e cotação continuam validados pelo servidor. Nenhuma alteração de banco ou preços nesta revisão.
+
+Build e jornada local completa aprovados. O navegador verificou exclusividade das opções, troca de variante com duas unidades, recálculo, apenas um controle visível e ausência de rolagem horizontal em 390/1440 px. Capturas locais foram inspecionadas visualmente. Administração de variantes e fluxo de fotos pessoais preservados.
