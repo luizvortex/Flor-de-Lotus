@@ -50,3 +50,14 @@
 @media(max-width:800px){.romance-page .rx-hero-shade{background:linear-gradient(90deg,#1f3c4de8,#1f3c4db3)}}
 
 .romance-page .rx-review p,.romance-page .rx-review li,.romance-page .rx-product-options summary strong{overflow-wrap:anywhere}.romance-page .rx-product-options summary>span:first-child{min-width:0;flex:1}.romance-page .rx-review dl{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:12px}.romance-page .rx-review dd{margin:0;text-align:end}
+
+/* Selected catalog items: independent photographs, never room compositions. */
+.romance-page .rx-selected-panel{margin-block:32px;padding:clamp(18px,3vw,28px);border:1px solid #e6dccb;border-radius:18px;background:#faf8f3}
+.romance-page .rx-selected-panel h3{margin-top:0;color:#1f3c4d}
+.romance-page .rx-selected-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px}
+.romance-page .rx-selected-item{min-width:0;overflow:hidden;border:1px solid #e6dccb;border-radius:16px;background:#fff}
+.romance-page .rx-selected-item img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.romance-page .rx-selected-item>div:not(.rx-product-photo-empty){padding:16px}
+.romance-page .rx-selected-item h4{margin:0;font-family:'Playfair Display',serif;color:#1f3c4d}
+.romance-page .rx-product-photo-empty{padding:20px;background:#f5ebdd;color:#1f3c4d;font-size:.8rem;text-align:center}
+.romance-page .rx-selected-total{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #e6dccb;padding-top:20px;margin-bottom:0}

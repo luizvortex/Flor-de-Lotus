@@ -65,3 +65,7 @@ As imagens sintéticas das capturas são fixtures locais de layout e **não** fo
 Não há alteração de banco a autorizar para este redesign. A autorização posterior “pode publicar” foi recebida em 29/10/2026 e permite enviar esta versão validada para main. Conferir a conclusão do check oficial da Vercel associado ao commit antes de anunciar a publicação.
 
 Não foi acrescentada ordenação manual de fotos: o contrato atual utiliza a sequência de upload. Validar e persistir uma ordem diferente seria uma extensão do serviço, desnecessária para este refinamento visual. As limitações externas de HQBeds, gateway e acesso às imagens reais permanecem as documentadas anteriormente.
+
+## Revisão atual: galeria sem simulação
+
+A autorização de publicação anterior não se aplica à revisão atual: o proprietário pediu explicitamente não publicar. O configurador por camadas foi removido seletivamente, preservando este redesign e o fluxo original. Consulte `docs/configurador-romantico-camadas.md`.

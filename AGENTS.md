@@ -149,3 +149,9 @@ Atualização: o proprietário enviou o original em ZIP. `images/romantic/user-r
 ## Preferência vigente — publicação automática autorizada
 
 Após a conclusão e os testes do configurador com a imagem original, o usuário instruiu explicitamente **“faça publicações automaticamente”**. Essa é a preferência mais recente e substitui as restrições anteriores de não publicar automaticamente registradas neste documento e nos relatórios históricos. Publicar as alterações concluídas e verificadas deste projeto por push para `origin/main`, acompanhando o check da Vercel, sem solicitar confirmação de rotina. Preservar alterações remotas e não usar force-push. Uma instrução futura explícita que proíba uma publicação específica prevalece para aquela revisão. Essa preferência não autoriza exclusões destrutivas de dados ou ações fora do escopo solicitado. O configurador por camadas e a incorporação da imagem original estão autorizados para publicação agora; não há migração pendente nessa revisão.
+
+## Restauração seletiva da experiência romântica
+
+A instrução mais recente remove o configurador artificial por camadas e **proíbe deploy automático desta revisão**. A referência é `558d8e6` (antes de `038d817`). Preservar quatro etapas, catálogo, rádios/quantidade, cotação, fotos privadas, revisão e envio. O painel “Sua surpresa está ganhando vida” mostra somente produtos selecionados e suas fotografias reais do catálogo; sem foto cadastrada, mostrar aviso textual, nunca inventar imagens. Não reintroduzir comparador, coordenadas, demos ou sobreposições. Backend e banco não foram modificados.
+
+O proprietário autorizou explicitamente publicar esta restauração seletiva com a instrução “publique”. Enviar a revisão já validada pelo fluxo Git/Vercel, preservando main; nenhuma migração necessária.
