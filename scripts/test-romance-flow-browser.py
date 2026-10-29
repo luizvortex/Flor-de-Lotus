@@ -17,6 +17,7 @@ with sync_playwright() as p:
  experience=opened.value;experience.wait_for_load_state('networkidle');expect(experience).to_have_url(base+'/experiencias/decoracao-romantica');experience.close()
  page.goto(base+'/experiencias/decoracao-romantica',wait_until='networkidle')
  expect(page.locator('#rx-title')).to_have_text('O amor merece um cenário inesquecível.')
+ expect(page.locator('#rx-mine')).to_have_count(0)
  # All public templates share the transparent header asset; no changes to admin/home behavior.
  for selector in ['.rx-page-header','.rx-nav']:
   expect(page.locator(selector)).to_have_css('background-color','rgba(0, 0, 0, 0)')

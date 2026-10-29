@@ -183,3 +183,7 @@ A experiência agora exibe somente uma etapa por vez, mantendo os elementos e da
 ## Lembranças na etapa Fotografias
 
 A categoria real `lembrancas` é renderizada uma única vez e movida para `#rx-memory-products`, dentro da etapa 3. Porta-retrato e envio da foto ficam juntos. Os dois contêineres de produtos reutilizam os mesmos eventos e o mesmo carrinho; não duplicar inputs, IDs, produtos ou preços. Permitir avançar da etapa 2 sem adicional para quem escolherá somente uma lembrança na etapa 3; continuar exigindo ao menos um adicional e a quantidade correta de fotos antes da revisão/envio. Validações de quantidade de lembranças devem direcionar à etapa 3. Demais itens permanecem em Surpresa. Upload, Google e fotos privadas preservados.
+
+## Revisão sem histórico de experiências
+
+Removida a seção `#rx-mine` da página romântica, assim como a consulta automática `api('mine')` usada exclusivamente nessa listagem. A revisão apresenta apenas a solicitação atual, seguida de finalizar/conferir valores. Não reintroduzir reservas antigas nesse formulário. O histórico e o diálogo privado da decoração continuam disponíveis em Minha conta, com seus endpoints preservados. Manter a recuperação do rascunho atual e o comprovante de envio.
