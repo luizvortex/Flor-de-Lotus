@@ -17,6 +17,17 @@ with sync_playwright() as p:
  experience=opened.value;experience.wait_for_load_state('networkidle');expect(experience).to_have_url(base+'/experiencias/decoracao-romantica');experience.close()
  page.goto(base+'/experiencias/decoracao-romantica',wait_until='networkidle')
  expect(page.locator('#rx-title')).to_have_text('O amor merece um cenário inesquecível.')
+ # All public templates share the transparent header asset; no changes to admin/home behavior.
+ for selector in ['.rx-page-header','.rx-nav']:
+  expect(page.locator(selector)).to_have_css('background-color','rgba(0, 0, 0, 0)')
+ expect(page.locator('.rx-page-header')).to_have_css('position','absolute')
+ header_page=context.new_page();header_page.route('https://**',lambda route:route.abort())
+ for path,selector in [('/quartos','.catalog-top'),('/grupos','.account-page-header'),('/pacotes','.account-page-header'),('/minha-conta','.account-page-header'),('/itacare','.explore-header'),('/avaliacoes','.rv-header'),('/privacidade','.information-header'),('/condicoes','.information-header')]:
+  header_page.goto(base+path,wait_until='domcontentloaded');expect(header_page.locator('link[href="/public-header.css"]')).to_have_count(1);expect(header_page.locator(selector)).to_have_css('background-color','rgba(0, 0, 0, 0)')
+  for width in [360,768,1440]:
+   header_page.set_viewport_size({'width':width,'height':1000});assert header_page.locator(selector).is_visible()
+ header_page.close()
+
  def step(number):
   page.locator(f'[data-rx-step="{number}"]').click()
   expect(page.locator('.rx-steps > .rx-step:visible')).to_have_count(1)

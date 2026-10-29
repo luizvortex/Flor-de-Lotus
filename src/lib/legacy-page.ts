@@ -25,6 +25,7 @@ export async function legacyPage(name: string, preview?:SiteContent): Promise<Re
   if (!['admin','minha-conta'].includes(name) && !html.includes('src="/site-language.js"')) {
     html = html.replace('</head>', '<link rel="stylesheet" href="/site-language.css"><script src="/site-language.js" defer></script></head>');
   }
+  if(!['admin','index'].includes(name))html=html.replace('</head>', '<link rel="stylesheet" href="/public-header.css"></head>');
   return new Response(html, { headers: {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-store',

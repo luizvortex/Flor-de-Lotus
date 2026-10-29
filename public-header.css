@@ -1,0 +1,12 @@
+/* Shared transparent navigation for public pages; no admin selectors. */
+body :is(.account-page-header,.information-header,.explore-header,.rv-header,.catalog-top){background:transparent;box-shadow:none}
+.romance-page .rx-page-header{position:absolute;inset:0 0 auto;z-index:30;background:transparent;color:#fffdf8;border:0;box-shadow:none}
+.romance-page .rx-page-header .rx-nav{background:transparent;color:inherit;border-bottom:1px solid #ffffff40;margin-inline:clamp(18px,4vw,42px);padding-inline:0}
+.romance-page .rx-page-header .rx-nav a{color:inherit;text-shadow:0 1px 4px #0006}
+.romance-page .rx-page-header .rx-nav img{filter:brightness(0) invert(1)}
+.romance-page .rx-page-header .public-language{color:inherit;background:transparent;margin-inline-end:24px}
+.romance-page .rx-page-header .public-language summary{color:inherit;background:transparent}
+.romance-page .rx-page-header .language-options{color:#1f3c4d;background:#fffdf9;text-shadow:none}
+.romance-page .rx-page-header :focus-visible{outline-color:currentColor}
+.romance-page .rx-hero-copy{padding-block-start:150px}
+@media(max-width:800px){.romance-page .rx-page-header .rx-nav{margin-inline:18px 12px}.romance-page .rx-page-header .public-language{margin-inline-end:18px}.romance-page .rx-hero-copy{padding-block-start:130px}}

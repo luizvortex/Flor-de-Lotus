@@ -175,3 +175,7 @@ O botão **Enviar minha solicitação especial** deve continuar clicável quando
 ## Jornada romântica em quatro telas
 
 A experiência agora exibe somente uma etapa por vez, mantendo os elementos e dados no DOM: Hospedagem → Surpresa → Fotografias (orientação de opcionalidade quando aplicável) → Revisão. Selecionar quarto não avança automaticamente; **Próxima etapa** e **Voltar** controlam o fluxo. Removido o IntersectionObserver que alterava a etapa conforme rolagem. Preservar todas as escolhas ao navegar. Ao finalizar a revisão, `#rx-final-review` abre o resumo financeiro antes de permitir o envio real; ele substitui a coluna lateral permanente. Pendências fecham esse diálogo e levam ao campo da etapa correta. Após envio, manter o comprovante existente em outro diálogo, sem sobrepor os dois. Não fazer uma nova reserva ao simplesmente abrir o resumo.
+
+## Cabeçalhos transparentes das abas públicas
+
+`public-header.css`, servido por `prepare-public.mjs`, centraliza as superfícies transparentes dos cabeçalhos públicos. `legacy-page.ts` injeta o arquivo nas abas públicas, preservando o cabeçalho próprio da home e o painel administrativo. A rota romântica também carrega o arquivo: `.rx-page-header` sobrepõe o hero, com marca branca, links claros, seletor de idiomas legível e espaço reservado no texto para não sobrepor os títulos. Nas páginas sem hero fotográfico, manter texto escuro sobre o fundo da página, sem inserir imagens de capa artificiais. Não remover links, autenticação ou seletores existentes.
