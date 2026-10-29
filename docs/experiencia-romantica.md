@@ -1,8 +1,10 @@
 # Experiência romântica — implementação e publicação
 
-## Situação em 28/10/2026
+## Situação em 29/10/2026
 
-Implementação preparada no checkout, ainda **não publicada**. A migração `supabase/migrations/20261028164135_romantic_experience.sql` não foi aplicada em produção. A revisão automática rejeitou a operação por criar tabelas, funções privilegiadas, permissões, políticas de Storage e um trigger de reservas sem autorização suficientemente específica. É necessária autorização explícita para essa migração antes da publicação do código dependente dela. Não repetir a operação nem publicar uma interface com backend ausente.
+O proprietário autorizou explicitamente a aplicação da migração em 29/10/2026. `supabase/migrations/20261028164135_romantic_experience.sql` foi aplicada com sucesso no projeto Supabase da pousada pelo fluxo oficial de migrações. As quatro tabelas novas têm RLS; o bucket de fotografias é privado, limitado a 3 MiB e JPG/PNG/WebP; não há acesso direto de anon/authenticated aos dados privados. O catálogo foi conferido vazio, sem produtos, preços ou pedidos de teste semeados. A revisão automática anterior foi resolvida pela autorização do usuário.
+
+A análise de segurança pós-migração não apresentou novos avisos; permanece o alerta preexistente de [proteção contra senhas comprometidas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) no Auth. Código em publicação pelo fluxo autorizado de Git/Vercel; resultado final registrado abaixo após verificar o deploy.
 
 ## Jornada e arquitetura
 
