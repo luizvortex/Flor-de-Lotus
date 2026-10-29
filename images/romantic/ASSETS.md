@@ -1,13 +1,27 @@
 # Assets do configurador
 
-`room-layout-placeholder.svg`, `petals.svg` e `flowers.svg` são vetores originais preparados para este projeto. São ilustrações, não fotografias nem registros da pousada. Os assets vetoriais deste diretório são disponibilizados sob CC0 1.0 para uso e adaptação no projeto: https://creativecommons.org/publicdomain/zero/1.0/ . Esta declaração não abrange fotografias de terceiros ou o restante do código da aplicação.
+## Imagem base ativa
 
-A foto candidata é **White bed linen on bed**, de **Point3D Commercial Imaging Ltd.**, https://unsplash.com/photos/white-bed-linen-on-bed-5BV56SdvLmo . O resultado oficial consultado em 29/10/2026 a identifica como gratuita sob a Unsplash License: https://unsplash.com/license . A fotografia NÃO está incorporada: o download foi bloqueado pela política de rede com HTTP 403. Não há arquivo de foto disfarçado de asset ou proveniente de cache externo. É preciso liberar os domínios, baixar pelo banco, conferir o arquivo e a licença da página e recalibrar as camadas antes de marcar a fotografia como pronta. Não usar o layout esquemático como se fosse fotografia.
+`user-room-reference.jpg` foi fornecida pelo proprietário em um arquivo ZIP na conversa e incorporada em 29/10/2026. JPEG de 1920 × 764, 144.931 bytes. O conteúdo foi extraído sem redimensionamento, recompressão ou alteração visual.
 
-Configuração central: `romantic-room-preview.config.js`. Preencher `image` com caminho local, alterar `type` para `demo` e atualizar autoria/licença e dimensões. Ajustar `x`, `y`, `width` (frações do enquadramento), `rotation` e `zIndex` de cada camada para a perspectiva real. Manter a informação de imagem ilustrativa para fotos de banco. Para foto oficial, registrar a origem/autorização e alterar também o texto explicativo do componente conforme a configuração.
+SHA-256: `e45a825860063f8e4f006a3285e3c9b196a271377ab7a7351f19708cfdebd8a4`.
 
-## Referência escolhida pelo usuário
+Origem de uso: imagem ilustrativa fornecida pelo usuário para este configurador. Não foi apresentada como fotografia oficial da pousada, como registro de um quarto reservado ou como imagem licenciada pelo Unsplash. A origem externa/licença original da imagem não foi informada; não atribuir licença CC0 a esse JPEG. Manter a legenda de imagem ilustrativa e a identificação de referência, conforme o pedido.
 
-O usuário posteriormente escolheu uma imagem de quarto com cama clara e vista para o mar, exibida na conversa (1920 × 764). Essa escolha substitui a busca da fotografia Unsplash como base pretendida. O arquivo de imagem não foi exposto pelo ambiente como anexo baixável; apenas o TXT de instruções está em `/workspace/attachments`. Não se deve recriar a imagem nem alegar que o original foi incorporado. A configuração `userReference` já contém o caminho local planejado e coordenadas preliminares para essa perspectiva; precisam de verificação visual com o arquivo real. Não há licença externa atribuída automaticamente a essa imagem. Manter a legenda de imagem ilustrativa.
+## Vetores e fallback
 
-Após receber o arquivo, salve-o em `/images/romantic/user-room-reference.webp` (preservando composição e qualidade). Altere `activeProfile` para `userReference` no fim do arquivo de configuração. A inicialização mescla os placements individuais, preservando os assets e nomes de produtos de cada camada, e troca a mensagem de arquivo pendente pela legenda ilustrativa. Ajuste as coordenadas com o arquivo real e teste comparador/modal em desktop e mobile. A imagem não deve substituir fotos de categorias ou o hero oficial.
+`room-layout-placeholder.svg`, `petals.svg` e `flowers.svg` são vetores originais preparados para este projeto. São ilustrações, não fotografias nem registros da pousada. Esses três assets vetoriais são disponibilizados sob CC0 1.0 para uso e adaptação: https://creativecommons.org/publicdomain/zero/1.0/ . Essa declaração não abrange o JPEG, fotografias pessoais de hóspedes, imagens de terceiros ou o restante do código da aplicação.
+
+O esquema de quarto permanece somente como fallback para falha de carregamento da base. A imagem ativa é o JPEG fornecido pelo usuário.
+
+## Histórico de pesquisa
+
+Antes de o usuário escolher a imagem enviada, foi identificada a candidata **White bed linen on bed**, de **Point3D Commercial Imaging Ltd.**, https://unsplash.com/photos/white-bed-linen-on-bed-5BV56SdvLmo . O resultado oficial consultado em 29/10/2026 a identifica como gratuita sob a Unsplash License: https://unsplash.com/license . Ela NÃO foi baixada nem utilizada: o proxy bloqueou o download com HTTP 403, mesmo após autorização de rede. Não foi usado outro serviço para contornar o bloqueio. A imagem enviada posteriormente pelo usuário resolveu a dependência do arquivo.
+
+## Substituição e calibração
+
+Configuração central: `romantic-room-preview.config.js`. `activeProfile='userReference'` ativa a base local, proporção 1920/764, texto de referência e os placements conferidos sobre a cama/mesa lateral. O perfil mantém os assets e aliases de cada camada.
+
+Para substituir a imagem, envie o novo arquivo à pasta de assets e altere `userReference.image`, `aspectRatio` e origem. Recalibre `x`, `y`, `width` (frações do enquadramento), `rotation`, `scaleY` e `zIndex` individualmente para cada camada. Não há necessidade de reescrever o componente ou o fluxo de reservas. Preserve a legenda de referência enquanto a base não for uma fotografia oficial identificada/autorizada.
+
+Validação visual isolada: `python3 scripts/test-romantic-reference-layout.py`. A imagem pessoal da moldura nessa fixture é um pixel neutro sintético, não uma foto real de hóspede; todos os dados desse teste são locais.

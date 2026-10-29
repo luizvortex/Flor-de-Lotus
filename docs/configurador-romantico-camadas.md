@@ -2,11 +2,11 @@
 
 ## Estado da entrega
 
-Implementação integrada ao repositório, **sem deploy e sem alterações no banco**. Controles, carrinho, camadas, filtros, comparador, miniaturas, modal, mensagem, upload privado e resumo são funcionais. A incorporação da imagem escolhida pelo usuário está pendente do **arquivo original**. Não declarar que a fotografia foi instalada ou que o enquadramento real foi validado.
+Implementação integrada ao repositório, **sem deploy e sem alterações no banco**. Controles, carrinho, camadas, filtros, comparador, miniaturas, modal, mensagem, upload privado e resumo são funcionais. A imagem escolhida pelo usuário foi incorporada após o recebimento do ZIP. A base original e o posicionamento das quatro camadas foram conferidos localmente em desktop e mobile.
 
-O TXT enviado pede uma foto de banco e menciona um mockup que não veio como arquivo. Depois, o proprietário escolheu uma imagem de quarto com cama clara e vista para o mar, exibida na conversa (1920 × 764). Essa referência passa a ser a base pretendida. O ambiente disponibilizou apenas o TXT em `/workspace/attachments`; não disponibilizou o arquivo dessa imagem. Não há bytes originais a copiar/converter. Não foi feita uma reprodução por IA nem substituição por uma imagem de outra pousada.
+O TXT enviado pede uma foto de banco e menciona um mockup que não veio como arquivo. Depois, o proprietário escolheu uma imagem de quarto com cama clara e vista para o mar, exibida na conversa (1920 × 764). Essa referência passa a ser a base pretendida. Posteriormente, o usuário enviou o ZIP com o original: `images/romantic/user-room-reference.jpg`, JPEG de 1920 × 764 e 144.931 bytes. O arquivo foi preservado sem recompressão e com hash registrado em `images/romantic/ASSETS.md`. Não foi feita reprodução por IA nem substituição por outra imagem.
 
-A autorização de rede foi concedida pelo usuário e o perfil de rede da sessão foi autorizado, mas o proxy continuou respondendo HTTP 403 ao download oficial Unsplash. A lista efetiva de domínios do ambiente não foi alterada para incluir Unsplash. Não foram usados proxies alternativos, remoção de proxy ou outro serviço para contornar o bloqueio.
+A autorização de rede foi concedida pelo usuário e o perfil de rede da sessão foi autorizado, mas o proxy continuou respondendo HTTP 403 ao download oficial Unsplash. A lista efetiva de domínios do ambiente não foi alterada para incluir Unsplash. Não foram usados proxies alternativos, remoção de proxy ou outro serviço para contornar o bloqueio. A dependência da foto foi resolvida pelo arquivo enviado diretamente pelo usuário.
 
 ## Arquitetura preservada
 
@@ -23,7 +23,7 @@ Next.js App Router/TypeScript, HTML server-rendered da mesma rota e módulos JS/
 | Arquivo | Responsabilidade |
 | --- | --- |
 | `romantic-room-preview.js` | Componente reutilizável `RomanticRoomPreview`; cenas, camadas, comparador, galeria, modal, estado visual independente do carrinho |
-| `romantic-room-preview.config.js` | Base, fallback, origem, metadados, aliases de produtos e coordenadas; perfil preliminar para a imagem fornecida pelo usuário |
+| `romantic-room-preview.config.js` | Base, fallback, origem, metadados, aliases de produtos e coordenadas; perfil calibrado para a imagem fornecida pelo usuário |
 | `romantic-room-preview.css` | Layout 35/65, filtros, comparação e resumo, exclusivo sob `.romance-page` |
 | `images/romantic/*.svg` | Esquema de quarto, pétalas e arranjo vetoriais originais |
 | `images/romantic/ASSETS.md` | Origem, licença e situação real dos arquivos |
@@ -55,19 +55,19 @@ O resumo azul mostra itens/valores reais de decoração e identifica separadamen
 
 ## Fotografia, assets e substituição
 
-**Fotografia incorporada nesta revisão: nenhuma.** O estado atual utiliza ilustração esquemática local, com legenda explícita. Isso mantém os controles testáveis sem representar um desenho como foto real.
+**Imagem incorporada: `images/romantic/user-room-reference.jpg`**, enviada pelo proprietário em ZIP. A imagem ilustrativa ativa substitui a base esquemática. O SVG de quarto permanece apenas como fallback, sem ser apresentado como fotografia. Proporção original e enquadramento integral preservados.
 
 Os SVGs foram preparados originalmente para o projeto e estão documentados como CC0 1.0 exclusivamente para esses arquivos. Não são camadas extraídas de outro quarto e não são fotografias reais. As fotos pessoais dos hóspedes não fazem parte dessa licença e nunca foram gravadas nos assets.
 
 Antes da escolha enviada pelo usuário, foi identificada a candidata Unsplash [White bed linen on bed — Point3D Commercial Imaging Ltd.](https://unsplash.com/photos/white-bed-linen-on-bed-5BV56SdvLmo), cujo resultado oficial a identifica sob a [Unsplash License](https://unsplash.com/license). Ela não foi baixada nem utilizada; sua referência fica apenas no histórico de origem. A imagem escolhida depois pelo usuário não recebeu uma licença externa inventada. Seu uso foi solicitado na conversa, sempre como referência ilustrativa e não fotografia oficial da pousada.
 
-Para incorporar a imagem escolhida:
+Para substituir a base no futuro:
 
-1. Receber o arquivo original como JPG/PNG/WebP ou ZIP; conferir visualmente e otimizar sem mudar a composição.
-2. Salvar como `images/romantic/user-room-reference.webp`.
-3. Em `romantic-room-preview.config.js`, trocar `activeProfile` de `schematic` para `userReference`. O componente aplica base/aspect-ratio 1920/764 e mescla coordenadas por camada, mantendo assets e aliases.
-4. Conferir/ajustar individualmente x/y/width/rotation/scaleY/zIndex para a cama e a mesa lateral. As coordenadas atuais do perfil são preliminares, baseadas na imagem visível na conversa, e não uma calibração visual final.
-5. Executar preparação de assets, build, testes e inspeção visual com o original em desktop/mobile/modal. Manter a legenda de imagem ilustrativa e registrar a origem correta.
+1. Receber e conferir o novo arquivo; preservar composição e qualidade.
+2. Salvá-lo em `images/romantic/` e atualizar `userReference.image`.
+3. Atualizar a proporção e a origem do perfil central. O perfil `userReference` já está ativo e mescla os placements com os assets/aliases existentes.
+4. Recalibrar x/y/width/rotation/scaleY/zIndex para a perspectiva da nova cama/mesa. Os placements atuais foram conferidos sobre o original enviado pelo usuário.
+5. Executar preparação de assets, build e testes; manter a identificação de imagem ilustrativa quando aplicável.
 
 Uma fotografia oficial futura também deve ter seu próprio perfil e coordenadas; trocar a base não exige reescrever o componente ou o fluxo de reserva. Não substituir a fotografia do hero ou das categorias automaticamente.
 
@@ -78,15 +78,14 @@ Uma fotografia oficial futura também deve ter seu próprio perfil e coordenadas
 - `node scripts/test-romance-flow.mjs`: aprovado com Next compilado e PostgreSQL nativo isolado; Auth e transporte binário de Storage são adaptadores locais. Não foram utilizadas contas ou reservas reais.
 - Cobertura adicionada: pétalas ligadas ao item comercial; flores/cartão em demonstração sem cobrança; fotos privadas na moldura; mensagem escapada; remover camadas; filtros sem perder a quantidade; totais; comparador por teclado e touch real; valor inicial 50%; modal/Escape/foco; galeria/original; layout com prévia antes do catálogo no mobile; 360/375/390/430/768/1024/1440 px sem rolagem horizontal.
 - A mesma jornada verifica datas, hóspedes/crianças, seleção de quarto, upload/remoção/validação, revisão, pedido pendente, repetição idempotente, isolamento entre hóspedes/admin e preparação administrativa.
-- Capturas do componente em desktop e mobile foram inspecionadas. São da base esquemática, não da fotografia real ainda indisponível.
+- Capturas do componente com a imagem enviada foram inspecionadas em desktop e mobile. `python3 scripts/test-romantic-reference-layout.py` verificou as quatro camadas juntas em 360/375/390/430/768/1024/1440 px, ampliação, foco e ausência de rolagem horizontal. A fotografia da moldura nessa fixture é sintética e neutra, sem dados pessoais reais.
 - `git diff --check`: aprovado. O projeto não possui um script lint; não foi anunciado lint inexistente. A verificação de sintaxe e o TypeScript/build foram executados.
 
 ## Pendências
 
-- Arquivo original da imagem enviada na conversa e calibração final sobre ele.
 - Cadastro comercial de flores e cartão físico, se a pousada quiser vendê-los.
 - Mockup de layout mencionado no TXT não foi anexado como arquivo; foi seguida a descrição escrita 35/65.
-- Não houve validação visual da fotografia real, login Google externo ou HQBeds em produção.
+- Não houve homologação externa de login Google ou HQBeds nem inspeção dessa versão em produção. A imagem fornecida foi validada visualmente no ambiente local.
 - Deploy não autorizado por este pedido: manter esta implementação local até nova instrução explícita, preservando a restrição mais recente de não publicar automaticamente.
 
 Verificação final adicional: a falha simulada no carregamento do módulo visual deixa o catálogo, os filtros comerciais e o fluxo de reserva disponíveis; controles de demonstração são omitidos nessa situação. O teste completo foi reexecutado com esse cenário e aprovado. A mensagem também possui uma prévia maior fora da imagem e não é traduzida/interpretrada como HTML quando preenchida pelo hóspede.
