@@ -191,3 +191,7 @@ Removida a seção `#rx-mine` da página romântica, assim como a consulta autom
 ## Download de fotos na preparação administrativa
 
 Em `admin-romance.js`, cada anexo oferece **Abrir foto** e **Baixar foto**. O download consulta `admin_file?id=...&download=1`; a API preserva a autorização existente de acesso ao arquivo e gera URL assinada de 120 segundos com a opção oficial `download`/nome seguro. Baixar os bytes originais, sem converter imagens ou tornar o bucket público. A opção padrão de visualização continua inalterada. Teste de navegador verifica o download real, nome/extensão, igualdade dos bytes, acesso negado sem cookie administrativo e erro após exclusão autorizada da foto. Sem migração.
+
+## Controles dos detalhes da decoração
+
+Nos detalhes “Preparação especial do quarto”, não exibir os botões Pedidos e preparação, Produtos e variantes, Voltar aos pedidos e Registrar recebimento. Essa tela deve focar no pedido, anexos, atribuição/confirmação e situação operacional. A navegação geral permanece nas listagens/editor próprios e o catálogo continua acessível pelo menu administrativo; os recebimentos continuam na aba própria. Não remover os serviços nem registros correspondentes.
