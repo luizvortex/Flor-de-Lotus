@@ -23,6 +23,12 @@
   $('#rx-finish').disabled=busy||finished;
  }
  const stageIds=['hospedagem','personalizar','rx-memories','rx-contact'],stageLabels=['Hospedagem','Sua surpresa','Fotografias','Revisão'];
+ const finalReview=$('#rx-final-review');
+ finalReview.querySelector('.rx-final-close').onclick=()=>finalReview.close();
+ finalReview.onkeydown=event=>{if(event.key!=='Tab')return;const controls=[...finalReview.querySelectorAll('button:not([disabled]),a[href],summary')],first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}};
+ $('#rx-contact').append($('#rx-mine'));
+ $('#rx-back').onclick=()=>{if(!busy&&!finished)goStep(Math.max(1,activeStep-1));};
+
  const validationNote=document.createElement('p');validationNote.id='rx-validation-note';validationNote.className='rx-validation-note';validationNote.setAttribute('role','alert');validationNote.hidden=true;
  function missingRequirement(){
   const issue=(step,target,message)=>({step,target,message});
@@ -52,13 +58,15 @@
  }
  document.addEventListener('input',event=>{if(event.target.matches('[data-rx-invalid]')){event.target.removeAttribute('aria-invalid');validationNote.hidden=true;}});
  function instructions(){const message=$('#rx-message').value.trim(),photoNotes=$('#rx-instructions').value.trim();return [message?'Mensagem especial:\n'+message:'',photoNotes?'Instruções das fotografias:\n'+photoNotes:''].filter(Boolean).join('\n\n');}
- function goStep(number){activeStep=number;updateProgress();const target=$('#'+stageIds[number-1]);target.setAttribute('tabindex','-1');target.focus({preventScroll:true});target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
+ function goStep(number){if(finalReview.open)finalReview.close();activeStep=number;updateProgress();const target=$('#'+stageIds[number-1]);target.setAttribute('tabindex','-1');target.focus({preventScroll:true});target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
  function updateProgress(){
+  stageIds.forEach((id,index)=>{$('#'+id).hidden=index!==activeStep-1;});
+  $('#rx-back').disabled=busy||finished;$('#rx-back').hidden=activeStep===1;
   const complete=[Boolean(selection),Boolean(selection&&cart.size&&quote),Boolean(selection&&cart.size&&photos.length===selectedPhotoCount()),finished];
   document.querySelectorAll('[data-rx-step]').forEach(button=>{const number=Number(button.dataset.rxStep);button.dataset.complete=String(complete[number-1]);if(complete[number-1])button.setAttribute('aria-describedby','rx-completed-label');else button.removeAttribute('aria-describedby');if(number===activeStep)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');button.querySelector('[data-rx-step-mark]').textContent=complete[number-1]?'✓':String(number);});
   const label=`Etapa ${activeStep} de 4 — ${stageLabels[activeStep-1]}`;
   $('#rx-progress-label').textContent=label;$('#rx-mobile-step').textContent=label;$('#rx-progress-count').textContent=activeStep+' / 4';$('.rx-progress').style.setProperty('--rx-progress',((activeStep-1)/3*100)+'%');$('.rx-progress-track').setAttribute('aria-valuenow',String(activeStep));
-  $('#rx-continue').textContent=activeStep===4?'Revisar solicitação':'Continuar';$('#rx-continue').disabled=busy||finished;
+  $('#rx-continue').textContent=activeStep===4?'Finalizar e conferir valores':'Próxima etapa';$('#rx-continue').disabled=busy||finished;
  }
  function selectedGallery(removable=false){
   const items=[];
@@ -79,13 +87,13 @@
  $('#rx-review').addEventListener('error',async event=>{const image=event.target;if(!image.matches?.('[data-rx-review-photo]')||image.dataset.refreshed)return;image.dataset.refreshed='true';try{const url=await photoUrl(image.dataset.rxReviewPhoto);if(image.isConnected)image.src=url;}catch{}},true);
  document.addEventListener('click',event=>{const button=event.target.closest('[data-rx-step],[data-rx-go]');if(button)goStep(Number(button.dataset.rxStep||button.dataset.rxGo));});
  $('#rx-continue').onclick=()=>{
-  if(activeStep===1&&!selection){$('#search').reportValidity();$('#rx-search-status').textContent='Consulte a disponibilidade e escolha um quarto para continuar.';goStep(1);return;}
-  if(activeStep===2&&!cart.size){error('Escolha seus adicionais.');return;}
+  if(busy||finished)return;
+  if(!selection){guideRequirement({step:1,target:'#rx-search-button',message:'Consulte a disponibilidade e escolha um quarto para continuar.'});return;}
+  if(activeStep===2&&!cart.size){guideRequirement({step:2,target:'#rx-products',message:'Escolha seus adicionais.'});return;}
   if(activeStep===3&&photos.length!==selectedPhotoCount()){const issue=missingRequirement();if(issue)guideRequirement(issue);return;}
-  if(activeStep===4){const issue=missingRequirement();if(issue){guideRequirement(issue);return;}$('#rx-summary-details').open=true;$('.rx-summary').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});$('#rx-finish').focus({preventScroll:true});return;}
-  goStep(activeStep===2&&selectedPhotoCount()===0&&photos.length===0?4:activeStep+1);
+  if(activeStep===4){const issue=missingRequirement();if(issue){guideRequirement(issue);return;}$('#rx-summary-details').open=true;finalReview.showModal();$('#rx-finish').focus({preventScroll:true});return;}
+  goStep(activeStep+1);
  };
- if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(visible.length){activeStep=stageIds.indexOf(visible[0].target.id)+1;updateProgress();}},{rootMargin:'-15% 0px -55% 0px'});stageIds.forEach(id=>observer.observe($('#'+id)));}
  ['rx-message','rx-instructions','rx-guest','rx-phone'].forEach(id=>$('#'+id).addEventListener('input',summary));
  async function price(){
   clearTimeout(quoteTimer);quote=null;const sequence=++quoteSequence;summary();if(!selection)return;
@@ -128,7 +136,7 @@
   }catch(e){if(sequence===searchSequence)$('#rx-search-status').textContent=e.message;}
   finally{$('#rx-search-button').disabled=false;}
  };
- $('#rx-rooms').onclick=event=>{const button=event.target.closest('[data-rx-choose]');if(!button||busy)return;selection=rooms[Number(button.dataset.rxChoose)];document.querySelectorAll('[data-rx-room-card]').forEach((card,i)=>{card.classList.toggle('is-selected',i===Number(button.dataset.rxChoose));const trigger=card.querySelector('button');trigger.textContent=i===Number(button.dataset.rxChoose)?'✓ Quarto selecionado':'Escolher este quarto';trigger.setAttribute('aria-pressed',String(i===Number(button.dataset.rxChoose)));});price();goStep(2);};
+ $('#rx-rooms').onclick=event=>{const button=event.target.closest('[data-rx-choose]');if(!button||busy)return;selection=rooms[Number(button.dataset.rxChoose)];document.querySelectorAll('[data-rx-room-card]').forEach((card,i)=>{card.classList.toggle('is-selected',i===Number(button.dataset.rxChoose));const trigger=card.querySelector('button');trigger.textContent=i===Number(button.dataset.rxChoose)?'✓ Quarto selecionado':'Escolher este quarto';trigger.setAttribute('aria-pressed',String(i===Number(button.dataset.rxChoose)));});price();};
  function paintProducts(){
   $('#rx-products').innerHTML=Object.entries(categoryNames).map(([category,title])=>{const products=catalog.filter(p=>p.category===category&&p.variants.length);return products.length?`<h3 class="rx-category-title">${title}</h3><div class="rx-product-grid">${products.map(p=>`<article class="romance-product-card" data-rx-product="${p.id}"><span class="rx-selection-badge" hidden>✓ Selecionado</span>${p.photo?`<div class="romance-image-wrapper"><img class="romance-image" src="${esc(p.photo)}" alt="${esc(p.name)}" width="800" height="600" loading="lazy"></div>`:'<div class="rx-product-photo-empty">Fotografia ainda não cadastrada</div>'}<details class="rx-product-options" ${p.variants.some(v=>(cart.get(v.id)||0)>0)?'open':''}><summary><span><strong>${esc(p.name)}</strong><span class="rx-product-from">A partir de ${money(Math.min(...p.variants.map(v=>v.price)))}</span></span><span class="rx-product-toggle" aria-hidden="true">＋</span></summary><div class="rx-card-copy"><p>${esc(p.description)}</p>${p.photos_required?`<p><span>${p.photos_required} fotos</span> <span>por unidade</span></p>`:''}<div class="rx-style-row"><div class="rx-variant-choices" role="radiogroup" aria-label="${esc(p.name)}">${p.variants.map(v=>`<label class="rx-variant-choice"><input type="radio" name="rx-style-${p.id}" value="${v.id}" data-rx-style ${p.variants.length===1||(cart.get(v.id)||0)>0?'checked':''}><span>${esc(v.name)}</span></label>`).join('')}</div>${p.variants.map(v=>`<div data-rx-variant-controls="${v.id}" ${p.variants.length===1||(cart.get(v.id)||0)>0?'':'hidden'}><div class="rx-quantity-heading"><label for="rx-quantity-${v.id}">Quantidade</label><small>${money(v.price)}</small></div><div class="rx-quantity" role="group" aria-label="${esc(p.name)} · ${esc(v.name)}"><button type="button" class="rx-secondary-button" data-rx-qty-step="-1" data-rx-variant="${v.id}" aria-label="Diminuir quantidade">−</button><input id="rx-quantity-${v.id}" type="number" min="0" max="${Math.min(p.max_quantity,v.stock??p.max_quantity)}" value="${cart.get(v.id)||0}" data-rx-quantity="${v.id}" aria-label="Quantidade: ${esc(p.name)} · ${esc(v.name)}"><button type="button" class="rx-secondary-button" data-rx-qty-step="1" data-rx-variant="${v.id}" aria-label="Aumentar quantidade">+</button></div></div>`).join('')}</div></div></details></article>`).join('')}</div>`:'';}).join('');
  }
@@ -170,7 +178,7 @@
   }catch(e){if(e.status===401){authenticated=false;photos=[];$('#rx-photos').innerHTML='';$('#rx-mine>div').innerHTML='';$('#rx-mine').hidden=true;}error(e.message);}summary();
  }
  function receipt(result){
-  finished=true;quote=null;const target=$('#rx-receipt');
+  if(finalReview.open)finalReview.close();finished=true;quote=null;const target=$('#rx-receipt');
   target.innerHTML=`<button type="button" class="rx-receipt-close" aria-label="Fechar" autofocus>×</button><p class="rx-eyebrow">SOLICITAÇÃO ENVIADA</p><h2 id="rx-receipt-title">Sua surpresa começou.</h2><p class="rx-receipt-number">Reserva #${esc(result.booking_id)}</p><p id="rx-receipt-status">Aguardando confirmação da pousada.</p><p class="rx-receipt-total">${money(result.total)}</p><p>Nenhum pagamento foi cobrado. A equipe irá conferir a hospedagem e combinar os próximos passos.</p><div class="rx-receipt-actions"><a class="romance-primary-button" href="/minha-conta">Acompanhar minha reserva</a><button type="button" class="rx-secondary-button" id="rx-new">Iniciar outra experiência</button></div>`;
   target.querySelector('.rx-receipt-close').onclick=()=>target.close();
   target.onkeydown=event=>{if(event.key!=='Tab')return;const controls=[...target.querySelectorAll('button:not([disabled]),a[href]')],first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}};
@@ -189,8 +197,8 @@
   finally{busy=false;summary();}
  };
  $('#rx-refresh-account').onclick=account;window.addEventListener('focus',()=>{if(!busy&&!finished)account();});
- document.querySelectorAll('.rx-hero-actions a').forEach(a=>a.onclick=event=>{event.preventDefault();$(a.getAttribute('href')).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});
- if(matchMedia('(max-width:800px)').matches)$('#rx-summary-details').open=false;
+ document.querySelectorAll('.rx-hero-actions a').forEach(a=>a.onclick=event=>{event.preventDefault();goStep(a.getAttribute('href')==='#personalizar'&&selection?2:1);});
+ $('#rx-summary-details').open=true;
  async function loadCatalog(){
   if(catalogLoading)return;catalogLoading=true;$('#rx-retry-catalog').hidden=true;$('#rx-products').setAttribute('aria-busy','true');$('#rx-catalog-status').textContent='Carregando opções…';$('#rx-catalog-skeleton').hidden=false;
   try{const result=await api('catalog');catalog=result.products.filter(p=>p.variants?.length);paintProducts();$('#rx-catalog-status').textContent=catalog.length?'':'As opções de decoração estão sendo preparadas. Consulte a pousada para conhecer as possibilidades.';$('#rx-retry-catalog').hidden=Boolean(catalog.length);}
@@ -203,5 +211,5 @@
   await loadCatalog();
   await account();summary();
  }
- start();
+ updateProgress();start();
 })();

@@ -111,3 +111,17 @@
 .romance-page .rx-validation-note{font-size:12px;line-height:1.7;color:#8b2638;background:#fff5f1;border-inline-start:3px solid #a67c3d;padding:12px 14px;margin-block:12px}
 .romance-page [aria-invalid=true]{border-color:#8b2638!important}
 .romance-page [data-rx-invalid]{scroll-margin-block:150px}
+
+/* A single step at a time; final prices are reviewed in a dedicated dialog. */
+.romance-page .rx-shell{display:block;max-width:1000px;padding-bottom:0}
+.romance-page .rx-step{margin-bottom:0}
+.romance-page .rx-wizard-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:944px;margin:20px auto 48px;padding:18px 24px;border:1px solid #e5dece;border-radius:16px;background:#faf8f3}
+.romance-page .rx-wizard-actions>div{flex:1;text-align:center;font-size:11px}
+.romance-page .rx-wizard-actions #rx-mobile-step{display:block;color:#5d6c72}
+.romance-page .rx-wizard-actions #rx-mobile-total{display:block;margin-top:5px;font-size:14px}
+.romance-page .rx-final-dialog{position:fixed;inset:0;width:min(560px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;margin:auto;padding:36px 24px 24px;border:1px solid #e5dece;border-radius:20px;background:#faf8f3;color:#1f3c4d;box-shadow:0 24px 80px #1f3c4d33;overscroll-behavior:contain}
+.romance-page .rx-final-dialog::backdrop{background:#152d3bb3}
+.romance-page .rx-final-dialog .rx-summary{position:static;width:100%;padding:12px 4px 0;margin:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.romance-page .rx-final-close{position:absolute;inset-block-start:6px;inset-inline-end:6px;width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:inherit;font-size:26px;cursor:pointer}
+.romance-page:has(.rx-final-dialog[open]){overflow:hidden}
+@media(max-width:800px){.romance-page .rx-wizard-actions{position:fixed;inset-inline:0;bottom:0;margin:0;border-radius:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));gap:8px}.romance-page .rx-wizard-actions button{padding:10px 12px;font-size:11px;max-width:46%}.romance-page .rx-wizard-actions>div{text-align:start}.romance-page .rx-wizard-actions #rx-mobile-total{font-size:12px}.romance-page .rx-final-dialog{padding:36px 20px 20px}.romance-page .rx-final-dialog .rx-summary{margin:0}}

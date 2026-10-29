@@ -3609,6 +3609,26 @@
       "Prices or availability could not be validated. Search for your stay again.",
       "לא ניתן לאמת מחירים או זמינות. חפשו שוב את השהייה שלכם.",
       "No se pudieron validar los valores o la disponibilidad. Consulta tu hospedaje nuevamente."
+    ],
+    "Próxima etapa": [
+      "Next step",
+      "השלב הבא",
+      "Siguiente paso"
+    ],
+    "Finalizar e conferir valores": [
+      "Finish and review prices",
+      "סיום ובדיקת המחירים",
+      "Finalizar y revisar valores"
+    ],
+    "Voltar": [
+      "Back",
+      "חזרה",
+      "Volver"
+    ],
+    "Navegação entre etapas": [
+      "Step navigation",
+      "ניווט בין שלבים",
+      "Navegación entre pasos"
     ]
   }
 }

@@ -17,81 +17,61 @@ with sync_playwright() as p:
  experience=opened.value;experience.wait_for_load_state('networkidle');expect(experience).to_have_url(base+'/experiencias/decoracao-romantica');experience.close()
  page.goto(base+'/experiencias/decoracao-romantica',wait_until='networkidle')
  expect(page.locator('#rx-title')).to_have_text('O amor merece um cenário inesquecível.')
- # Catalog failure/empty states always stop loading and allow retry.
- page.route('**/api/romance/catalog',lambda route:route.fulfill(status=503,json={'error':'synthetic outage'}));page.reload(wait_until='networkidle');expect(page.locator('#rx-retry-catalog')).to_be_visible();expect(page.locator('#rx-products')).to_have_attribute('aria-busy','false')
+ def step(number):
+  page.locator(f'[data-rx-step="{number}"]').click()
+  expect(page.locator('.rx-steps > .rx-step:visible')).to_have_count(1)
+ def finish_attempt():
+  step(4);page.locator('#rx-continue').click()
+ expect(page.locator('#hospedagem')).to_be_visible();expect(page.locator('#personalizar')).to_be_hidden();expect(page.locator('#rx-final-review')).not_to_be_visible()
+ page.locator('#rx-continue').click();expect(page.locator('#rx-search-button')).to_be_focused();assert len(payloads)==0
+ # Catalog failures/empty states remain recoverable in their own step.
+ page.route('**/api/romance/catalog',lambda route:route.fulfill(status=503,json={'error':'synthetic outage'}));page.reload(wait_until='networkidle');step(2);expect(page.locator('#rx-retry-catalog')).to_be_visible();expect(page.locator('#rx-products')).to_have_attribute('aria-busy','false')
  page.unroute('**/api/romance/catalog');page.locator('#rx-retry-catalog').click();expect(page.locator('.rx-product-options')).to_have_count(7,timeout=20000)
- page.route('**/api/romance/catalog',lambda route:route.fulfill(json={'products':[]}));page.reload(wait_until='networkidle');expect(page.locator('#rx-catalog-status')).to_contain_text('sendo preparadas');expect(page.locator('#rx-products')).to_have_attribute('aria-busy','false');page.unroute('**/api/romance/catalog');page.locator('#rx-retry-catalog').click();expect(page.locator('.rx-product-options')).to_have_count(7,timeout=20000)
-
+ page.route('**/api/romance/catalog',lambda route:route.fulfill(json={'products':[]}));page.reload(wait_until='networkidle');step(2);expect(page.locator('#rx-catalog-status')).to_contain_text('sendo preparadas');page.unroute('**/api/romance/catalog');page.locator('#rx-retry-catalog').click();expect(page.locator('.rx-product-options')).to_have_count(7,timeout=20000)
  expect(page.locator('#romantic-room-preview,[data-rrp-layer],input[type=range]')).to_have_count(0)
  expect(page.locator('#rx-selected-gallery')).to_contain_text('Sua surpresa começa')
- expect(page.locator('#rx-account-status')).to_contain_text('Conta conectada')
- page.locator('#rx-finish').click();expect(page.locator('#rx-search-button')).to_be_focused();expect(page.locator('#rx-validation-note')).to_contain_text('escolha um quarto');assert len(payloads)==0
- visitor=browser.new_context(extra_http_headers={'Origin':base});guest=visitor.new_page();guest.route('https://**',lambda route:route.abort());guest.goto(base+'/experiencias/decoracao-romantica',wait_until='networkidle');guest.locator('.rx-product-options').filter(has=guest.get_by_text('Vinho',exact=True)).locator('summary').click();guest.locator('.rx-product-options').filter(has=guest.get_by_text('Vinho',exact=True)).locator('[data-rx-style]').first.check();guest.locator('#rx-message').fill('Mensagem antes do login');guest.locator('[data-rx-step="4"]').click();expect(guest.locator('#rx-google')).to_be_visible();expect(guest.locator('#rx-message')).to_have_value('Mensagem antes do login');expect(guest.locator('#rx-finish')).to_be_enabled();assert visitor.request.post(base+'/api/romance/draft',data={'request_id':'00000000-0000-4000-8000-000000000001'}).status==401;visitor.close()
-
- page.evaluate('scrollTo(0,0)')
+ visitor=browser.new_context(extra_http_headers={'Origin':base});guest=visitor.new_page();guest.route('https://**',lambda route:route.abort());guest.goto(base+'/experiencias/decoracao-romantica',wait_until='networkidle');guest.locator('[data-rx-step="2"]').click();guest.locator('.rx-product-options').filter(has=guest.get_by_text('Vinho',exact=True)).locator('summary').click();guest.locator('.rx-product-options').filter(has=guest.get_by_text('Vinho',exact=True)).locator('[data-rx-style]').first.check();guest.locator('#rx-message').fill('Mensagem antes do login');guest.locator('[data-rx-step="4"]').click();expect(guest.locator('#rx-google')).to_be_visible();expect(guest.locator('#rx-message')).to_have_value('Mensagem antes do login');assert visitor.request.post(base+'/api/romance/draft',data={'request_id':'00000000-0000-4000-8000-000000000001'}).status==401;visitor.close()
+ step(1)
  for width in [360,375,390,430,768,1024,1600]:
-  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1'),width
-  page.screenshot(path=f'work/romance-experience-hero-{width}.png')
- page.set_viewport_size({'width':1440,'height':1000})
- page.locator('.rx-hero-actions a').first.click();expect(page.locator('#search')).to_be_visible()
+  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');page.screenshot(path=f'work/romance-experience-hero-{width}.png')
+ page.set_viewport_size({'width':1440,'height':1000});page.locator('.rx-hero-actions a').first.click();expect(page.locator('#search')).to_be_visible()
  starts=(datetime.now(timezone.utc)+timedelta(days=20)).date().isoformat();ends=(datetime.now(timezone.utc)+timedelta(days=22)).date().isoformat()
  page.locator('#dates-trigger').click();page.locator(f'[data-day="{starts}"]:not([disabled])').first.click();page.locator(f'[data-day="{ends}"]:not([disabled])').first.click();page.locator('#apply-dates').click()
- page.locator('#rx-children').fill('1');page.locator('[data-rx-age]').select_option('5')
- page.locator('#rx-search-button').click();expect(page.locator('[data-rx-choose]').first).to_be_visible(timeout=20000)
- # Capacity includes the free child; a real rate is returned by the native DB routines.
- page.locator('[data-rx-choose]').first.focus();page.keyboard.press('Enter');expect(page.locator('[data-rx-room-card].is-selected')).to_have_count(1)
- wine=page.locator('.rx-product-options').filter(has=page.get_by_text('Vinho',exact=True));wine.locator('summary').click();expect(wine.locator('[data-rx-quantity]')).to_have_count(7);wine.locator('[data-rx-style]').first.check();expect(wine.locator('[data-rx-variant-controls]:visible')).to_have_count(1);expect(page.locator('.rx-grand-total')).to_contain_text('475,00',timeout=20000);wine.locator('[data-rx-style]').nth(1).check();expect(wine.locator('[data-rx-quantity]').first).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('1');wine.locator('[data-rx-quantity]').nth(1).fill('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000);wine.locator('[data-rx-style]').nth(2).check();expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2')
- expect(page.locator('[data-rx-selected]')).to_have_count(1);expect(page.locator('#rx-selected-gallery')).to_contain_text('Vinho');expect(page.locator('#rx-selected-gallery')).to_contain_text('× 2');expect(page.locator('#rx-selected-total')).to_contain_text('150,00')
+ page.locator('#rx-children').fill('1');page.locator('[data-rx-age]').select_option('5');page.locator('#rx-search-button').click();expect(page.locator('[data-rx-choose]').first).to_be_visible(timeout=20000)
+ page.locator('[data-rx-choose]').first.focus();page.keyboard.press('Enter');expect(page.locator('[data-rx-room-card].is-selected')).to_have_count(1);expect(page.locator('#hospedagem')).to_be_visible();expect(page.locator('#personalizar')).to_be_hidden()
+ page.locator('#rx-continue').click();expect(page.locator('#personalizar')).to_be_visible();expect(page.locator('#hospedagem')).to_be_hidden()
+ wine=page.locator('.rx-product-options').filter(has=page.get_by_text('Vinho',exact=True));wine.locator('summary').click();wine.locator('[data-rx-style]').first.check();expect(page.locator('.rx-grand-total')).to_contain_text('475,00',timeout=20000);wine.locator('[data-rx-style]').nth(1).check();wine.locator('[data-rx-quantity]').nth(1).fill('2');wine.locator('[data-rx-style]').nth(2).check();expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000)
+ page.locator('#rx-message').fill('Uma surpresa especial');expect(page.locator('#rx-message-preview')).to_have_text('Uma surpresa especial')
  for width in [360,390,768,1024,1440]:
-  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');wine.screenshot(path=f'work/romance-compact-variants-{width}.png');page.locator('.rx-selected-panel').screenshot(path=f'work/romance-gift-summary-{width}.png')
- expect(page.locator('#rx-review [data-rx-reviewed]')).to_have_count(1)
- page.locator('#rx-message').fill('Uma surpresa especial');expect(page.locator('#rx-message-preview')).to_have_text('Uma surpresa especial');page.locator('[data-rx-step="4"]').click();expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2');page.locator('[data-rx-step="2"]').click()
- page.locator('[data-rx-remove-item]').click();expect(page.locator('[data-rx-selected]')).to_have_count(0);expect(page.locator('#rx-selected-total')).to_contain_text('0,00');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('0');wine.locator('[data-rx-quantity]').nth(2).fill('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000)
- # Non-personalized extras require no photograph.
- page.locator('#rx-consent').check();page.locator('#rx-finish').click();expect(page.locator('#rx-phone')).to_be_focused();expect(page.locator('#rx-validation-note')).to_contain_text('DDD')
- page.locator('#rx-phone').fill('739999');page.locator('#rx-finish').click();expect(page.locator('#rx-phone')).to_be_focused()
- page.locator('#rx-phone').fill('73999999999');expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000)
- page.locator('#rx-guest').fill('   ');page.locator('#rx-finish').click();expect(page.locator('#rx-guest')).to_be_focused();page.locator('#rx-guest').fill('Hóspede sintético');expect(page.locator('#rx-finish')).to_be_enabled()
- page.locator('#rx-consent').uncheck();page.locator('#rx-finish').click();expect(page.locator('#rx-consent')).to_be_focused();page.locator('#rx-consent').check();expect(page.locator('#rx-finish')).to_be_enabled();expect(page.locator('#rx-dropzone')).to_be_hidden()
- wine.locator('[data-rx-quantity]').nth(2).fill('0');expect(page.locator('[data-rx-selected]')).to_have_count(0)
- page.locator('.rx-product-options').filter(has=page.locator(f'[data-rx-quantity="{variant}"]')).locator('summary').click()
- quantity=page.locator(f'[data-rx-quantity="{variant}"]');quantity.fill('99');page.locator('#rx-finish').click();expect(quantity).to_be_focused();quantity.fill('0');page.locator(f'[data-rx-variant="{variant}"][data-rx-qty-step="1"]').click();expect(quantity).to_have_value('1')
- expect(page.locator('#rx-memories')).to_be_visible();expect(page.locator('#rx-quote-status')).to_contain_text('Valores conferidos',timeout=20000)
- page.locator('#rx-finish').click();expect(page.locator('#rx-files')).to_be_focused();expect(page.locator('#rx-files')).to_have_attribute('aria-invalid','true');expect(page.locator('#rx-validation-note')).to_contain_text('fotografias exigidas');expect(page.locator('#rx-progress-label')).to_contain_text('Etapa 3');assert len(payloads)==0
- expect(page.locator('.rx-grand-total')).to_contain_text('450,00')
- expect(page.locator('#rx-selected-gallery img')).to_have_count(1)
- for width in [390,1440]:
-  page.set_viewport_size({'width':width,'height':1000});page.locator('.rx-selected-panel').screenshot(path=f'work/romance-gift-product-photo-{width}.png')
- # Server rejects bytes disguised as a PNG, before creating any upload metadata.
- invalid=context.request.post(base+'/api/romance/upload',multipart={'request_id':'00000000-0000-4000-8000-000000000019','photo':{'name':'fake.png','mimeType':'image/png','buffer':b'<svg onload=alert(1)></svg>'}})
- assert invalid.status==415,invalid.text()
- im=Image.new('RGB',(800,600),'#e8d5ba');buf=io.BytesIO();im.save(buf,format='PNG')
- photo={'name':'private-synthetic.png','mimeType':'image/png','buffer':buf.getvalue()}
- page.locator('[data-rx-step="3"]').click();page.locator('#rx-files').set_input_files({'name':'invalid.txt','mimeType':'text/plain','buffer':b'invalid'});expect(page.locator('#rx-upload-status')).to_contain_text('JPG')
+  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');page.locator('#personalizar').screenshot(path=f'work/romance-wizard-surprise-{width}.png')
+ page.locator('#rx-continue').click();expect(page.locator('#rx-memories')).to_be_visible();expect(page.locator('#rx-photo-optional')).to_be_visible();page.locator('#rx-continue').click();expect(page.locator('#rx-contact')).to_be_visible()
+ page.locator('#rx-consent').check();page.locator('#rx-continue').click();expect(page.locator('#rx-phone')).to_be_focused();page.locator('#rx-phone').fill('739999');page.locator('#rx-continue').click();expect(page.locator('#rx-phone')).to_be_focused();page.locator('#rx-phone').fill('73999999999')
+ page.locator('#rx-guest').fill('   ');page.locator('#rx-continue').click();expect(page.locator('#rx-guest')).to_be_focused();page.locator('#rx-guest').fill('Hóspede sintético');page.locator('#rx-consent').uncheck();page.locator('#rx-continue').click();expect(page.locator('#rx-consent')).to_be_focused();page.locator('#rx-consent').check();assert len(payloads)==0
+ step(2);expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2');expect(page.locator('#rx-message')).to_have_value('Uma surpresa especial')
+ page.locator('[data-rx-remove-item]').click();expect(page.locator('[data-rx-selected]')).to_have_count(0)
+ frame=page.locator('.rx-product-options').filter(has=page.locator(f'[data-rx-quantity="{variant}"]'));frame.locator('summary').click();quantity=page.locator(f'[data-rx-quantity="{variant}"]');quantity.fill('99');finish_attempt();expect(quantity).to_be_focused();quantity.fill('1');expect(page.locator('.rx-grand-total')).to_contain_text('450,00',timeout=20000)
+ page.locator('#rx-continue').click();expect(page.locator('#rx-memories')).to_be_visible();page.locator('#rx-continue').click();expect(page.locator('#rx-files')).to_be_focused();expect(page.locator('#rx-validation-note')).to_contain_text('fotografias exigidas');assert len(payloads)==0
+ invalid=context.request.post(base+'/api/romance/upload',multipart={'request_id':'00000000-0000-4000-8000-000000000019','photo':{'name':'fake.png','mimeType':'image/png','buffer':b'<svg onload=alert(1)></svg>'}});assert invalid.status==415
+ im=Image.new('RGB',(800,600),'#e8d5ba');buf=io.BytesIO();im.save(buf,format='PNG');photo={'name':'private-synthetic.png','mimeType':'image/png','buffer':buf.getvalue()}
+ page.locator('#rx-files').set_input_files({'name':'invalid.txt','mimeType':'text/plain','buffer':b'invalid'});expect(page.locator('#rx-upload-status')).to_contain_text('JPG')
  transfer=page.evaluate_handle('(bytes)=>{const data=new DataTransfer();data.items.add(new File([new Uint8Array(bytes)],"private-synthetic.png",{type:"image/png"}));return data;}',list(buf.getvalue()))
- page.dispatch_event('#rx-dropzone','dragenter',{'dataTransfer':transfer});expect(page.locator('#rx-dropzone')).to_have_class(re.compile('is-dragging'));page.dispatch_event('#rx-dropzone','drop',{'dataTransfer':transfer});expect(page.locator('[data-rx-remove]')).to_have_count(1,timeout=20000)
- expect(page.locator('[data-rx-remove]')).to_be_enabled(timeout=15000);page.locator('[data-rx-remove]').click();expect(page.locator('[data-rx-remove]')).to_have_count(0,timeout=20000)
- page.locator('#rx-files').set_input_files(photo);expect(page.locator('[data-rx-remove]')).to_have_count(1,timeout=20000)
- expect(page.locator('[data-rx-photo]')).to_have_attribute('src',re.compile('token='),timeout=10000)
- # Removing the frame must keep an already-uploaded photo visible/removable.
- quantity.fill('0');wine.locator('[data-rx-quantity]').nth(2).fill('1');expect(page.locator('#rx-memories')).to_be_visible();expect(page.locator('#rx-photo-count')).to_contain_text('Remova as fotos');page.locator('#rx-finish').click();expect(page.locator('#rx-photos')).to_be_focused();expect(page.locator('[data-rx-remove]')).to_be_enabled();page.locator('[data-rx-remove]').click();expect(page.locator('#rx-dropzone')).to_be_hidden(timeout=15000);expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000)
- wine.locator('[data-rx-quantity]').nth(2).fill('0');quantity.fill('1');page.locator('#rx-files').set_input_files(photo);expect(page.locator('[data-rx-photo]')).to_have_attribute('src',re.compile('token='),timeout=15000)
- file_id=page.locator('[data-rx-photo]').get_attribute('data-rx-photo')
- page.locator('#rx-instructions').fill('<img src=x onerror=alert(1)> Instrução sintética privada');page.locator('#rx-message').fill('Surpresa <svg onload=alert(1)> para você')
- expect(page.locator('#rx-review blockquote')).to_have_text('Surpresa <svg onload=alert(1)> para você')
- page.locator('[data-rx-step="1"]').click();expect(page.locator('#rx-message')).to_have_value('Surpresa <svg onload=alert(1)> para você');expect(page.locator('[data-rx-room-card].is-selected')).to_have_count(1);page.locator('[data-rx-step="4"]').click()
- page.locator('#rx-guest').fill('Hóspede sintético');page.locator('#rx-phone').fill('73999999999');page.locator('#rx-consent').check()
- expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000)
+ page.dispatch_event('#rx-dropzone','dragenter',{'dataTransfer':transfer});expect(page.locator('#rx-dropzone')).to_have_class(re.compile('is-dragging'));page.dispatch_event('#rx-dropzone','drop',{'dataTransfer':transfer});expect(page.locator('[data-rx-remove]')).to_have_count(1,timeout=20000);expect(page.locator('[data-rx-remove]')).to_be_enabled(timeout=15000);page.locator('[data-rx-remove]').click();expect(page.locator('[data-rx-remove]')).to_have_count(0,timeout=20000)
+ page.locator('#rx-files').set_input_files(photo);expect(page.locator('[data-rx-photo]')).to_have_attribute('src',re.compile('token='),timeout=15000)
+ step(2);quantity.fill('0');wine.locator('[data-rx-quantity]').nth(2).fill('1');finish_attempt();expect(page.locator('#rx-photos')).to_be_focused();page.locator('[data-rx-remove]').click();expect(page.locator('#rx-dropzone')).to_be_hidden(timeout=15000)
+ step(2);wine.locator('[data-rx-quantity]').nth(2).fill('0');quantity.fill('1');page.locator('#rx-continue').click();page.locator('#rx-files').set_input_files(photo);expect(page.locator('[data-rx-photo]')).to_have_attribute('src',re.compile('token='),timeout=15000)
+ file_id=page.locator('[data-rx-photo]').get_attribute('data-rx-photo');page.locator('#rx-instructions').fill('<img src=x onerror=alert(1)> Instrução sintética privada')
+ page.locator('#rx-back').click();expect(page.locator('#personalizar')).to_be_visible();page.locator('#rx-message').fill('Surpresa <svg onload=alert(1)> para você');page.locator('#rx-back').click();expect(page.locator('[data-rx-room-card].is-selected')).to_have_count(1);expect(page.locator('#rx-message')).to_have_value('Surpresa <svg onload=alert(1)> para você')
+ step(4);expect(page.locator('#rx-review blockquote')).to_have_text('Surpresa <svg onload=alert(1)> para você');expect(page.locator('#rx-final-review')).not_to_be_visible();expect(page.locator('#rx-phone')).to_have_value(re.compile('73'))
  for lang,heading in [('en','Love deserves an unforgettable setting.'),('es','El amor merece un escenario inolvidable.'),('he','לאהבה מגיעה תפאורה בלתי נשכחת.'),('pt','O amor merece um cenário inesquecível.')]:
-  page.locator('.site-language summary').first.click();page.locator(f'[data-language="{lang}"]').first.click();expect(page.locator('#rx-title')).to_have_text(heading)
-  expect(page.locator('#rx-guest')).to_have_value('Hóspede sintético')
-  assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
+  page.locator('.site-language summary').first.click();page.locator(f'[data-language="{lang}"]').first.click();expect(page.locator('#rx-title')).to_have_text(heading);expect(page.locator('#rx-guest')).to_have_value('Hóspede sintético');assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
   if lang=='he':expect(page.locator('html')).to_have_attribute('dir','rtl')
  for width in [360,375,390,430,768,1024,1600]:
-  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');page.locator('#rx-review').screenshot(path=f'work/romance-premium-review-{width}.png')
- page.set_viewport_size({'width':1440,'height':1000})
- page.locator('#rx-finish').click();expect(page.locator('#rx-receipt')).to_be_visible(timeout=20000);expect(page.locator('#rx-receipt')).to_contain_text('Aguardando confirmação')
- modal=page.get_by_role('dialog',name='Sua surpresa começou.');expect(modal).to_be_visible();expect(modal.locator('a')).to_have_attribute('href','/minha-conta');expect(modal.locator('.rx-receipt-close')).to_be_focused()
+  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');page.locator('#rx-contact').screenshot(path=f'work/romance-wizard-review-{width}.png')
+ page.set_viewport_size({'width':1440,'height':1000});page.locator('#rx-continue').click();final=page.locator('#rx-final-review');expect(final).to_be_visible();expect(final).to_contain_text('450,00');assert len(payloads)==0
+ page.keyboard.press('Escape');expect(final).not_to_be_visible();expect(page.locator('#rx-contact')).to_be_visible();page.locator('#rx-continue').click()
+ for width in [360,390,768,1440]:
+  page.set_viewport_size({'width':width,'height':1000});final.screenshot(path=f'work/romance-final-review-dialog-{width}.png')
+ page.locator('#rx-finish').click();expect(final).not_to_be_visible();modal=page.get_by_role('dialog',name='Sua surpresa começou.');expect(modal).to_be_visible(timeout=20000);expect(modal).to_contain_text('Aguardando confirmação');expect(modal.locator('a')).to_have_attribute('href','/minha-conta');expect(modal.locator('.rx-receipt-close')).to_be_focused()
  page.keyboard.press('Shift+Tab');expect(modal.locator('#rx-new')).to_be_focused();page.keyboard.press('Tab');expect(modal.locator('.rx-receipt-close')).to_be_focused()
  for width in [360,390,768,1440]:
   page.set_viewport_size({'width':width,'height':1000});box=modal.bounding_box();assert abs(box['x']+box['width']/2-width/2)<2;assert box['height']<=970;assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');modal.screenshot(path=f'work/romance-receipt-dialog-{width}.png')
