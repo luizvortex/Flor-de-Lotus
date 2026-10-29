@@ -104,3 +104,9 @@ Migração do catálogo aplicada em produção com versão `20261029115950`. Con
 A pedido do proprietário, os adicionais agora são linhas de largura completa. Ao abrir um item, as variantes aparecem lado a lado como opções de rádio, com um único controle de quantidade à direita (reorganizado no celular). É escolhido um estilo por produto. Trocar o estilo remove o anterior do carrinho e mantém a quantidade, respeitando o limite da nova variante; preço, estoque e cotação continuam validados pelo servidor. Nenhuma alteração de banco ou preços nesta revisão.
 
 Build e jornada local completa aprovados. O navegador verificou exclusividade das opções, troca de variante com duas unidades, recálculo, apenas um controle visível e ausência de rolagem horizontal em 390/1440 px. Capturas locais foram inspecionadas visualmente. Administração de variantes e fluxo de fotos pessoais preservados.
+
+### Finalização sem fotografias
+
+Fotografias são exigidas somente na quantidade definida pelos itens personalizados selecionados (`photos_required`). Bebidas, bombons, pétalas e balões não exigem fotos; porta-retrato personalizado exige uma por unidade. A página informa essa regra antes da seleção. A autorização agora se refere aos dados fornecidos e às fotos apenas quando enviadas, evitando sugerir que uma imagem é obrigatória em todos os pedidos.
+
+Se o hóspede retirar do carrinho um item com foto depois do upload, as imagens continuam visíveis para remoção. Isso evita esconder arquivos pendentes enquanto a validação impede o envio por excesso de fotos. Não há exclusão automática de fotos pessoais ao mudar a seleção. Banco, produtos, preços e histórico permanecem preservados.

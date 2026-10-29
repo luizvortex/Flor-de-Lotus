@@ -11,7 +11,7 @@
  function error(message){$('#rx-error').textContent=message;}
  function payload(){return {...query,category_slug:selection?.slug,floor:selection?.floor,preference:$('#rx-preference').value,party,items:[...cart].filter(([,q])=>q>0).map(([variant_id,quantity])=>({variant_id,quantity})).sort((a,b)=>a.variant_id.localeCompare(b.variant_id))};}
  function selectedPhotoCount(){let count=0;for(const product of catalog)for(const variant of product.variants)count+=(cart.get(variant.id)||0)*(product.photos_required||0);return count;}
- function updateFiles(){const required=selectedPhotoCount();$('#rx-memories').hidden=required===0;$('#rx-photo-count').textContent=`${photos.length} / ${required} fotos`;$('#rx-files').disabled=!authenticated||busy||photos.length>=required;}
+ function updateFiles(){const required=selectedPhotoCount();$('#rx-memories').hidden=required===0&&photos.length===0;$('#rx-photo-count').textContent=required?`${photos.length} / ${required} fotos`:'Você retirou os itens que usam fotografias. Remova as fotos enviadas para continuar sem elas.';$('#rx-files').disabled=!authenticated||busy||photos.length>=required;}
  function summary(){
   updateFiles();document.querySelectorAll('[data-rx-remove],[data-rx-orphan]').forEach(button=>button.disabled=busy||finished);let estimate=0;const lines=[];
   for(const product of catalog)for(const variant of product.variants){const quantity=cart.get(variant.id)||0;if(quantity){const checked=quote?.items.find(i=>i.variant_id===variant.id),unit=checked?.unit_price??variant.price;estimate+=unit*quantity;lines.push(`<li>${esc(product.name)} · ${esc(variant.name)} × ${quantity} — ${money(unit*quantity)}</li>`);}}

@@ -3263,6 +3263,21 @@
       "Drinks",
       "משקאות",
       "Bebidas"
+    ],
+    "Você pode finalizar sem enviar fotos. Elas são exigidas apenas para itens personalizados que utilizam fotografias, como o porta-retrato.": [
+      "You can complete your experience without uploading photos. They are only required for personalized items that use photographs, such as a photo frame.",
+      "אפשר להשלים את ההזמנה ללא העלאת תמונות. תמונות נדרשות רק לפריטים מותאמים אישית המשתמשים בהן, כמו מסגרת תמונה.",
+      "Puedes finalizar sin enviar fotos. Solo son necesarias para artículos personalizados que utilizan fotografías, como el portarretratos."
+    ],
+    "Autorizo o uso dos dados informados e das fotos enviadas, quando houver, exclusivamente para preparar minha experiência.": [
+      "I authorize the use of the information provided and any photos uploaded exclusively to prepare my experience.",
+      "אני מאשר/ת שימוש בפרטים שמסרתי ובתמונות שהעליתי, אם ישנן, אך ורק להכנת החוויה שלי.",
+      "Autorizo el uso de los datos facilitados y de las fotos enviadas, si las hay, exclusivamente para preparar mi experiencia."
+    ],
+    "Você retirou os itens que usam fotografias. Remova as fotos enviadas para continuar sem elas.": [
+      "You removed the items that use photographs. Remove the uploaded photos to continue without them.",
+      "הסרת את הפריטים המשתמשים בתמונות. יש להסיר את התמונות שהועלו כדי להמשיך בלעדיהן.",
+      "Has quitado los artículos que utilizan fotografías. Elimina las fotos enviadas para continuar sin ellas."
     ]
   }
 }

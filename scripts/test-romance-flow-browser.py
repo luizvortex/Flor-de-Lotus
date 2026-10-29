@@ -32,6 +32,8 @@ with sync_playwright() as p:
  wine=page.locator('.rx-product-options').filter(has=page.get_by_text('Vinho',exact=True));wine.locator('summary').click();expect(wine.locator('[data-rx-quantity]')).to_have_count(7);wine.locator('[data-rx-style]').first.check();expect(wine.locator('[data-rx-variant-controls]:visible')).to_have_count(1);expect(page.locator('.rx-grand-total')).to_contain_text('475,00',timeout=20000);wine.locator('[data-rx-style]').nth(1).check();expect(wine.locator('[data-rx-quantity]').first).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('1');wine.locator('[data-rx-quantity]').nth(1).fill('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000);wine.locator('[data-rx-style]').nth(2).check();expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2')
  for width in [390,1440]:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');wine.screenshot(path=f'work/romance-compact-variants-{width}.png')
+ # Non-personalized extras require no photograph.
+ page.locator('#rx-consent').check();expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000);expect(page.locator('#rx-memories')).to_be_hidden()
  wine.locator('[data-rx-quantity]').nth(2).fill('0')
  page.locator('.rx-product-options').filter(has=page.locator(f'[data-rx-quantity="{variant}"]')).locator('summary').click()
  quantity=page.locator(f'[data-rx-quantity="{variant}"]');quantity.fill('99');expect(page.locator('#rx-finish')).to_be_disabled();quantity.fill('0');page.locator(f'[data-rx-variant="{variant}"][data-rx-qty-step="1"]').click();expect(quantity).to_have_value('1')
@@ -46,6 +48,9 @@ with sync_playwright() as p:
  expect(page.locator('[data-rx-remove]')).to_be_enabled(timeout=15000);page.locator('[data-rx-remove]').click();expect(page.locator('[data-rx-remove]')).to_have_count(0,timeout=20000)
  page.locator('#rx-files').set_input_files(photo);expect(page.locator('[data-rx-remove]')).to_have_count(1,timeout=20000)
  expect(page.locator('[data-rx-photo]')).to_have_attribute('src',re.compile('token='),timeout=10000)
+ # Removing the frame must keep an already-uploaded photo visible/removable.
+ quantity.fill('0');wine.locator('[data-rx-quantity]').nth(2).fill('1');expect(page.locator('#rx-memories')).to_be_visible();expect(page.locator('#rx-photo-count')).to_contain_text('Remova as fotos');expect(page.locator('#rx-finish')).to_be_disabled();expect(page.locator('[data-rx-remove]')).to_be_enabled();page.locator('[data-rx-remove]').click();expect(page.locator('#rx-memories')).to_be_hidden(timeout=15000);expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000)
+ wine.locator('[data-rx-quantity]').nth(2).fill('0');quantity.fill('1');page.locator('#rx-files').set_input_files(photo);expect(page.locator('[data-rx-photo]')).to_have_attribute('src',re.compile('token='),timeout=15000)
  file_id=page.locator('[data-rx-photo]').get_attribute('data-rx-photo')
  page.locator('#rx-instructions').fill('<img src=x onerror=alert(1)> Instrução sintética privada')
  page.locator('#rx-guest').fill('Hóspede sintético');page.locator('#rx-phone').fill('73999999999');page.locator('#rx-consent').check()
