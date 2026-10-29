@@ -10,7 +10,7 @@ Origem de uso: imagem ilustrativa fornecida pelo usuário para este configurador
 
 ## Vetores e fallback
 
-`room-layout-placeholder.svg`, `petals.svg` e `flowers.svg` são vetores originais preparados para este projeto. São ilustrações, não fotografias nem registros da pousada. Esses três assets vetoriais são disponibilizados sob CC0 1.0 para uso e adaptação: https://creativecommons.org/publicdomain/zero/1.0/ . Essa declaração não abrange o JPEG, fotografias pessoais de hóspedes, imagens de terceiros ou o restante do código da aplicação.
+`room-layout-placeholder.svg`, `petals.svg` e `flowers.svg` são vetores originais preparados para este projeto. São ilustrações, não fotografias nem registros da pousada. Os SVGs originais deste diretório são disponibilizados sob CC0 1.0 para uso e adaptação: https://creativecommons.org/publicdomain/zero/1.0/ . Essa declaração não abrange o JPEG, fotografias pessoais de hóspedes, imagens de terceiros ou o restante do código da aplicação.
 
 O esquema de quarto permanece somente como fallback para falha de carregamento da base. A imagem ativa é o JPEG fornecido pelo usuário.
 
@@ -25,3 +25,7 @@ Configuração central: `romantic-room-preview.config.js`. `activeProfile='userR
 Para substituir a imagem, envie o novo arquivo à pasta de assets e altere `userReference.image`, `aspectRatio` e origem. Recalibre `x`, `y`, `width` (frações do enquadramento), `rotation`, `scaleY` e `zIndex` individualmente para cada camada. Não há necessidade de reescrever o componente ou o fluxo de reservas. Preserve a legenda de referência enquanto a base não for uma fotografia oficial identificada/autorizada.
 
 Validação visual isolada: `python3 scripts/test-romantic-reference-layout.py`. A imagem pessoal da moldura nessa fixture é um pixel neutro sintético, não uma foto real de hóspede; todos os dados desse teste são locais.
+
+## Bebidas, chocolates e balões
+
+As camadas adicionais `champagne.svg`, `champagne-rose.svg`, `wine.svg`, `wine-white.svg`, `wine-rose.svg`, `chocolates.svg` e `balloons.svg` são vetores originais do projeto, sob a mesma licença CC0 aplicada aos outros SVGs. São representações ilustrativas e não fotografias ou reproduções de embalagens/marcas. A escolha de Rosé/Branco altera o asset da bebida; o preço continua vindo da variante real do catálogo. A autorização de uso/licença do JPEG base permanece separada e não foi alterada.

@@ -89,3 +89,9 @@ Uma fotografia oficial futura também deve ter seu próprio perfil e coordenadas
 - Em 29/10/2026, após a entrega local, o proprietário instruiu “faça publicações automaticamente”. A publicação desta versão foi autorizada e a preferência passou a ser publicar futuras alterações concluídas após as verificações, salvo instrução específica em contrário.
 
 Verificação final adicional: a falha simulada no carregamento do módulo visual deixa o catálogo, os filtros comerciais e o fluxo de reserva disponíveis; controles de demonstração são omitidos nessa situação. O teste completo foi reexecutado com esse cenário e aprovado. A mensagem também possui uma prévia maior fora da imagem e não é traduzida/interpretrada como HTML quando preenchida pelo hóspede.
+
+## Correção de sincronização dos adicionais
+
+O proprietário relatou que bebidas e bombons não apareciam na imagem. A implementação anterior tinha apenas quatro tipos de camada e mantinha a visualização Original/comparador oculto ao editar o carrinho. A correção acrescenta espumante, vinho, bombons e balões ao mapeamento dos produtos reais e mostra automaticamente a composição completa ao mudar itens, variantes ou quantidades. Movimentar o comparador ou navegar nas miniaturas continua sem alterar o pedido. No limite 0/100, o rótulo da área que não está visível é ocultado.
+
+As variantes Rosé de espumante e vinhos branco/rosé têm assets próprios; todos são vetores ilustrativos originais. Foram preservados preços, produtos, dados, APIs e regras de confirmação. O teste integrado reproduziu Original + comparador em 100%, selecionou os novos itens, conferiu todas as camadas, os assets das variantes, o recálculo e a remoção independente. A jornada completa de reserva e privacidade também passou. Não foi necessário modificar o banco.

@@ -14,3 +14,5 @@
 
 .romance-page .rrp-scope-note{font-size:10px;color:var(--romance-muted);margin:12px 0}.romance-page .rrp-message-preview{margin:16px 0;padding:18px;border:1px solid #dcc6a3;border-radius:14px;background:#fff9ef;color:var(--romance-text);font:italic clamp(18px,2vw,25px)/1.6 'Playfair Display',Georgia,serif;white-space:pre-wrap;overflow-wrap:anywhere}
 .romance-page .rrp-summary-band{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.romance-page .rrp-summary-band>div{min-width:0}.romance-page .rrp-summary-band li,.romance-page .rrp-catalog-pane .rx-card-copy p{overflow-wrap:anywhere}@media(max-width:850px){.romance-page .rrp-summary-band{grid-template-columns:minmax(0,1fr)}}
+
+.romance-page .rrp-stage[data-comparison=after] .rrp-scene-labels span:first-child,.romance-page .rrp-stage[data-comparison=before] .rrp-scene-labels span:last-child{visibility:hidden}
