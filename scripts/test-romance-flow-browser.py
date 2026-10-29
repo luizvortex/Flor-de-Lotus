@@ -23,7 +23,7 @@ with sync_playwright() as p:
  page.route('**/api/romance/catalog',lambda route:route.fulfill(json={'products':[]}));page.reload(wait_until='networkidle');expect(page.locator('#rx-catalog-status')).to_contain_text('sendo preparadas');expect(page.locator('#rx-products')).to_have_attribute('aria-busy','false');page.unroute('**/api/romance/catalog');page.locator('#rx-retry-catalog').click();expect(page.locator('.rx-product-options')).to_have_count(7,timeout=20000)
 
  expect(page.locator('#romantic-room-preview,[data-rrp-layer],input[type=range]')).to_have_count(0)
- expect(page.locator('#rx-selected-gallery')).to_contain_text('Escolha seus adicionais')
+ expect(page.locator('#rx-selected-gallery')).to_contain_text('Sua surpresa começa')
  expect(page.locator('#rx-account-status')).to_contain_text('Conta conectada')
  visitor=browser.new_context(extra_http_headers={'Origin':base});guest=visitor.new_page();guest.route('https://**',lambda route:route.abort());guest.goto(base+'/experiencias/decoracao-romantica',wait_until='networkidle');guest.locator('.rx-product-options').filter(has=guest.get_by_text('Vinho',exact=True)).locator('summary').click();guest.locator('.rx-product-options').filter(has=guest.get_by_text('Vinho',exact=True)).locator('[data-rx-style]').first.check();guest.locator('#rx-message').fill('Mensagem antes do login');guest.locator('[data-rx-step="4"]').click();expect(guest.locator('#rx-google')).to_be_visible();expect(guest.locator('#rx-message')).to_have_value('Mensagem antes do login');expect(guest.locator('#rx-finish')).to_be_disabled();assert visitor.request.post(base+'/api/romance/draft',data={'request_id':'00000000-0000-4000-8000-000000000001'}).status==401;visitor.close()
 
@@ -42,7 +42,10 @@ with sync_playwright() as p:
  wine=page.locator('.rx-product-options').filter(has=page.get_by_text('Vinho',exact=True));wine.locator('summary').click();expect(wine.locator('[data-rx-quantity]')).to_have_count(7);wine.locator('[data-rx-style]').first.check();expect(wine.locator('[data-rx-variant-controls]:visible')).to_have_count(1);expect(page.locator('.rx-grand-total')).to_contain_text('475,00',timeout=20000);wine.locator('[data-rx-style]').nth(1).check();expect(wine.locator('[data-rx-quantity]').first).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('1');wine.locator('[data-rx-quantity]').nth(1).fill('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000);wine.locator('[data-rx-style]').nth(2).check();expect(wine.locator('[data-rx-quantity]').nth(1)).to_have_value('0');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2')
  expect(page.locator('[data-rx-selected]')).to_have_count(1);expect(page.locator('#rx-selected-gallery')).to_contain_text('Vinho');expect(page.locator('#rx-selected-gallery')).to_contain_text('× 2');expect(page.locator('#rx-selected-total')).to_contain_text('150,00')
  for width in [360,390,768,1024,1440]:
-  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');wine.screenshot(path=f'work/romance-compact-variants-{width}.png')
+  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');wine.screenshot(path=f'work/romance-compact-variants-{width}.png');page.locator('.rx-selected-panel').screenshot(path=f'work/romance-gift-summary-{width}.png')
+ expect(page.locator('#rx-review [data-rx-reviewed]')).to_have_count(1)
+ page.locator('#rx-message').fill('Uma surpresa especial');expect(page.locator('#rx-message-preview')).to_have_text('Uma surpresa especial');page.locator('[data-rx-step="4"]').click();expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2');page.locator('[data-rx-step="2"]').click()
+ page.locator('[data-rx-remove-item]').click();expect(page.locator('[data-rx-selected]')).to_have_count(0);expect(page.locator('#rx-selected-total')).to_contain_text('0,00');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('0');wine.locator('[data-rx-quantity]').nth(2).fill('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000)
  # Non-personalized extras require no photograph.
  page.locator('#rx-consent').check();expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000);expect(page.locator('#rx-dropzone')).to_be_hidden()
  wine.locator('[data-rx-quantity]').nth(2).fill('0');expect(page.locator('[data-rx-selected]')).to_have_count(0)
@@ -50,6 +53,9 @@ with sync_playwright() as p:
  quantity=page.locator(f'[data-rx-quantity="{variant}"]');quantity.fill('99');expect(page.locator('#rx-finish')).to_be_disabled();quantity.fill('0');page.locator(f'[data-rx-variant="{variant}"][data-rx-qty-step="1"]').click();expect(quantity).to_have_value('1')
  expect(page.locator('#rx-memories')).to_be_visible();expect(page.locator('#rx-quote-status')).to_contain_text('Valores conferidos',timeout=20000)
  expect(page.locator('.rx-grand-total')).to_contain_text('450,00')
+ expect(page.locator('#rx-selected-gallery img')).to_have_count(1)
+ for width in [390,1440]:
+  page.set_viewport_size({'width':width,'height':1000});page.locator('.rx-selected-panel').screenshot(path=f'work/romance-gift-product-photo-{width}.png')
  # Server rejects bytes disguised as a PNG, before creating any upload metadata.
  invalid=context.request.post(base+'/api/romance/upload',multipart={'request_id':'00000000-0000-4000-8000-000000000019','photo':{'name':'fake.png','mimeType':'image/png','buffer':b'<svg onload=alert(1)></svg>'}})
  assert invalid.status==415,invalid.text()

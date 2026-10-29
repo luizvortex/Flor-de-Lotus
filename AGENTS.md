@@ -2,7 +2,7 @@
 
 ## Decisão do usuário
 
-O usuário autorizou fazer push das alterações concluídas deste site para `origin/main`, inclusive nas correções seguintes, sem pedir nova confirmação. O push aciona a publicação automática na Vercel; execute as verificações apropriadas antes de enviar. Preserve alterações remotas e não faça force-push.
+O usuário reafirmou explicitamente: “pode publicar, não precisa perguntar toda vez, já faz o push direto toda vez que terminar”. Fazer push das alterações concluídas e verificadas deste site para `origin/main`, inclusive nas correções seguintes, sem pedir nova confirmação. Esta é a preferência atual e prevalece sobre proibições antigas de deploy nos documentos anteriores; somente uma nova restrição explícita do usuário muda essa orientação. O push aciona a publicação automática na Vercel; execute as verificações apropriadas antes de enviar. Preserve alterações remotas e não faça force-push.
 
 A stack escolhida para a próxima fase é **Next.js com TypeScript**, usando React e App Router. O usuário pretende melhorar bastante o site e o painel em novos chats. Não retome a proposta de Django/Python como stack principal. A migração completa ainda não foi implementada: os arquivos HTML/JS/CSS e o servidor Python atuais são referência funcional a preservar durante a transição.
 
@@ -155,3 +155,11 @@ Após a conclusão e os testes do configurador com a imagem original, o usuário
 A instrução mais recente remove o configurador artificial por camadas e **proíbe deploy automático desta revisão**. A referência é `558d8e6` (antes de `038d817`). Preservar quatro etapas, catálogo, rádios/quantidade, cotação, fotos privadas, revisão e envio. O painel “Sua surpresa está ganhando vida” mostra somente produtos selecionados e suas fotografias reais do catálogo; sem foto cadastrada, mostrar aviso textual, nunca inventar imagens. Não reintroduzir comparador, coordenadas, demos ou sobreposições. Backend e banco não foram modificados.
 
 O proprietário autorizou explicitamente publicar esta restauração seletiva com a instrução “publique”. Enviar a revisão já validada pelo fluxo Git/Vercel, preservando main; nenhuma migração necessária.
+
+## Refinamento posterior do catálogo romântico
+
+O novo documento pede refinamento premium, priorizando catálogo e resumo visual, e **não autoriza deploy automático**. Leia `docs/refinamento-catalogo-romantico.md`. A autorização “publique” anterior valeu para a restauração já publicada. Preservar galeria de produtos individuais sem simulação de quarto, seleção compacta, fotos privadas e APIs. Cadastro sem foto usa aviso textual; não inventar imagens.
+
+## Publicação automática reafirmada
+
+Após o refinamento do catálogo, o proprietário autorizou publicar esta revisão e fazer push direto ao terminar as próximas alterações verificadas, sem perguntar novamente. Esta autorização substitui as restrições anteriores de deploy registradas neste arquivo e nos documentos da experiência romântica. Preservar commits remotos, não fazer force-push e conferir o resultado da Vercel.

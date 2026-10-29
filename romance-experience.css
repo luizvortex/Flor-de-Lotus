@@ -51,13 +51,35 @@
 
 .romance-page .rx-review p,.romance-page .rx-review li,.romance-page .rx-product-options summary strong{overflow-wrap:anywhere}.romance-page .rx-product-options summary>span:first-child{min-width:0;flex:1}.romance-page .rx-review dl{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:12px}.romance-page .rx-review dd{margin:0;text-align:end}
 
-/* Selected catalog items: independent photographs, never room compositions. */
-.romance-page .rx-selected-panel{margin-block:32px;padding:clamp(18px,3vw,28px);border:1px solid #e6dccb;border-radius:18px;background:#faf8f3}
-.romance-page .rx-selected-panel h3{margin-top:0;color:#1f3c4d}
-.romance-page .rx-selected-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:16px}
-.romance-page .rx-selected-item{min-width:0;overflow:hidden;border:1px solid #e6dccb;border-radius:16px;background:#fff}
-.romance-page .rx-selected-item img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+/* Catalog and gift summary share the live booking cart. */
+.romance-page{--rx-card-radius:18px;--rx-card-border:#e5dece;--rx-soft-shadow:0 8px 28px #1f3c4d08}
+.romance-page #personalizar .romance-product-card{position:relative;border-radius:var(--rx-card-radius);border:1px solid var(--rx-card-border);background:#fff;box-shadow:var(--rx-soft-shadow);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.romance-page #personalizar .romance-product-card.is-selected{border-color:#a67c3d;background:#fffdf9;box-shadow:0 0 0 1px #c8a96b55}
+.romance-page #personalizar .romance-image-wrapper{aspect-ratio:16/7;background:#faf8f3}
+.romance-page #personalizar .romance-image{object-fit:contain;padding:12px}
+.romance-page .rx-selection-badge{position:absolute;inset-block-start:12px;inset-inline-end:12px;z-index:1;padding:6px 10px;border-radius:20px;background:#1f3c4d;color:#fff;font-size:10px;box-shadow:var(--rx-soft-shadow)}
+.romance-page .rx-selected-panel{margin-block:32px;padding:clamp(18px,3vw,28px);border:1px solid var(--rx-card-border);border-radius:20px;background:#faf8f3;box-shadow:var(--rx-soft-shadow)}
+.romance-page .rx-selected-panel h3{margin-top:0;color:#1f3c4d;font-size:clamp(24px,3vw,30px)}
+.romance-page .rx-selected-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.romance-page .rx-selected-item{min-width:0;overflow:hidden;border:1px solid var(--rx-card-border);border-radius:16px;background:#fff}
+.romance-page .rx-selected-item img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#fff;padding:10px;box-sizing:border-box}
 .romance-page .rx-selected-item>div:not(.rx-product-photo-empty){padding:16px}
-.romance-page .rx-selected-item h4{margin:0;font-family:'Playfair Display',serif;color:#1f3c4d}
-.romance-page .rx-product-photo-empty{padding:20px;background:#f5ebdd;color:#1f3c4d;font-size:.8rem;text-align:center}
-.romance-page .rx-selected-total{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #e6dccb;padding-top:20px;margin-bottom:0}
+.romance-page .rx-selected-item h4{margin:0;font:20px/1.3 'Playfair Display',serif;color:#1f3c4d;overflow-wrap:anywhere}
+.romance-page .rx-selected-item p{font-size:11px;margin-block:8px}
+.romance-page .rx-selected-item strong{font-size:13px;color:#1f3c4d}
+.romance-page .rx-selected-item button{display:block;min-height:44px;padding:6px 0;text-align:start}
+.romance-page .rx-product-photo-empty{padding:20px;background:#f5ebdd;color:#1f3c4d;font-size:.75rem;text-align:center}
+.romance-page .rx-selected-total{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--rx-card-border);padding-top:20px;margin-bottom:0;font-size:13px}
+.romance-page .rx-selected-total strong{font:26px 'Playfair Display',serif;color:#1f3c4d}
+.romance-page .rx-selected-empty{grid-column:1/-1;text-align:center;padding:24px 8px;margin:0;color:#2e5b6e;font-size:13px;line-height:1.8}
+.romance-page .rx-selected-empty>span{display:block;font-size:30px;color:#a67c3d;margin-bottom:12px}
+.romance-page .rx-message-preview{margin:18px 0;padding:24px;border:1px solid #c8a96b88;border-radius:16px;background:#faf8f3;font:italic 22px/1.6 'Playfair Display',serif;color:#1f3c4d;white-space:pre-wrap;overflow-wrap:anywhere}
+.romance-page .rx-catalog-skeleton{display:grid;gap:16px;margin-block:20px}
+.romance-page .rx-catalog-skeleton span{display:block;height:120px;border-radius:18px;background:#f1ede5}
+.romance-page .rx-review-gallery .rx-selected-item{padding:0}
+.romance-page .rx-review-gallery h4{font-size:18px}
+.romance-page .rx-progress button[aria-current=step] .rx-step-icon{box-shadow:0 0 0 2px #c8a96b}
+@media(hover:hover){.romance-page #personalizar .romance-product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px #1f3c4d0e}}
+@media(max-width:480px){.romance-page .rx-selected-gallery{grid-template-columns:minmax(0,1fr)}.romance-page .rx-selected-item{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start}.romance-page .rx-selected-item img{aspect-ratio:1;align-self:start}.romance-page .rx-selected-item .rx-product-photo-empty{padding:16px 8px;align-self:stretch;display:grid;place-items:center}.romance-page .rx-selected-item>div:not(.rx-product-photo-empty){padding:14px}.romance-page .rx-selected-item h4{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.romance-page #personalizar .romance-product-card{transition:none;transform:none}}
+.romance-page .rx-catalog-skeleton[hidden],.romance-page .rx-selection-badge[hidden],.romance-page .rx-message-preview[hidden]{display:none}
