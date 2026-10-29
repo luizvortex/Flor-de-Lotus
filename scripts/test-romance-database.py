@@ -10,7 +10,7 @@ def sql(text):
  return result.stdout
 # The name is dedicated to this test container, which has no network or exposed port.
 subprocess.run(['docker','--host=unix:///var/run/docker.sock','exec',container,'createdb','-U','postgres',database],check=True)
-files=['scripts/romance-local-bootstrap.sql','database/lotus-schema.sql','database/room-showcases.sql','database/room-detail-modal.sql','database/room-amenity-icons.sql','database/triplo-standard.sql','database/guest-bookings.sql','database/require-google-booking.sql','database/room-catalog.sql','database/room-inventory.sql','database/occupancy-rates.sql','database/category-bookings.sql','database/party-bookings.sql','database/children-free-through-five.sql','database/property-policies.sql','database/property-hours.sql','database/excursions.sql','database/reports.sql','database/six-room-categories.sql','supabase/migrations/20261028164135_romantic_experience.sql']
+files=['scripts/romance-local-bootstrap.sql','database/lotus-schema.sql','database/room-showcases.sql','database/room-detail-modal.sql','database/room-amenity-icons.sql','database/triplo-standard.sql','database/guest-bookings.sql','database/require-google-booking.sql','database/room-catalog.sql','database/room-inventory.sql','database/occupancy-rates.sql','database/category-bookings.sql','database/party-bookings.sql','database/children-free-through-five.sql','database/property-policies.sql','database/property-hours.sql','database/excursions.sql','database/reports.sql','database/six-room-categories.sql','supabase/migrations/20261029112902_romantic_experience.sql']
 for file in files:
  print('Loading',file,flush=True)
  sql((root/file).read_text())

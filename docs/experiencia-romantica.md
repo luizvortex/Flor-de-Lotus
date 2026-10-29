@@ -2,9 +2,9 @@
 
 ## Situação em 29/10/2026
 
-O proprietário autorizou explicitamente a aplicação da migração em 29/10/2026. `supabase/migrations/20261028164135_romantic_experience.sql` foi aplicada com sucesso no projeto Supabase da pousada pelo fluxo oficial de migrações. As quatro tabelas novas têm RLS; o bucket de fotografias é privado, limitado a 3 MiB e JPG/PNG/WebP; não há acesso direto de anon/authenticated aos dados privados. O catálogo foi conferido vazio, sem produtos, preços ou pedidos de teste semeados. A revisão automática anterior foi resolvida pela autorização do usuário.
+O proprietário autorizou explicitamente a aplicação da migração em 29/10/2026. `supabase/migrations/20261029112902_romantic_experience.sql` foi aplicada com sucesso no projeto Supabase da pousada pelo fluxo oficial de migrações. As quatro tabelas novas têm RLS; o bucket de fotografias é privado, limitado a 3 MiB e JPG/PNG/WebP; não há acesso direto de anon/authenticated aos dados privados. O catálogo foi conferido vazio, sem produtos, preços ou pedidos de teste semeados. A revisão automática anterior foi resolvida pela autorização do usuário.
 
-A análise de segurança pós-migração não apresentou novos avisos; permanece o alerta preexistente de [proteção contra senhas comprometidas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) no Auth. Código em publicação pelo fluxo autorizado de Git/Vercel; resultado final registrado abaixo após verificar o deploy.
+A análise de segurança pós-migração não apresentou novos avisos; permanece o alerta preexistente de [proteção contra senhas comprometidas desativada](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) no Auth. O código foi enviado à branch main pelo fluxo autorizado Git/Vercel. O arquivo local usa o mesmo identificador `20261029112902` registrado pelo Supabase, evitando uma futura reaplicação por divergência de versões.
 
 ## Jornada e arquitetura
 
@@ -48,7 +48,7 @@ O fornecedor documenta link/widget e venda de adicionais pelo motor oficial; iss
 - API: `src/app/api/romance/[operation]/route.ts`, `src/lib/romance-api.ts`.
 - Interface: `romance-experience.js`, `romance-experience.css`, com estilos limitados a `.romance-page`.
 - Administração: `admin-romance.js`, `admin-romance.css`; integrações condicionais em `admin.js`, `conta.js`, `guest-bookings.ts` e `supabase-api.ts`.
-- Migração: `supabase/migrations/20261028164135_romantic_experience.sql`.
+- Migração: `supabase/migrations/20261029112902_romantic_experience.sql`.
 - Idiomas: mecanismo existente em `site-language.js` e `site-translations.json`, com português, inglês, espanhol e hebraico/RTL na nova interface. Textos antigos sem versão espanhola preservam o português; não se declara tradução integral de todo o conteúdo editorial antigo.
 
 ## Verificação reproduzível, sem dados reais
@@ -78,3 +78,11 @@ A cobertura inclui nova aba, hero, calendário, capacidade/tarifa de criança, d
 - `git diff --check` e verificações de sintaxe dos novos scripts: aprovados.
 
 Os testes usaram dados sintéticos exclusivamente locais. Fotografias reais do Storage não puderam ser baixadas porque o domínio do projeto está bloqueado pela política de rede; não se declara revisão visual do enquadramento dessas fotos nem correção das fotos 10 e 16. Nenhum checkout de pagamento, conector HQBeds ou deploy da nova experiência foi validado/ativado em produção.
+
+### Publicação em 29/10/2026
+
+Migração `romantic_experience`, versão remota `20261029112902`, aplicada com sucesso após autorização explícita do proprietário. Conferência em produção: RLS nas quatro tabelas, bucket privado de 3 MiB, MIME restrito, políticas de leitura/escrita/remoção, trigger de cancelamento e ausência de acesso direto às tabelas privadas. A API do catálogo retornou lista vazia, motor nativo e nenhuma integração HQBeds/pagamento declarada. Advisors sem novos avisos; proteção contra senhas comprometidas permanece uma configuração preexistente desativada.
+
+Publicação acionada por push para `origin/main`; acompanhar status no GitHub/Vercel antes de declarar o deploy finalizado. O conector Vercel desta sessão não possui acesso ao escopo `zilter-pacheonis-projects`; o status de build é consultado pelo check oficial Vercel associado ao commit no GitHub. A rede ainda não permite acessar os hosts públicos do site/Supabase para uma nova inspeção HTTP/navegador em produção. As validações locais anteriores permanecem aprovadas; não confundir aprovação do build com nova validação visual de produção.
+
+Persistem pendências externas: acesso às fotografias 10 e 16 para ajustar os recortes; documentação/credenciais e homologação de API HQBeds; contratação/configuração de um gateway caso o proprietário queira pagamento automático. Nenhuma dessas capacidades foi declarada ativa.
