@@ -133,3 +133,7 @@ O usuário autorizou o cadastro dos seis itens e preços de referência da image
 ## Reformulação premium local — não publicar automaticamente
 
 O pedido mais recente de redesign da experiência romântica determina explicitamente **não realizar deploy em produção automaticamente**. Essa instrução prevalece sobre a autorização antiga de push: não enviar esta reformulação para `origin/main` sem nova instrução do proprietário. Leia `docs/reformulacao-romantica-premium.md`. Hero azul/areia, progresso de quatro etapas, mensagem especial salva nas instruções existentes, dropzone privada, revisão e barra móvel; backend, banco, preços e rotas preservados. A etapa de fotos aparece com orientação de opcionalidade quando não há item personalizado. Configuração antes do login é permitida, fotos/finalização continuam exigindo Google. Testes locais completos aprovados; não declarar teste visual de fotografias reais ou homologação de provedores externos. Manter a seleção compacta por rádio e quantidade compartilhada solicitada anteriormente.
+
+### Autorização de publicação desta reformulação
+
+Em 29/10/2026, após a entrega local do commit `558d8e6`, o usuário respondeu explicitamente **“pode publicar”**. Isso autoriza a publicação desta reformulação pelo fluxo Git/Vercel e resolve a restrição de publicação pendente descrita acima. Não há migração a aplicar. Manter a exigência de nova autorização para futuras revisões que explicitamente proíbam deploy.

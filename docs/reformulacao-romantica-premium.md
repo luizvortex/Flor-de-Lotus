@@ -1,6 +1,6 @@
 # Reformulação premium da experiência romântica
 
-Estado em 29/10/2026: **implementada e validada localmente; não publicada**. O pedido desta revisão proíbe deploy automático em produção e prevalece sobre a autorização anterior de push para main. Nenhuma migração ou escrita em produção foi executada nesta reformulação.
+Estado em 29/10/2026: **implementada, validada localmente e autorizada para publicação pelo proprietário após a entrega**. O pedido inicial vedava deploy automático; a instrução posterior “pode publicar” autoriza a publicação desta versão. Nenhuma migração ou escrita em banco de produção foi executada nesta reformulação.
 
 ## Auditoria da arquitetura
 
@@ -58,10 +58,10 @@ Não foram alterados endpoints, rotas, dependências, tabelas, políticas de ace
 - `python3 scripts/test-site-language-browser.py`: aprovado, incluindo restauração do português, controles dinâmicos, campos preservados, teclado, RTL e preferência entre páginas.
 - `git diff --check`: aprovado.
 
-As imagens sintéticas das capturas são fixtures locais de layout e **não** fotografias publicadas ou cadastradas da pousada. A rede deste ambiente continua bloqueando o domínio real das fotografias; o enquadramento das imagens reais não foi revalidado visualmente em produção. A autenticação Google do provedor, pagamento e HQBeds não foram homologados com serviços externos nesta revisão. O fluxo de produção anterior não foi modificado por deploy.
+As imagens sintéticas das capturas são fixtures locais de layout e **não** fotografias publicadas ou cadastradas da pousada. A rede deste ambiente continua bloqueando o domínio real das fotografias; o enquadramento das imagens reais não foi revalidado visualmente em produção. A autenticação Google do provedor, pagamento e HQBeds não foram homologados com serviços externos nesta revisão. A publicação desta revisão utiliza o fluxo Git/Vercel existente, após autorização explícita do proprietário.
 
 ## Pendências / publicação
 
-Não há alteração de banco a autorizar para este redesign. Publicação exige nova instrução do proprietário, pois o prompt desta reformulação vedou deploy automático. Não executar push para main enquanto essa restrição permanecer.
+Não há alteração de banco a autorizar para este redesign. A autorização posterior “pode publicar” foi recebida em 29/10/2026 e permite enviar esta versão validada para main. Conferir a conclusão do check oficial da Vercel associado ao commit antes de anunciar a publicação.
 
 Não foi acrescentada ordenação manual de fotos: o contrato atual utiliza a sequência de upload. Validar e persistir uma ordem diferente seria uma extensão do serviço, desnecessária para este refinamento visual. As limitações externas de HQBeds, gateway e acesso às imagens reais permanecem as documentadas anteriormente.
