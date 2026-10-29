@@ -108,3 +108,6 @@
 .romance-page .rx-receipt-actions{display:grid;gap:12px;margin-top:26px}
 .romance-page .rx-receipt p:not(.rx-eyebrow):not(.rx-receipt-total){font-size:13px;line-height:1.8}
 .romance-page:has(dialog.rx-receipt[open]){overflow:hidden}
+.romance-page .rx-validation-note{font-size:12px;line-height:1.7;color:#8b2638;background:#fff5f1;border-inline-start:3px solid #a67c3d;padding:12px 14px;margin-block:12px}
+.romance-page [aria-invalid=true]{border-color:#8b2638!important}
+.romance-page [data-rx-invalid]{scroll-margin-block:150px}

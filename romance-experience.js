@@ -20,9 +20,37 @@
   const finalQuote=quote?.total,base=quote?.stay_total??selection?.total;if($('#rx-compact-total'))$('#rx-compact-total').textContent=selection?money(finalQuote??(Number.isSafeInteger(base)?base+estimate:null)):'';
   $('#rx-summary-content').innerHTML=selection?`<dl><dt>Hospedagem</dt><dd>${esc(selection.title)}</dd><dt>Entrada / Saída</dt><dd>${esc(query.start)} → ${esc(query.end)}</dd><dt>Noites</dt><dd>${quote?.nights??Math.round((new Date(query.end+'T12:00:00Z')-new Date(query.start+'T12:00:00Z'))/86400000)}</dd><dt>Hóspedes</dt><dd>${party[0].adults+party[0].children_ages.length}</dd><dt>Andar da oferta</dt><dd>${esc(floorNames[selection.floor])}</dd><dt>Preferência de andar</dt><dd>${esc(floorNames[$('#rx-preference').value])}</dd><dt>Valor da hospedagem</dt><dd>${money(base)}</dd></dl><p>Decoração</p><ul>${lines.join('')||'<li>Escolha seus adicionais.</li>'}</ul><dl><dt>Subtotal dos adicionais</dt><dd>${money(quote?.decoration_total??estimate)}</dd>${quote?`<dt>Taxas / descontos</dt><dd>${money(quote.taxes)} / ${money(quote.discounts)}</dd>`:''}</dl><div class="rx-grand-total">${money(finalQuote??(Number.isSafeInteger(base)?base+estimate:null))}</div>`:'<p>Escolha uma hospedagem e personalize sua surpresa.</p>';
   updatePresentation(lines,finalQuote??(Number.isSafeInteger(base)?base+estimate:null),base,quote?.decoration_total??estimate);
-  $('#rx-finish').disabled=busy||finished||!authenticated||!selection||!quote||!cart.size||photos.length!==selectedPhotoCount()||!$('#rx-consent').checked||!contactValid()||[...document.querySelectorAll('[data-rx-quantity]')].some(input=>!input.checkValidity());
+  $('#rx-finish').disabled=busy||finished;
  }
  const stageIds=['hospedagem','personalizar','rx-memories','rx-contact'],stageLabels=['Hospedagem','Sua surpresa','Fotografias','Revisão'];
+ const validationNote=document.createElement('p');validationNote.id='rx-validation-note';validationNote.className='rx-validation-note';validationNote.setAttribute('role','alert');validationNote.hidden=true;
+ function missingRequirement(){
+  const issue=(step,target,message)=>({step,target,message});
+  if(!selection)return issue(1,'#rx-search-button','Consulte a disponibilidade e escolha um quarto para continuar.');
+  if(catalogLoading)return issue(2,'#rx-catalog-status','Aguarde o carregamento das opções de decoração.');
+  const invalid=[...document.querySelectorAll('[data-rx-quantity]')].find(input=>!input.checkValidity());
+  if(invalid)return issue(2,'#'+invalid.id,'Confira as quantidades dos adicionais.');
+  if(!cart.size)return issue(2,'#rx-products','Escolha seus adicionais.');
+  if(!authenticated)return issue(4,'#rx-google button','Entre com Google para enviar as fotografias e finalizar sua experiência.');
+  if(photos.length<selectedPhotoCount())return issue(3,'#rx-files','Envie as fotografias exigidas pelos itens personalizados selecionados para continuar.');
+  if(photos.length>selectedPhotoCount())return issue(3,'#rx-photos','Remova as fotografias que não serão usadas nos itens selecionados.');
+  if(!$('#rx-guest').value.trim()||$('#rx-guest').value.trim().length>120)return issue(4,'#rx-guest','Preencha o nome do hóspede.');
+  if(!contactValid())return issue(4,'#rx-phone','Informe um telefone válido com DDD.');
+  if(!$('#rx-consent').checked)return issue(4,'#rx-consent','Marque a autorização de uso dos dados e das fotos, quando houver, para continuar.');
+  if(instructions().length>2000)return issue(2,'#rx-message','Reduza a mensagem e as instruções para continuar.');
+  return null;
+ }
+ function guideRequirement(issue){
+  document.querySelectorAll('[data-rx-invalid]').forEach(el=>{el.removeAttribute('aria-invalid');el.removeAttribute('data-rx-invalid');const ids=(el.getAttribute('aria-describedby')||'').split(' ').filter(id=>id&&id!=='rx-validation-note');if(ids.length)el.setAttribute('aria-describedby',ids.join(' '));else el.removeAttribute('aria-describedby');});
+  goStep(issue.step);const target=$(issue.target);if(!target)return;
+  const details=target.closest('details');if(details)details.open=true;
+  validationNote.textContent=issue.message;validationNote.hidden=false;target.insertAdjacentElement('beforebegin',validationNote);
+  if(target.matches('input,textarea,select'))target.setAttribute('aria-invalid','true');
+  target.dataset.rxInvalid='true';target.setAttribute('aria-describedby',[(target.getAttribute('aria-describedby')||''),'rx-validation-note'].filter(Boolean).join(' '));
+  if(!target.matches('input,textarea,select,button,a'))target.setAttribute('tabindex','-1');
+  target.focus({preventScroll:true});target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+ }
+ document.addEventListener('input',event=>{if(event.target.matches('[data-rx-invalid]')){event.target.removeAttribute('aria-invalid');validationNote.hidden=true;}});
  function instructions(){const message=$('#rx-message').value.trim(),photoNotes=$('#rx-instructions').value.trim();return [message?'Mensagem especial:\n'+message:'',photoNotes?'Instruções das fotografias:\n'+photoNotes:''].filter(Boolean).join('\n\n');}
  function goStep(number){activeStep=number;updateProgress();const target=$('#'+stageIds[number-1]);target.setAttribute('tabindex','-1');target.focus({preventScroll:true});target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
  function updateProgress(){
@@ -53,8 +81,8 @@
  $('#rx-continue').onclick=()=>{
   if(activeStep===1&&!selection){$('#search').reportValidity();$('#rx-search-status').textContent='Consulte a disponibilidade e escolha um quarto para continuar.';goStep(1);return;}
   if(activeStep===2&&!cart.size){error('Escolha seus adicionais.');return;}
-  if(activeStep===3&&photos.length!==selectedPhotoCount()){error('Confira as fotos e a autorização de uso.');return;}
-  if(activeStep===4){$('#rx-summary-details').open=true;$('.rx-summary').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});$('#rx-finish').focus({preventScroll:true});return;}
+  if(activeStep===3&&photos.length!==selectedPhotoCount()){const issue=missingRequirement();if(issue)guideRequirement(issue);return;}
+  if(activeStep===4){const issue=missingRequirement();if(issue){guideRequirement(issue);return;}$('#rx-summary-details').open=true;$('.rx-summary').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});$('#rx-finish').focus({preventScroll:true});return;}
   goStep(activeStep===2&&selectedPhotoCount()===0&&photos.length===0?4:activeStep+1);
  };
  if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top);if(visible.length){activeStep=stageIds.indexOf(visible[0].target.id)+1;updateProgress();}},{rootMargin:'-15% 0px -55% 0px'});stageIds.forEach(id=>observer.observe($('#'+id)));}
@@ -105,7 +133,7 @@
   $('#rx-products').innerHTML=Object.entries(categoryNames).map(([category,title])=>{const products=catalog.filter(p=>p.category===category&&p.variants.length);return products.length?`<h3 class="rx-category-title">${title}</h3><div class="rx-product-grid">${products.map(p=>`<article class="romance-product-card" data-rx-product="${p.id}"><span class="rx-selection-badge" hidden>✓ Selecionado</span>${p.photo?`<div class="romance-image-wrapper"><img class="romance-image" src="${esc(p.photo)}" alt="${esc(p.name)}" width="800" height="600" loading="lazy"></div>`:'<div class="rx-product-photo-empty">Fotografia ainda não cadastrada</div>'}<details class="rx-product-options" ${p.variants.some(v=>(cart.get(v.id)||0)>0)?'open':''}><summary><span><strong>${esc(p.name)}</strong><span class="rx-product-from">A partir de ${money(Math.min(...p.variants.map(v=>v.price)))}</span></span><span class="rx-product-toggle" aria-hidden="true">＋</span></summary><div class="rx-card-copy"><p>${esc(p.description)}</p>${p.photos_required?`<p><span>${p.photos_required} fotos</span> <span>por unidade</span></p>`:''}<div class="rx-style-row"><div class="rx-variant-choices" role="radiogroup" aria-label="${esc(p.name)}">${p.variants.map(v=>`<label class="rx-variant-choice"><input type="radio" name="rx-style-${p.id}" value="${v.id}" data-rx-style ${p.variants.length===1||(cart.get(v.id)||0)>0?'checked':''}><span>${esc(v.name)}</span></label>`).join('')}</div>${p.variants.map(v=>`<div data-rx-variant-controls="${v.id}" ${p.variants.length===1||(cart.get(v.id)||0)>0?'':'hidden'}><div class="rx-quantity-heading"><label for="rx-quantity-${v.id}">Quantidade</label><small>${money(v.price)}</small></div><div class="rx-quantity" role="group" aria-label="${esc(p.name)} · ${esc(v.name)}"><button type="button" class="rx-secondary-button" data-rx-qty-step="-1" data-rx-variant="${v.id}" aria-label="Diminuir quantidade">−</button><input id="rx-quantity-${v.id}" type="number" min="0" max="${Math.min(p.max_quantity,v.stock??p.max_quantity)}" value="${cart.get(v.id)||0}" data-rx-quantity="${v.id}" aria-label="Quantidade: ${esc(p.name)} · ${esc(v.name)}"><button type="button" class="rx-secondary-button" data-rx-qty-step="1" data-rx-variant="${v.id}" aria-label="Aumentar quantidade">+</button></div></div>`).join('')}</div></div></details></article>`).join('')}</div>`:'';}).join('');
  }
  $('#rx-products').onclick=event=>{const button=event.target.closest('[data-rx-qty-step]');if(!button||busy||finished)return;const input=$('#rx-quantity-'+button.dataset.rxVariant);input.value=Math.min(Number(input.max),Math.max(0,Number(input.value||0)+Number(button.dataset.rxQtyStep)));input.dispatchEvent(new Event('input',{bubbles:true}));};
- $('#rx-products').oninput=event=>{const input=event.target.closest('[data-rx-quantity]');if(!input)return;const qty=Number(input.value);quote=null;quoteSequence++;if(!input.checkValidity()||!Number.isInteger(qty)){error('Confira as quantidades dos adicionais.');$('#rx-finish').disabled=true;return;}if(qty)cart.set(input.dataset.rxQuantity,qty);else cart.delete(input.dataset.rxQuantity);const card=input.closest('article');card.classList.toggle('is-selected',[...card.querySelectorAll('input')].some(i=>Number(i.value)>0));summary();clearTimeout(quoteTimer);quoteTimer=setTimeout(price,350);};
+ $('#rx-products').oninput=event=>{const input=event.target.closest('[data-rx-quantity]');if(!input)return;const qty=Number(input.value);quote=null;quoteSequence++;if(!input.checkValidity()||!Number.isInteger(qty)){error('Confira as quantidades dos adicionais.');$('#rx-finish').disabled=busy||finished;return;}if(qty)cart.set(input.dataset.rxQuantity,qty);else cart.delete(input.dataset.rxQuantity);const card=input.closest('article');card.classList.toggle('is-selected',[...card.querySelectorAll('input')].some(i=>Number(i.value)>0));summary();clearTimeout(quoteTimer);quoteTimer=setTimeout(price,350);};
  $('#rx-products').onchange=event=>{
   const radio=event.target.closest('[data-rx-style]');if(!radio||busy||finished)return;
   const card=radio.closest('article'),inputs=[...card.querySelectorAll('[data-rx-quantity]')],quantity=Math.max(1,...inputs.map(i=>Number(i.value)||0));
@@ -151,10 +179,10 @@
   summary();if(!target.open)target.showModal();
  }
  $('#rx-finish').onclick=async()=>{
-  if(busy||finished||!selection||!quote)return;
-  if(!contactValid()){error('Preencha seu nome e um telefone válido.');$('#rx-contact').scrollIntoView();return;}
-  if(!$('#rx-consent').checked||photos.length!==selectedPhotoCount()){error('Confira as fotos e a autorização de uso.');return;}
-  if(instructions().length>2000){error('Reduza a mensagem e as instruções para continuar.');return;}
+  if(busy||finished)return;
+  const issue=missingRequirement();if(issue){guideRequirement(issue);return;}
+  if(!quote){await price();guideRequirement({step:quote?4:1,target:quote?'#rx-contact':'#rx-search-button',message:quote?'Valores atualizados. Revise o resumo antes de enviar.':'Não foi possível validar os valores ou a disponibilidade. Consulte novamente sua hospedagem.'});return;}
+  validationNote.hidden=true;
   busy=true;summary();error('');
   try{const checked=await api('quote',payload());if(checked.total!==quote.total){quote=checked;error('O valor mudou. Revise o resumo e clique novamente para enviar.');return;}const result=await api('book',{...payload(),request_id:requestId,guest:$('#rx-guest').value.trim(),phone:$('#rx-phone').value,expected_total:quote.total,expected_items:quote.items,photos:photos.map(p=>p.id),instructions:instructions(),privacy_accepted:true});receipt(result);}
   catch(e){error(e.message);$('#rx-quote-status').textContent='A solicitação não foi confirmada nesta tela. Você pode tentar novamente com o mesmo envio, sem duplicar a reserva.';}

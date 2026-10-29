@@ -3564,6 +3564,51 @@
       "We could not find decoration linked to this booking.",
       "לא נמצא קישוט המשויך להזמנה זו.",
       "No encontramos la decoración vinculada a esta reserva."
+    ],
+    "Envie as fotografias exigidas pelos itens personalizados selecionados para continuar.": [
+      "Upload the photographs required by your selected personalized items to continue.",
+      "העלו את התמונות הנדרשות לפריטים המותאמים שבחרתם כדי להמשיך.",
+      "Sube las fotografías requeridas por los artículos personalizados seleccionados para continuar."
+    ],
+    "Remova as fotografias que não serão usadas nos itens selecionados.": [
+      "Remove photographs that will not be used for the selected items.",
+      "הסירו תמונות שלא ישמשו בפריטים שנבחרו.",
+      "Elimina las fotografías que no se usarán en los artículos seleccionados."
+    ],
+    "Preencha o nome do hóspede.": [
+      "Enter the guest name.",
+      "הזינו את שם האורח.",
+      "Introduce el nombre del huésped."
+    ],
+    "Informe um telefone válido com DDD.": [
+      "Enter a valid phone number with area code.",
+      "הזינו מספר טלפון תקין עם קידומת אזור.",
+      "Introduce un teléfono válido con código de área."
+    ],
+    "Marque a autorização de uso dos dados e das fotos, quando houver, para continuar.": [
+      "Authorize the use of your details and any uploaded photographs to continue.",
+      "אשרו שימוש בפרטים ובתמונות שהועלו, אם ישנן, כדי להמשיך.",
+      "Autoriza el uso de tus datos y las fotos, si las hay, para continuar."
+    ],
+    "Entre com Google para enviar as fotografias e finalizar sua experiência.": [
+      "Sign in with Google to upload photographs and submit your experience.",
+      "התחברו עם Google כדי להעלות תמונות ולשלוח את הבקשה.",
+      "Inicia sesión con Google para subir fotografías y enviar tu experiencia."
+    ],
+    "Aguarde o carregamento das opções de decoração.": [
+      "Wait for decoration options to load.",
+      "המתינו לטעינת אפשרויות הקישוט.",
+      "Espera a que se carguen las opciones de decoración."
+    ],
+    "Valores atualizados. Revise o resumo antes de enviar.": [
+      "Prices updated. Review the summary before submitting.",
+      "המחירים עודכנו. בדקו את הסיכום לפני השליחה.",
+      "Valores actualizados. Revisa el resumen antes de enviar."
+    ],
+    "Não foi possível validar os valores ou a disponibilidade. Consulte novamente sua hospedagem.": [
+      "Prices or availability could not be validated. Search for your stay again.",
+      "לא ניתן לאמת מחירים או זמינות. חפשו שוב את השהייה שלכם.",
+      "No se pudieron validar los valores o la disponibilidad. Consulta tu hospedaje nuevamente."
     ]
   }
 }
