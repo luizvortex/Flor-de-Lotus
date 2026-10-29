@@ -86,3 +86,15 @@ Migração `romantic_experience`, versão remota `20261029112902`, aplicada com 
 Publicação acionada por push para `origin/main`; acompanhar status no GitHub/Vercel antes de declarar o deploy finalizado. O conector Vercel desta sessão não possui acesso ao escopo `zilter-pacheonis-projects`; o status de build é consultado pelo check oficial Vercel associado ao commit no GitHub. A rede ainda não permite acessar os hosts públicos do site/Supabase para uma nova inspeção HTTP/navegador em produção. As validações locais anteriores permanecem aprovadas; não confundir aprovação do build com nova validação visual de produção.
 
 Persistem pendências externas: acesso às fotografias 10 e 16 para ajustar os recortes; documentação/credenciais e homologação de API HQBeds; contratação/configuração de um gateway caso o proprietário queira pagamento automático. Nenhuma dessas capacidades foi declarada ativa.
+
+### Catálogo inicial e opções expansíveis — 29/10/2026
+
+O proprietário solicitou explicitamente o cadastro das opções e autorizou os preços de referência da imagem: Espumante R$ 95 (Brut, Rosé e Moscatel), Vinho R$ 75 (tinto seco/suave/doce, branco seco/suave/doce e Rosé), Ferrero Rocher R$ 55, pétalas R$ 80, balões R$ 65 e porta-retrato R$ 45 (uma foto). Cada variante começa com o preço de referência do respectivo item e pode receber seu próprio valor na administração. Os cartões informam que são valores iniciais sujeitos à confirmação da pousada.
+
+A migração adicional `romantic_catalog_options` insere somente produtos ausentes por nome e não sobrescreve cadastros, preços ou pedidos existentes. Permite produtos sem foto com apresentação textual; imagens, quando enviadas, continuam restritas a mídia validada e real. Não foram utilizadas fotos de quartos para representar produtos.
+
+Cada produto abre um painel nativo acessível (`details`/`summary`) com variantes, preços e quantidades. A seleção continua no mesmo carrinho e é recalculada e validada pelo servidor. Porta-retrato solicita fotografia privada. Há acesso direto **Decoração e adicionais** no menu administrativo, abrindo **Produtos e variantes**; o fluxo **Pedidos e preparação** continua disponível. O atalho não muda os identificadores ou a ordem persistida dos tópicos anteriores.
+
+Verificação adicional: `python3 scripts/test-romance-catalog-migration.py` usa clone descartável do PostgreSQL local para validar seis produtos, quatorze variantes, valores autorizados, catálogo sem fotos, exigência de foto pessoal no porta-retrato e preservação de preços numa segunda execução. O teste de navegador passou a cobrir a expansão dos sete vinhos, o recálculo de R$ 400 de hospedagem + R$ 75 de vinho e o atalho administrativo, além do fluxo completo existente.
+
+Migração do catálogo aplicada em produção com versão `20261029115950`. Conferidos seis produtos ativos, quatorze variantes e preços mínimos de referência iguais aos autorizados. A análise de segurança não apresentou novos avisos. Build, contrato SQL original, teste da migração em clone local e jornada completa no navegador aprovados. O nome do arquivo local acompanha a versão registrada pelo Supabase.

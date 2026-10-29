@@ -9,6 +9,7 @@ import {randomUUID} from 'node:crypto';
 const container='lotus-romance-test',db='romance_e2e_'+Date.now();
 async function command(args,input=''){const child=spawn('docker',['--host=unix:///var/run/docker.sock',...args],{stdio:['pipe','pipe','pipe']});let out='',err='';child.stdout.on('data',c=>out+=c);child.stderr.on('data',c=>err+=c);child.stdin.end(input);await once(child,'exit');if(child.exitCode)throw Error(err);return out;}
 await command(['exec',container,'createdb','-U','postgres','-T',(await readFile('work/romance-test-database.txt','utf8')).trim(),db]);
+await command(['exec','-i',container,'psql','-U','postgres','-d',db,'-v','ON_ERROR_STOP=1'],await readFile('supabase/migrations/20261029115950_romantic_catalog_options.sql','utf8'));
 const literal=s=>"'"+String(s).replaceAll("'","''")+"'";
 async function sql(statement,claims={},role='postgres'){const script=`begin;select set_config('request.jwt.claims',${literal(JSON.stringify(claims))},true);set local role ${role};${statement};commit;`;const out=await command(['exec','-i',container,'psql','-U','postgres','-d',db,'-At','-v','ON_ERROR_STOP=1','-v','VERBOSITY=verbose'],script);const lines=out.trim().split('\n').filter(line=>line.startsWith('{')||line.startsWith('['));return JSON.parse(lines.at(-1)||'{}');}
 const uid=randomUUID(),sid=randomUUID(),adminId=randomUUID(),adminSid=randomUUID(),otherId=randomUUID(),otherSid=randomUUID(),productId=randomUUID(),variantId=randomUUID();

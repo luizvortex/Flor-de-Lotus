@@ -3168,6 +3168,101 @@
       "Skip to accommodation",
       "דילוג לבחירת האירוח",
       "Ir al alojamiento"
+    ],
+    "Espumante": [
+      "Sparkling wine",
+      "יין מבעבע",
+      "Espumoso"
+    ],
+    "Vinho": [
+      "Wine",
+      "יין",
+      "Vino"
+    ],
+    "Bombons Ferrero Rocher": [
+      "Ferrero Rocher chocolates",
+      "שוקולדים Ferrero Rocher",
+      "Bombones Ferrero Rocher"
+    ],
+    "Decoração com pétalas": [
+      "Petal decoration",
+      "קישוט בעלי כותרת",
+      "Decoración con pétalos"
+    ],
+    "Balões românticos": [
+      "Romantic balloons",
+      "בלונים רומנטיים",
+      "Globos románticos"
+    ],
+    "Porta-retrato personalizado": [
+      "Personalized photo frame",
+      "מסגרת תמונה אישית",
+      "Portarretratos personalizado"
+    ],
+    "Valor inicial de referência. Opções e disponibilidade sujeitas à confirmação da pousada.": [
+      "Initial reference price. Options and availability are subject to confirmation by the inn.",
+      "מחיר התחלתי להמחשה. האפשרויות והזמינות כפופות לאישור מקום האירוח.",
+      "Precio inicial de referencia. Opciones y disponibilidad sujetas a confirmación de la posada."
+    ],
+    "Brut": [
+      "Brut",
+      "ברוט",
+      "Brut"
+    ],
+    "Rosé": [
+      "Rosé",
+      "רוזה",
+      "Rosado"
+    ],
+    "Moscatel": [
+      "Moscato",
+      "מוסקט",
+      "Moscatel"
+    ],
+    "Tinto seco": [
+      "Dry red",
+      "אדום יבש",
+      "Tinto seco"
+    ],
+    "Tinto suave": [
+      "Mild red",
+      "אדום עדין",
+      "Tinto suave"
+    ],
+    "Tinto doce": [
+      "Sweet red",
+      "אדום מתוק",
+      "Tinto dulce"
+    ],
+    "Branco seco": [
+      "Dry white",
+      "לבן יבש",
+      "Blanco seco"
+    ],
+    "Branco suave": [
+      "Mild white",
+      "לבן עדין",
+      "Blanco suave"
+    ],
+    "Branco doce": [
+      "Sweet white",
+      "לבן מתוק",
+      "Blanco dulce"
+    ],
+    "Padrão": [
+      "Standard",
+      "רגיל",
+      "Estándar"
+    ],
+    "Uma fotografia": [
+      "One photograph",
+      "תמונה אחת",
+      "Una fotografía"
+    ],
+    "Bebidas": [
+      "Drinks",
+      "משקאות",
+      "Bebidas"
     ]
   }
 }
