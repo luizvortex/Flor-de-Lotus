@@ -47,7 +47,11 @@ with sync_playwright() as p:
  page.locator('#rx-message').fill('Uma surpresa especial');expect(page.locator('#rx-message-preview')).to_have_text('Uma surpresa especial');page.locator('[data-rx-step="4"]').click();expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('2');page.locator('[data-rx-step="2"]').click()
  page.locator('[data-rx-remove-item]').click();expect(page.locator('[data-rx-selected]')).to_have_count(0);expect(page.locator('#rx-selected-total')).to_contain_text('0,00');expect(wine.locator('[data-rx-quantity]').nth(2)).to_have_value('0');wine.locator('[data-rx-quantity]').nth(2).fill('2');expect(page.locator('.rx-grand-total')).to_contain_text('550,00',timeout=20000)
  # Non-personalized extras require no photograph.
- page.locator('#rx-consent').check();expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000);expect(page.locator('#rx-dropzone')).to_be_hidden()
+ page.locator('#rx-consent').check();expect(page.locator('#rx-finish')).to_be_disabled()
+ page.locator('#rx-phone').fill('739999');expect(page.locator('#rx-finish')).to_be_disabled()
+ page.locator('#rx-phone').fill('73999999999');expect(page.locator('#rx-finish')).to_be_enabled(timeout=20000)
+ page.locator('#rx-guest').fill('   ');expect(page.locator('#rx-finish')).to_be_disabled();page.locator('#rx-guest').fill('Hóspede sintético');expect(page.locator('#rx-finish')).to_be_enabled()
+ page.locator('#rx-consent').uncheck();expect(page.locator('#rx-finish')).to_be_disabled();page.locator('#rx-consent').check();expect(page.locator('#rx-finish')).to_be_enabled();expect(page.locator('#rx-dropzone')).to_be_hidden()
  wine.locator('[data-rx-quantity]').nth(2).fill('0');expect(page.locator('[data-rx-selected]')).to_have_count(0)
  page.locator('.rx-product-options').filter(has=page.locator(f'[data-rx-quantity="{variant}"]')).locator('summary').click()
  quantity=page.locator(f'[data-rx-quantity="{variant}"]');quantity.fill('99');expect(page.locator('#rx-finish')).to_be_disabled();quantity.fill('0');page.locator(f'[data-rx-variant="{variant}"][data-rx-qty-step="1"]').click();expect(quantity).to_have_value('1')
