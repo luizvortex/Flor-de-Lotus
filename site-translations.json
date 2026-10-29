@@ -3439,6 +3439,241 @@
       "Step completed",
       "השלב הושלם",
       "Paso completado"
+    ],
+    "PERSONALIZE SUA EXPERIÊNCIA": [
+      "PERSONALIZE YOUR EXPERIENCE",
+      "התאימו את החוויה שלכם",
+      "PERSONALIZA TU EXPERIENCIA"
+    ],
+    "Imagine o seu momento especial": [
+      "Imagine your special moment",
+      "דמיינו את הרגע המיוחד שלכם",
+      "Imagina tu momento especial"
+    ],
+    "Cada detalhe conta uma história. Personalize sua surpresa e descubra como esse momento pode ganhar vida.": [
+      "Every detail tells a story. Personalize your surprise and see your special moment take shape.",
+      "כל פרט מספר סיפור. התאימו את ההפתעה שלכם וראו את הרגע המיוחד מתעורר לחיים.",
+      "Cada detalle cuenta una historia. Personaliza tu sorpresa y descubre cómo este momento puede cobrar vida."
+    ],
+    "Filtrar itens de decoração": [
+      "Filter decoration items",
+      "סינון פריטי קישוט",
+      "Filtrar artículos de decoración"
+    ],
+    "Todos os itens": [
+      "All items",
+      "כל הפריטים",
+      "Todos los artículos"
+    ],
+    "Romance": [
+      "Romance",
+      "רומנטיקה",
+      "Romance"
+    ],
+    "Memórias": [
+      "Memories",
+      "זיכרונות",
+      "Recuerdos"
+    ],
+    "Mensagens": [
+      "Messages",
+      "מסרים",
+      "Mensajes"
+    ],
+    "PRÉVIA DA SUA SURPRESA": [
+      "PREVIEW YOUR SURPRISE",
+      "תצוגה מקדימה של ההפתעה",
+      "VISTA PREVIA DE TU SORPRESA"
+    ],
+    "Ampliar imagem ↗": [
+      "Enlarge image ↗",
+      "הגדלת התמונה ↗",
+      "Ampliar imagen ↗"
+    ],
+    "Fechar prévia": [
+      "Close preview",
+      "סגירת התצוגה",
+      "Cerrar vista previa"
+    ],
+    "Visualizações da decoração": [
+      "Decoration views",
+      "תצוגות הקישוט",
+      "Vistas de la decoración"
+    ],
+    "Sua composição": [
+      "Your composition",
+      "העיצוב שלכם",
+      "Tu composición"
+    ],
+    "Quarto original": [
+      "Original room",
+      "החדר המקורי",
+      "Habitación original"
+    ],
+    "Pétalas": [
+      "Petals",
+      "עלי כותרת",
+      "Pétalos"
+    ],
+    "Arranjo de flores": [
+      "Flower arrangement",
+      "סידור פרחים",
+      "Arreglo floral"
+    ],
+    "Cartão": [
+      "Card",
+      "כרטיס",
+      "Tarjeta"
+    ],
+    "Cartão personalizado": [
+      "Personalized card",
+      "כרטיס אישי",
+      "Tarjeta personalizada"
+    ],
+    "Pétalas de rosas": [
+      "Rose petals",
+      "עלי כותרת של ורדים",
+      "Pétalos de rosas"
+    ],
+    "Fotografias do casal": [
+      "Couple photographs",
+      "תמונות של בני הזוג",
+      "Fotografías de la pareja"
+    ],
+    "Suas fotos": [
+      "Your photos",
+      "התמונות שלכם",
+      "Tus fotos"
+    ],
+    "Uma mensagem especial": [
+      "A special message",
+      "מסר מיוחד",
+      "Un mensaje especial"
+    ],
+    "Compare antes e depois": [
+      "Compare before and after",
+      "השוואת לפני ואחרי",
+      "Compara antes y después"
+    ],
+    "Comparar quarto original e decoração": [
+      "Compare the original room and decoration",
+      "השוואת החדר המקורי לקישוט",
+      "Comparar habitación original y decoración"
+    ],
+    "Antes": [
+      "Before",
+      "לפני",
+      "Antes"
+    ],
+    "Depois": [
+      "After",
+      "אחרי",
+      "Después"
+    ],
+    "Imagem ilustrativa. A decoração final poderá variar.": [
+      "Illustrative image. The final decoration may vary.",
+      "התמונה להמחשה. הקישוט הסופי עשוי להשתנות.",
+      "Imagen ilustrativa. La decoración final puede variar."
+    ],
+    "Imagem ilustrativa de referência; não representa um quarto confirmado.": [
+      "Illustrative reference image; it does not represent a confirmed room.",
+      "תמונת המחשה; אינה מייצגת חדר שאושר.",
+      "Imagen de referencia ilustrativa; no representa una habitación confirmada."
+    ],
+    "Imagem fornecida como referência ilustrativa; não representa um quarto confirmado.": [
+      "Image provided as an illustrative reference; it does not represent a confirmed room.",
+      "התמונה סופקה כהמחשה; אינה מייצגת חדר שאושר.",
+      "Imagen proporcionada como referencia ilustrativa; no representa una habitación confirmada."
+    ],
+    "Demonstração visual. Este elemento não foi incluído na sua solicitação.": [
+      "Visual demonstration. This element has not been included in your request.",
+      "הדגמה חזותית. פריט זה לא נכלל בבקשתכם.",
+      "Demostración visual. Este elemento no se ha incluido en tu solicitud."
+    ],
+    "Quarto original, sem a simulação decorativa.": [
+      "Original room, without the decoration simulation.",
+      "החדר המקורי, ללא הדמיית הקישוט.",
+      "Habitación original, sin la simulación decorativa."
+    ],
+    "Sua composição acompanha os itens selecionados.": [
+      "Your composition reflects the selected items.",
+      "העיצוב משקף את הפריטים שבחרתם.",
+      "Tu composición refleja los artículos seleccionados."
+    ],
+    "Apenas demonstração visual": [
+      "Visual demonstration only",
+      "הדגמה חזותית בלבד",
+      "Solo demostración visual"
+    ],
+    "Visualizar exemplo": [
+      "Preview example",
+      "צפייה בדוגמה",
+      "Ver ejemplo"
+    ],
+    "Escreva sua mensagem especial": [
+      "Write your special message",
+      "כתבו את המסר המיוחד שלכם",
+      "Escribe tu mensaje especial"
+    ],
+    "Você transforma qualquer lugar no meu lugar favorito...": [
+      "You turn any place into my favorite place...",
+      "אתם הופכים כל מקום למקום האהוב עליי...",
+      "Conviertes cualquier lugar en mi lugar favorito..."
+    ],
+    "Sua surpresa está ganhando vida": [
+      "Your surprise is taking shape",
+      "ההפתעה שלכם מקבלת צורה",
+      "Tu sorpresa está cobrando vida"
+    ],
+    "Confira os itens selecionados e veja o valor estimado da sua experiência.": [
+      "Review your selected items and the estimated cost of your experience.",
+      "בדקו את הפריטים שנבחרו ואת המחיר המשוער של החוויה.",
+      "Revisa los artículos seleccionados y el valor estimado de tu experiencia."
+    ],
+    "Decoração estimada": [
+      "Estimated decoration",
+      "עלות קישוט משוערת",
+      "Decoración estimada"
+    ],
+    "Hospedagem e decoração são apresentadas separadamente. O total será validado antes do envio.": [
+      "Accommodation and decoration are shown separately. The total will be validated before submission.",
+      "השהייה והקישוט מוצגים בנפרד. הסכום יאומת לפני שליחת הבקשה.",
+      "El hospedaje y la decoración se muestran por separado. El total se validará antes del envío."
+    ],
+    "Continuar minha surpresa": [
+      "Continue my surprise",
+      "המשך יצירת ההפתעה",
+      "Continuar mi sorpresa"
+    ],
+    "Pétalas, flores, fotos e cartão podem aparecer na simulação. Bebidas e outros adicionais são listados no resumo.": [
+      "Petals, flowers, photos and a card can appear in the simulation. Drinks and other extras are listed in the summary.",
+      "עלי כותרת, פרחים, תמונות וכרטיס יכולים להופיע בהדמיה. משקאות ותוספות אחרות מופיעים בסיכום.",
+      "Pétalos, flores, fotos y tarjeta pueden aparecer en la simulación. Las bebidas y otros adicionales se enumeran en el resumen."
+    ],
+    "Ilustração esquemática de referência. Não representa o quarto reservado.": [
+      "Schematic reference illustration. It does not represent the room booked.",
+      "איור סכמטי להמחשה. אינו מייצג את החדר שהוזמן.",
+      "Ilustración esquemática de referencia. No representa el cuarto reservado."
+    ],
+    "Imagem de referência indisponível. Exibindo ilustração esquemática.": [
+      "Reference image unavailable. Showing a schematic illustration.",
+      "תמונת ההמחשה אינה זמינה. מוצג איור סכמטי.",
+      "Imagen de referencia no disponible. Se muestra una ilustración esquemática."
+    ],
+    "Este item ainda não está disponível para contratação.": [
+      "This item is not yet available to book.",
+      "פריט זה עדיין אינו זמין להזמנה.",
+      "Este artículo aún no está disponible para contratar."
+    ],
+    "A mensagem será enviada à equipe junto com sua solicitação. O cartão físico só estará incluído se selecionado como adicional disponível.": [
+      "Your message will be sent to the team with your request. A physical card is only included if selected as an available extra.",
+      "המסר יישלח לצוות עם הבקשה. כרטיס מודפס ייכלל רק אם נבחר כתוספת זמינה.",
+      "El mensaje se enviará al equipo con tu solicitud. La tarjeta física solo se incluye si se elige como adicional disponible."
+    ],
+    "A prévia visual está indisponível. Você pode continuar escolhendo seus adicionais.": [
+      "The visual preview is unavailable. You can continue choosing your extras.",
+      "התצוגה החזותית אינה זמינה. אפשר להמשיך לבחור תוספות.",
+      "La vista previa no está disponible. Puedes seguir eligiendo tus adicionales."
     ]
   }
 }

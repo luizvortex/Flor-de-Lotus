@@ -137,3 +137,11 @@ O pedido mais recente de redesign da experiência romântica determina explicita
 ### Autorização de publicação desta reformulação
 
 Em 29/10/2026, após a entrega local do commit `558d8e6`, o usuário respondeu explicitamente **“pode publicar”**. Isso autoriza a publicação desta reformulação pelo fluxo Git/Vercel e resolve a restrição de publicação pendente descrita acima. Não há migração a aplicar. Manter a exigência de nova autorização para futuras revisões que explicitamente proíbam deploy.
+
+## Configurador por camadas — nova revisão local, não publicar automaticamente
+
+O TXT mais recente pede configurador visual e explicitamente proíbe deploy automático. A autorização anterior de publicar referia-se à revisão anterior, já publicada. Não fazer push desta nova revisão para main sem nova instrução. Leia `docs/configurador-romantico-camadas.md` e `images/romantic/ASSETS.md`.
+
+`RomanticRoomPreview` integra-se ao carrinho existente, com configuração central, camadas SVG originais, comparador, modal e galeria. Exemplos de flores/cartão ausentes do catálogo são somente visuais e não podem entrar no pedido ou no preço. Não semear produtos ou preços. Fotografias pessoais permanecem privadas no serviço existente.
+
+O proprietário escolheu uma imagem ilustrativa de quarto com vista para o mar (1920×764), visível na conversa, mas o arquivo original não foi disponibilizado no workspace. Apenas o TXT está em attachments. Não recriar a foto por IA nem alegar que foi incorporada. A base ativa ainda é explicitamente esquemática. O perfil `userReference` tem coordenadas preliminares e deve ser ativado/calibrado só após receber o arquivo original. O usuário autorizou rede para Unsplash, mas o proxy ainda retorna403 e a allowlist do ambiente não mudou. Não contornar o bloqueio. A imagem do usuário substitui a procura da foto de banco; pedir o original como arquivo (ou ZIP) se ainda não estiver disponível.
