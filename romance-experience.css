@@ -53,10 +53,10 @@
 
 /* Catalog and gift summary share the live booking cart. */
 .romance-page{--rx-card-radius:18px;--rx-card-border:#e5dece;--rx-soft-shadow:0 8px 28px #1f3c4d08}
-.romance-page #personalizar .romance-product-card{position:relative;border-radius:var(--rx-card-radius);border:1px solid var(--rx-card-border);background:#fff;box-shadow:var(--rx-soft-shadow);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
-.romance-page #personalizar .romance-product-card.is-selected{border-color:#a67c3d;background:#fffdf9;box-shadow:0 0 0 1px #c8a96b55}
-.romance-page #personalizar .romance-image-wrapper{aspect-ratio:16/7;background:#faf8f3}
-.romance-page #personalizar .romance-image{object-fit:contain;padding:12px}
+.romance-page :is(#personalizar,#rx-memories) .romance-product-card{position:relative;border-radius:var(--rx-card-radius);border:1px solid var(--rx-card-border);background:#fff;box-shadow:var(--rx-soft-shadow);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.romance-page :is(#personalizar,#rx-memories) .romance-product-card.is-selected{border-color:#a67c3d;background:#fffdf9;box-shadow:0 0 0 1px #c8a96b55}
+.romance-page :is(#personalizar,#rx-memories) .romance-image-wrapper{aspect-ratio:16/7;background:#faf8f3}
+.romance-page :is(#personalizar,#rx-memories) .romance-image{object-fit:contain;padding:12px}
 .romance-page .rx-selection-badge{position:absolute;inset-block-start:12px;inset-inline-end:12px;z-index:1;padding:6px 10px;border-radius:20px;background:#1f3c4d;color:#fff;font-size:10px;box-shadow:var(--rx-soft-shadow)}
 .romance-page .rx-selected-panel{margin-block:32px;padding:clamp(18px,3vw,28px);border:1px solid var(--rx-card-border);border-radius:20px;background:#faf8f3;box-shadow:var(--rx-soft-shadow)}
 .romance-page .rx-selected-panel h3{margin-top:0;color:#1f3c4d;font-size:clamp(24px,3vw,30px)}
@@ -78,24 +78,24 @@
 .romance-page .rx-catalog-skeleton span{display:block;height:120px;border-radius:18px;background:#f1ede5}
 .romance-page .rx-review-gallery .rx-selected-item{padding:0}
 .romance-page .rx-review-gallery h4{font-size:18px}
-@media(hover:hover){.romance-page #personalizar .romance-product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px #1f3c4d0e}}
+@media(hover:hover){.romance-page :is(#personalizar,#rx-memories) .romance-product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px #1f3c4d0e}}
 @media(max-width:480px){.romance-page .rx-selected-gallery{grid-template-columns:minmax(0,1fr)}.romance-page .rx-selected-item{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start}.romance-page .rx-selected-item img{aspect-ratio:1;align-self:start}.romance-page .rx-selected-item .rx-product-photo-empty{padding:16px 8px;align-self:stretch;display:grid;place-items:center}.romance-page .rx-selected-item>div:not(.rx-product-photo-empty){padding:14px}.romance-page .rx-selected-item h4{font-size:19px}}
-@media(prefers-reduced-motion:reduce){.romance-page #personalizar .romance-product-card{transition:none;transform:none}}
+@media(prefers-reduced-motion:reduce){.romance-page :is(#personalizar,#rx-memories) .romance-product-card{transition:none;transform:none}}
 .romance-page .rx-catalog-skeleton[hidden],.romance-page .rx-selection-badge[hidden],.romance-page .rx-message-preview[hidden]{display:none}
 
 /* Compact decoration catalog; keep touch targets and variant controls comfortable. */
-.romance-page #personalizar .rx-category-title{font-size:23px;margin-block:22px 12px}
-.romance-page #personalizar .rx-product-grid{gap:10px}
-.romance-page #personalizar .romance-product-card{border-radius:14px;box-shadow:0 4px 18px #1f3c4d05}
-.romance-page #personalizar .rx-product-grid .rx-product-photo-empty{padding:8px 16px;min-height:0;font-size:10px;line-height:1.5;text-align:start;padding-inline-end:112px}
-.romance-page #personalizar .rx-product-options summary{padding:12px 16px;min-height:44px}
-.romance-page #personalizar .rx-product-options summary strong{font-size:19px;line-height:1.3}
-.romance-page #personalizar .rx-product-from{font-size:10px;margin-top:3px}
-.romance-page #personalizar .rx-product-options .rx-card-copy{padding:4px 16px 14px}
-.romance-page #personalizar .romance-image-wrapper{aspect-ratio:auto;height:132px}
-.romance-page #personalizar .romance-image{padding:8px;box-sizing:border-box}
-.romance-page #personalizar .rx-selection-badge{inset-block-start:6px;inset-inline-end:8px;padding:3px 7px;font-size:9px}
-@media(max-width:480px){.romance-page #personalizar .rx-product-options summary{padding:11px 14px}.romance-page #personalizar .rx-product-options summary strong{font-size:18px}.romance-page #personalizar .rx-product-grid .rx-product-photo-empty{padding-inline-start:14px}.romance-page #personalizar .romance-image-wrapper{height:112px}}
+.romance-page :is(#personalizar,#rx-memories) .rx-category-title{font-size:23px;margin-block:22px 12px}
+.romance-page :is(#personalizar,#rx-memories) .rx-product-grid{gap:10px}
+.romance-page :is(#personalizar,#rx-memories) .romance-product-card{border-radius:14px;box-shadow:0 4px 18px #1f3c4d05}
+.romance-page :is(#personalizar,#rx-memories) .rx-product-grid .rx-product-photo-empty{padding:8px 16px;min-height:0;font-size:10px;line-height:1.5;text-align:start;padding-inline-end:112px}
+.romance-page :is(#personalizar,#rx-memories) .rx-product-options summary{padding:12px 16px;min-height:44px}
+.romance-page :is(#personalizar,#rx-memories) .rx-product-options summary strong{font-size:19px;line-height:1.3}
+.romance-page :is(#personalizar,#rx-memories) .rx-product-from{font-size:10px;margin-top:3px}
+.romance-page :is(#personalizar,#rx-memories) .rx-product-options .rx-card-copy{padding:4px 16px 14px}
+.romance-page :is(#personalizar,#rx-memories) .romance-image-wrapper{aspect-ratio:auto;height:132px}
+.romance-page :is(#personalizar,#rx-memories) .romance-image{padding:8px;box-sizing:border-box}
+.romance-page :is(#personalizar,#rx-memories) .rx-selection-badge{inset-block-start:6px;inset-inline-end:8px;padding:3px 7px;font-size:9px}
+@media(max-width:480px){.romance-page :is(#personalizar,#rx-memories) .rx-product-options summary{padding:11px 14px}.romance-page :is(#personalizar,#rx-memories) .rx-product-options summary strong{font-size:18px}.romance-page :is(#personalizar,#rx-memories) .rx-product-grid .rx-product-photo-empty{padding-inline-start:14px}.romance-page :is(#personalizar,#rx-memories) .romance-image-wrapper{height:112px}}
 
 /* Native dialog keeps the success receipt centered and keyboard focus contained. */
 .romance-page dialog.rx-receipt{position:fixed;inset:0;width:calc(100% - 32px);max-width:560px;max-height:calc(100dvh - 32px);overflow-y:auto;margin:auto;padding:clamp(26px,5vw,42px);border:1px solid #e5dece;border-radius:20px;background:#faf8f3;color:#1f3c4d;box-shadow:0 24px 80px #1f3c4d33;text-align:center;overscroll-behavior:contain}

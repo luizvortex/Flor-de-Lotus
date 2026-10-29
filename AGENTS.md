@@ -179,3 +179,7 @@ A experiência agora exibe somente uma etapa por vez, mantendo os elementos e da
 ## Cabeçalhos transparentes das abas públicas
 
 `public-header.css`, servido por `prepare-public.mjs`, centraliza as superfícies transparentes dos cabeçalhos públicos. `legacy-page.ts` injeta o arquivo nas abas públicas, preservando o cabeçalho próprio da home e o painel administrativo. A rota romântica também carrega o arquivo: `.rx-page-header` sobrepõe o hero, com marca branca, links claros, seletor de idiomas legível e espaço reservado no texto para não sobrepor os títulos. Nas páginas sem hero fotográfico, manter texto escuro sobre o fundo da página, sem inserir imagens de capa artificiais. Não remover links, autenticação ou seletores existentes.
+
+## Lembranças na etapa Fotografias
+
+A categoria real `lembrancas` é renderizada uma única vez e movida para `#rx-memory-products`, dentro da etapa 3. Porta-retrato e envio da foto ficam juntos. Os dois contêineres de produtos reutilizam os mesmos eventos e o mesmo carrinho; não duplicar inputs, IDs, produtos ou preços. Permitir avançar da etapa 2 sem adicional para quem escolherá somente uma lembrança na etapa 3; continuar exigindo ao menos um adicional e a quantidade correta de fotos antes da revisão/envio. Validações de quantidade de lembranças devem direcionar à etapa 3. Demais itens permanecem em Surpresa. Upload, Google e fotos privadas preservados.
