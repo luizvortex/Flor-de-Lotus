@@ -26,11 +26,22 @@
   catch(e){if(sequence===quoteSequence){$('#rx-quote-status').textContent=e.message;quote=null;}}
   if(sequence===quoteSequence)summary();
  }
+ function categoryFits(slug,count,floor){
+  const standard=['duplo','triplo'],triple=['triplo-standard','triplo-superior'],family=['familia','familia-superior'];
+  const allowed=count<=2?standard:count===3?triple:count>=5?family:[];
+  const upstairs=['triplo','triplo-superior','familia-superior'].includes(slug);
+  return allowed.includes(slug)&&(floor==='sem_preferencia'||(floor==='superior')===upstairs);
+ }
+ function filterCategories(){
+  const count=Number($('#rx-adults').value)+Number($('#rx-children').value),floor=$('#rx-preference').value,select=$('#rx-category'),previous=select.value;
+  select.innerHTML='<option value="">Todas as categorias</option>'+showcases.filter(s=>categoryFits(s.slug,count,floor)).map(s=>`<option value="${esc(s.slug)}">${esc(s.title)}</option>`).join('');
+  if([...select.options].some(o=>o.value===previous))select.value=previous;
+ }
  function invalidate(){selection=null;quote=null;query=null;party=null;quoteSequence++;searchSequence++;$('#rx-rooms').innerHTML='';$('#rx-search-status').textContent='Consulte novamente para atualizar a hospedagem.';$('#rx-quote-status').textContent='';summary();}
  function ages(){const number=Number($('#rx-children').value),previous=[...document.querySelectorAll('[data-rx-age]')].map(input=>input.value);$('#rx-ages').innerHTML=Array.from({length:Math.min(5,Math.max(0,number||0))},(_,i)=>`<label>Idade da criança ${i+1}<select data-rx-age required><option value="">Selecione</option>${Array.from({length:18},(_,a)=>`<option value="${a}" ${previous[i]===String(a)?'selected':''}>${a}</option>`).join('')}</select></label>`).join('');}
  $('#search').addEventListener('invalid',event=>{if(['checkin','checkout'].includes(event.target.id)){event.preventDefault();if($('#dates-picker').hidden)$('#dates-trigger').click();$('#rx-search-status').textContent='Escolha entrada e saída válidas.';}},true);
  $('#rx-children').addEventListener('input',ages);
- $('#search').addEventListener('input',invalidate);$('#search').addEventListener('change',invalidate);
+ $('#search').addEventListener('input',()=>{filterCategories();invalidate();});$('#search').addEventListener('change',()=>{filterCategories();invalidate();});
  $('#search').onsubmit=async event=>{
   event.preventDefault();if(busy||!$('#search').reportValidity())return;
   const adults=Number($('#rx-adults').value),children=[...document.querySelectorAll('[data-rx-age]')].map(input=>Number(input.value));
@@ -42,7 +53,7 @@
    const result=await Promise.all(floors.map(async floor=>{const params=new URLSearchParams({start,end,floor,guests:String(adults+children.length),party:JSON.stringify(requestParty)});const response=await fetch('/api/availability?'+params,{cache:'no-store'});const data=await response.json();if(!response.ok)throw Error(data.error||'Não foi possível consultar os quartos.');return (data.rooms||[]).map(room=>({...room,floor}));}));
    if(sequence!==searchSequence)return;
    const wanted=$('#rx-category').value;
-   rooms=result.flat().filter(room=>Number.isSafeInteger(room.total)&&!room.quote_example&&(!wanted||wanted===(room.slug||room.presentation_slug))&&(!String(room.slug||room.presentation_slug).startsWith('familia')||adults+children.length>=5)).map(room=>{const slug=room.slug||room.presentation_slug,showcase=showcases.find(s=>s.slug===slug);return {...room,slug,title:showcase?.title||room.name,description:showcase?.description||'',photo:showcase?.photos?.[0],capacity:room.capacity||adults+children.length};});
+   rooms=result.flat().filter(room=>categoryFits(room.slug||room.presentation_slug,adults+children.length,preference)&&Number.isSafeInteger(room.total)&&!room.quote_example&&(!wanted||wanted===(room.slug||room.presentation_slug))&&(!String(room.slug||room.presentation_slug).startsWith('familia')||adults+children.length>=5)).map(room=>{const slug=room.slug||room.presentation_slug,showcase=showcases.find(s=>s.slug===slug);return {...room,slug,title:showcase?.title||room.name,description:showcase?.description||'',photo:showcase?.photos?.[0],capacity:room.capacity||adults+children.length};});
    party=requestParty;query={start,end,guests:adults+children.length};
    $('#rx-rooms').innerHTML=rooms.map((room,i)=>`<article class="romance-product-card" data-rx-room-card="${i}">${room.photo?`<div class="romance-image-wrapper"><img class="romance-image" src="${esc(room.photo.url)}" alt="${esc(room.photo.alt)}" width="800" height="600" loading="lazy"></div>`:''}<div class="rx-card-copy"><h3>${esc(room.title)}</h3><p>${esc(floorNames[room.floor])} · ${room.capacity} pessoas</p><p>${esc(room.description)}</p><p>${money(room.total)} · <span>Período completo</span></p><button class="romance-primary-button" type="button" data-rx-choose="${i}">Escolher este quarto</button></div></article>`).join('');
    $('#rx-search-status').textContent=rooms.length?'Escolha uma hospedagem disponível.':'Não encontramos disponibilidade para essas datas e hóspedes.';
@@ -91,7 +102,7 @@
  document.querySelectorAll('.rx-hero-actions a').forEach(a=>a.onclick=event=>{event.preventDefault();$(a.getAttribute('href')).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});
  if(matchMedia('(max-width:800px)').matches)$('#rx-summary-details').open=false;
  async function start(){
-  try{const response=await fetch('/api/catalog',{cache:'no-store'}),data=await response.json();if(!response.ok)throw Error(data.error||'Não foi possível carregar os quartos.');showcases=data.showcases||[];$('#rx-category').innerHTML='<option value="">Todas as categorias</option>'+showcases.map(s=>`<option value="${esc(s.slug)}">${esc(s.title)}</option>`).join('');}catch(e){$('#rx-search-status').textContent=e.message;}
+  try{const response=await fetch('/api/catalog',{cache:'no-store'}),data=await response.json();if(!response.ok)throw Error(data.error||'Não foi possível carregar os quartos.');showcases=data.showcases||[];filterCategories();}catch(e){$('#rx-search-status').textContent=e.message;}
   try{const result=await api('catalog');catalog=result.products.filter(p=>p.variants?.length);paintProducts();$('#rx-catalog-status').textContent=catalog.length?'':'As opções de decoração estão sendo preparadas. Consulte a pousada para conhecer as possibilidades.';}catch(e){$('#rx-catalog-status').textContent='As opções ainda não estão disponíveis para contratação. Consulte a pousada.';}
   await account();summary();
  }
