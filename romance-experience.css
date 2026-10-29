@@ -96,3 +96,15 @@
 .romance-page #personalizar .romance-image{padding:8px;box-sizing:border-box}
 .romance-page #personalizar .rx-selection-badge{inset-block-start:6px;inset-inline-end:8px;padding:3px 7px;font-size:9px}
 @media(max-width:480px){.romance-page #personalizar .rx-product-options summary{padding:11px 14px}.romance-page #personalizar .rx-product-options summary strong{font-size:18px}.romance-page #personalizar .rx-product-grid .rx-product-photo-empty{padding-inline-start:14px}.romance-page #personalizar .romance-image-wrapper{height:112px}}
+
+/* Native dialog keeps the success receipt centered and keyboard focus contained. */
+.romance-page dialog.rx-receipt{position:fixed;inset:0;width:calc(100% - 32px);max-width:560px;max-height:calc(100dvh - 32px);overflow-y:auto;margin:auto;padding:clamp(26px,5vw,42px);border:1px solid #e5dece;border-radius:20px;background:#faf8f3;color:#1f3c4d;box-shadow:0 24px 80px #1f3c4d33;text-align:center;overscroll-behavior:contain}
+.romance-page dialog.rx-receipt::backdrop{background:#152d3bb3}
+.romance-page dialog.rx-receipt h2{font-size:clamp(30px,5vw,42px);margin-block:12px 20px}
+.romance-page .rx-receipt-close{position:absolute;inset-block-start:8px;inset-inline-end:8px;width:44px;height:44px;border:0;border-radius:50%;background:transparent;color:#1f3c4d;font-size:26px;cursor:pointer}
+.romance-page .rx-receipt .rx-eyebrow{margin-top:12px;font-size:9px}
+.romance-page .rx-receipt-number{font-weight:500}
+.romance-page .rx-receipt-total{font:28px 'Playfair Display',serif}
+.romance-page .rx-receipt-actions{display:grid;gap:12px;margin-top:26px}
+.romance-page .rx-receipt p:not(.rx-eyebrow):not(.rx-receipt-total){font-size:13px;line-height:1.8}
+.romance-page:has(dialog.rx-receipt[open]){overflow:hidden}

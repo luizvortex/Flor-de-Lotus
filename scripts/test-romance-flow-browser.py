@@ -89,6 +89,11 @@ with sync_playwright() as p:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');page.locator('#rx-review').screenshot(path=f'work/romance-premium-review-{width}.png')
  page.set_viewport_size({'width':1440,'height':1000})
  page.locator('#rx-finish').click();expect(page.locator('#rx-receipt')).to_be_visible(timeout=20000);expect(page.locator('#rx-receipt')).to_contain_text('Aguardando confirmação')
+ modal=page.get_by_role('dialog',name='Sua surpresa começou.');expect(modal).to_be_visible();expect(modal.locator('a')).to_have_attribute('href','/minha-conta');expect(modal.locator('.rx-receipt-close')).to_be_focused()
+ page.keyboard.press('Shift+Tab');expect(modal.locator('#rx-new')).to_be_focused();page.keyboard.press('Tab');expect(modal.locator('.rx-receipt-close')).to_be_focused()
+ for width in [360,390,768,1440]:
+  page.set_viewport_size({'width':width,'height':1000});box=modal.bounding_box();assert abs(box['x']+box['width']/2-width/2)<2;assert box['height']<=970;assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');modal.screenshot(path=f'work/romance-receipt-dialog-{width}.png')
+ page.keyboard.press('Escape');expect(modal).not_to_be_visible();expect(page.locator('[data-rx-step="4"]')).to_be_focused()
  assert len(payloads)==1
  payload=payloads[0];assert payload['expected_total']==45000 and payload['photos']==[file_id] and payload['party'][0]['children_ages']==[5]
  retry=context.request.post(base+'/api/romance/book',data=payload);assert retry.status==201,retry.text();assert retry.json()['replayed']

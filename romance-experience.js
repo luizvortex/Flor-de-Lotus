@@ -141,7 +141,15 @@
    else{photos=[];$('#rx-photos').innerHTML='';$('#rx-mine').hidden=true;$('#rx-mine>div').innerHTML='';if($('#rx-orphans'))$('#rx-orphans').innerHTML='';}
   }catch(e){if(e.status===401){authenticated=false;photos=[];$('#rx-photos').innerHTML='';$('#rx-mine>div').innerHTML='';$('#rx-mine').hidden=true;}error(e.message);}summary();
  }
- function receipt(result){finished=true;quote=null;const target=$('#rx-receipt');target.hidden=false;target.innerHTML=`<h2>Sua surpresa começou.</h2><p>Reserva #${esc(result.booking_id)}</p><p>Aguardando confirmação da pousada.</p><p>${money(result.total)}</p><p>Nenhum pagamento foi cobrado. A equipe irá conferir a hospedagem e combinar os próximos passos.</p><a href="/minha-conta" target="_blank" rel="noopener">Acompanhar em Minha conta</a><p><button type="button" class="rx-secondary-button" id="rx-new">Iniciar outra experiência</button></p>`;$('#rx-new').onclick=()=>{try{sessionStorage.removeItem('lotus-romance-request');}catch{}location.reload();};target.focus();summary();}
+ function receipt(result){
+  finished=true;quote=null;const target=$('#rx-receipt');
+  target.innerHTML=`<button type="button" class="rx-receipt-close" aria-label="Fechar" autofocus>×</button><p class="rx-eyebrow">SOLICITAÇÃO ENVIADA</p><h2 id="rx-receipt-title">Sua surpresa começou.</h2><p class="rx-receipt-number">Reserva #${esc(result.booking_id)}</p><p id="rx-receipt-status">Aguardando confirmação da pousada.</p><p class="rx-receipt-total">${money(result.total)}</p><p>Nenhum pagamento foi cobrado. A equipe irá conferir a hospedagem e combinar os próximos passos.</p><div class="rx-receipt-actions"><a class="romance-primary-button" href="/minha-conta">Acompanhar minha reserva</a><button type="button" class="rx-secondary-button" id="rx-new">Iniciar outra experiência</button></div>`;
+  target.querySelector('.rx-receipt-close').onclick=()=>target.close();
+  target.onkeydown=event=>{if(event.key!=='Tab')return;const controls=[...target.querySelectorAll('button:not([disabled]),a[href]')],first=controls[0],last=controls.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}};
+  target.onclose=()=>{document.querySelector('[data-rx-step="4"]').focus({preventScroll:true});};
+  $('#rx-new').onclick=()=>{try{sessionStorage.removeItem('lotus-romance-request');}catch{}location.reload();};
+  summary();if(!target.open)target.showModal();
+ }
  $('#rx-finish').onclick=async()=>{
   if(busy||finished||!selection||!quote)return;
   if(!contactValid()){error('Preencha seu nome e um telefone válido.');$('#rx-contact').scrollIntoView();return;}
