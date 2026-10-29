@@ -187,3 +187,7 @@ A categoria real `lembrancas` é renderizada uma única vez e movida para `#rx-m
 ## Revisão sem histórico de experiências
 
 Removida a seção `#rx-mine` da página romântica, assim como a consulta automática `api('mine')` usada exclusivamente nessa listagem. A revisão apresenta apenas a solicitação atual, seguida de finalizar/conferir valores. Não reintroduzir reservas antigas nesse formulário. O histórico e o diálogo privado da decoração continuam disponíveis em Minha conta, com seus endpoints preservados. Manter a recuperação do rascunho atual e o comprovante de envio.
+
+## Download de fotos na preparação administrativa
+
+Em `admin-romance.js`, cada anexo oferece **Abrir foto** e **Baixar foto**. O download consulta `admin_file?id=...&download=1`; a API preserva a autorização existente de acesso ao arquivo e gera URL assinada de 120 segundos com a opção oficial `download`/nome seguro. Baixar os bytes originais, sem converter imagens ou tornar o bucket público. A opção padrão de visualização continua inalterada. Teste de navegador verifica o download real, nome/extensão, igualdade dos bytes, acesso negado sem cookie administrativo e erro após exclusão autorizada da foto. Sem migração.

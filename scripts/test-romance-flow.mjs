@@ -53,7 +53,7 @@ const mock=createServer(async(req,res)=>{
     if(!row.length)return json(403,{message:'Not authorized'});const signature=randomUUID();signatures.set(signature,{key,expires:Date.now()+120000});return json(200,{signedURL:'/object/sign/'+key+'?token='+signature});
    }
    const signed=signatures.get(new URL(req.url,'http://localhost').searchParams.get('token'));if(!signed||signed.key!==key||signed.expires<Date.now()||!objects.has(key))return json(403,{error:'Expired'});
-   const object=objects.get(key);res.writeHead(200,{'Content-Type':object.type,'Cache-Control':'private,no-store'});res.end(object.bytes);return;
+   const object=objects.get(key),downloadName=new URL(req.url,'http://localhost').searchParams.get('download');res.writeHead(200,{'Content-Type':object.type,'Cache-Control':'private,no-store',...(downloadName?{'Content-Disposition':'attachment; filename="'+downloadName.replace(/[^a-zA-Z0-9.-]/g,'')+'"'}:{})});res.end(object.bytes);return;
   }
   if(path.startsWith('/storage/v1/object/')){
    const key=decodeURIComponent(path.slice('/storage/v1/object/'.length)),bucket=key.split('/')[0],name=key.slice(bucket.length+1);

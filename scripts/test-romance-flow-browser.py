@@ -114,6 +114,14 @@ with sync_playwright() as p:
  owner.goto(base+'/admin',wait_until='networkidle');owner.locator('[data-romance-view="products"]').click();expect(owner.locator('[data-ra-new]')).to_be_visible(timeout=15000);owner.locator('[data-ra-close]').click();owner.locator('[data-tab="bookings"]').click();expect(owner.locator('tr[data-booking-row] strong').filter(has_text='Decoração personalizada')).to_have_count(1)
  owner.locator('[data-open-romance]:not([data-romance-view])').first.click();expect(owner.locator('[data-ra-detail]')).to_have_count(1,timeout=20000);owner.locator('[data-ra-detail]').click();expect(owner.locator('.ra-instructions')).to_have_text(order['instructions'])
  owner.locator('[data-ra-photo]').click();expect(owner.locator('[data-ra-image]')).to_be_visible(timeout=10000)
+ # Download preserves original bytes and uses a fresh, authorized attachment URL.
+ assert context.request.get(base+'/api/romance/admin_file?id='+file_id+'&download=1').status==401
+ assert other.request.get(base+'/api/romance/admin_file?id='+file_id+'&download=1').status==401
+ with owner.expect_download() as download_event:owner.locator('[data-ra-download]').click()
+ downloaded=download_event.value;assert downloaded.suggested_filename=='foto-decoracao-'+file_id+'.png';assert open(downloaded.path(),'rb').read()==buf.getvalue();expect(owner.locator('[data-ra-download]')).to_be_enabled();assert owner.url==base+'/admin'
+ signed=admin.request.get(base+'/api/romance/admin_file?id='+file_id+'&download=1');assert signed.status==200;assert signed.headers['cache-control'].find('no-store')>=0
+ assert signed.json()['expires_in']==120 and 'download=' in signed.json()['url']
+
  owner.locator('[data-ra-status] select').select_option('preparado');owner.locator('[data-ra-status] [type="submit"]').click();expect(owner.locator('[data-ra-message]')).to_contain_text('confirme a hospedagem',timeout=15000)
  owner.locator('[data-ra-close]').click();owner.locator('[data-assign]').first.click();owner.locator('#assignment-dialog [type="submit"]').click();expect(owner.locator('[data-confirm]')).to_have_count(1,timeout=15000);owner.locator('[data-confirm]').click();expect(owner.locator('[data-booking-status="confirmada"] tr[data-booking-row]')).to_have_count(1,timeout=15000)
  owner.locator('[data-open-romance]:not([data-romance-view])').first.click();expect(owner.locator('[data-ra-detail]')).to_have_count(1,timeout=15000);owner.locator('[data-ra-detail]').click();owner.locator('[data-ra-status] select').select_option('em_preparacao');owner.locator('[data-ra-status] [type="submit"]').click();expect(owner.locator('[data-ra-message]')).to_contain_text('Alteração salva',timeout=15000)
@@ -123,6 +131,7 @@ with sync_playwright() as p:
  owner.locator('[data-ra-view="orders"]').click();owner.locator('[data-ra-detail]').click();owner.locator('[data-ra-status] select').select_option('concluido');owner.locator('[data-ra-status] [type="submit"]').click();expect(owner.locator('[data-ra-message]')).to_contain_text('Alteração salva',timeout=15000)
  owner.locator('[data-ra-detail]').click();owner.once('dialog',lambda dialog:dialog.accept());owner.locator('[data-ra-purge]').click();expect(owner.locator('[data-ra-message]')).to_contain_text('Fotografias pessoais excluídas',timeout=15000)
  assert admin.request.get(base+'/api/romance/admin_file?id='+file_id).status==404
+ assert admin.request.get(base+'/api/romance/admin_file?id='+file_id+'&download=1').status==404
  retained=admin.request.get(base+'/api/romance/admin_orders').json()['orders'][0];assert retained['photos']==[] and retained['total']==45000 and retained['items']==details['items']
  assert not errors,errors
  other.close();admin.close();browser.close()

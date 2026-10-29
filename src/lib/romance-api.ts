@@ -53,7 +53,9 @@ export async function romanceApi(request:NextRequest,operation:string){
     const {error}=await client.storage.from('lotus-romance-private').remove([file.path]);if(error)throw new Failure(503,'Não foi possível remover a foto.');
     return reply(await rpc('upload_remove',{id}));
    }
-   const {data:signed,error}=await client.storage.from('lotus-romance-private').createSignedUrl(file.path,120);
+   const download=operation==='admin_file'&&request.nextUrl.searchParams.get('download')==='1';
+   const filename='foto-decoracao-'+String(id).replace(/[^a-zA-Z0-9-]/g,'')+'.'+(file.path.endsWith('.png')?'png':file.path.endsWith('.webp')?'webp':'jpg');
+   const {data:signed,error}=await client.storage.from('lotus-romance-private').createSignedUrl(file.path,120,download?{download:filename}:undefined);
    if(error||!signed)throw new Failure(503,'Não foi possível abrir a fotografia.');
    return reply({url:signed.signedUrl,expires_in:120});
   }
