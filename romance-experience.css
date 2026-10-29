@@ -78,7 +78,6 @@
 .romance-page .rx-catalog-skeleton span{display:block;height:120px;border-radius:18px;background:#f1ede5}
 .romance-page .rx-review-gallery .rx-selected-item{padding:0}
 .romance-page .rx-review-gallery h4{font-size:18px}
-.romance-page .rx-progress button[aria-current=step] .rx-step-icon{box-shadow:0 0 0 2px #c8a96b}
 @media(hover:hover){.romance-page #personalizar .romance-product-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px #1f3c4d0e}}
 @media(max-width:480px){.romance-page .rx-selected-gallery{grid-template-columns:minmax(0,1fr)}.romance-page .rx-selected-item{display:grid;grid-template-columns:100px minmax(0,1fr);align-items:start}.romance-page .rx-selected-item img{aspect-ratio:1;align-self:start}.romance-page .rx-selected-item .rx-product-photo-empty{padding:16px 8px;align-self:stretch;display:grid;place-items:center}.romance-page .rx-selected-item>div:not(.rx-product-photo-empty){padding:14px}.romance-page .rx-selected-item h4{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.romance-page #personalizar .romance-product-card{transition:none;transform:none}}
