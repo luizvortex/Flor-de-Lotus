@@ -3373,7 +3373,7 @@
     "Sua hospedagem": [
       "Your stay",
       "השהייה שלכם",
-      "Tu hospedaje"
+      "Tu estancia"
     ],
     "Suas memórias": [
       "Your memories",
@@ -3504,6 +3504,66 @@
       "Track my booking",
       "מעקב אחר ההזמנה שלי",
       "Seguir mi reserva"
+    ],
+    "Itens solicitados": [
+      "Requested items",
+      "פריטים שהתבקשו",
+      "Artículos solicitados"
+    ],
+    "Carregando os detalhes da sua surpresa…": [
+      "Loading your surprise details…",
+      "טוענים את פרטי ההפתעה שלכם…",
+      "Cargando los detalles de tu sorpresa…"
+    ],
+    "Mensagem e instruções": [
+      "Message and instructions",
+      "הודעה והנחיות",
+      "Mensaje e instrucciones"
+    ],
+    "Fotografias enviadas": [
+      "Uploaded photographs",
+      "תמונות שהועלו",
+      "Fotografías enviadas"
+    ],
+    "Valores e preparação": [
+      "Prices and preparation",
+      "מחירים והכנה",
+      "Valores y preparación"
+    ],
+    "Esta lista registra suas escolhas, não indica que a preparação já foi concluída.": [
+      "This list records your choices; it does not mean preparation is complete.",
+      "רשימה זו מתעדת את הבחירות שלכם ואינה מציינת שההכנה הושלמה.",
+      "Esta lista registra tus elecciones; no indica que la preparación haya terminado."
+    ],
+    "Nenhuma mensagem ou instrução adicional.": [
+      "No additional message or instructions.",
+      "אין הודעה או הנחיות נוספות.",
+      "Sin mensajes ni instrucciones adicionales."
+    ],
+    "Nenhuma fotografia enviada.": [
+      "No photographs uploaded.",
+      "לא הועלו תמונות.",
+      "No se enviaron fotografías."
+    ],
+    "As fotos e instruções são acessíveis somente à sua conta e à equipe responsável pela preparação.": [
+      "Photographs and instructions are accessible only to your account and the team preparing your experience.",
+      "התמונות וההנחיות זמינות רק לחשבון שלכם ולצוות האחראי על ההכנה.",
+      "Las fotos e instrucciones solo son accesibles para tu cuenta y el equipo encargado de la preparación."
+    ],
+    "Status da decoração": [
+      "Decoration status",
+      "מצב הקישוט",
+      "Estado de la decoración"
+    ],
+    "Não foi possível carregar esta fotografia.": [
+      "This photograph could not be loaded.",
+      "לא ניתן לטעון תמונה זו.",
+      "No se pudo cargar esta fotografía."
+    ],
+    "Não encontramos a decoração vinculada a esta reserva.": [
+      "We could not find decoration linked to this booking.",
+      "לא נמצא קישוט המשויך להזמנה זו.",
+      "No encontramos la decoración vinculada a esta reserva."
     ]
   }
 }

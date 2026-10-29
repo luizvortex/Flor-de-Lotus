@@ -163,3 +163,7 @@ O novo documento pede refinamento premium, priorizando catálogo e resumo visual
 ## Publicação automática reafirmada
 
 Após o refinamento do catálogo, o proprietário autorizou publicar esta revisão e fazer push direto ao terminar as próximas alterações verificadas, sem perguntar novamente. Esta autorização substitui as restrições anteriores de deploy registradas neste arquivo e nos documentos da experiência romântica. Preservar commits remotos, não fazer force-push e conferir o resultado da Vercel.
+
+## Decoração personalizada em Minha conta
+
+`conta.js` abre um diálogo privado ao clicar em **Ver decoração personalizada**. Consulta `/api/romance/mine`, seleciona o pedido pelo `booking_id` da reserva e mostra snapshots dos itens/variantes/quantidades/preços, instruções, total e estado operacional. Fotografias vêm de `/api/romance/file?id=...` com URLs temporárias; limpar conteúdo e abortar requisições ao fechar ou trocar de conta. Sem cache local, sem novo endpoint ou migração, sem consulta ao catálogo atual para reconstruir um pedido antigo. A lista indica o que foi solicitado, não preparação concluída. Teste integrado em `scripts/test-romance-flow-browser.py`: abertura, snapshots, fotos privadas, escape/retorno de foco, mobile/desktop e erro/retry.

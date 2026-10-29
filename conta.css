@@ -92,3 +92,24 @@
  .account-page h1 { font-size:36px; }.account-dashboard { grid-template-columns:1fr; gap:28px; }.account-sidebar { position:static; padding:22px; }.account-sidebar .guest-profile-avatar { width:52px; height:52px; }.account-sidebar .guest-logout { width:auto; }.account-sidebar-reserve { margin-top:18px; }
  .account-login-card { padding:28px 22px; margin:24px auto; }
 }
+
+/* Private, read-only decoration checklist linked to the guest's booking. */
+.guest-decoration-open{border:0;background:none;color:inherit;padding:8px 0;min-height:44px;font:inherit;font-size:13px;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.guest-decoration-dialog{position:fixed;inset:0;width:min(680px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;margin:auto;padding:clamp(24px,4vw,36px);border:1px solid #e5dece;border-radius:18px;background:#fffdf9;color:#1f3c4d;box-shadow:0 24px 80px #1f3c4d33;overscroll-behavior:contain;font-family:'Poppins',sans-serif}
+.guest-decoration-dialog::backdrop{background:#152d3bb3}
+.guest-decoration-dialog h2{font:500 clamp(27px,4vw,34px)/1.2 'Playfair Display',serif;margin:12px 30px 16px 0}
+.guest-decoration-dialog h3{font:500 23px/1.3 'Playfair Display',serif;margin:0 0 12px}
+.guest-decoration-dialog p{font-size:12px;line-height:1.8;margin:8px 0;overflow-wrap:anywhere}
+.guest-decoration-dialog section{padding-block:20px;border-top:1px solid #e5dece}
+.guest-decoration-close{position:absolute;inset-block-start:8px;inset-inline-end:8px;border:0;border-radius:50%;width:44px;height:44px;background:transparent;color:inherit;font-size:27px;cursor:pointer}
+.guest-decoration-number{color:#80603f}
+.guest-decoration-items{padding:0;margin:16px 0 0;list-style:none;display:grid;gap:10px}
+.guest-decoration-items li{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:10px;align-items:start;border:1px solid #e5dece;border-radius:12px;padding:14px;font-size:12px;background:#faf8f3}
+.guest-decoration-items li>span{color:#58734f}.guest-decoration-items strong{overflow-wrap:anywhere}.guest-decoration-items p{margin:4px 0}.guest-decoration-items small{font-size:11px}
+.guest-decoration-notes{white-space:pre-wrap;padding:16px;border-inline-start:2px solid #c8a96b;background:#faf8f3}
+.guest-decoration-photos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.guest-decoration-photos figure{margin:0;min-width:0}.guest-decoration-photos img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;border-radius:10px;background:#f5ebdd}.guest-decoration-photos figcaption{font-size:11px;margin-top:6px}
+.guest-decoration-dialog dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;font-size:12px}.guest-decoration-dialog dd{margin:0;text-align:end}.guest-decoration-dialog dt{color:#5d6c72}
+.guest-decoration-dialog :focus-visible{outline:2px solid #a67c3d;outline-offset:3px}.guest-decoration-dialog [data-decoration-retry]{min-height:44px;padding:10px 18px;border:1px solid #a67c3d;border-radius:8px;background:#faf8f3;color:inherit;cursor:pointer}
+body:has(.guest-decoration-dialog[open]){overflow:hidden}
+@media(max-width:480px){.guest-decoration-items li{grid-template-columns:16px minmax(0,1fr)}.guest-decoration-items li>strong{grid-column:2}.guest-decoration-photos{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -102,6 +102,13 @@ with sync_playwright() as p:
  mine=context.request.get(base+'/api/romance/mine').json();assert len(mine['orders'])==1;order=mine['orders'][0]
  assert order['stay_total']==40000 and order['decoration_total']==5000 and order['booking_status']=='pendente'
  assert order['instructions']=='Mensagem especial:\nSurpresa <svg onload=alert(1)> para você\n\nInstruções das fotografias:\n<img src=x onerror=alert(1)> Instrução sintética privada'
+ # My account opens only the matching private order, without leaving the page.
+ account=context.new_page();account.route('https://**',lambda route:route.abort());account.goto(base+'/minha-conta',wait_until='networkidle');account.get_by_role('button',name='Ver decoração personalizada').click()
+ details=account.get_by_role('dialog',name='Decoração personalizada');expect(details).to_be_visible();expect(details.locator('.guest-decoration-items')).to_contain_text('Porta-retrato sintético');expect(details.locator('.guest-decoration-items')).to_contain_text('Uma fotografia');expect(details.locator('.guest-decoration-notes')).to_contain_text('Surpresa <svg onload=alert(1)> para você');expect(details.locator('.guest-decoration-notes svg')).to_have_count(0);expect(details.locator('[data-decoration-photo]')).to_have_attribute('src',re.compile('token='),timeout=15000);expect(details).to_contain_text('450,00');expect(details).to_contain_text('Aguardando confirmação');assert account.url==base+'/minha-conta'
+ for width in [360,390,768,1440]:
+  account.set_viewport_size({'width':width,'height':1000});assert account.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');details.screenshot(path=f'work/account-decoration-checklist-{width}.png')
+ account.keyboard.press('Escape');expect(details).not_to_be_visible();expect(details.locator('img')).to_have_count(0);expect(account.get_by_role('button',name='Ver decoração personalizada')).to_be_focused()
+ account.route('**/api/romance/mine',lambda route:route.fulfill(status=503,json={'error':'Falha sintética'}));account.get_by_role('button',name='Ver decoração personalizada').click();expect(details.get_by_role('button',name='Tentar novamente')).to_be_visible();account.unroute('**/api/romance/mine');details.get_by_role('button',name='Tentar novamente').click();expect(details.locator('.guest-decoration-items')).to_contain_text('Porta-retrato sintético');details.locator('.guest-decoration-close').click();account.close()
  # Another Google identity has no order or photograph access.
  other=browser.new_context(extra_http_headers={'Origin':base});other.add_cookies([{'name':'lotus_guest_auth','value':other_cookie,'url':base}])
  assert other.request.get(base+'/api/romance/mine').json()['orders']==[]
