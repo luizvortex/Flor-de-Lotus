@@ -2,7 +2,7 @@
 
 ## Estado da entrega
 
-Implementação integrada ao repositório, **sem deploy e sem alterações no banco**. Controles, carrinho, camadas, filtros, comparador, miniaturas, modal, mensagem, upload privado e resumo são funcionais. A imagem escolhida pelo usuário foi incorporada após o recebimento do ZIP. A base original e o posicionamento das quatro camadas foram conferidos localmente em desktop e mobile.
+Implementação integrada ao repositório, **validada e autorizada para publicação automática, sem alterações no banco**. Controles, carrinho, camadas, filtros, comparador, miniaturas, modal, mensagem, upload privado e resumo são funcionais. A imagem escolhida pelo usuário foi incorporada após o recebimento do ZIP. A base original e o posicionamento das quatro camadas foram conferidos localmente em desktop e mobile.
 
 O TXT enviado pede uma foto de banco e menciona um mockup que não veio como arquivo. Depois, o proprietário escolheu uma imagem de quarto com cama clara e vista para o mar, exibida na conversa (1920 × 764). Essa referência passa a ser a base pretendida. Posteriormente, o usuário enviou o ZIP com o original: `images/romantic/user-room-reference.jpg`, JPEG de 1920 × 764 e 144.931 bytes. O arquivo foi preservado sem recompressão e com hash registrado em `images/romantic/ASSETS.md`. Não foi feita reprodução por IA nem substituição por outra imagem.
 
@@ -86,6 +86,6 @@ Uma fotografia oficial futura também deve ter seu próprio perfil e coordenadas
 - Cadastro comercial de flores e cartão físico, se a pousada quiser vendê-los.
 - Mockup de layout mencionado no TXT não foi anexado como arquivo; foi seguida a descrição escrita 35/65.
 - Não houve homologação externa de login Google ou HQBeds nem inspeção dessa versão em produção. A imagem fornecida foi validada visualmente no ambiente local.
-- Deploy não autorizado por este pedido: manter esta implementação local até nova instrução explícita, preservando a restrição mais recente de não publicar automaticamente.
+- Em 29/10/2026, após a entrega local, o proprietário instruiu “faça publicações automaticamente”. A publicação desta versão foi autorizada e a preferência passou a ser publicar futuras alterações concluídas após as verificações, salvo instrução específica em contrário.
 
 Verificação final adicional: a falha simulada no carregamento do módulo visual deixa o catálogo, os filtros comerciais e o fluxo de reserva disponíveis; controles de demonstração são omitidos nessa situação. O teste completo foi reexecutado com esse cenário e aprovado. A mensagem também possui uma prévia maior fora da imagem e não é traduzida/interpretrada como HTML quando preenchida pelo hóspede.
