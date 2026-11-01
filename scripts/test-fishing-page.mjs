@@ -1,0 +1,15 @@
+import {readFileSync} from 'node:fs';
+import {stripTypeScriptTypes} from 'node:module';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+function renderer(path,name){const source=readFileSync(path,'utf8').replace(/^import .*;$/gm,'').replace(/^export /gm,'');const context={};vm.createContext(context);vm.runInContext(stripTypeScriptTypes(source),context);return context[name];}
+const home=renderer('src/lib/fishing-content.ts','renderFishing');
+const page=renderer('src/lib/fishing-page.ts','renderFishingPage');
+const content={branding:{title:'Flor de Lótus',logo:'/logo.png',whatsapp:'5573000000000'},fishing:{visible:true,title:'A pescaria termina. As boas histórias continuam.',description:'OLD DESCRIPTION',notice:'OLD NOTICE',highlight:'OLD HIGHLIGHT',buttonLabel:'Consultar hospedagem para pescadores',groupLabel:'Organizar meu grupo',whatsappMessage:'Olá! & consulta',photos:[{url:'/images/real.jpg',alt:'Grupo na pousada'},{url:'/images/boat.jpg',alt:'Barco & peixes'}]}};
+const html=home(content);assert.equal((html.match(/<a /g)||[]).length,1);assert.match(html,/href="\/pescadores" target="_blank" rel="noopener noreferrer"/);assert(!/OLD DESCRIPTION|OLD NOTICE|OLD HIGHLIGHT|Organizar meu grupo|wa\.me/.test(html));assert(html.includes(content.fishing.title));assert.match(html,/Freezer disponível para guardar os peixes/);
+const album=page(content,'https://example.com');assert.equal((album.match(/data-fishing-photo=/g)||[]).length,2);assert.match(album,/Barco &amp; peixes/);assert.match(album,/wa.me\/5573000000000\?text=Ol%C3%A1!%20%26%20consulta/);assert.match(album,/href="\/quartos"/);assert.match(album,/<dialog/);
+const single=page({...content,fishing:{...content.fishing,photos:[content.fishing.photos[0]]}},'https://example.com');assert.equal((single.match(/data-fishing-photo=/g)||[]).length,3);
+const empty=page({...content,fishing:{...content.fishing,photos:[]}},'https://example.com');assert(!empty.includes('data-fishing-photo='));assert(empty.includes('Nosso álbum está sendo preparado.'));
+const hidden=page({...content,fishing:{...content.fishing,visible:false}},'https://example.com');assert(!hidden.includes('/images/real.jpg'));assert.equal(home({...content,fishing:{...content.fishing,visible:false}}),'');
+const hostile=page({...content,fishing:{...content.fishing,title:'<script>alert(1)</script>',photos:[{url:'/images/a.jpg',alt:'" onload="bad'}]}},'https://example.com');assert(!hostile.includes('<script>alert(1)</script>'));assert.match(hostile,/&quot; onload=&quot;bad/);
+console.log('OK: ação única, álbum dinâmico, estado vazio/oculto, contato e escape de conteúdo.');
