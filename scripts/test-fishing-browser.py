@@ -47,15 +47,17 @@ with sync_playwright() as p:
  page.goto(base+'/',wait_until='networkidle');expect(page.locator('#fishing-title')).to_have_text(original['fishing']['title'])
  expect(page.locator('.fishing-gallery img').first).to_have_attribute('alt','Foto sintética para teste 3')
  assert page.locator('#pescadores').evaluate('el=>el.previousElementSibling.id')=='grupos-excursoes'
- href=page.locator('.fishing-cta').get_attribute('href');assert urlparse(href).path=='/'+str(original['branding']['whatsapp'])
- assert parse_qs(urlparse(href).query)['text']==[original['fishing']['whatsappMessage']]
+ expect(page.locator('.fishing-cta')).to_have_attribute('href','/pescadores')
+ expect(page.locator('.fishing-cta')).to_have_attribute('target','_blank')
+ expect(page.locator('.fishing-description,.fishing-notice,.fishing-group-link')).to_have_count(0)
  expect(page.locator('#grupos-excursoes .group-home-link')).to_have_attribute('href','/grupos')
  expect(page.locator('#grupos-excursoes .group-home-link')).to_contain_text('Planejar minha excursão')
  expect(page.locator('#grupos-excursoes .group-organize-link')).to_have_count(0)
  # The link follows the shared WhatsApp configuration and owner-edited message.
  changed=copy.deepcopy(saved['content']);changed['branding']['whatsapp']='5573999999999';changed['fishing']['whatsappMessage']='Consulta de teste & grupo + pesca'
  preview=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'});assert preview.status==200
- html=preview.json()['html'];assert 'wa.me/5573999999999?text=Consulta%20de%20teste%20%26%20grupo%20%2B%20pesca' in html
+ html=preview.json()['html'];assert 'href="/pescadores"' in html
+ album=context.request.get(base+'/pescadores');assert album.status==200 and 'NOSSO ÁLBUM DE PESCARIAS' in album.text()
  # Layout order is independently configurable; published surrounding content is preserved.
  keys=changed['layout']['order'].split();keys.remove('fishing');keys.insert(keys.index('instagram')+1,'fishing');changed['layout']['order']='\n'.join(keys)
  html=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'}).json()['html']

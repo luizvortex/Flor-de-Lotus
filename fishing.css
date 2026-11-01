@@ -77,3 +77,6 @@
 @media(max-width:767px){.home-page main>.group-experiences{padding:48px 20px}.group-experiences-heading{margin-bottom:32px}.group-experiences .group-home-inner,.group-experiences .fishing-inner{grid-template-columns:minmax(0,1fr)}.group-experiences .group-home-photo,.group-experiences .fishing-gallery{grid-column:1;grid-row:1;min-height:0}.group-experiences .group-home-photo{aspect-ratio:4/3}.group-experiences .group-home-copy,.group-experiences .fishing-copy{grid-column:1;grid-row:2;padding:30px 24px}.group-experiences .fishing-gallery figure:only-child{height:auto;aspect-ratio:4/3;min-height:0}.group-experiences .fishing-actions{align-items:stretch}.group-experiences .fishing-group-link{align-self:center}.group-experiences .fishing-section{margin-top:28px}.group-experiences .group-home h2,.group-experiences .fishing-copy h2{font-size:32px}}
 @media(prefers-reduced-motion:reduce){.group-experiences *{transition:none!important}.group-experiences .group-reveal{opacity:1;transform:none}.group-experiences img,.group-experiences a svg{transform:none!important}}
 .group-experiences figcaption::before{content:'↗';float:left;font:22px/1.4 sans-serif;margin-inline-end:12px;color:#d4bd91}
+
+/* One clear action below the freezer benefit. */
+.fishing-actions{margin-top:28px}
