@@ -116,3 +116,30 @@
 .group-page .account-page-header a{color:var(--ink)}
 .group-page .group-box.group-login h2{font:600 15px/1.5 'DM Sans',sans-serif;margin:0 0 4px}
 .group-page .group-login-copy>div{min-width:0}
+
+/* Guest details stay in an accessible editor; the room list remains compact. */
+.group-page.group-room-editing{overflow:hidden}
+.group-page .group-room-compact{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid #d8e3d2}
+.group-page .group-room-party{margin:0;color:var(--ink);font-size:15px;font-weight:500}
+.group-page .group-room-party>span{display:block;font-size:11px;line-height:1.5;font-weight:400;margin-top:4px}
+.group-page .group-room-party .is-complete{color:#28584b}
+.group-page .group-room-party .is-pending{color:#806135}
+.group-page .group-room-compact .group-btn{padding:11px 14px;font-size:11px;flex-shrink:0}
+.group-page .group-room-editor{width:min(760px,calc(100% - 32px));max-width:calc(100% - 32px);max-height:calc(100dvh - 40px);border:1px solid #d8dfd3;border-radius:12px;padding:0;background:#f7f8f2;color:var(--ink);box-shadow:0 24px 100px #14291f50;overflow-y:auto;overscroll-behavior:contain}
+.group-page .group-room-editor::backdrop{background:#14291f99;backdrop-filter:blur(3px)}
+.group-page .group-editor-heading{position:sticky;top:0;z-index:2;display:flex;align-items:start;justify-content:space-between;gap:18px;padding:24px 28px;background:#f7f8f2;border-bottom:1px solid #dde4d6}
+.group-page .group-editor-heading .group-eyebrow{font-size:9px;margin:0 0 8px;letter-spacing:.14em}
+.group-page .group-editor-heading h2{font:500 29px/1.2 'Playfair Display',Georgia,serif;margin:0;color:var(--ink)}
+.group-page #group-editor-meta{font-size:12px;margin:8px 0 0;color:#586c5d}
+.group-page .group-editor-close{display:grid;place-items:center;flex:none;width:44px;height:44px;background:#fff;border:1px solid #d4ddce;border-radius:50%;font-size:26px;color:var(--green);cursor:pointer}
+.group-page #group-room-editor-form{padding:0 28px 24px}
+.group-page .group-room-editor .group-room-count{border:0;max-width:320px;padding-top:22px;margin:0 0 20px}
+.group-page .group-room-editor .group-people{margin:0;gap:12px}
+.group-page .group-room-editor .group-person{grid-template-columns:minmax(0,1fr) 140px 120px;align-items:end;padding:16px;gap:12px}
+.group-page .group-room-editor .group-person label:first-child{grid-column:auto}
+.group-page .group-room-editor .group-person:has(label:nth-child(2):last-child){grid-template-columns:minmax(0,1fr) 140px}
+.group-page #group-editor-note{font-size:12px;color:#596a59;line-height:1.6;margin:18px 0}
+.group-page .group-editor-error{background:#fff0e8;color:#853e2e;border:1px solid #e8c9bc;border-radius:6px;padding:12px;font-size:12px}
+.group-page .group-editor-actions{display:flex;justify-content:space-between;gap:16px;padding-top:18px;border-top:1px solid #d8e1d2}
+@media(max-width:1000px){.group-page .group-room-compact{align-items:stretch;flex-direction:column;gap:12px}.group-page .group-room-compact .group-btn{align-self:flex-start}}
+@media(max-width:600px){.group-page .group-room-compact{flex-direction:row;align-items:center;gap:12px}.group-page .group-room-compact .group-btn{align-self:center;padding:10px;font-size:10px}.group-page .group-room-party{font-size:14px}.group-page .group-room-party>span{font-size:10px}.group-page .group-room-editor{max-height:calc(100dvh - 24px);width:calc(100% - 24px);max-width:calc(100% - 24px)}.group-page .group-editor-heading{padding:20px}.group-page #group-room-editor-form{padding:0 16px 18px}.group-page .group-room-editor .group-person,.group-page .group-room-editor .group-person:has(label:nth-child(2):last-child){grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px}.group-page .group-room-editor .group-person label:first-child{grid-column:1/-1}.group-page .group-editor-actions{gap:10px}.group-page .group-editor-actions .group-btn{flex:1;font-size:11px;padding:12px 8px}}

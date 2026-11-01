@@ -2,6 +2,7 @@
 (() => {
  const $=selector=>document.querySelector(selector),{esc,html:roster,date,states}=window.excursionRoster;
  const form=$('#group-form'),roomState=new Map();let rooms=[],quote=null,draftVersion=0,availabilitySequence=0,availabilityKey='',user=null,sessionSequence=0,mineSequence=0,sending=false,requestId=null;
+ const editor=$('#group-room-editor'),editorForm=$('#group-room-editor-form');let editingRoomId=null;
  const money=value=>(Number(value)/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bahia',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const phone=$('#group-phone');
@@ -24,9 +25,43 @@
  function selectedRooms(){return rooms.filter(room=>roomState.get(room.id)?.selected);}
  function count(){const selected=selectedRooms();$('#group-counter').textContent=`${selected.reduce((sum,room)=>sum+roomState.get(room.id).count,0)} pessoas · ${selected.length} quartos`;}
  function peopleHTML(room,state){return Array.from({length:state.count},(_,index)=>{const person=state.people[index]||{name:'',age:null};state.people[index]=person;return `<div class="group-person"><label>Nome completo · pessoa ${index+1}<input data-person-name="${room.id}" data-person-index="${index}" value="${esc(person.name)}" maxlength="120" required autocomplete="off"></label><label>Tipo<select data-person-type="${room.id}" data-person-index="${index}"><option value="adult" ${person.age===null?'selected':''}>Adulto</option><option value="child" ${person.age!==null?'selected':''}>Criança</option></select></label>${person.age!==null?`<label>Idade na entrada<select data-person-age="${room.id}" data-person-index="${index}" required><option value="" disabled ${person.age===''?'selected':''}>Selecione</option>${Array.from({length:18},(_,age)=>`<option value="${age}" ${person.age===age?'selected':''}>${age} anos</option>`).join('')}</select></label>`:''}</div>`;}).join('');}
- function paintRooms(){
-  $('#group-rooms').innerHTML=['terreo','superior'].map(floor=>{const rows=rooms.filter(room=>room.floor===floor);return `<div class="group-floor"><h3>${floor==='terreo'?'Térreo':'Piso superior'}</h3>${rows.length?`<div class="group-room-grid">${rows.map(room=>{const state=roomState.get(room.id);return `<article class="group-room ${state.selected?'is-selected':''} ${!room.available?'is-unavailable':''}"><label class="group-room-choice"><input type="checkbox" data-room-select="${room.id}" ${state.selected?'checked':''} ${!room.available&&!state.selected?'disabled':''}>Quarto ${esc(room.name)}</label><p class="group-room-meta"><span>${floor==='terreo'?'Térreo':'Piso superior'} · Até ${room.capacity} pessoas</span><span class="group-room-status ${room.available?'available':'unavailable'}">${room.available?'Disponível':'Indisponível no período'}</span></p>${state.selected?`<label class="group-room-count">Pessoas neste quarto<input type="number" min="1" max="${room.capacity}" value="${state.count}" data-room-count="${room.id}" required></label><div class="group-people">${peopleHTML(room,state)}</div>`:''}</article>`;}).join('')}</div>`:'<p>Nenhum quarto ativo neste andar.</p>'}</div>`;}).join('');count();
+ function ensurePeople(state){for(let i=0;i<state.count;i++)state.people[i]??={name:'',age:null};}
+ function roomComplete(room,state){
+  const people=state.people.slice(0,state.count);
+  return Number.isInteger(state.count)&&state.count>=1&&state.count<=room.capacity&&people.length===state.count&&people.every(p=>p.name.trim()&&(p.age===null||Number.isInteger(p.age)&&p.age>=0&&p.age<=17))&&people.some(p=>p.age===null);
  }
+ function paintRooms(){
+  $('#group-rooms').innerHTML=['terreo','superior'].map(floor=>{const rows=rooms.filter(room=>room.floor===floor);return `<div class="group-floor"><h3>${floor==='terreo'?'Térreo':'Piso superior'}</h3>${rows.length?`<div class="group-room-grid">${rows.map(room=>{const state=roomState.get(room.id);if(state.selected)ensurePeople(state);const complete=roomComplete(room,state);return `<article class="group-room ${state.selected?'is-selected':''} ${!room.available?'is-unavailable':''}"><label class="group-room-choice"><input type="checkbox" data-room-select="${room.id}" ${state.selected?'checked':''} ${!room.available&&!state.selected?'disabled':''}>Quarto ${esc(room.name)}</label><p class="group-room-meta"><span>${floor==='terreo'?'Térreo':'Piso superior'} · Até ${room.capacity} pessoas</span><span class="group-room-status ${room.available?'available':'unavailable'}">${room.available?'Disponível':'Indisponível no período'}</span></p>${state.selected?`<div class="group-room-compact"><p class="group-room-party">${state.count} ${state.count===1?'pessoa':'pessoas'}<span class="${complete?'is-complete':'is-pending'}">${complete?'Hóspedes preenchidos':'Dados dos hóspedes pendentes'}</span></p><button type="button" class="group-btn secondary" data-room-edit="${room.id}" aria-haspopup="dialog" aria-controls="group-room-editor">${complete?'Editar hóspedes':'Preencher hóspedes'}</button></div>`:''}</article>`;}).join('')}</div>`:'<p>Nenhum quarto ativo neste andar.</p>'}</div>`;}).join('');count();
+ }
+ function paintEditor(){
+  const room=rooms.find(r=>r.id===editingRoomId);if(!room)return;const state=roomState.get(room.id);ensurePeople(state);
+  $('#group-editor-title').textContent=`Quarto ${room.name}`;
+  $('#group-editor-meta').textContent=`${room.floor==='terreo'?'Térreo':'Piso superior'} · Até ${room.capacity} pessoas`;
+  $('#group-editor-fields').innerHTML=`<label class="group-room-count">Pessoas neste quarto<input type="number" min="1" max="${room.capacity}" value="${state.count}" data-room-count="${room.id}" required autofocus></label><div class="group-people">${peopleHTML(room,state)}</div>`;
+  $('#group-editor-error').hidden=true;
+ }
+ function openRoom(id){
+  editingRoomId=id;paintEditor();if(!editor.open){editor.showModal();document.body.classList.add('group-room-editing');}
+ }
+ $('#group-rooms').addEventListener('click',event=>{const button=event.target.closest('[data-room-edit]');if(button)openRoom(Number(button.dataset.roomEdit));});
+ editor.querySelectorAll('[data-room-editor-close]').forEach(button=>button.addEventListener('click',()=>editor.close()));
+ editor.addEventListener('close',()=>{document.body.classList.remove('group-room-editing');paintRooms();$(`[data-room-edit="${editingRoomId}"]`)?.focus({preventScroll:true});$('#group-editor-fields').innerHTML='';editingRoomId=null;});
+ editorForm.addEventListener('input',event=>{
+  const input=event.target;if(input.dataset.personName)roomState.get(editingRoomId).people[Number(input.dataset.personIndex)].name=input.value;
+  invalidate();$('#group-editor-error').hidden=true;
+ });
+ editorForm.addEventListener('change',event=>{
+  const input=event.target,state=roomState.get(editingRoomId);invalidate();
+  if(input.dataset.roomCount){if(!input.reportValidity())return;state.count=Number(input.value);paintEditor();editor.querySelector('[data-room-count]').focus();}
+  if(input.dataset.personType){const index=Number(input.dataset.personIndex);state.people[index].age=input.value==='adult'?null:'';paintEditor();editor.querySelector(`[${input.value==='child'?'data-person-age':'data-person-type'}][data-person-index="${index}"]`)?.focus();}
+  if(input.dataset.personAge)state.people[Number(input.dataset.personIndex)].age=input.value===''?'':Number(input.value);
+ });
+ editorForm.addEventListener('submit',event=>{
+  event.preventDefault();if(!editorForm.reportValidity())return;
+  const room=rooms.find(r=>r.id===editingRoomId),state=roomState.get(editingRoomId);
+  if(!roomComplete(room,state)){$('#group-editor-error').textContent='Preencha os nomes, as idades das crianças e inclua pelo menos um adulto no quarto.';$('#group-editor-error').hidden=false;editor.querySelector('[data-person-type]')?.focus();return;}
+  editor.close();
+ });
  async function availability(){
   const start=$('#group-start'),end=$('#group-end');if(!start.reportValidity()||!end.reportValidity())return;
   if(end.value<=start.value){message('A saída deve ser depois da entrada.',true);return;}
@@ -44,15 +79,14 @@
  });
  form.addEventListener('change',event=>{
   const input=event.target;invalidate();
-  if(input.dataset.roomSelect){roomState.get(Number(input.dataset.roomSelect)).selected=input.checked;paintRooms();}
-  if(input.dataset.roomCount){const room=rooms.find(r=>r.id===Number(input.dataset.roomCount));if(!input.reportValidity())return;roomState.get(room.id).count=Number(input.value);paintRooms();}
-  if(input.dataset.personType){const state=roomState.get(Number(input.dataset.personType));state.people[Number(input.dataset.personIndex)].age=input.value==='adult'?null:'';paintRooms();}
-  if(input.dataset.personAge){roomState.get(Number(input.dataset.personAge)).people[Number(input.dataset.personIndex)].age=input.value===''?'':Number(input.value);}
+  if(input.dataset.roomSelect){const id=Number(input.dataset.roomSelect);roomState.get(id).selected=input.checked;paintRooms();if(input.checked)openRoom(id);}
   if(input.id==='group-start'&&input.value){const next=new Date(input.value+'T12:00:00Z');next.setUTCDate(next.getUTCDate()+1);$('#group-end').min=next.toISOString().slice(0,10);}
  });
  $('#group-availability').onclick=availability;form.addEventListener('lotus:dates-applied',availability);
  form.onsubmit=async event=>{
   event.preventDefault();if(!form.reportValidity())return;
+  const incomplete=selectedRooms().find(room=>!roomComplete(room,roomState.get(room.id)));
+  if(incomplete){message('Complete os hóspedes dos quartos selecionados antes de conferir o orçamento.',true);openRoom(incomplete.id);editorForm.reportValidity();return;}
   const data=payload();if(!data.rooms.length){message('Selecione pelo menos um quarto.',true);return;}
   if(data.rooms.length>19){message('Selecione até 19 quartos.',true);return;}
   if(availabilityKey!==data.start+'|'+data.end){message('Atualize a disponibilidade após mudar as datas.',true);return;}
