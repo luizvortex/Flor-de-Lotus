@@ -6,7 +6,7 @@ source=Path(__file__).with_name('test-category-booking-browser.py').read_text().
 ns={'__file__':str(Path(__file__).with_name('test-category-booking-browser.py'))};exec(source,ns)
 rooms=[dict(id=i,name=str(i),floor='terreo' if i<=7 or i in [16,17,18,19] else 'superior',capacity=5 if i in [15,19] else 2 if i in [16,17] else 4 if i==18 else 3,available=True) for i in range(1,20)]
 fail_rooms=False
-groups=[];submitted=[];session={'user':{'name':'Synthetic organizer'},'google_enabled':True};original=ns['route']
+quoted=[];groups=[];submitted=[];session={'user':{'name':'Synthetic organizer'},'google_enabled':True};original=ns['route']
 def route(r):
  path=urlparse(r.request.url).path
  if path=='/grupos':return r.fulfill(body=(ns['ROOT']/'grupos.html').read_text().replace('</head>','<link rel="stylesheet" href="/public-header.css"></head>'),content_type='text/html')
@@ -15,7 +15,7 @@ def route(r):
   if fail_rooms:return r.fulfill(status=503,json={'error':'Consulta temporariamente indisponível.'})
   return r.fulfill(json={'rooms':rooms})
  if path=='/api/excursions/quote':
-  data=r.request.post_data_json;return r.fulfill(json={'rooms':[dict(x,guests=len(x['people'])) for x in data['rooms']],'nights':1,'total':sum(sum(p['age'] is None or p['age']>5 for p in x['people']) for x in data['rooms'])*10000})
+  data=r.request.post_data_json;quoted.append(data);return r.fulfill(json={'rooms':[dict(x,guests=len(x['people'])) for x in data['rooms']],'nights':1,'total':sum(sum(p['age'] is None or p['age']>5 for p in x['people']) for x in data['rooms'])*10000})
  if path=='/api/excursions' and r.request.method=='POST':
   data=r.request.post_data_json;submitted.append(data);g=dict(id=data['request_id'],name=data['name'],guest=data['guest'],phone=data['phone'],start=data['start'],end=data['end'],status='pendente',guest_count=sum(len(x['people']) for x in data['rooms']),room_count=len(data['rooms']),rooms=[dict(x,room_name=str(x['room_id']),floor=rooms[x['room_id']-1]['floor'],booking_id=i+900,status='pendente',room_assigned=True) for i,x in enumerate(data['rooms'])]);groups.append(g);return r.fulfill(status=201,json=g)
  if path in ['/api/excursions/mine','/api/admin-excursions']:return r.fulfill(json={'groups':groups})
@@ -64,7 +64,25 @@ with ns['sync_playwright']() as p:
    assert page.locator(control).bounding_box()['height']>=48,control
   if width in [390,1440]:
    page.evaluate('scrollTo(0,0)');page.screenshot(path=str(ns['ROOT']/f'work/groups-redesign-{width}.png'))
-   page.locator('.group-room.is-selected').first.screenshot(path=str(ns['ROOT']/f'work/groups-room-{width}.png'))
+   page.locator('#group-room-editor').screenshot(path=str(ns['ROOT']/f'work/groups-editor-{width}.png'))
+ # Close with Escape: fields stay in memory, cards remain compact, focus returns.
+ page.locator('[data-person-name="1"][data-person-index="0"]').fill('Preserved draft')
+ page.keyboard.press('Escape');assert page.locator('#group-room-editor').is_hidden()
+ page.wait_for_function('document.activeElement?.dataset.roomEdit==="1"')
+ assert page.locator('.group-room.is-selected').first.bounding_box()['height']<300
+ assert page.locator('#group-rooms [data-person-name]').count()==0
+ page.locator('[data-room-edit="1"]').click();assert page.locator('[data-person-name="1"][data-person-index="0"]').input_value()=='Preserved draft'
+ assert page.locator('[data-person-type="1"][data-person-index="1"]').input_value()=='child'
+ page.locator('[data-room-count="1"]').fill('4');page.locator('#group-room-editor-form [type="submit"]').click();assert page.locator('#group-room-editor').is_visible()
+ page.locator('[data-room-count="1"]').fill('2');page.locator('[data-room-count="1"]').press('Tab')
+ page.locator('[data-person-name="1"][data-person-index="1"]').fill('Child draft')
+ page.locator('[data-person-type="1"][data-person-index="0"]').select_option('child')
+ page.locator('[data-person-age="1"][data-person-index="0"]').select_option('6')
+ page.locator('[data-person-age="1"][data-person-index="1"]').select_option('5')
+ page.locator('#group-room-editor-form [type="submit"]').click();page.locator('#group-editor-error:not([hidden])').wait_for()
+ page.locator('[data-person-type="1"][data-person-index="0"]').select_option('adult')
+ page.locator('[data-person-type="1"][data-person-index="1"]').select_option('adult')
+ page.locator('#group-room-editor-form [type="submit"]').click();page.locator('#group-room-editor').wait_for(state='hidden')
  page.locator('[data-room-select="1"]').uncheck()
  fail_rooms=True;page.locator('#group-availability').click();page.locator('#group-message.error').filter(has_text='temporariamente indisponível').wait_for()
  assert page.locator('#group-availability').is_enabled()
@@ -84,10 +102,18 @@ with ns['sync_playwright']() as p:
   if not count:break
   page.locator(f'[data-room-select="{room["id"]}"]').check();field=page.locator(f'[data-room-count="{room["id"]}"]');field.fill(str(count));field.press('Tab')
   for index in range(count):page.locator(f'[data-person-name="{room["id"]}"][data-person-index="{index}"]').fill(f'Person {room["id"]} {index}')
+  page.locator('#group-room-editor-form [type="submit"]').click();page.locator('#group-room-editor').wait_for(state='hidden')
   total+=count
  assert total==60
+ assert page.locator('.group-room.is-selected').count()==19
+ for card in page.locator('.group-room.is-selected').all():assert card.bounding_box()['height']<300
+ page.locator('#group-step-rooms').screenshot(path=str(ns['ROOT']/'work/groups-compact.png'))
  # A five-year-old still occupies one of the 60 places, while the quote excludes that child.
- page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child');page.locator('[data-person-age="1"][data-person-index="1"]').select_option('5')
+ page.locator('[data-room-edit="1"]').click()
+ page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child')
+ page.keyboard.press('Escape');before=len(quoted);page.locator('#group-quote').click();page.locator('#group-room-editor').wait_for(state='visible');assert len(quoted)==before
+ page.locator('[data-person-age="1"][data-person-index="1"]').select_option('5')
+ page.locator('#group-room-editor-form [type="submit"]').click();page.locator('#group-room-editor').wait_for(state='hidden')
  assert '60 pessoas' in page.locator('#group-counter').inner_text();page.locator('#group-quote').click();page.locator('#group-submit').wait_for(state='visible');assert '5.900,00' in page.locator('#group-quote-summary').inner_text()
  page.locator('.group-quote-metrics').wait_for();assert page.locator('.group-quote-metrics dd').all_text_contents()==['1','60','19']
  page.locator('.group-review').screenshot(path=str(ns['ROOT']/'work/groups-review.png'))
@@ -95,7 +121,7 @@ with ns['sync_playwright']() as p:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
   if width==390:page.locator('.group-review').screenshot(path=str(ns['ROOT']/'work/groups-review-mobile.png'))
  # Changing a name invalidates the previous quote.
- page.locator('[data-person-name="1"][data-person-index="0"]').fill('<img src=x onerror=alert(1)>');assert page.locator('#group-submit').is_hidden();page.locator('#group-quote').click();page.locator('#group-submit').click();page.locator('#group-form').wait_for(state='hidden');assert len(submitted)==1 and len(submitted[0]['rooms'])==19
+ page.locator('[data-room-edit="1"]').click();page.locator('[data-person-name="1"][data-person-index="0"]').fill('<img src=x onerror=alert(1)>');assert page.locator('#group-submit').is_hidden();page.locator('#group-room-editor-form [type="submit"]').click();page.locator('#group-room-editor').wait_for(state='hidden');page.locator('#group-quote').click();page.locator('#group-submit').click();page.locator('#group-form').wait_for(state='hidden');assert len(submitted)==1 and len(submitted[0]['rooms'])==19
  assert submitted[0]['rooms'][0]['people'][1]['age']==5 and submitted[0]['expected_total']==590000
  assert any(rooms[x['room_id']-1]['floor']=='superior' for x in submitted[0]['rooms'])
  assert page.locator('[data-group-print]').count()==0
