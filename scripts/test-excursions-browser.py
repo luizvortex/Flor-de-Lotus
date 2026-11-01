@@ -5,12 +5,15 @@ import copy
 source=Path(__file__).with_name('test-category-booking-browser.py').read_text().split('with sync_playwright() as p:')[0]
 ns={'__file__':str(Path(__file__).with_name('test-category-booking-browser.py'))};exec(source,ns)
 rooms=[dict(id=i,name=str(i),floor='terreo' if i<=7 or i in [16,17,18,19] else 'superior',capacity=5 if i in [15,19] else 2 if i in [16,17] else 4 if i==18 else 3,available=True) for i in range(1,20)]
+fail_rooms=False
 groups=[];submitted=[];session={'user':{'name':'Synthetic organizer'},'google_enabled':True};original=ns['route']
 def route(r):
  path=urlparse(r.request.url).path
- if path=='/grupos':return r.fulfill(body=(ns['ROOT']/'grupos.html').read_text(),content_type='text/html')
+ if path=='/grupos':return r.fulfill(body=(ns['ROOT']/'grupos.html').read_text().replace('</head>','<link rel="stylesheet" href="/public-header.css"></head>'),content_type='text/html')
  if path=='/api/guest/session':return r.fulfill(json=session)
- if path=='/api/excursions/rooms':return r.fulfill(json={'rooms':rooms})
+ if path=='/api/excursions/rooms':
+  if fail_rooms:return r.fulfill(status=503,json={'error':'Consulta temporariamente indisponível.'})
+  return r.fulfill(json={'rooms':rooms})
  if path=='/api/excursions/quote':
   data=r.request.post_data_json;return r.fulfill(json={'rooms':[dict(x,guests=len(x['people'])) for x in data['rooms']],'nights':1,'total':sum(sum(p['age'] is None or p['age']>5 for p in x['people']) for x in data['rooms'])*10000})
  if path=='/api/excursions' and r.request.method=='POST':
@@ -28,8 +31,10 @@ def route(r):
  return original(r)
 with ns['sync_playwright']() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--unsafely-treat-insecure-origin-as-secure=http://qa.test']);context=browser.new_context(viewport={'width':1440,'height':1000});context.route('**/*',route);page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+ rooms[-1]['available']=False
  page.goto('http://qa.test/grupos');page.locator('[data-room-select="18"]').wait_for();assert page.locator('[data-room-select]').count()==19
  assert page.locator('#group-refresh-session').is_hidden() and page.locator('#group-login-form').is_hidden()
+ assert page.locator('[data-room-select="19"]').is_disabled();assert 'Indisponível' in page.locator('.group-room.is-unavailable').inner_text()
  assert page.locator('#group-account').is_visible()
  assert page.locator('#group-organizer-name').inner_text()=='Synthetic organizer'
  page.locator('#dates-trigger').click();page.locator('#dates-picker').wait_for(state='visible')
@@ -42,12 +47,28 @@ with ns['sync_playwright']() as p:
  page.locator('[data-day="'+last+'"]').first.click();assert page.locator('#apply-dates').inner_text()=='Buscar 3 noites'
  page.locator('#apply-dates').click();assert page.locator('#dates-picker').is_hidden()
  assert page.locator('#group-start').input_value()==first and page.locator('#group-end').input_value()==last
- assert 'Disponibilidade atualizada' in page.locator('#group-message').inner_text()
- for width in [320,390,768,1440]:
+ page.locator('#group-message').filter(has_text='Disponibilidade atualizada').wait_for()
+ for width in [360,390,430,768,1024,1440]:
   page.set_viewport_size({'width':width,'height':1000});page.locator('#dates-trigger').click()
   assert page.locator('#dates-picker').is_visible()
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),str(width)
+  bounds=page.locator('#dates-picker').bounding_box();assert bounds['x']>=0 and bounds['x']+bounds['width']<=width, (width,bounds)
   page.keyboard.press('Escape');assert page.locator('#dates-picker').is_hidden()
+ # Visual regression coverage with a selected room and a child; no real requests.
+ page.locator('[data-room-select="1"]').check();field=page.locator('[data-room-count="1"]');field.fill('2');field.press('Tab')
+ page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child')
+ for width in [360,390,430,768,1024,1440]:
+  page.set_viewport_size({'width':width,'height':1000})
+  assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
+  for control in ['#group-name','#group-phone','[data-person-name="1"][data-person-index="0"]','[data-person-age="1"]']:
+   assert page.locator(control).bounding_box()['height']>=48,control
+  if width in [390,1440]:
+   page.evaluate('scrollTo(0,0)');page.screenshot(path=str(ns['ROOT']/f'work/groups-redesign-{width}.png'))
+   page.locator('.group-room.is-selected').first.screenshot(path=str(ns['ROOT']/f'work/groups-room-{width}.png'))
+ page.locator('[data-room-select="1"]').uncheck()
+ fail_rooms=True;page.locator('#group-availability').click();page.locator('#group-message.error').filter(has_text='temporariamente indisponível').wait_for()
+ assert page.locator('#group-availability').is_enabled()
+ fail_rooms=False;rooms[-1]['available']=True;page.locator('#group-availability').click();page.locator('[data-room-select="19"]:enabled').wait_for()
  phone=page.locator('#group-phone')
  phone.fill('safdsdj');assert phone.input_value()=='' and not phone.evaluate('(el)=>el.checkValidity()')
  phone.fill('739123');assert not phone.evaluate('(el)=>el.checkValidity()')
@@ -68,6 +89,11 @@ with ns['sync_playwright']() as p:
  # A five-year-old still occupies one of the 60 places, while the quote excludes that child.
  page.locator('[data-person-type="1"][data-person-index="1"]').select_option('child');page.locator('[data-person-age="1"][data-person-index="1"]').select_option('5')
  assert '60 pessoas' in page.locator('#group-counter').inner_text();page.locator('#group-quote').click();page.locator('#group-submit').wait_for(state='visible');assert '5.900,00' in page.locator('#group-quote-summary').inner_text()
+ page.locator('.group-quote-metrics').wait_for();assert page.locator('.group-quote-metrics dd').all_text_contents()==['1','60','19']
+ page.locator('.group-review').screenshot(path=str(ns['ROOT']/'work/groups-review.png'))
+ for width in [360,390,430,768,1024,1440]:
+  page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
+  if width==390:page.locator('.group-review').screenshot(path=str(ns['ROOT']/'work/groups-review-mobile.png'))
  # Changing a name invalidates the previous quote.
  page.locator('[data-person-name="1"][data-person-index="0"]').fill('<img src=x onerror=alert(1)>');assert page.locator('#group-submit').is_hidden();page.locator('#group-quote').click();page.locator('#group-submit').click();page.locator('#group-form').wait_for(state='hidden');assert len(submitted)==1 and len(submitted[0]['rooms'])==19
  assert submitted[0]['rooms'][0]['people'][1]['age']==5 and submitted[0]['expected_total']==590000
