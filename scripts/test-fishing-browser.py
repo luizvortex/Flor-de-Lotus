@@ -49,9 +49,9 @@ with sync_playwright() as p:
  assert page.locator('#pescadores').evaluate('el=>el.previousElementSibling.id')=='grupos-excursoes'
  href=page.locator('.fishing-cta').get_attribute('href');assert urlparse(href).path=='/'+str(original['branding']['whatsapp'])
  assert parse_qs(urlparse(href).query)['text']==[original['fishing']['whatsappMessage']]
- group_href=page.locator('[data-group-whatsapp]').get_attribute('href')
- assert urlparse(group_href).path=='/'+str(original['branding']['whatsapp'])
- assert 'organizar uma excursão' in parse_qs(urlparse(group_href).query)['text'][0]
+ expect(page.locator('#grupos-excursoes .group-home-link')).to_have_attribute('href','/grupos')
+ expect(page.locator('#grupos-excursoes .group-home-link')).to_contain_text('Planejar minha excursão')
+ expect(page.locator('#grupos-excursoes .group-organize-link')).to_have_count(0)
  # The link follows the shared WhatsApp configuration and owner-edited message.
  changed=copy.deepcopy(saved['content']);changed['branding']['whatsapp']='5573999999999';changed['fishing']['whatsappMessage']='Consulta de teste & grupo + pesca'
  preview=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'});assert preview.status==200
