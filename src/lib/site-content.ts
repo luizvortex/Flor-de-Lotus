@@ -80,7 +80,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('#area-de-lazer').after(renderInstagram(c));
  const fishing=renderFishing(c);
  if(fishing){$('head').append('<link rel="stylesheet" href="/fishing.css">');$('#quartos').after(fishing);}
- text('.showcase-heading h2',c.rooms.title);text('.showcase-heading p',c.rooms.description);text('.showcase-more .showcase-rates',c.rooms.moreLabel);
+ text('.showcase-heading h2',c.rooms.title);text('.showcase-heading p',c.rooms.description);text('.showcase-copy > .showcase-rates',c.rooms.ratesLabel);
  const leisure=c.leisure;text('#leisure-title',leisure.title);text('.leisure-heading .leisure-eyebrow',leisure.eyebrow);text('.leisure-heading > p:last-child',leisure.description);text('.leisure-hint',leisure.hint);
  const close='<button type="button" data-leisure-close aria-label="Fechar detalhes"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button>';
  $('.leisure-choices').html((leisure.items as Item[]).map(i=>`<button type="button" class="leisure-choice" data-leisure="${esc(i.id)}" aria-expanded="false" aria-controls="leisure-panel-${esc(i.id)}"><img class="leisure-preview" src="${esc(i.image)}" alt="${esc(i.alt)}" width="600" height="650" loading="lazy"><span class="leisure-name">${esc(i.title)}</span><span class="leisure-indicator" aria-hidden="true">+</span></button>`).join(''));
