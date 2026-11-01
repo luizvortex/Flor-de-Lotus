@@ -1,6 +1,15 @@
 {
   "version": 1,
   "phrases": {
+    "Boas viagens começam com boas companhias.": ["Good trips begin with good company.", "טיולים טובים מתחילים בחברה טובה."],
+    "Organize sua excursão, escolha as acomodações e prepare dias especiais em Itacaré.": ["Plan your group trip, choose your rooms and look forward to special days in Itacaré.", "תכננו את הטיול הקבוצתי, בחרו חדרים והתכוננו לימים מיוחדים באיטקרה."],
+    "Datas e responsável": ["Dates and organizer", "תאריכים ומארגן"],
+    "Escolha dos quartos": ["Choose your rooms", "בחירת חדרים"],
+    "Conferir e solicitar": ["Review and request", "בדיקה ושליחת בקשה"],
+    "Distribuição dos hóspedes": ["Guest distribution", "חלוקת האורחים"],
+    "O primeiro passo para reunir sua turma.": ["The first step to bringing your group together.", "הצעד הראשון למפגש של הקבוצה שלכם."],
+    "Revise os detalhes da viagem do seu grupo.": ["Review the details of your group trip.", "בדקו את פרטי הנסיעה של הקבוצה שלכם."],
+    "Noites": ["Nights", "לילות"],
     "Freezer disponível para guardar os peixes durante a estadia.": ["Freezer available to store fish during your stay.", "מקפיא זמין לאחסון הדגים במהלך השהייה."],
     "Ir para o conteúdo": ["Skip to content", "דלגו לתוכן"],
     "Consultar hospedagem": ["Check accommodation", "בירור אירוח"],
