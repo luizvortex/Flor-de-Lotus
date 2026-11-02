@@ -11,10 +11,12 @@
     const inventory=data.rooms.filter(r=>r.active!==false&&r.active!==0);
     const selected=['duplo','triplo','familia'].map(slug=>data.showcases.find(s=>s.slug===slug)).filter(Boolean).map(row=>({row,units:window.lotusRoomCatalog.categoryRooms(row,inventory)})).filter(({row,units})=>units.length&&safePhoto(row.photos?.[0]?.url)&&units.every(u=>Number.isInteger(u.capacity)&&u.capacity>0));
     if(!selected.length)throw Error();
-    roomsPanel.innerHTML=selected.map(({row,units})=>{
-     const capacities=units.map(u=>u.capacity),min=Math.min(...capacities),max=Math.max(...capacities),description=String(row.description||'');
+    // Editorial category capacities confirmed by the owner for this introduction.
+    const categoryCapacity={duplo:3,triplo:3,familia:6};
+    roomsPanel.innerHTML=selected.map(({row})=>{
+     const description=String(row.description||'');
      const short=description.length>160?description.slice(0,160).replace(/\s+\S*$/,'')+'…':description;
-     return `<article class="fp-room-card"><img src="${esc(row.photos[0].url)}" alt="${esc(row.photos[0].alt||row.title)}" loading="lazy" width="600" height="450"><div><h3>${esc(row.title)}</h3><p class="fp-room-capacity">${min===max?max:`${min}–${max}`} pessoas por quarto</p><p>${esc(short)}</p></div></article>`;
+     return `<article class="fp-room-card"><img src="${esc(row.photos[0].url)}" alt="${esc(row.photos[0].alt||row.title)}" loading="lazy" width="600" height="450"><div><h3>${esc(row.title)}</h3><p class="fp-room-capacity">Até ${categoryCapacity[row.slug]} pessoas por quarto</p><p>${esc(short)}</p></div></article>`;
     }).join('');
    }catch{roomsPanel.innerHTML='<p class="fp-room-status">Não foi possível carregar as acomodações. <button type="button" data-rooms-retry>Tentar novamente</button></p>';roomsPanel.querySelector('[data-rooms-retry]').addEventListener('click',loadRooms);}
   }

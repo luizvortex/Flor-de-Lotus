@@ -6,7 +6,7 @@ Base sincronizada com `origin/main` em `6e086193`. Foram preservados a abertura 
 
 Ordem: abertura → carrossel → acomodações → três passos → depoimento → consulta/contato → políticas.
 
-Acomodações vêm do GET `/api/catalog`, reutilizando a mesma correspondência de categorias de reservas.js, agora compartilhada em room-catalog.js. Exibe Standard, Standard Superior e Família se há unidades ativas correspondentes; capacidade mínima/máxima é calculada somente a partir do cadastro, sem preço ou disponibilidade presumida. Erros permitem nova tentativa e mantêm a ação para /grupos.
+Acomodações vêm do GET `/api/catalog`, reutilizando a mesma correspondência de categorias de reservas.js, agora compartilhada em room-catalog.js. Exibe Standard, Standard Superior e Família se há unidades ativas correspondentes; os textos dos cartões apresentam as capacidades de categoria confirmadas pelo proprietário após a publicação: Standard e Standard Superior até 3 pessoas; Família até 6. Esta correção editorial limita-se à apresentação em /pescadores. Sem preço ou disponibilidade presumida. Erros permitem nova tentativa e mantêm a ação para /grupos.
 
 Todos os links de organização usam `/grupos?origem=pescadores`. A origem muda somente o cabeçalho editorial, usando group-origin.ts. A rota padrão permanece igual. Nenhuma alteração em banco, autenticação, reservas ou preços.
 

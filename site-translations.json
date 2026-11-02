@@ -1,6 +1,8 @@
 {
   "version": 1,
   "phrases": {
+    "Até 3 pessoas por quarto": ["Up to 3 guests per room", "עד 3 אורחים בחדר"],
+    "Até 6 pessoas por quarto": ["Up to 6 guests per room", "עד 6 אורחים בחדר"],
     "ACOMODAÇÕES PARA REUNIR SUA TURMA": ["ROOMS FOR YOUR GROUP", "חדרים לקבוצה שלכם"],
     "Conforto para cada": ["Comfort for every", "נוחות לכל"],
     "parte do grupo.": ["part of the group.", "חלק מהקבוצה."],

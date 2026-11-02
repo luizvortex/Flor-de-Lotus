@@ -39,7 +39,7 @@ with sync_playwright() as p:
  page.goto('http://lotus.test/pescadores',wait_until='networkidle')
  expect(page.locator('.fp-room-card')).to_have_count(3)
  assert page.locator('.fp-room-card h3').all_text_contents()==['Quarto Standard','Quarto Standard Superior','Quarto Família']
- assert page.locator('.fp-room-capacity').all_text_contents()==['2–5 pessoas por quarto','3–5 pessoas por quarto','5 pessoas por quarto']
+ assert page.locator('.fp-room-capacity').all_text_contents()==['Até 3 pessoas por quarto','Até 3 pessoas por quarto','Até 6 pessoas por quarto']
  assert 'Disponível' not in page.locator('#fishing-rooms').inner_text()
  for image in page.locator('.fp-room-card img').all():image.scroll_into_view_if_needed();assert image.evaluate('(el)=>el.naturalWidth>0')
  assert page.locator('.fp-testimonial blockquote p').inner_text() in [r['description'] for r in live['content']['reviews']['items'] if r['published']]
