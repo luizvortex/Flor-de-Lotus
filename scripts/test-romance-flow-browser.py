@@ -75,9 +75,11 @@ with sync_playwright() as p:
  file_id=page.locator('[data-rx-photo]').get_attribute('data-rx-photo');page.locator('#rx-instructions').fill('<img src=x onerror=alert(1)> Instrução sintética privada')
  page.locator('#rx-back').click();expect(page.locator('#personalizar')).to_be_visible();page.locator('#rx-message').fill('Surpresa <svg onload=alert(1)> para você');page.locator('#rx-back').click();expect(page.locator('[data-rx-room-card].is-selected')).to_have_count(1);expect(page.locator('#rx-message')).to_have_value('Surpresa <svg onload=alert(1)> para você')
  step(4);expect(page.locator('#rx-review blockquote')).to_have_text('Surpresa <svg onload=alert(1)> para você');expect(page.locator('#rx-final-review')).not_to_be_visible();expect(page.locator('#rx-phone')).to_have_value(re.compile('73'))
- for lang,heading in [('en','Love deserves an unforgettable setting.'),('es','El amor merece un escenario inolvidable.'),('he','לאהבה מגיעה תפאורה בלתי נשכחת.'),('pt','O amor merece um cenário inesquecível.')]:
-  page.locator('.site-language summary').first.click();page.locator(f'[data-language="{lang}"]').first.click();expect(page.locator('#rx-title')).to_have_text(heading);expect(page.locator('#rx-guest')).to_have_value('Hóspede sintético');assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
-  if lang=='he':expect(page.locator('html')).to_have_attribute('dir','rtl')
+ # Language selection is available only on the homepage; keep the private draft intact here.
+ expect(page.locator('.site-language')).to_have_count(0)
+ expect(page.locator('#rx-title')).to_have_text('O amor merece um cenário inesquecível.')
+ expect(page.locator('#rx-guest')).to_have_value('Hóspede sintético')
+ assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1')
  for width in [360,375,390,430,768,1024,1600]:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('()=>document.documentElement.scrollWidth<=innerWidth+1');page.locator('#rx-contact').screenshot(path=f'work/romance-wizard-review-{width}.png')
  page.set_viewport_size({'width':1440,'height':1000});page.locator('#rx-continue').click();final=page.locator('#rx-final-review');expect(final).to_be_visible();expect(final).to_contain_text('450,00');assert len(payloads)==0

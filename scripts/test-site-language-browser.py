@@ -1,18 +1,25 @@
 """Real local translation dictionary and browser interactions. No external translator."""
+import subprocess
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
+fishing_html=subprocess.check_output(['node','--input-type=module','-e',r'''
+import fs from 'node:fs';import vm from 'node:vm';import {stripTypeScriptTypes} from 'node:module';
+const source=fs.readFileSync('src/lib/fishing-page.ts','utf8').replace(/^import .*;$/gm,'').replace(/^export /gm,'');const context={};vm.createContext(context);vm.runInContext(stripTypeScriptTypes(source),context);
+console.log(context.renderFishingPage(JSON.parse(fs.readFileSync('src/lib/site-content-defaults.json','utf8')),'http://qa.test'));
+'''],cwd=ROOT,text=True)
+
 def route(request):
  u=urlparse(request.request.url)
  if u.hostname!='qa.test':return request.fulfill(status=200,body='')
  path=unquote(u.path)
  if path.startswith('/api/'):
   return request.fulfill(json={'user':None,'google_enabled':False,'rooms':[],'showcases':[],'packages':[]})
- if path in ['/','/quartos']:
-  file=ROOT/('index.html' if path=='/' else 'reservas.html')
-  body=file.read_text()
-  if path=='/quartos':body=body.replace('</head>','<link rel="stylesheet" href="/site-language.css"><script src="/site-language.js" defer></script></head>')
+ templates={'/':'index.html','/quartos':'reservas.html','/grupos':'grupos.html','/itacare':'itacare.html','/pacotes':'pacotes.html','/avaliacoes':'avaliacoes.html'}
+ if path in templates or path=='/pescadores':
+  body=fishing_html if path=='/pescadores' else (ROOT/templates[path]).read_text()
+  if 'src="/site-language.js"' not in body:body=body.replace('</head>','<link rel="stylesheet" href="/site-language.css"><script src="/site-language.js" defer></script></head>')
   return request.fulfill(body=body,content_type='text/html')
  file=(ROOT/path.lstrip('/')).resolve()
  if ROOT in file.parents and file.is_file():
@@ -80,6 +87,19 @@ with sync_playwright() as p:
  page.goto('http://qa.test/quartos');page.wait_for_function("document.documentElement.lang==='en'")
  assert page.locator('.catalog-title h2').inner_text()=='Choose your room'
  assert page.locator('#floor option[value="terreo"]').inner_text()=='Ground floor'
+ assert page.locator('.site-language,[data-language]').count()==0
+ # All public subpages inherit the homepage choice, without creating any selector.
+ for language in ['en','he','es']:
+  page.goto('http://qa.test/');page.locator('.home-language summary').click();page.locator(f'.home-language [data-language="{language}"]').click()
+  page.wait_for_function('(lang)=>document.documentElement.lang===lang',arg=language)
+  for path in ['/quartos','/grupos','/pescadores','/itacare','/pacotes','/avaliacoes']:
+   page.goto('http://qa.test'+path);page.wait_for_function('(lang)=>document.documentElement.lang===lang',arg=language)
+   assert page.locator('.site-language,[data-language]').count()==0,(language,path)
+   assert page.evaluate("localStorage.getItem('lotus-language')")==language
+   assert page.locator('html').get_attribute('dir')==('rtl' if language=='he' else 'ltr')
+ # Leave English selected for the existing mobile-home checks.
+ page.goto('http://qa.test/');page.locator('.home-language summary').click();page.locator('.home-language [data-language="en"]').click()
+ page.wait_for_function("document.documentElement.lang==='en'")
  page.goto('http://qa.test/');page.set_viewport_size({'width':390,'height':844})
  page.wait_for_function("document.documentElement.lang==='en'")
  page.locator('.home-menu-toggle').click();mobile=page.locator('.mobile-language summary');mobile.click()
@@ -91,4 +111,4 @@ with sync_playwright() as p:
  assert external==[],external
  assert errors==[],errors
  browser.close()
- print('PASS: actual local English/Hebrew translations, original Portuguese restoration without reload, dynamic controls and text, preserved form values, RTL, mobile, keyboard, cross-page preference. No translation service mocked or requested.')
+ print('PASS: actual local English/Hebrew translations, original Portuguese restoration without reload, dynamic controls and text, preserved form values, RTL, mobile, keyboard, EN/HE/ES cross-page preference and selectors only on home. No translation service mocked or requested.')

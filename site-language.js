@@ -66,10 +66,8 @@
       const mobile = createSelector(mobileParent, 'mobile-language');
       mobileParent.querySelector('.home-menu-account')?.after(mobile);
     }
-  } else {
-    const header = document.querySelector('header');
-    if (header) createSelector(header, 'public-language');
   }
+  // Other public pages inherit the saved locale, without offering another selector.
   document.addEventListener('click', event => {
     if (!event.target.closest('.site-language')) closeMenus();
   });
