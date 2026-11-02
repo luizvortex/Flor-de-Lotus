@@ -40,3 +40,6 @@
 @media(max-width:1024px){.catalog-main>.catalog-offers:has(>#special-packages:not([hidden])):has(>.romance-section){grid-template-columns:minmax(0,1fr)}.catalog-main>.catalog-offers{padding:52px max(24px,calc((100% - 640px)/2));gap:28px}}
 @media(max-width:600px){.catalog-main>.catalog-offers{margin-top:40px;padding:44px 20px}.experience-heading{margin-bottom:8px}#catalog-offers .romance-copy,#catalog-offers #special-packages .package-copy,#catalog-offers #special-packages .package-card:only-child .package-copy{padding:26px 22px}}
 @media(prefers-reduced-motion:reduce){#catalog-offers *,#catalog-offers.experience-entering>section,#catalog-offers.experience-entering .experience-heading{transition:none!important;transform:none!important;opacity:1!important}}
+
+/* Keep the romantic card compact when it occupies the offer strip on its own. */
+@media(min-width:1025px){#catalog-offers:not(:has(>#special-packages:not([hidden])))>.romance-catalog{width:min(100%,940px);justify-self:center}}
