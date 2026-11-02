@@ -75,3 +75,18 @@ html{scroll-padding-top:84px}
 
 /* Touch/mouse opening should not draw an autofocus box around Close. */
 .fp-lightbox.photo-pointer-open .fp-close:focus{outline:none;box-shadow:none}
+
+/* A shorter desktop opening without removing any fishing benefits or actions. */
+@media(min-width:1025px){
+ .fp-hero:not(.fp-no-photo){min-height:520px}
+ .fp-hero-copy{padding:120px clamp(28px,3.4vw,52px) 28px}
+ .fp-hero .fp-eyebrow{margin-bottom:16px}
+ .fp-hero h1{font-size:clamp(32px,2.6vw,44px);line-height:1.1}
+ .fp-hero .fp-intro{margin-top:16px;max-width:44ch;line-height:1.7}
+ .fp-hero .fp-button{margin-top:18px;padding:12px 20px}
+ .fp-hero .fp-hero-note{margin-top:18px;padding:12px 16px;gap:12px;font-size:14px;line-height:1.5}
+ .fp-hero .fp-early-note{margin-top:10px}
+ .fp-hero .fp-early-note p{font-size:14px;line-height:1.5}
+ .fp-hero .fp-early-note strong{margin-bottom:3px}
+ .fp-hero .fp-hero-note>svg{width:26px;height:26px;flex:0 0 26px}
+}
