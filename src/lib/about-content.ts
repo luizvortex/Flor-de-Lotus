@@ -7,12 +7,13 @@ const paths={
  parking:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>',
  balcony:'<path d="M5 21V3h14v18M9 3v11M15 3v11M3 21h18M2 14h20M5 14v7M10 14v7M15 14v7M19 14v7"/>',
  pool:'<path d="M2 17c2-3 4 3 7 0s4 3 7 0 4 3 6 0M2 21c2-3 4 3 7 0s4 3 7 0 4 3 6 0M7 13V5a2 2 0 0 1 4 0M15 13V5a2 2 0 0 1 4 0M7 7h8M7 11h8"/>',
+ beach:'<path d="M3 11a9 9 0 0 1 18 0H3ZM12 11v9M12 2v1M2 21c2-2 4 2 6 0s4 2 6 0 4 2 8 0"/>',
  snow:'<path d="M12 2v20M3.3 7l17.4 10M3.3 17 20.7 7M9 4l3 3 3-3M9 20l3-3 3 3M3 10l4-1-1-4M21 14l-4 1 1 4M6 19l1-4-4-1M18 5l-1 4 4 1"/>',
  leaf:'<path d="M20 3c-9-1-16 3-16 10a7 7 0 0 0 14 0c0-4 0-7 2-10ZM3 22 15 9"/>',
 };
 function icon(label:string){
  const normalized=label.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
- const key=/wi.?fi|internet/.test(normalized)?'wifi':/cafe|buffet/.test(normalized)?'coffee':/estacion|parking/.test(normalized)?'parking':/varanda|quarto|rede/.test(normalized)?'balcony':/piscina|churrasqueira|lazer/.test(normalized)?'pool':/split|ar.condicionado/.test(normalized)?'snow':'leaf';
+ const key=/wi.?fi|internet/.test(normalized)?'wifi':/cafe|buffet/.test(normalized)?'coffee':/estacion|parking/.test(normalized)?'parking':/varanda|quarto|rede/.test(normalized)?'balcony':/piscina|churrasqueira|lazer/.test(normalized)?'pool':/praia|beach/.test(normalized)?'beach':/split|ar.condicionado/.test(normalized)?'snow':'leaf';
  return `<svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[key]}</svg>`;
 }
 export function applyAbout($:CheerioAPI,content:SiteContent){

@@ -21,7 +21,7 @@
 .about-actions a:focus-visible{outline:2px solid #8a7353;outline-offset:5px}
 .about-amenities{margin-top:58px;padding-top:34px;border-top:1px solid #deddd3}
 .about-amenities h3{font:23px/1.4 'Playfair Display',serif;margin:0 0 28px}
-.about-feature-list{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px;list-style:none;padding:0;margin:0}
+.about-feature-list{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:28px;list-style:none;padding:0;margin:0}
 .about-feature-list li{display:flex;align-items:flex-start;gap:12px;min-width:0;font-size:13px;line-height:1.65;color:#52645c}
 .about-feature-list svg{flex-shrink:0;color:#8a7353;margin-top:1px}
 .about-feature-list span{overflow-wrap:anywhere}
