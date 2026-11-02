@@ -53,3 +53,6 @@
 .fp-wheel-controls button:hover{background:var(--sand)}
 .fp-wheel-caption{font-size:11px;color:#52645b;max-width:55ch;text-align:right;overflow-wrap:anywhere}
 @media(max-width:600px){.fp-wheel-toolbar{flex-direction:column;gap:14px;padding-block:18px}.fp-wheel-caption{text-align:center}.fp-wheel-photo button{padding:2px}.fp-wheel-photo[data-wheel-slot="9"] button{padding:3px}.fp-wheel-photo button>span{width:24px;height:24px;right:5px;bottom:5px;font-size:14px}.fp-wheel-photo button:focus-visible{outline-width:2px;outline-offset:2px}}
+
+/* Center the opening at 85% on desktop, with a more compact text column. */
+@media(min-width:1025px){.fp-hero{width:85%;margin-inline:auto}.fp-hero:not(.fp-no-photo){min-height:560px}.fp-hero-copy{padding:clamp(32px,4vw,64px)}.fp-hero h1{font-size:clamp(32px,3vw,48px)}}
