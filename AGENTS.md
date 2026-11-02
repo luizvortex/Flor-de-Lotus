@@ -203,3 +203,5 @@ O álbum de `/pescadores` agora usa dez posições em roda: nove fotos periféri
 O editor de fotos em `admin-showcases.js` prepara imagens acima de 3 MB no navegador (até 50 MB de entrada), mantendo o envio abaixo do limite de 3 MB. Mostra resultado junto à foto e exige Salvar no site para publicar. Teste sintético: `python scripts/test-showcase-photo-browser.py`.
 
 Na home, o usuário pediu exibir o título **Quarto Triplo Superior** no destaque alimentado por `triplo-standard`, mantendo exatamente suas fotos e demais textos. O título é aplicado apenas na renderização da home em `legacy-page.ts`; preservar cadastro, catálogo e regras de reserva.
+
+Instagram usa somente o container fixo em `instagram-content.ts`. No editor há três imagens independentes (`backgroundImage`, `firstImage`, `secondImage`), sem lista/adicionar/carrossel. Publicações antigas recebem as três primeiras fotos anteriores (ou da galeria usada antes como fallback), sem regravar o banco. Campos de fotos/intervalos antigos ficam ocultos para preservar o documento. Teste: `node scripts/test-site-editor.mjs --instagram-only`.

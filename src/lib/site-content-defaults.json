@@ -137,7 +137,10 @@
     "buttonLabel": "Acompanhe a pousada",
     "mobileDelay": 3,
     "desktopDelay": 4,
-    "photos": []
+    "photos": [],
+    "backgroundImage": "/img Pousada/interiorpousada.jpg",
+    "firstImage": "/img Pousada/FlordeLotus3.jpg",
+    "secondImage": "/img Pousada/quartocasal.jpg"
   },
   "beaches": {
     "visible": true,
