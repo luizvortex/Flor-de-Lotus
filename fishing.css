@@ -80,3 +80,6 @@
 
 /* One clear action below the freezer benefit. */
 .fishing-actions{margin-top:28px}
+
+/* Preserve the whole excursion group in the owner's principal photograph. */
+.group-experiences .group-home-photo img{object-fit:contain}
