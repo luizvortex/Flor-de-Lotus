@@ -1,6 +1,6 @@
 # Proposta local — página de pescadores
 
-Solicitação de 02/11/2026: preparar prévia para avaliação. **Não fazer push nem publicar esta proposta antes da avaliação do proprietário.** A autorização de rede recebida nesta tarefa refere-se ao acesso à fotografia pública, não à publicação.
+Solicitação de 02/11/2026: preparar prévia para avaliação. Após receber a prévia e o resumo das verificações, o proprietário solicitou explicitamente **“push”**, autorizando o envio desta proposta para main e a publicação automática na Vercel. Essa instrução resolve a restrição inicial de publicação. A autorização anterior de rede referia-se somente ao acesso à fotografia pública.
 
 Base sincronizada com `origin/main` em `6e086193`. Foram preservados a abertura compacta a 85%, o respiro superior, o cabeçalho transparente/compacto, o freezer e o café antecipado sob solicitação. A roda mantém fotos, dez posições, ampliação, controles, movimento e intervalo de dois segundos.
 
