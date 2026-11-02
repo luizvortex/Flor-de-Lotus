@@ -59,9 +59,9 @@
 
  const carousel=document.querySelector('.fp-carousel'),wheel=carousel?.querySelector('[data-fishing-wheel]');
  if(!wheel)return;
- const tiles=[...wheel.querySelectorAll('.fp-wheel-photo')],toggle=carousel.querySelector('[data-wheel-toggle]'),wheelCaption=carousel.querySelector('[data-wheel-caption]');
+ const tiles=[...wheel.querySelectorAll('.fp-wheel-photo')];
  const reduced=matchMedia('(prefers-reduced-motion:reduce)');
- let selected=9,paused=reduced.matches,hovering=false,visible=false,timer,animations=[],pointerPause;
+ let selected=9,paused=reduced.matches,hovering=false,visible=false,timer,animations=[];
  const slotOf=index=>(index-selected+19)%10;
  function position(slot){
   if(slot===9)return {left:'50%',top:'50%',width:'44%'};
@@ -85,23 +85,19 @@
    if(slot===9)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');
    if(previous&&!reduced.matches&&tile.animate)animations.push(tile.animate(path(previous[index],slot),{duration:800,easing:'cubic-bezier(.4,0,.2,1)'}));
   });
-  const sourceIndex=Number(tiles[selected].querySelector('button').dataset.fishingPhoto);
-  wheelCaption.textContent=`${sourceIndex+1} / ${sources.length} · ${sources[sourceIndex].alt}`;
  }
  function advance(direction){const previous=tiles.map((_,index)=>slotOf(index));selected=(selected+direction+10)%10;render(previous);}
  function schedule(){
   clearTimeout(timer);
-  toggle.textContent=paused?'Reproduzir':'Pausar';toggle.setAttribute('aria-pressed',String(paused));
-  if(paused||hovering||!visible||document.hidden||dialog.open)return;
+  if(paused||hovering||!visible||document.hidden||dialog.open||carousel.matches(':focus-within'))return;
   timer=setTimeout(()=>{advance(-1);schedule();},3000);
  }
  updateCarousel=schedule;
- toggle.addEventListener('pointerdown',()=>{pointerPause=!paused;});
- toggle.addEventListener('click',()=>{paused=pointerPause??!paused;pointerPause=undefined;schedule();});
- carousel.querySelector('[data-wheel-prev]').addEventListener('click',()=>{paused=true;advance(1);schedule();});
- carousel.querySelector('[data-wheel-next]').addEventListener('click',()=>{paused=true;advance(-1);schedule();});
- // Keyboard focus stops autoplay until the visitor explicitly restarts it.
- carousel.addEventListener('focusin',()=>{paused=true;schedule();});
+ carousel.querySelector('[data-wheel-prev]').addEventListener('click',()=>{advance(1);schedule();});
+ carousel.querySelector('[data-wheel-next]').addEventListener('click',()=>{advance(-1);schedule();});
+ // Suspend motion while the visitor interacts with photos or arrows.
+ carousel.addEventListener('focusin',schedule);
+ carousel.addEventListener('focusout',()=>requestAnimationFrame(schedule));
  carousel.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'){hovering=true;schedule();}});
  carousel.addEventListener('pointerleave',()=>{hovering=false;schedule();});
  document.addEventListener('visibilitychange',schedule);

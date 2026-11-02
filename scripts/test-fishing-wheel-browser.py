@@ -47,16 +47,10 @@ with sync_playwright() as p:
     assert page.locator('[data-fishing-photo="9"]').locator('..').get_attribute('data-wheel-slot')=='0'
     for _ in range(9):page.clock.fast_forward(3100)
     assert center().get_attribute('data-fishing-photo')=='9'
-    # The first click really pauses, despite focus also pausing autoplay.
-    toggle=page.locator('[data-wheel-toggle]');toggle.click();expect(toggle).to_have_text('Reproduzir')
-    page.mouse.move(0,0);page.clock.fast_forward(7000)
-    assert center().get_attribute('data-fishing-photo')=='9'
-    toggle.click();page.mouse.move(0,0);page.clock.fast_forward(3100)
-    assert center().get_attribute('data-fishing-photo')=='8'
-    # Manual navigation pauses; keyboard focus also pauses and retains a clear selection.
-    page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='7'
-    expect(toggle).to_have_text('Reproduzir')
-    page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='8'
+    assert page.locator('[data-wheel-toggle],[data-wheel-caption]').count()==0
+    page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
+    page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='9'
+    page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
     center().focus();page.clock.fast_forward(5000);assert center().get_attribute('data-fishing-photo')=='8'
     center().click();expect(page.locator('.fp-lightbox')).to_be_visible()
     expect(page.locator('[data-photo-large]')).to_have_attribute('alt','Foto de teste 9')
@@ -97,11 +91,11 @@ with sync_playwright() as p:
     # Reduced motion defaults to paused; manual next still changes the central photo.
     reduced=context.new_page();reduced.emulate_media(reduced_motion='reduce');reduced.clock.install()
     reduced.goto('http://lotus.test/ten',wait_until='networkidle');reduced.locator('.fp-wheel').scroll_into_view_if_needed()
-    expect(reduced.locator('[data-wheel-toggle]')).to_have_text('Reproduzir')
+    expect(reduced.locator('[data-wheel-toggle]')).to_have_count(0)
     reduced.clock.fast_forward(9000)
     assert reduced.locator('[data-wheel-slot="9"] button').get_attribute('data-fishing-photo')=='9'
     reduced.locator('[data-wheel-next]').click()
     assert reduced.locator('[data-wheel-slot="9"] button').get_attribute('data-fishing-photo')=='8'
     assert not errors,errors
     browser.close()
-print('OK: 3s cycle and full loop, pause/play, manual navigation, keyboard/lightbox, mobile sizes, contact/calendar, one/zero photos and reduced motion.')
+print('OK: 3s cycle and full loop, arrows-only controls, manual navigation, keyboard/lightbox, mobile sizes, contact/calendar, one/zero photos and reduced motion.')

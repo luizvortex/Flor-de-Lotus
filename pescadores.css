@@ -71,3 +71,6 @@ html{scroll-padding-top:84px}
 
 /* Reduce the complete fishing album to 80% of its previous desktop footprint. */
 @media(min-width:1025px){.fp-memories{width:80%;max-width:1120px;padding:80px 4vw}.fp-memories .fp-section-heading{gap:35px;margin-bottom:38px}.fp-memories .fp-section-heading h2{font-size:clamp(28px,2.88vw,43.2px)}.fp-memories .fp-section-heading>p{font-size:12px}.fp-memories .fp-carousel{max-width:880px}}
+
+/* Keep only discreet navigation arrows below the circular album. */
+.fp-wheel-toolbar{justify-content:flex-end;flex-direction:row;border:0;padding:8px 0 0;margin-top:0;gap:0}.fp-wheel-controls{justify-content:flex-end;gap:8px}.fp-wheel-controls button{min-width:44px;min-height:44px}
