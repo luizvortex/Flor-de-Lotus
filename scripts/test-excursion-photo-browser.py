@@ -28,12 +28,22 @@ with sync_playwright() as p:
    image=page.locator('.group-home-photo img');photo=page.locator('.group-home-photo');copy=page.locator('.group-home-copy')
    image.scroll_into_view_if_needed();page.wait_for_function('document.querySelector(".group-home-photo img").naturalWidth===1280')
    assert image.is_visible() and image.bounding_box()['height']>100,(name,width)
+   badge=photo.locator('figcaption')
    if width<768:
+    assert not badge.is_visible(),(name,width,'mobile badge must be hidden')
     assert image.evaluate('(el)=>getComputedStyle(el).position')=='static'
     bounds=image.bounding_box();assert abs(bounds['height']/bounds['width']-961/1280)<.01
     assert bounds['y']+bounds['height']<=copy.bounding_box()['y']+1
     assert abs(photo.bounding_box()['height']-bounds['height'])<1
-   else:assert image.evaluate('(el)=>getComputedStyle(el).position')=='absolute'
+   else:
+    assert image.evaluate('(el)=>getComputedStyle(el).position')=='absolute'
+    assert badge.is_visible(),(name,width)
+    box=badge.bounding_box();frame=photo.bounding_box()
+    assert box['width']<=210 and box['height']<60,(width,box,badge.evaluate('(el)=>getComputedStyle(el).cssText'))
+    assert abs(box['x']-frame['x']-16)<1
+    assert abs(frame['y']+frame['height']-box['y']-box['height']-16)<1
+    assert badge.evaluate('(el)=>getComputedStyle(el,"::before").fontSize')=='16px'
+
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),(name,width)
-   if width==390:photo.screenshot(path=str(root/'work/excursion-photo-mobile.png'))
-  browser.close();print(f'OK: {name}, real photo visible at 7 mobile/tablet/desktop sizes; mobile intrinsic height and photo before text.')
+   if width in [390,1440]:photo.screenshot(path=str(root/f'work/excursion-photo-{width}.png'))
+  browser.close();print(f'OK: {name}, real photo visible at 7 mobile/tablet/desktop sizes; mobile photo intact and badge hidden; desktop badge compact at bottom left.')
