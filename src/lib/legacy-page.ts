@@ -18,7 +18,7 @@ export async function legacyPage(name: string, preview?:SiteContent): Promise<Re
   let html = await readFile(path.join(process.cwd(), file), 'utf8');
   const contentPromise=name==='admin'?undefined:preview?Promise.resolve(preview):getSiteContent();
   if (name === 'index') {
-    const content = renderShowcases((await getShowcases()).filter(row => ['duplo', 'triplo-superior'].includes(row.slug)));
+    const content = renderShowcases((await getShowcases()).filter(row => ['duplo', 'triplo-standard'].includes(row.slug)));
     html = html.replace(/<!--ROOM_SHOWCASES_START-->[\s\S]*?<!--ROOM_SHOWCASES_END-->/, () => `<!--ROOM_SHOWCASES_START-->${content}<!--ROOM_SHOWCASES_END-->`);
   }
   if(contentPromise)html=renderSiteContent(html,await contentPromise,name);
