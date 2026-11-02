@@ -20,8 +20,10 @@ with ns['sync_playwright']() as p:
  page.goto('http://qa.test/admin');opener=page.locator('[data-admin-menu-open]');opener.wait_for(state='visible')
  nav=page.locator('.sidebar nav[aria-label="Administração"]')
  expect(nav.locator('[data-tab]').first).to_have_attribute('data-tab','bookings')
- assert nav.locator('.admin-menu-rank').all_text_contents()==[str(n) for n in range(1,15)]
+ assert nav.locator('.admin-menu-rank').all_text_contents()==[str(n) for n in range(1,14)]
+ assert nav.locator('[data-tab="experiences"]').count()==0
  opener.click();dialog=page.locator('.admin-menu-dialog');assert dialog.is_visible()
+ assert dialog.locator('[data-menu-position="experiences"]').count()==0
  assert dialog.locator('[data-menu-move="bookings"][data-step="-1"]').is_disabled()
  dialog.locator('[data-menu-move="calendar"][data-step="-1"]').click()
  assert dialog.locator('[data-menu-position]').first.get_attribute('data-menu-position')=='calendar'

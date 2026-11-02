@@ -10,7 +10,7 @@
  function clearDraft(){clearTimeout(draftTimer);try{localStorage.removeItem(draftKey);}catch{}draftAvailable=null;}
  function saveDraft(){clearTimeout(draftTimer);if(!dirty||!state)return;try{localStorage.setItem(draftKey,JSON.stringify({content:state.content,revision:state.revision,updated:new Date().toISOString()}));}catch{updateStatus('Não foi possível guardar o rascunho neste navegador. Mantenha esta aba aberta até publicar.',true);}}
  function queueDraft(){clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,450);}
- const editorActive=()=>Boolean(document.querySelector('[data-tab="site"].active,[data-tab="experiences"].active,[data-tab="reviews"].active'));
+ const editorActive=()=>Boolean(document.querySelector('[data-tab="site"].active,[data-tab="reviews"].active'));
  const preview=document.createElement('dialog');preview.className='cms-preview';preview.innerHTML='<div class="modal-head"><h2>Pré-visualização</h2><div><button type="button" class="btn secondary" data-preview-size="desktop">Computador</button> <button type="button" class="btn secondary" data-preview-size="mobile">Celular</button> <button type="button" class="close" aria-label="Fechar pré-visualização">×</button></div></div><p class="hint">Prévia visual das alterações ainda não publicadas. Os formulários estão desativados aqui.</p><iframe title="Prévia do site" sandbox="allow-same-origin"></iframe>';document.body.append(preview);
  preview.querySelector('.close').onclick=()=>preview.close();preview.querySelectorAll('[data-preview-size]').forEach(b=>b.onclick=()=>preview.classList.toggle('is-mobile',b.dataset.previewSize==='mobile'));
  const get=path=>path.split('.').reduce((v,k)=>v?.[k],state.content);
@@ -83,7 +83,7 @@
   if(!container||!editorActive())return;
   const section=state.sections.find(s=>s.key===active)||state.sections[0];active=section.key;
   container.querySelectorAll('[data-cms-item]').forEach(el=>disclosure.set(el.dataset.cmsItem,el.open));
-  const dedicatedTab=document.querySelector('[data-tab="experiences"].active,[data-tab="reviews"].active')?.dataset.tab;
+  const dedicatedTab=document.querySelector('[data-tab="reviews"].active')?.dataset.tab;
   const dedicated=Boolean(dedicatedTab),dedicatedSection=dedicatedTab==='reviews'?'reviews':'beaches';
   const beachTabs=active==='beaches'?`<div class="cms-beach-tabs" role="group" aria-label="Editar praias e passeios">${[['overview','Capa e apresentação'],['destinations','Fotos das praias e cachoeiras'],['tours','Passeios']].map(([key,label])=>`<button type="button" class="${beachGroup===key?'active':''}" data-beach-group="${key}" aria-pressed="${beachGroup===key}">${label}</button>`).join('')}</div>`:'';
   const whale=active==='beaches'?state.content.beaches.tours.findIndex(t=>t.kind==='baleias'):-1;
@@ -122,7 +122,7 @@
   if(button.hasAttribute('data-draft-restore')){if(draftAvailable?.revision!==state.revision)return;const restored=structuredClone(draftAvailable.content);if(!restored.romance){restored.romance=structuredClone(state.content.romance);}if(!restored.fishing){restored.fishing=structuredClone(state.content.fishing);const keys=String(restored.layout.order).split(/\s+/).filter(Boolean);if(!keys.includes('fishing'))keys.splice(keys.indexOf('rooms')+1,0,'fishing');restored.layout.order=keys.join('\n');}restored.layout.order=String(restored.layout.order).split(/\s+/).filter(key=>key&&key!=='romance').join('\n');restored.layout.blocks=restored.layout.blocks.map(block=>block.after==='romance'?{...block,after:'rooms'}:block);state.content=restored;draftAvailable=null;dirty=true;render();updateStatus('Rascunho recuperado. Revise e pré-visualize antes de publicar.');return;}
   if(button.hasAttribute('data-draft-discard')){clearDraft();render();return;}
   if(button.hasAttribute('data-draft-download')){if(!draftAvailable)return;const url=URL.createObjectURL(new Blob([JSON.stringify(draftAvailable.content,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='rascunho-flor-de-lotus.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
-  if(button.hasAttribute('data-open-beach-content')){if(saving||pending)return;beachGroup='destinations';document.querySelector('[data-tab="experiences"]').click();return;}
+  if(button.hasAttribute('data-open-beach-content')){if(saving||pending)return;beachGroup='destinations';active='beaches';render();return;}
   if(button.hasAttribute('data-beach-photos')){
    if(saving||pending)return;const index=Number(button.dataset.beachPhotos);
    if(!Number.isInteger(index)||!state.content.beaches.items[index])return;

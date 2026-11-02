@@ -10,6 +10,8 @@ with sync_playwright() as p:
  page=context.new_page();page.route('https://**',lambda r:r.abort());errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  original=context.request.get(base+'/api/site-content').json()
  page.goto(base+'/admin#praias-passeios',wait_until='networkidle')
+ expect(page.locator('[data-tab="site"]')).to_have_class('active')
+ expect(page.locator('[data-cms-section="beaches"]')).to_be_visible()
  expect(page.locator('[data-beach-group="destinations"]')).to_have_attribute('aria-pressed','true')
  expect(page.locator('[data-beach-photos]')).to_have_count(len(original['content']['beaches']['items']))
  index=1;path=f'beaches.items.{index}.photos';field=path+'.0.url';alt=path+'.0.alt'
@@ -37,7 +39,8 @@ with sync_playwright() as p:
  assert context.request.get(base+'/api/site-content').json()['revision']==original['revision']
  page.locator('[data-tab="site"]').click();page.locator('[data-cms-section="about"]').click()
  expect(page.locator('[data-open-beach-content]')).to_be_visible();page.locator('[data-open-beach-content]').click()
- expect(page.locator('[data-tab="experiences"]')).to_have_class('active')
+ expect(page.locator('[data-tab="site"]')).to_have_class('active')
+ assert page.locator('.sidebar [data-tab="experiences"]').count()==0
  page.locator(f'[data-beach-photos="{index}"]').click();expect(page.locator(f'[data-cms-field="{alt}"]')).to_have_value('Nova foto sintética da praia')
  page.locator('[data-cms-action="preview"]').click();expect(page.locator('.cms-preview[open]')).to_be_visible()
  assert 'Nova foto sintética da praia' in page.locator('.cms-preview iframe').get_attribute('srcdoc');page.locator('.cms-preview .close').click()
