@@ -1,6 +1,6 @@
 'use strict';
 (() => {
- const $=s=>document.querySelector(s),form=$('#search')||$('#group-form');if(!form)return;
+ const $=s=>document.querySelector(s),form=$('#search')||$('#group-form')||$('#fishing-contact');if(!form)return;
  const entry=$('#checkin')||$('#group-start'),exit=$('#checkout')||$('#group-end'),guests=$('#guests'),calendar=$('#dates-picker'),guestPanel=$('#guests-picker');
  const localParts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bahia',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
  const part=k=>localParts.find(p=>p.type===k).value,today=`${part('year')}-${part('month')}-${part('day')}`;

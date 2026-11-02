@@ -4,15 +4,27 @@
   event.preventDefault();
   const name=contact.querySelector('#fishing-name');
   if(!name.value.trim()){name.setCustomValidity('Informe seu nome.');name.reportValidity();return;}
+  const entry=contact.querySelector('#checkin').value,exit=contact.querySelector('#checkout').value;
+  if(!entry||!exit||exit<=entry){
+   contact.querySelector('#fishing-stay-summary').textContent='Escolha a data de entrada e a data de saída.';
+   const trigger=contact.querySelector('#dates-trigger');
+   if(trigger.getAttribute('aria-expanded')!=='true')trigger.click();
+   return;
+  }
   if(!contact.reportValidity())return;
   const people=contact.querySelector('#fishing-people').value;
-  const date=contact.querySelector('#fishing-date').value;
-  const formattedDate=date.split('-').reverse().join('/');
+  const format=value=>value.split('-').reverse().join('/');
+  const nights=Math.round((new Date(exit+'T12:00:00Z')-new Date(entry+'T12:00:00Z'))/86400000);
   const url=new URL(contact.action);
-  url.searchParams.set('text',`Oi, meu nome é ${name.value.trim()} e estou entrando em contato referente a um grupo de pescadores e gostaria de consultar a disponibilidade.\n\nQuantidade de pessoas: ${people}\nData da viagem: ${formattedDate}`);
+  url.searchParams.set('text',`Oi, meu nome é ${name.value.trim()} e estou entrando em contato referente a um grupo de pescadores e gostaria de consultar a disponibilidade.\n\nQuantidade de pessoas: ${people}\nCheck-in: ${format(entry)}\nCheck-out: ${format(exit)}\nEstadia: ${nights} ${nights===1?'noite':'noites'}`);
   window.open(url.href,'_blank','noopener,noreferrer');
  });
  contact?.querySelector('#fishing-name').addEventListener('input',event=>event.target.setCustomValidity(''));
+ contact?.addEventListener('lotus:dates-applied',()=>{
+  const entry=contact.querySelector('#checkin').value,exit=contact.querySelector('#checkout').value;
+  const nights=Math.round((new Date(exit+'T12:00:00Z')-new Date(entry+'T12:00:00Z'))/86400000);
+  contact.querySelector('#fishing-stay-summary').textContent=`${nights} ${nights===1?'noite':'noites'}`;
+ });
  const buttons=[...document.querySelectorAll('[data-fishing-photo]')],dialog=document.querySelector('.fp-lightbox');
  if(!buttons.length||!dialog)return;
  const image=dialog.querySelector('[data-photo-large]'),caption=dialog.querySelector('[data-photo-caption]');

@@ -1,6 +1,8 @@
 {
   "version": 1,
   "phrases": {
+    "Check-in e check-out": ["Check-in and check-out", "צ׳ק-אין וצ׳ק-אאוט"],
+    "Escolha a data de entrada e a data de saída.": ["Choose your check-in and check-out dates.", "בחרו את תאריכי הכניסה והיציאה."],
     "Quantidade de pessoas": ["Number of people", "מספר האנשים"],
     "Data da viagem": ["Trip date", "תאריך הנסיעה"],
     "VAMOS CONVERSAR": ["LET’S TALK", "בואו נדבר"],

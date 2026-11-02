@@ -10,3 +10,5 @@
 .fp-hero-note>svg{color:var(--forest);width:32px;height:32px;flex:none}
 .fp-contact{max-width:1260px;margin:auto;padding:72px 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;border-bottom:1px solid #d4c7b5}
 .fp-contact h2+p{margin-top:24px;max-width:42ch}.fp-contact form{align-self:center;min-width:0}.fp-contact label{display:block;margin-bottom:8px}.fp-contact input{width:100%;border:1px solid #9b9f8e;background:#fffdf8;color:var(--forest);font:inherit;padding:14px;margin-bottom:16px}.fp-contact input:focus-visible{outline:3px solid #b78a43;outline-offset:3px}.fp-contact button{cursor:pointer}.fp-contact form>p{font-size:11px;margin-top:12px}@media(max-width:600px){.fp-contact{grid-template-columns:1fr;gap:28px;padding:46px 24px}.fp-hero-note{padding:16px;gap:14px}}
+
+.fp-contact .dates-control{margin-bottom:12px}.fp-contact .calendar-popover{left:auto;right:0}.fp-contact #fishing-stay-summary{margin:0 0 16px;font-size:12px}.fp-contact .calendar-nav p,.fp-contact .calendar-footer>span{color:#647269}
