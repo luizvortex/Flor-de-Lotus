@@ -164,9 +164,9 @@
  }
  function whatsappButton(title){const url=whatsappLink(title);return url?`<a class="text-button room-whatsapp" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Consultar a pousada no WhatsApp ↗</a>`:'';}
  function render(){
-  // Capacity applies per room, including children who are exempt from the rate.
+  // Four or more occupants need Família. Count every child and apply this per room.
   const largestParty=lastQuery?Math.max(...JSON.parse(lastQuery.party).map(room=>room.adults+room.children_ages.length)):0;
-  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(categoryRules[s.slug]?.capacity>=5?largestParty>=5:largestParty<=4)):showcases;
+  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(categoryRules[s.slug]?.capacity>=5?largestParty>=4:largestParty<=3)):showcases;
   const noAvailability=Boolean(lastQuery&&showcases.length&&visibleShowcases.length===0);
   $('#no-availability').hidden=!noAvailability;
   $('.results-heading').hidden=noAvailability;

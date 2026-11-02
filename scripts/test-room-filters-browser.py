@@ -5,7 +5,7 @@ import json
 source=Path(__file__).with_name('test-category-booking-browser.py').read_text().split('with sync_playwright() as p:')[0]
 ns={'__file__':str(Path(__file__).with_name('test-category-booking-browser.py'))};exec(source,ns)
 ns['showcases'].reverse()
-original=ns['route'];sold_out=False
+original=ns['route'];sold_out=False;unavailable_categories=set()
 requests=[]
 def route(r):
  u=urlparse(r.request.url)
@@ -15,7 +15,8 @@ def route(r):
  if u.path=='/api/availability':
   q=parse_qs(u.query);requests.append(q)
   categories=[row['slug'] for row in ns['showcases'] if q['floor']==['sem_preferencia'] or (row['slug'] in ['duplo','triplo-standard','familia'])==(q['floor']==['terreo'])]
-  # Include broad offers; the UI must keep five/six-person parties in Família.
+  categories=[slug for slug in categories if slug not in unavailable_categories]
+  # Broad offers deliberately exercise the UI's four-person Family boundary.
   offers=[dict(category_slug=slug,floor='terreo' if slug in ['duplo','triplo-standard','familia'] else 'superior',total=60000,starting_price=60000,room_count=len(json.loads(q['party'][0]))) for slug in categories]
   return r.fulfill(json={'rooms':[] if sold_out else offers,'nights':1})
  return original(r)
@@ -35,36 +36,56 @@ with ns['sync_playwright']() as p:
  page.locator('#rooms').screenshot(path=str(ns['ROOT']/'work/filtered-superior.png'))
  for floor in ['terreo','superior','sem_preferencia']:
   families=['familia','familia-superior'] if floor=='sem_preferencia' else ['familia' if floor=='terreo' else 'familia-superior']
-  for size in [1,2,3,4]:
-   assert not any(slug.startswith('familia') for slug in search(floor,[{'adults':size,'children_ages':[]}]))
-  assert search(floor,[{'adults':5,'children_ages':[]}])==families
-  assert not any(slug.startswith('familia') for slug in search(floor,[{'adults':3,'children_ages':[5]}]))
-  assert search(floor,[{'adults':6,'children_ages':[]}])==families
-  assert search(floor,[{'adults':4,'children_ages':[5]}])==families,'Free child occupies a bed'
+  standard=['duplo','triplo','triplo-standard','triplo-superior'] if floor=='sem_preferencia' else (['duplo','triplo-standard'] if floor=='terreo' else ['triplo','triplo-superior'])
+  for size in [1,2,3]:
+   assert search(floor,[{'adults':size,'children_ages':[]}])==standard
+  for size in [4,5,6]:
+   assert search(floor,[{'adults':size,'children_ages':[]}])==families,(floor,size)
+  assert search(floor,[{'adults':2,'children_ages':[5]}])==standard
+  assert search(floor,[{'adults':3,'children_ages':[5]}])==families,'Free child is the fourth occupant'
+  assert search(floor,[{'adults':1,'children_ages':[0,5,17]}])==families
+  assert search(floor,[{'adults':4,'children_ages':[5]}])==families
  assert search('sem_preferencia',[{'adults':2,'children_ages':[]}])==['duplo','triplo','triplo-standard','triplo-superior']
  assert 'Sem preferência' in page.locator('#result-count').inner_text()
- # Choosing either floor binds that offer's real floor to the booking, never the search preference.
- for slug,floor,label in [('duplo','terreo','Térreo'),('triplo','superior','Piso superior')]:
-  page.locator(f'[data-options="{slug}"]').click()
-  assert label in page.locator('#details-options').inner_text()
-  page.locator(f'[data-book-category="{slug}"]').click()
-  assert label in page.locator('#booking-summary').inner_text()
-  assert 'Sem preferência' not in page.locator('#booking-summary').inner_text()
-  page.locator('#guest').fill('Teste sintético');page.locator('#phone').fill('65999999999')
-  page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
-  assert ns['payloads'][-1]['floor']==floor
-  assert ns['payloads'][-1]['category_slug']==slug
-  assert ns['payloads'][-1]['expected_total']==60000
-  assert label in page.locator('#booking-receipt-summary').inner_text()
-  page.locator('#booking-success [data-close-success]').first.click()
-  page.wait_for_function("!document.querySelector('#search [type=submit]').disabled")
-  assert page.locator('#floor').input_value()=='sem_preferencia'
+ # Both a small party and a four-person family bind the selected offer's real floor.
+ for size,options in [(2,[('duplo','terreo','Térreo'),('triplo','superior','Piso superior')]),(4,[('familia','terreo','Térreo'),('familia-superior','superior','Piso superior')])]:
+  search('sem_preferencia',[{'adults':size,'children_ages':[]}])
+  if size==4:page.locator('#rooms').screenshot(path=str(ns['ROOT']/'work/filtered-four-person-family.png'))
+  for slug,floor,label in options:
+   page.locator(f'[data-options="{slug}"]').click()
+   assert label in page.locator('#details-options').inner_text()
+   page.locator(f'[data-book-category="{slug}"]').click()
+   assert label in page.locator('#booking-summary').inner_text()
+   assert 'Sem preferência' not in page.locator('#booking-summary').inner_text()
+   page.locator('#guest').fill('Teste sintético');page.locator('#phone').fill('65999999999')
+   page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
+   assert ns['payloads'][-1]['floor']==floor
+   assert ns['payloads'][-1]['category_slug']==slug
+   assert ns['payloads'][-1]['party']==[{'adults':size,'children_ages':[]}]
+   assert ns['payloads'][-1]['expected_total']==60000
+   assert label in page.locator('#booking-receipt-summary').inner_text()
+   page.locator('#booking-success [data-close-success]').first.click()
+   page.wait_for_function("!document.querySelector('#search [type=submit]').disabled")
+   assert page.locator('#floor').input_value()=='sem_preferencia'
+ # Total across rooms never changes the per-room category boundary.
+ assert search('sem_preferencia',[{'adults':2,'children_ages':[]},{'adults':2,'children_ages':[]}])==['duplo','triplo','triplo-standard','triplo-superior']
+ assert search('sem_preferencia',[{'adults':4,'children_ages':[]},{'adults':2,'children_ages':[]}])==['familia','familia-superior']
+ # Only return available families; never fall back to an incompatible Standard.
+ unavailable_categories={'familia'}
+ assert search('sem_preferencia',[{'adults':4,'children_ages':[]}])==['familia-superior']
+ unavailable_categories={'familia','familia-superior'}
+ assert search('sem_preferencia',[{'adults':4,'children_ages':[]}])==[]
+ assert page.locator('#no-availability').is_visible()
+ unavailable_categories=set()
  assert search('sem_preferencia',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['duplo','triplo','triplo-standard','triplo-superior']
  # Home popup keeps the no-preference option and party composition in its native GET/new tab.
  page.goto('http://qa.test/')
  page.locator('.showcase-copy > .showcase-rates').first.click()
  assert page.locator('#floor option:not([disabled])').all_text_contents()==['Sem preferência','Térreo','Piso superior']
  page.locator('#floor').select_option('sem_preferencia')
+ page.locator('#guests-trigger').click()
+ for _ in range(2):page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click()
+ page.locator('#apply-guests').click()
  expected_party=page.evaluate('window.stayParty.get()')
  with page.expect_popup() as popup:
   page.locator('#search [type="submit"]').click()
@@ -72,7 +93,8 @@ with ns['sync_playwright']() as p:
  forwarded=parse_qs(urlparse(target.url).query)
  assert forwarded['floor']==['sem_preferencia']
  assert json.loads(forwarded['party'][0])==expected_party
- target.wait_for_function("document.querySelectorAll('.catalog-room').length===4")
+ target.wait_for_function("document.querySelectorAll('.catalog-room').length===2")
+ assert target.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['familia','familia-superior']
  assert target.locator('#floor').input_value()=='sem_preferencia'
  target.close()
  # Six people in two rooms can use the normal categories: capacity is per room.
@@ -91,4 +113,4 @@ with ns['sync_playwright']() as p:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
  assert errors==[],errors
  browser.close()
- print('PASS: no-preference redirect and both-floor booking payloads; initial catalogue; both floors; five/six occupants; children count toward capacity; multiple rooms; empty result; refilter; responsive layout.')
+ print('PASS: no-preference redirect and both-floor booking payloads; initial catalogue; both floors; four/five/six occupants; children count toward capacity; multiple rooms; empty result; refilter; responsive layout.')

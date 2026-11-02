@@ -62,7 +62,7 @@ A aba Reservas tem seleção múltipla em `admin-bulk-bookings.js`, carregado an
 
 ## Filtro do catálogo público
 
-Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Família aparece nas buscas somente a partir de cinco pessoas no mesmo quarto; cinco ou seis pessoas exibem apenas Família; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
+Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Família aparece nas buscas a partir de quatro pessoas no mesmo quarto; quatro, cinco ou seis pessoas exibem apenas Família; com até três pessoas, mostrar somente as categorias Standard/Triplo disponíveis; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
 
 ## Conta Google nas reservas
 
@@ -98,7 +98,7 @@ Em 27/10/2026 o usuário autorizou explicitamente a limpeza das reservas de test
 
 ## Seis categorias por andar
 
-Ordem pública e do editor: `duplo` (Standard/térreo), `triplo` (Standard Superior, slug legado preservado), `triplo-standard`, `triplo-superior`, `familia` (térreo) e `familia-superior`. `database/six-room-categories.sql` amplia os blocos editoriais, mantém mídia/conteúdo existente, cria as variantes superiores com mídia atual como ponto de partida e separa o matching por andar/capacidade. As variantes compartilham o estoque físico e a constraint de exclusão; não criar unidades ou tarifas duplicadas. As duas famílias aparecem na busca apenas a partir de 5 pessoas por quarto. Novos ícones, fotos e descrições ficam editáveis em Conteúdo dos quartos. A home continua com os dois destaques Standard; o catálogo exibe seis opções antes da busca. Preservar os slugs antigos para vínculos e reservas; famílias superiores ativas antigas são migradas para o slug específico sem mudar cotação/unidade/datas. Contrato SQL em rollback: `database/test-six-room-categories.sql`.
+Ordem pública e do editor: `duplo` (Standard/térreo), `triplo` (Standard Superior, slug legado preservado), `triplo-standard`, `triplo-superior`, `familia` (térreo) e `familia-superior`. `database/six-room-categories.sql` amplia os blocos editoriais, mantém mídia/conteúdo existente, cria as variantes superiores com mídia atual como ponto de partida e separa o matching por andar/capacidade. As variantes compartilham o estoque físico e a constraint de exclusão; não criar unidades ou tarifas duplicadas. As duas famílias aparecem na busca a partir de 4 pessoas por quarto, conforme a correção solicitada pelo usuário; os limites físicos e a disponibilidade continuam sendo validados pelo servidor. Novos ícones, fotos e descrições ficam editáveis em Conteúdo dos quartos. A home continua com os dois destaques Standard; o catálogo exibe seis opções antes da busca. Preservar os slugs antigos para vínculos e reservas; famílias superiores ativas antigas são migradas para o slug específico sem mudar cotação/unidade/datas. Contrato SQL em rollback: `database/test-six-room-categories.sql`.
 
 ## Decoração romântica
 
