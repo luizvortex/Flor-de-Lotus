@@ -1,6 +1,13 @@
 {
   "version": 1,
   "phrases": {
+    "Cuidado com quem sai cedo para pescar.": ["A little care for early fishing departures.", "דואגים למי שיוצאים מוקדם לדוג."],
+    "Itens do café da manhã antes do horário habitual, mediante solicitação com antecedência.": ["Selected breakfast items before the usual hours, by advance request.", "פריטים מארוחת הבוקר לפני השעה הרגילה, בתיאום מראש."],
+    "Café da manhã para quem sai cedo": ["Breakfast for early departures", "ארוחת בוקר ליוצאים מוקדם"],
+    "Vai sair de madrugada para pescar? Combinando com a pousada com antecedência, podemos deixar alguns itens do café da manhã preparados antes do horário habitual, para você sair alimentado.": ["Heading out before dawn to fish? Arrange it with the inn in advance and we can prepare some breakfast items before the usual hours, so you can eat before leaving.", "יוצאים לדוג לפנות בוקר? בתיאום מראש עם בית ההארחה נוכל להכין כמה פריטים מארוחת הבוקר לפני השעה הרגילה, כדי שתאכלו לפני היציאה."],
+    "Café, leite, misto quente, frutas e suco são algumas das opções que podem ser combinadas com a equipe.": ["Coffee, milk, toasted ham and cheese sandwiches, fruit and juice are some of the options you can arrange with the team.", "קפה, חלב, טוסט עם גבינה ונקניק, פירות ומיץ הם חלק מהאפשרויות שניתן לתאם עם הצוות."],
+    "Solicite com antecedência e combine o horário e os itens disponíveis. Esse atendimento antecipado inclui alguns itens, não o café da manhã completo.": ["Request in advance and agree on the time and available items. This early service includes selected items, rather than the full breakfast.", "בקשו מראש ותאמו את השעה ואת הפריטים הזמינים. השירות המוקדם כולל כמה פריטים ולא את ארוחת הבוקר המלאה."],
+
     "Escolha os quartos e distribua os hóspedes no painel de grupos.": ["Choose rooms and assign guests in the group planner.", "בחרו חדרים ושבצו אורחים בלוח הקבוצות."],
     "Prefere conversar com a pousada? Informe os dados da sua estadia.": ["Prefer to talk to the inn? Enter your stay details.", "מעדיפים לדבר עם בית ההארחה? מלאו את פרטי השהייה."],
     "Check-in e check-out": ["Check-in and check-out", "צ׳ק-אין וצ׳ק-אאוט"],
