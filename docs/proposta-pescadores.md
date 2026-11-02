@@ -12,7 +12,7 @@ Todos os links de organização usam `/grupos?origem=pescadores`. A origem muda 
 
 Depoimento: primeiro publicado e destacado no cadastro (Ramon, Booking.com na leitura de 02/11/2026). Texto integral, nome e fonte preservados. Não foi encontrado relato comprovadamente sobre grupos; o bloco é apresentado como depoimento de hóspede. Sem conteúdo publicado adequado, não renderiza o bloco.
 
-Contato conserva nome, 1–60 pessoas e calendário compartilhado. Corrigida a orientação para datas ausentes para abrir o calendário após os demais listeners de submit, evitando fechamento imediato. Políticas usam detalhes nativos somente em /pescadores; check-in, check-out e confirmação iniciam abertos. Texto cadastrado não foi cortado.
+Contato conserva nome, 1–60 pessoas e calendário compartilhado. Corrigida a orientação para datas ausentes para abrir o calendário após os demais listeners de submit, evitando fechamento imediato. Após a avaliação, o proprietário solicitou manter todas as políticas permanentemente abertas, sem controles de expandir/recolher. Os cartões usam títulos e descrições estáticos, preservando integralmente o texto cadastrado.
 
 Verificações aprovadas: build Next/TypeScript; test-fishing-page.mjs; test-fishing-wheel-browser.py; test-fishing-proposal-browser.py; test-category-booking-browser.py. Navegador testado em 360, 390, 430, 768, 1024 e 1440 px. APIs interceptadas com fotografia/catálogo/depoimentos públicos consultados somente para leitura; window.open capturado para conferir mensagem sem enviá-la. Nenhuma reserva criada.
 

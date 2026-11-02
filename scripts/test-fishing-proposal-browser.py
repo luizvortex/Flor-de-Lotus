@@ -48,9 +48,9 @@ with sync_playwright() as p:
  assert page.locator('.fp-wheel-photo').count()==10
  assert set(page.locator('.fp-wheel img').evaluate_all('(els)=>els.map(el=>el.src)'))==photo_urls
  assert page.locator('.fp-plan').count()==0
- assert page.locator('#policy-grid details').count()==sum(bool(str(live['policies']['policies'].get(k,'')).strip()) for k in ['checkin','checkout','pets','internet','parking','children','payments','cancellation','reservations','additional'])
- for key in ['Check-in','Check-out','Confirmação da reserva']:assert page.locator('#policy-grid details').filter(has=page.locator('summary',has_text=key)).get_attribute('open') is not None
- item=page.locator('#policy-grid details').filter(has=page.locator('summary',has_text='Internet'));item.locator('summary').click();expect(item.locator('p')).to_be_visible()
+ assert page.locator('#policy-grid article.policy-item').count()==sum(bool(str(live['policies']['policies'].get(k,'')).strip()) for k in ['checkin','checkout','pets','internet','parking','children','payments','cancellation','reservations','additional'])
+ assert page.locator('#policy-grid details,#policy-grid summary').count()==0
+ for item in page.locator('#policy-grid article.policy-item').all():expect(item.locator('p')).to_be_visible()
  for width in [360,390,430,768,1024,1440]:
   page.set_viewport_size({'width':width,'height':1050})
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),width
@@ -87,4 +87,4 @@ with sync_playwright() as p:
  expect(page.locator('#plan-title')).to_contain_text('Comfort for every');assert page.locator('.site-language').count()==0
  assert not errors,errors
  browser.close()
-print('PASS: real catalog capacities/photos, published review, policy accordions, six widths, shared calendar, 1–60 people, WhatsApp text only, group origin/default, catalog retry and saved language; no writes.')
+print('PASS: real catalog capacities/photos, published review, always-visible policies, six widths, shared calendar, 1–60 people, WhatsApp text only, group origin/default, catalog retry and saved language; no writes.')

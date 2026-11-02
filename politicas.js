@@ -12,7 +12,7 @@
   try{
    const data=await request(),visible=fields.filter(([key])=>typeof data.policies?.[key]==='string'&&data.policies[key].trim());
    document.dispatchEvent(new CustomEvent('lotus:property-hours',{detail:{checkin:data.policies?.checkin_time||'14:00',checkout:data.policies?.checkout_time||'12:00'}}));
-   grid.innerHTML=visible.length?visible.map(([key,title,icon])=>grid.hasAttribute('data-policy-accordion')?`<details class="policy-item" ${['checkin','checkout','reservations'].includes(key)?'open':''}><summary>${title}</summary><p>${esc(data.policies[key])}</p></details>`:`<article class="policy-item"><h3><i class="bi bi-${icon}" aria-hidden="true"></i>${title}</h3><p>${esc(data.policies[key])}</p></article>`).join(''):'<p class="policy-status">Consulte a equipe da pousada para saber mais sobre as condições da sua estadia.</p>';
+   grid.innerHTML=visible.length?visible.map(([key,title,icon])=>`<article class="policy-item"><h3><i class="bi bi-${icon}" aria-hidden="true"></i>${title}</h3><p>${esc(data.policies[key])}</p></article>`).join(''):'<p class="policy-status">Consulte a equipe da pousada para saber mais sobre as condições da sua estadia.</p>';
   }catch{
    grid.innerHTML='<div class="policy-status"><p>Não foi possível carregar as políticas agora.</p><button type="button" class="text-button" id="retry-policies">Tentar novamente</button> · <a href="/#fale-conosco">Fale com a pousada</a></div>';
    grid.querySelector('button').onclick=loadPublic;
