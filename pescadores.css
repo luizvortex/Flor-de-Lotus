@@ -21,5 +21,9 @@
 @media(max-width:700px){.fp-inquiry{grid-template-columns:minmax(0,1fr);padding:46px 24px;gap:32px}.fp-inquiry-copy{padding-top:0}.fp-contact-card{padding:22px}.fp-contact-card .calendar-popover{width:min(560px,calc(100vw - 48px));right:-22px}}
 @media(max-width:600px){.fp-contact-card .calendar-popover{width:100%;right:0;max-width:none}}
 
-.fp-hero-note.fp-early-note{margin-top:12px;align-items:flex-start}.fp-early-note p{min-width:0;font-size:clamp(15px,1.2vw,18px);line-height:1.5;font-weight:400}.fp-early-note strong,.fp-early-note span{display:block}.fp-early-note strong{font-size:inherit;font-weight:500;margin-bottom:6px}.fp-hero-note.fp-early-note>svg{margin-top:2px}
+.fp-hero-note.fp-early-note{margin-top:12px;align-items:flex-start;color:var(--forest)}.fp-early-note p{min-width:0;font-size:clamp(15px,1.2vw,18px);line-height:1.5;font-weight:400}.fp-early-note strong,.fp-early-note span{display:block}.fp-early-note strong{font-size:inherit;font-weight:500;margin-bottom:6px}.fp-hero-note.fp-early-note>svg{margin-top:2px}
 .fp-inquiry .fp-freezer{display:flex;align-items:center;gap:14px;margin:28px 0 0;padding:20px 0;color:var(--gold)}.fp-freezer>svg,.fp-early-breakfast h3>svg{width:28px;height:28px;flex:none;color:inherit}.fp-early-breakfast{padding:20px 0;margin-bottom:28px;border-bottom:1px solid #ffffff30;color:var(--gold)}.fp-early-breakfast h3{display:flex;align-items:center;gap:14px;font:500 13px/1.8 Poppins,sans-serif;color:inherit;margin:0 0 12px}.fp-early-breakfast p{font-size:12px;line-height:1.85;margin:0;color:inherit}
+
+/* Keep every part of both sand cards legible against their shared background. */
+.fp-hero .fp-hero-note p,.fp-hero .fp-hero-note strong,.fp-hero .fp-hero-note span,.fp-hero .fp-hero-note>svg{color:var(--forest)}
+.fp-hero .fp-hero-note>svg{display:block;flex:0 0 32px;width:32px;height:32px;stroke:currentColor;opacity:1;visibility:visible}
