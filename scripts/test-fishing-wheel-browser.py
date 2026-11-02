@@ -48,6 +48,7 @@ with sync_playwright() as p:
     for _ in range(9):page.clock.fast_forward(3100)
     assert center().get_attribute('data-fishing-photo')=='9'
     assert page.locator('[data-wheel-toggle],[data-wheel-caption]').count()==0
+    assert page.locator('.fp-wheel-photo button>span').count()==0
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
     page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='9'
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
