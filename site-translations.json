@@ -1,6 +1,10 @@
 {
   "version": 1,
   "phrases": {
+    "VAMOS CONVERSAR": ["LET’S TALK", "בואו נדבר"],
+    "Converse com a pousada sobre a viagem do seu grupo de pescadores.": ["Talk to the inn about your fishing group’s trip.", "דברו עם בית ההארחה על הנסיעה של קבוצת הדייגים שלכם."],
+    "Conversar pelo WhatsApp": ["Chat on WhatsApp", "שיחה בוואטסאפ"],
+    "A conversa será aberta no WhatsApp em uma nova aba.": ["The conversation will open in WhatsApp in a new tab.", "השיחה תיפתח בוואטסאפ בלשונית חדשה."],
     "Selecione um quarto e preencha os hóspedes na janela de edição.": ["Select a room and enter its guests in the editor.", "בחרו חדר ומלאו את פרטי האורחים בחלון העריכה."],
     "DISTRIBUIÇÃO DOS HÓSPEDES": ["GUEST DISTRIBUTION", "חלוקת האורחים"],
     "Hóspedes do quarto": ["Room guests", "אורחי החדר"],

@@ -1,4 +1,14 @@
 (() => {
+ const contact=document.querySelector('#fishing-contact');
+ contact?.addEventListener('submit',event=>{
+  event.preventDefault();
+  const name=contact.querySelector('#fishing-name');
+  if(!name.value.trim()){name.setCustomValidity('Informe seu nome.');name.reportValidity();return;}
+  const url=new URL(contact.action);
+  url.searchParams.set('text',`Oi, meu nome é ${name.value.trim()}. Estou entrando em contato referente a um grupo de pescadores e gostaria de consultar a disponibilidade. ${contact.dataset.message||''}`);
+  window.open(url.href,'_blank','noopener,noreferrer');
+ });
+ contact?.querySelector('#fishing-name').addEventListener('input',event=>event.target.setCustomValidity(''));
  const buttons=[...document.querySelectorAll('[data-fishing-photo]')],dialog=document.querySelector('.fp-lightbox');
  if(!buttons.length||!dialog)return;
  const image=dialog.querySelector('[data-photo-large]'),caption=dialog.querySelector('[data-photo-caption]');
