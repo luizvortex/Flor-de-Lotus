@@ -1,5 +1,10 @@
 (() => {
  const contact=document.querySelector('#fishing-contact');
+ const peopleInput=contact?.querySelector('#fishing-people');
+ peopleInput?.addEventListener('input',()=>{
+  peopleInput.value=peopleInput.value.replace(/[^0-9]/g,'').slice(0,2);
+  peopleInput.setCustomValidity('');
+ });
  contact?.addEventListener('submit',event=>{
   event.preventDefault();
   const name=contact.querySelector('#fishing-name');
@@ -11,6 +16,7 @@
    if(trigger.getAttribute('aria-expanded')!=='true')trigger.click();
    return;
   }
+  peopleInput.setCustomValidity(/^([1-9]|[1-5][0-9]|60)$/.test(peopleInput.value)?'':'Informe de 1 a 60 pessoas.');
   if(!contact.reportValidity())return;
   const people=contact.querySelector('#fishing-people').value;
   const format=value=>value.split('-').reverse().join('/');
