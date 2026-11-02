@@ -56,3 +56,15 @@
 
 /* Center the opening at 85% on desktop, with a more compact text column. */
 @media(min-width:1025px){.fp-hero{width:85%;margin-inline:auto}.fp-hero:not(.fp-no-photo){min-height:560px}.fp-hero-copy{padding:clamp(32px,4vw,64px)}.fp-hero h1{font-size:clamp(32px,3vw,48px)}}
+
+/* The expanded navigation belongs to the hero; scrolling reveals a slim fixed bar. */
+html{scroll-padding-top:84px}
+.fp-header{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:1500px;z-index:40;margin:0;padding:24px 4vw;background:transparent;color:var(--paper);transition:padding .25s,background .25s,box-shadow .25s}
+.fp-header nav a{color:inherit;text-shadow:0 1px 4px #0009}.fp-header nav a:last-child{border-color:var(--gold)}
+.fp-brand img{display:block;transition:width .25s,height .25s;filter:drop-shadow(0 1px 2px #ffffff60)}
+.fp-hero{position:relative}.fp-hero::before{content:'';position:absolute;inset:0 0 auto;height:125px;background:linear-gradient(#152e28b8,transparent);pointer-events:none;z-index:1}
+.fp-hero-copy{padding-top:150px}.fp-header.is-compact{width:100%;max-width:none;padding:8px 7.5vw;background:#254039f5;backdrop-filter:blur(12px);box-shadow:0 3px 18px #152e2826}
+.fp-header.is-compact .fp-brand img{width:112px;height:44px}.fp-header.is-compact nav{font-size:11px;gap:24px}
+@media(min-width:1025px){.fp-header{width:85%}.fp-hero-copy{padding-top:144px}}
+@media(min-width:601px) and (max-width:850px){.fp-header{width:calc(100% - 40px)}}
+@media(max-width:600px){.fp-header{padding:18px 24px}.fp-header.is-compact{padding:7px 20px}.fp-header.is-compact .fp-brand img{width:92px;height:38px}.fp-header.is-compact nav{font-size:10px;gap:12px}.fp-hero-copy{padding-top:38px}.fp-no-photo .fp-hero-copy{padding-top:130px}}

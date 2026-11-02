@@ -1,4 +1,13 @@
 (() => {
+ const header=document.querySelector('.fp-header');
+ if(header){
+  let frame=0;
+  const paintHeader=()=>{header.classList.toggle('is-compact',window.scrollY>40);frame=0;};
+  window.addEventListener('scroll',()=>{if(!frame)frame=requestAnimationFrame(paintHeader);},{passive:true});
+  window.addEventListener('pageshow',paintHeader);
+  paintHeader();
+ }
+
  const contact=document.querySelector('#fishing-contact');
  const peopleInput=contact?.querySelector('#fishing-people');
  peopleInput?.addEventListener('input',()=>{
