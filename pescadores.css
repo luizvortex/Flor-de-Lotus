@@ -72,3 +72,6 @@ html{scroll-padding-top:84px}
 
 /* Keep only discreet navigation arrows below the circular album. */
 .fp-wheel-toolbar{justify-content:flex-end;flex-direction:row;border:0;padding:8px 0 0;margin-top:0;gap:0}.fp-wheel-controls{justify-content:flex-end;gap:8px}.fp-wheel-controls button{min-width:44px;min-height:44px}
+
+/* Touch/mouse opening should not draw an autofocus box around Close. */
+.fp-lightbox.photo-pointer-open .fp-close:focus{outline:none;box-shadow:none}

@@ -54,11 +54,15 @@ with sync_playwright() as p:
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
     center().focus();page.clock.fast_forward(5000);assert center().get_attribute('data-fishing-photo')=='8'
     center().click();expect(page.locator('.fp-lightbox')).to_be_visible()
+    assert page.locator('.fp-close').evaluate('(el)=>getComputedStyle(el).outlineStyle')=='none'
     expect(page.locator('[data-photo-large]')).to_have_attribute('alt','Foto de teste 9')
     page.keyboard.press('ArrowRight');expect(page.locator('[data-photo-large]')).to_have_attribute('alt','Foto de teste 10')
     page.clock.fast_forward(5000);assert center().get_attribute('data-fishing-photo')=='8'
     page.keyboard.press('Escape');expect(page.locator('.fp-lightbox')).not_to_be_visible()
     expect(center()).to_be_focused()
+    page.keyboard.press('Enter');expect(page.locator('.fp-lightbox')).to_be_visible()
+    assert page.locator('.fp-close').evaluate('(el)=>getComputedStyle(el).outlineStyle')!='none'
+    page.keyboard.press('Escape');expect(page.locator('.fp-lightbox')).not_to_be_visible()
     # All ten slots stay distinct, increase in size and fit within the wheel on mobile and desktop.
     for width in [320,390,768,1440]:
         page.set_viewport_size({'width':width,'height':1100});wheel.scroll_into_view_if_needed();page.clock.fast_forward(1000)

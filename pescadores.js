@@ -48,12 +48,12 @@
  const image=dialog.querySelector('[data-photo-large]'),caption=dialog.querySelector('[data-photo-caption]');
  let active=0,opener,updateCarousel=()=>{};
  function show(index){active=(index+sources.length)%sources.length;const source=sources[active];image.src=source.src;image.alt=source.alt;caption.textContent=`${active+1} / ${sources.length} · ${source.alt}`;}
- buttons.forEach(button=>button.addEventListener('click',()=>{opener=button;show(Number(button.dataset.fishingPhoto));dialog.showModal();document.body.classList.add('photo-open');updateCarousel();}));
+ buttons.forEach(button=>button.addEventListener('click',event=>{dialog.classList.toggle('photo-pointer-open',event.detail>0);opener=button;show(Number(button.dataset.fishingPhoto));dialog.showModal();document.body.classList.add('photo-open');updateCarousel();}));
  dialog.querySelector('[data-photo-close]').addEventListener('click',()=>dialog.close());
  dialog.querySelector('[data-photo-prev]').addEventListener('click',()=>show(active-1));
  dialog.querySelector('[data-photo-next]').addEventListener('click',()=>show(active+1));
  dialog.querySelector('[data-photo-prev]').hidden=sources.length<2;dialog.querySelector('[data-photo-next]').hidden=sources.length<2;
- dialog.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();show(active-1);}if(event.key==='ArrowRight'){event.preventDefault();show(active+1);}});
+ dialog.addEventListener('keydown',event=>{if(event.key==='Tab')dialog.classList.remove('photo-pointer-open');if(event.key==='ArrowLeft'){event.preventDefault();show(active-1);}if(event.key==='ArrowRight'){event.preventDefault();show(active+1);}});
  dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
  dialog.addEventListener('close',()=>{document.body.classList.remove('photo-open');image.removeAttribute('src');opener?.focus();updateCarousel();});
 
