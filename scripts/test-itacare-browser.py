@@ -11,6 +11,15 @@ with sync_playwright() as p:
   more=page.locator('.discovery-more');assert more.get_attribute('target')=='_blank'
   assert page.locator('.discovery-card').count()==3
   assert page.locator('#praias-select').count()==0
+  stage=page.locator('[data-discovery-photos]').first
+  home_photos=json.loads(stage.get_attribute('data-discovery-photos'))
+  assert len(home_photos)>1
+  stage.locator('[data-explore-card-prev]').click()
+  page.wait_for_function('(count)=>document.querySelector("[data-discovery-photos] .explore-card-counter").textContent===`${count} / ${count}`',arg=len(home_photos))
+  stage.locator('[data-explore-card-next]').click()
+  page.wait_for_function('()=>document.querySelector("[data-discovery-photos] .explore-card-counter").textContent.startsWith("1 /")')
+  assert len(page.context.pages)==1
+
   with page.expect_popup() as popup:more.click()
   guide=popup.value
   guide.wait_for_load_state('domcontentloaded')
@@ -46,6 +55,10 @@ with sync_playwright() as p:
   advance.click()
   guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
   assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
+  shown.locator('[data-explore-card-prev]').click()
+  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
+  advance.click()
+  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
   guide.context.set_offline(False)
   guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'")
   assert not guide.locator('#explore-album').evaluate('(d)=>d.open')

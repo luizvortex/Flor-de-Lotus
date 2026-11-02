@@ -111,3 +111,9 @@
 .explore-card-counter { position:absolute; top:14px; left:14px; pointer-events:none; padding:6px 9px; font-size:10px; letter-spacing:.7px; background:#10222070; color:white; }
 @media(max-width:767px){.explore-hero>img,.explore-photo-button>img{transform:none;transition:none}}
 .explore-subtitle { color:#927953; font-size:13px; line-height:1.7; margin:0 0 18px; white-space:pre-line; }
+
+.explore-card-prev { right:auto; left:8px; }
+.discovery-card-heading { color:inherit; text-decoration:none; }
+.discovery-card-image>a { display:block; width:100%; height:100%; }
+
+.discovery-card-image:has(.explore-card-counter) .discovery-number { display:none; }

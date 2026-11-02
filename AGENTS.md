@@ -207,3 +207,5 @@ Na home, o usuário pediu exibir o título **Quarto Triplo Superior** no destaqu
 Instagram usa somente o container fixo em `instagram-content.ts`. No editor há três imagens independentes (`backgroundImage`, `firstImage`, `secondImage`), sem lista/adicionar/carrossel. Publicações antigas recebem as três primeiras fotos anteriores (ou da galeria usada antes como fallback), sem regravar o banco. Campos de fotos/intervalos antigos ficam ocultos para preservar o documento. Teste: `node scripts/test-site-editor.mjs --instagram-only`.
 
 Na home, o seletor de idioma mostra bandeira, nome e seta no topo; com `.home-header.is-compact`, mostra apenas bandeira e seta, preservando o nome acessível. Inglês usa a bandeira dos EUA. Teste de rolagem nos quatro idiomas em `scripts/test-site-language-browser.py`.
+
+Cards de praias têm anterior/próxima em `itacare-content.ts` e `itacare.js`. A prévia na home troca fotos por `discovery-photos.js`, preservando os links para o destino. Manter controles fora dos links e esconder ambos em álbuns com uma foto. Teste: `node scripts/test-site-editor.mjs --guide-only`.

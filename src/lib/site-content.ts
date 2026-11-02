@@ -65,7 +65,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
   offers.append($('#decoracao-romantica').remove());
  }
  if(page!=='index')return $.html();
- $('head').append('<link rel="stylesheet" href="/itacare.css">');
+ $('head').append('<link rel="stylesheet" href="/itacare.css"><script src="/discovery-photos.js" defer></script>');
  const hero=c.hero;
  text('.home-hero-copy h1',hero.title);text('.home-hero-eyebrow',hero.eyebrow);text('.home-hero-tagline',hero.description);
  img('.home-hero-poster',hero.poster);const video=$('.home-hero-video');video.attr('poster',String(hero.poster)).attr('data-speed',String(hero.speed)).attr('data-limit',String(hero.limit)).attr('data-animation',String(hero.animation));

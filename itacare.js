@@ -82,9 +82,9 @@
  stages.forEach(stage=>{warmObserver.observe(stage);stage.addEventListener('pointerenter',()=>warmStage(stage),{passive:true});stage.addEventListener('touchstart',()=>warmStage(stage),{passive:true});stage.addEventListener('focusin',()=>warmStage(stage));});
  // Explicit clicks only: cached images commit immediately, with no disabled arrow
  // or busy cursor. Late responses cannot replace a newer selection.
- page.querySelectorAll('[data-explore-card-next]').forEach(next=>next.addEventListener('click',()=>{
+ page.querySelectorAll('[data-explore-card-next],[data-explore-card-prev]').forEach(next=>next.addEventListener('click',()=>{
   const state=stageState(next.closest('.explore-photo-stage'));if(!state||state.list.length<2)return;
-  state.target=(state.target+1)%state.list.length;const selected=state.target,sequence=++state.sequence,photo=state.list[selected],entry=preparePhoto(photo,828,100);
+  state.target=(state.target+(next.hasAttribute('data-explore-card-prev')?-1:1)+state.list.length)%state.list.length;const selected=state.target,sequence=++state.sequence,photo=state.list[selected],entry=preparePhoto(photo,828,100);
   const commit=()=>{
    if(sequence!==state.sequence)return;
    state.img.src=entry.url;state.img.alt=photo.alt;state.open.dataset.exploreStart=String(selected);
