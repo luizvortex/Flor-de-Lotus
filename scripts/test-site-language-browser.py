@@ -35,6 +35,25 @@ with sync_playwright() as p:
  page.goto('http://qa.test/');page.wait_for_selector('.home-language summary')
  assert page.locator('html').get_attribute('lang')=='pt-BR'
  assert page.locator('.home-language [data-language-label]').inner_text()=='Português'
+ # Selected-language text is shown at the top and hidden only after real scrolling.
+ for language,lang in [('en','en'),('es','es'),('he','he'),('pt','pt-BR')]:
+  page.locator('.home-language summary').click()
+  page.locator(f'.home-language [data-language="{language}"]').click()
+  page.wait_for_function('(lang)=>document.documentElement.lang===lang',arg=lang)
+  label=page.locator('.home-language [data-language-label] > span')
+  assert label.is_visible()
+  page.evaluate('window.scrollTo({top:1500,behavior:"instant"})')
+  page.wait_for_selector('.home-header.is-compact')
+  assert label.is_hidden()
+  assert page.locator('.home-language .language-flag').first.is_visible()
+  assert page.locator('.home-language .language-chevron').is_visible()
+  assert label.text_content() in page.locator('.home-language summary').get_attribute('aria-label')
+  page.locator('.home-language summary').click()
+  assert page.locator('.home-language .language-options').is_visible()
+  page.keyboard.press('Escape')
+  page.evaluate('window.scrollTo({top:0,behavior:"instant"})')
+  page.wait_for_function("!document.querySelector('.home-header').classList.contains('is-compact')")
+  assert label.is_visible()
  original=page.locator('.home-hero-tagline').inner_text()
  original_about=page.locator('.about-description p').first.inner_text()
  summary=page.locator('.home-language summary');summary.click()

@@ -3,13 +3,14 @@
   // Local translations for public pages; never load on admin or guest accounts.
   const languages = {
     pt: {label: 'Português', lang: 'pt-BR', flag: 'br', loading: 'Traduzindo…', error: 'Não foi possível carregar a tradução. Tente novamente.'},
-    en: {label: 'English', lang: 'en', flag: 'gb', loading: 'Translating…', error: 'Translation could not be loaded. Please try again.'},
+    en: {label: 'English', lang: 'en', flag: 'us', loading: 'Translating…', error: 'Translation could not be loaded. Please try again.'},
     es: {label:'Español',lang:'es',flag:'es',loading:'Traduciendo…',error:'No se pudo cargar la traducción. Inténtalo de nuevo.'},
     he: {label: 'עברית', lang: 'he', flag: 'il', loading: 'מתרגם…', error: 'לא ניתן לטעון את התרגום. נסו שוב.'},
   };
   const flags = {
     es: '<rect width="28" height="20" rx="2" fill="#aa151b"/><path d="M0 5h28v10H0Z" fill="#f1bf00"/>',
     br: '<rect width="28" height="20" rx="2" fill="#229e45"/><path d="m14 2 12 8-12 8L2 10Z" fill="#ffdf00"/><circle cx="14" cy="10" r="5" fill="#17479e"/><path d="M9.4 8.4a12 12 0 0 1 9 3.1" fill="none" stroke="#fff" stroke-width="1"/>',
+    us: '<rect width="28" height="20" fill="#fff"/><path d="M0 1.4h28M0 4.3h28M0 7.2h28M0 10.1h28M0 13h28M0 15.9h28M0 18.8h28" stroke="#b22234" stroke-width="1.5"/><path d="M0 0h12v10.8H0Z" fill="#3c3b6e"/><path d="M2 2h1m2 0h1m2 0h1M3 4h1m2 0h1m2 0h1M2 6h1m2 0h1m2 0h1M3 8h1m2 0h1m2 0h1" stroke="#fff" stroke-width="1"/>',
     gb: '<rect width="28" height="20" rx="2" fill="#173b78"/><path d="m0 0 28 20M28 0 0 20" stroke="#fff" stroke-width="5"/><path d="m0 0 28 20M28 0 0 20" stroke="#c8102e" stroke-width="2"/><path d="M14 0v20M0 10h28" stroke="#fff" stroke-width="7"/><path d="M14 0v20M0 10h28" stroke="#c8102e" stroke-width="4"/>',
     il: '<rect width="28" height="20" rx="2" fill="#fff"/><path d="M0 4h28M0 16h28" stroke="#1764b4" stroke-width="2"/><path d="m14 6 3.5 6h-7Zm0 8-3.5-6h7Z" fill="none" stroke="#1764b4" stroke-width=".8"/>',
   };
@@ -34,6 +35,7 @@
     root.lang = languages[key].lang;
     root.dir = key === 'he' ? 'rtl' : 'ltr';
     selectors.forEach(menu => {
+      menu.querySelector('summary').setAttribute('aria-label', `Idioma / Language: ${languages[key].label}`);
       menu.querySelector('[data-language-label]').innerHTML = `${flag(key)}<span lang="${languages[key].lang}" dir="auto">${languages[key].label}</span>`;
       menu.querySelectorAll('[data-language]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.language === key)));
     });

@@ -39,3 +39,6 @@ html[dir="rtl"] .home-nav-links { direction: rtl; }
 }
 html[lang="he"] :is(body,h1,h2,h3,h4,button,input,select,textarea){font-family:Arial,sans-serif}
 html[lang="he"] .home-hero-copy h1{font-family:'Playfair Display',Georgia,serif}
+
+/* The compact home header keeps the selected flag and dropdown arrow. */
+.home-header.is-compact .home-language [data-language-label] > span { display: none; }

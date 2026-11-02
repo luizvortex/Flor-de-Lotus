@@ -205,3 +205,5 @@ O editor de fotos em `admin-showcases.js` prepara imagens acima de 3 MB no naveg
 Na home, o usuário pediu exibir o título **Quarto Triplo Superior** no destaque alimentado por `triplo-standard`, mantendo exatamente suas fotos e demais textos. O título é aplicado apenas na renderização da home em `legacy-page.ts`; preservar cadastro, catálogo e regras de reserva.
 
 Instagram usa somente o container fixo em `instagram-content.ts`. No editor há três imagens independentes (`backgroundImage`, `firstImage`, `secondImage`), sem lista/adicionar/carrossel. Publicações antigas recebem as três primeiras fotos anteriores (ou da galeria usada antes como fallback), sem regravar o banco. Campos de fotos/intervalos antigos ficam ocultos para preservar o documento. Teste: `node scripts/test-site-editor.mjs --instagram-only`.
+
+Na home, o seletor de idioma mostra bandeira, nome e seta no topo; com `.home-header.is-compact`, mostra apenas bandeira e seta, preservando o nome acessível. Inglês usa a bandeira dos EUA. Teste de rolagem nos quatro idiomas em `scripts/test-site-language-browser.py`.
