@@ -68,3 +68,6 @@ html{scroll-padding-top:84px}
 @media(min-width:1025px){.fp-header{width:85%}.fp-hero-copy{padding-top:144px}}
 @media(min-width:601px) and (max-width:850px){.fp-header{width:calc(100% - 40px)}}
 @media(max-width:600px){.fp-header{padding:18px 24px}.fp-header.is-compact{padding:7px 20px}.fp-header.is-compact .fp-brand img{width:92px;height:38px}.fp-header.is-compact nav{font-size:10px;gap:12px}.fp-hero-copy{padding-top:38px}.fp-no-photo .fp-hero-copy{padding-top:130px}}
+
+/* Reduce the complete fishing album to 80% of its previous desktop footprint. */
+@media(min-width:1025px){.fp-memories{width:80%;max-width:1120px;padding:80px 4vw}.fp-memories .fp-section-heading{gap:35px;margin-bottom:38px}.fp-memories .fp-section-heading h2{font-size:clamp(28px,2.88vw,43.2px)}.fp-memories .fp-section-heading>p{font-size:12px}.fp-memories .fp-carousel{max-width:880px}}
