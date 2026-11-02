@@ -96,3 +96,32 @@ html{scroll-padding-top:84px}
 .fp-hero{margin-top:var(--fp-top-space)}
 .fp-header:not(.is-compact){top:var(--fp-top-space)}
 @media(max-width:600px){.fishing-page{--fp-top-space:16px}}
+
+/* Local proposal: accommodation references, concise planning and clear contact paths. */
+.fp-accommodations,.fp-how,.fp-testimonial{width:85%;max-width:1260px;margin:0 auto 52px}
+.fp-accommodations .fp-section-heading{margin-bottom:26px;gap:32px}.fp-accommodations h2{font-size:clamp(30px,3vw,42px)}
+.fp-accommodations .fp-section-heading>p{max-width:40ch;font-size:12px}
+.fp-room-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;outline-offset:5px}
+.fp-room-card{min-width:0;background:#fffdf8;border:1px solid #d7cdbb;overflow:hidden;border-radius:5px}
+.fp-room-card>img{display:block;width:100%;height:200px;object-fit:cover;object-position:center}
+.fp-room-card>div{padding:20px}.fp-room-card h3{font:400 24px/1.2 'Playfair Display',Georgia,serif;margin:0 0 10px}
+.fp-room-card p{font-size:11px;line-height:1.8;color:#586b60;margin:0}.fp-room-card .fp-room-capacity{font-size:11px;color:#775529;margin-bottom:12px;font-weight:500}
+.fp-room-status{grid-column:1/-1;font-size:12px;border:1px solid #d7cdbb;padding:22px}.fp-room-status button{font:inherit;background:none;border:0;color:var(--forest);text-decoration:underline;cursor:pointer;padding:8px}
+.fp-room-actions{display:flex;flex-wrap:wrap;align-items:center;gap:18px 32px;margin-top:26px}.fp-room-actions .fp-text-link{margin:0;font-size:11px}
+.fp-room-actions .fp-button{min-width:0;font-size:11px}.fp-how{background:var(--sand);padding:28px 32px;border-block:1px solid #d2c1a0}.fp-how>.fp-eyebrow{margin-bottom:24px;font-size:9px}
+.fp-how ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));list-style:none;padding:0;margin:0;gap:24px}
+.fp-how li{display:flex;gap:14px;align-items:start}.fp-how li>span{display:grid;place-items:center;flex:none;width:32px;height:32px;border:1px solid #b99e73;border-radius:50%;color:#75552e;font-size:10px}
+.fp-how h3{font-size:13px;font-weight:500;line-height:1.6;margin:0 0 4px}.fp-how li p{font-size:11px;color:#586b60;line-height:1.8}.fp-confirmation-note{font-size:10px;margin-top:22px;padding-top:16px;border-top:1px solid #d2c1a0;color:#5d604b}
+.fp-testimonial{max-width:950px;padding:12px 40px 10px;text-align:center}.fp-testimonial>.fp-eyebrow{font-size:9px;margin-bottom:18px}
+.fp-testimonial blockquote{margin:0}.fp-testimonial blockquote>p{font:400 clamp(20px,2.1vw,28px)/1.5 'Playfair Display',Georgia,serif;white-space:pre-line}.fp-testimonial footer{max-width:none;display:flex;justify-content:center;gap:12px 20px;flex-wrap:wrap;padding:22px 0 0;font-size:11px}.fp-testimonial cite{font-style:normal;font-weight:500;color:var(--forest)}
+.fp-inquiry .fp-inquiry-lead{margin:22px 0;font-size:13px;line-height:1.9;color:#e3e8dd;max-width:42ch}.fp-inquiry-copy>.fp-button{font-size:11px;max-width:440px}
+.fp-practical{padding:20px 0 0 18px;margin:22px 0 0;border-top:1px solid #ffffff30;color:#d8dfcd;font-size:12px;line-height:1.8}.fp-practical li{padding:5px 0}.fp-contact-card h3{font-size:28px}.fp-contact-intro{margin-bottom:20px}
+.fishing-page [data-policy-accordion]{display:grid;grid-template-columns:1fr 1fr;border:0;gap:12px}
+.fishing-page [data-policy-accordion] .policy-item{border:1px solid #d4c7b5;padding:0;background:#fffdf8;align-self:start;border-radius:4px;overflow:hidden}
+.fishing-page [data-policy-accordion] summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 22px;font-size:13px;font-weight:500;list-style:none;min-height:52px}
+.fishing-page [data-policy-accordion] summary::-webkit-details-marker{display:none}.fishing-page [data-policy-accordion] summary::after{content:'+';font-size:20px;font-weight:400;color:#826037}
+.fishing-page [data-policy-accordion] details[open]>summary::after{content:'−'}.fishing-page [data-policy-accordion] .policy-item p{border-top:1px solid #e9dfd0;padding:16px 22px;font-size:12px}
+.fishing-page [data-policy-accordion] details[open]:nth-child(1),.fishing-page [data-policy-accordion] details[open]:nth-child(2){border-top:2px solid #b99e73}
+@media(max-width:1000px){.fp-room-cards{gap:14px}.fp-room-card>div{padding:16px}.fp-room-card h3{font-size:21px}.fp-room-card>img{height:170px}.fp-how{padding:24px}.fp-how ol{gap:16px}.fp-how li{gap:10px}}
+@media(max-width:700px){.fp-accommodations,.fp-how,.fp-testimonial{width:calc(100% - 40px);margin-bottom:36px}.fp-accommodations .fp-section-heading{display:block}.fp-accommodations .fp-section-heading>p{margin-top:18px;max-width:none}.fp-room-cards{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:12px}.fp-room-card{flex:0 0 85%;scroll-snap-align:start}.fp-room-card>img{height:180px}.fp-room-card h3{font-size:24px}.fp-room-card>div{padding:20px}.fp-room-actions{display:block;margin-top:20px}.fp-room-actions .fp-button{display:flex;justify-content:space-between;width:100%;font-size:11px;padding-inline:18px;gap:12px}.fp-room-actions .fp-text-link{display:inline-flex;margin-top:18px;font-size:10px}.fp-how ol{grid-template-columns:1fr;gap:18px}.fp-how>.fp-eyebrow{font-size:8px;line-height:1.8}.fp-how{padding:24px}.fp-testimonial{padding:4px 16px}.fp-testimonial footer{display:flex;align-items:center;font-size:10px;gap:8px 14px}.fp-testimonial footer a{flex-basis:100%}.fishing-page [data-policy-accordion]{grid-template-columns:1fr}.fp-inquiry .fp-inquiry-lead{font-size:12px}.fp-contact-card h3{font-size:26px}}
+.fishing-page #policy-grid[data-policy-accordion]{border:0;gap:12px}

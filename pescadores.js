@@ -1,4 +1,25 @@
 (() => {
+ const roomsPanel=document.querySelector('#fishing-rooms');
+ if(roomsPanel){
+  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const safePhoto=value=>typeof value==='string'&&!value.includes('..')&&(/^\/(img[^/]*|images)\/[^<>"\\]+\.(jpg|jpeg|png|webp)$/i.test(value)||/^https:\/\/asojfispuomhbfapqdmi\.supabase\.co\/storage\/v1\/object\/public\/lotus-showcase\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(value));
+  async function loadRooms(){
+   roomsPanel.innerHTML='<p class="fp-room-status">Carregando acomodações do catálogo…</p>';
+   try{
+    const response=await fetch('/api/catalog',{cache:'no-store',signal:AbortSignal.timeout(8000)});if(!response.ok)throw Error();
+    const data=await response.json();if(!Array.isArray(data.rooms)||!Array.isArray(data.showcases))throw Error();
+    const inventory=data.rooms.filter(r=>r.active!==false&&r.active!==0);
+    const selected=['duplo','triplo','familia'].map(slug=>data.showcases.find(s=>s.slug===slug)).filter(Boolean).map(row=>({row,units:window.lotusRoomCatalog.categoryRooms(row,inventory)})).filter(({row,units})=>units.length&&safePhoto(row.photos?.[0]?.url)&&units.every(u=>Number.isInteger(u.capacity)&&u.capacity>0));
+    if(!selected.length)throw Error();
+    roomsPanel.innerHTML=selected.map(({row,units})=>{
+     const capacities=units.map(u=>u.capacity),min=Math.min(...capacities),max=Math.max(...capacities),description=String(row.description||'');
+     const short=description.length>160?description.slice(0,160).replace(/\s+\S*$/,'')+'…':description;
+     return `<article class="fp-room-card"><img src="${esc(row.photos[0].url)}" alt="${esc(row.photos[0].alt||row.title)}" loading="lazy" width="600" height="450"><div><h3>${esc(row.title)}</h3><p class="fp-room-capacity">${min===max?max:`${min}–${max}`} pessoas por quarto</p><p>${esc(short)}</p></div></article>`;
+    }).join('');
+   }catch{roomsPanel.innerHTML='<p class="fp-room-status">Não foi possível carregar as acomodações. <button type="button" data-rooms-retry>Tentar novamente</button></p>';roomsPanel.querySelector('[data-rooms-retry]').addEventListener('click',loadRooms);}
+  }
+  loadRooms();
+ }
  const header=document.querySelector('.fp-header');
  if(header){
   let frame=0;
@@ -22,7 +43,7 @@
   if(!entry||!exit||exit<=entry){
    contact.querySelector('#fishing-stay-summary').textContent='Escolha a data de entrada e a data de saída.';
    const trigger=contact.querySelector('#dates-trigger');
-   if(trigger.getAttribute('aria-expanded')!=='true')trigger.click();
+   if(trigger.getAttribute('aria-expanded')!=='true')setTimeout(()=>trigger.click(),0);
    return;
   }
   peopleInput.setCustomValidity(/^([1-9]|[1-5][0-9]|60)$/.test(peopleInput.value)?'':'Informe de 1 a 60 pessoas.');

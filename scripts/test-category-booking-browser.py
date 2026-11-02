@@ -173,7 +173,7 @@ with sync_playwright() as p:
  assert page.locator('#showcase-album').is_visible()
  assert page.locator('.showcase-album-count').inner_text().startswith(str(expected_photo)+' /')
  page.keyboard.press('Escape')
- page.locator('.showcase-more .showcase-rates').first.click()
+ page.locator('.showcase-copy > .showcase-rates').first.click()
  assert page.locator('#availability-dialog').is_visible()
  assert page.evaluate('getComputedStyle(document.activeElement).outlineStyle')=='none'
  assert page.locator('#floor').input_value()==''

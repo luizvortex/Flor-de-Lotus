@@ -64,9 +64,8 @@
  const nextDay=(value,days=1)=>{const d=new Date(value+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);};
  const floorLabel=value=>({terreo:'Térreo',superior:'Piso superior'}[value]||'Andar a definir');
  const configuration=value=>({solteiro:'Single',casal:'Duplo',casal_mais_um:'Triplo',quadruplo:'Quádruplo',familia:'Família'}[value]||'Acomodação');
- const categoryRules={duplo:{floor:'terreo',capacity:1},triplo:{floor:'superior',capacity:1},'triplo-standard':{floor:'terreo',capacity:3},'triplo-superior':{floor:'superior',capacity:3},familia:{floor:'terreo',capacity:5},'familia-superior':{floor:'superior',capacity:5}};
+ const {categoryRules,defaultSlug,categoryRooms}=window.lotusRoomCatalog;
  const categoryOrder=Object.keys(categoryRules);
- const defaultSlug=r=>r.presentation_slug||r.showcase_slug||({familia:'familia',casal_mais_um:'triplo-standard'}[r.type]||'duplo');
  const photoUrl=url=>typeof url==='string'&&!url.includes('..')&&(/^\/(img[^/]*|images)\/[^<>"\\]+\.(jpg|jpeg|png|webp)$/i.test(url)||/^https:\/\/asojfispuomhbfapqdmi\.supabase\.co\/storage\/v1\/object\/public\/lotus-showcase\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(url));
  let startingRates=[],showcases=[],inventory=[],packages=[],available=[],lastQuery=null,nights=0,sequence=0,controller,selection=null,detail=null,detailIndex=0;
  const photoIndices=new Map();
@@ -123,7 +122,7 @@
  function message(text,error=false){$('#message').textContent=text;$('#message').className=error?'error':'';}
  function query(){return {start:$('#checkin').value,end:$('#checkout').value,guests:Number($('#guests').value),package_id:$('#package').value||'',floor:$('#floor').value||'',party:JSON.stringify(window.stayParty.get())};}
  function focusSearch(){ $('#search').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});$('#dates-trigger').focus({preventScroll:true});if($('#dates-trigger').getAttribute('aria-expanded')==='false')$('#dates-trigger').click(); }
- function categoryRooms(row,rooms){const rule=categoryRules[row.slug];return rooms.filter(r=>r.category_slug?r.category_slug===row.slug&&(!rule||!r.floor||r.floor===rule.floor):rule?r.floor===rule.floor&&r.capacity>=rule.capacity:defaultSlug(r)===row.slug);}
+
  function rowsFor(row){return categoryRooms(row,lastQuery?available:inventory).sort((a,b)=>(lastQuery?a.total:a.price)-(lastQuery?b.total:b.price));}
  function applyCatalog(data){
   startingRates=Array.isArray(data.starting_rates)?data.starting_rates:[];
