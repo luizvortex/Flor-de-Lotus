@@ -33,15 +33,71 @@
  });
  const buttons=[...document.querySelectorAll('[data-fishing-photo]')],dialog=document.querySelector('.fp-lightbox');
  if(!buttons.length||!dialog)return;
+ // The wheel repeats registered photos when needed; the lightbox lists each original only once.
+ const sources=[];
+ buttons.forEach(button=>{sources[Number(button.dataset.fishingPhoto)]=button.querySelector('img');});
  const image=dialog.querySelector('[data-photo-large]'),caption=dialog.querySelector('[data-photo-caption]');
- let active=0,opener;
- function show(index){active=(index+buttons.length)%buttons.length;const source=buttons[active].querySelector('img');image.src=source.src;image.alt=source.alt;caption.textContent=`${active+1} / ${buttons.length} · ${source.alt}`;}
- buttons.forEach((button,index)=>button.addEventListener('click',()=>{opener=button;show(index);dialog.showModal();document.body.classList.add('photo-open');}));
+ let active=0,opener,updateCarousel=()=>{};
+ function show(index){active=(index+sources.length)%sources.length;const source=sources[active];image.src=source.src;image.alt=source.alt;caption.textContent=`${active+1} / ${sources.length} · ${source.alt}`;}
+ buttons.forEach(button=>button.addEventListener('click',()=>{opener=button;show(Number(button.dataset.fishingPhoto));dialog.showModal();document.body.classList.add('photo-open');updateCarousel();}));
  dialog.querySelector('[data-photo-close]').addEventListener('click',()=>dialog.close());
  dialog.querySelector('[data-photo-prev]').addEventListener('click',()=>show(active-1));
  dialog.querySelector('[data-photo-next]').addEventListener('click',()=>show(active+1));
- dialog.querySelector('[data-photo-prev]').hidden=buttons.length<2;dialog.querySelector('[data-photo-next]').hidden=buttons.length<2;
+ dialog.querySelector('[data-photo-prev]').hidden=sources.length<2;dialog.querySelector('[data-photo-next]').hidden=sources.length<2;
  dialog.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'){event.preventDefault();show(active-1);}if(event.key==='ArrowRight'){event.preventDefault();show(active+1);}});
  dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
- dialog.addEventListener('close',()=>{document.body.classList.remove('photo-open');image.removeAttribute('src');opener?.focus();});
+ dialog.addEventListener('close',()=>{document.body.classList.remove('photo-open');image.removeAttribute('src');opener?.focus();updateCarousel();});
+
+ const carousel=document.querySelector('.fp-carousel'),wheel=carousel?.querySelector('[data-fishing-wheel]');
+ if(!wheel)return;
+ const tiles=[...wheel.querySelectorAll('.fp-wheel-photo')],toggle=carousel.querySelector('[data-wheel-toggle]'),wheelCaption=carousel.querySelector('[data-wheel-caption]');
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+ let selected=9,paused=reduced.matches,hovering=false,visible=false,timer,animations=[],pointerPause;
+ const slotOf=index=>(index-selected+19)%10;
+ function position(slot){
+  if(slot===9)return {left:'50%',top:'50%',width:'44%'};
+  const angle=(slot*40-90)*Math.PI/180;
+  return {left:`${50+37*Math.cos(angle)}%`,top:`${50+37*Math.sin(angle)}%`,width:`${10+slot*1.5}%`};
+ }
+ function path(from,to){
+  const start=position(from),end=position(to);
+  // Sample the circular path so orbiting photos travel along the ring, upright.
+  return Array.from({length:13},(_,i)=>{
+   const progress=i/12;
+   if(from===9||to===9)return Object.fromEntries(['left','top','width'].map(key=>[key,`${parseFloat(start[key])+(parseFloat(end[key])-parseFloat(start[key]))*progress}%`]));
+   return position(from+(to-from)*progress);
+  });
+ }
+ function render(previous){
+  animations.forEach(animation=>animation.cancel());animations=[];
+  tiles.forEach((tile,index)=>{
+   const slot=slotOf(index),button=tile.querySelector('button');
+   tile.dataset.wheelSlot=String(slot);Object.assign(tile.style,position(slot));
+   if(slot===9)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');
+   if(previous&&!reduced.matches&&tile.animate)animations.push(tile.animate(path(previous[index],slot),{duration:800,easing:'cubic-bezier(.4,0,.2,1)'}));
+  });
+  const sourceIndex=Number(tiles[selected].querySelector('button').dataset.fishingPhoto);
+  wheelCaption.textContent=`${sourceIndex+1} / ${sources.length} · ${sources[sourceIndex].alt}`;
+ }
+ function advance(direction){const previous=tiles.map((_,index)=>slotOf(index));selected=(selected+direction+10)%10;render(previous);}
+ function schedule(){
+  clearTimeout(timer);
+  toggle.textContent=paused?'Reproduzir':'Pausar';toggle.setAttribute('aria-pressed',String(paused));
+  if(paused||hovering||!visible||document.hidden||dialog.open)return;
+  timer=setTimeout(()=>{advance(-1);schedule();},3000);
+ }
+ updateCarousel=schedule;
+ toggle.addEventListener('pointerdown',()=>{pointerPause=!paused;});
+ toggle.addEventListener('click',()=>{paused=pointerPause??!paused;pointerPause=undefined;schedule();});
+ carousel.querySelector('[data-wheel-prev]').addEventListener('click',()=>{paused=true;advance(1);schedule();});
+ carousel.querySelector('[data-wheel-next]').addEventListener('click',()=>{paused=true;advance(-1);schedule();});
+ // Keyboard focus stops autoplay until the visitor explicitly restarts it.
+ carousel.addEventListener('focusin',()=>{paused=true;schedule();});
+ carousel.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'){hovering=true;schedule();}});
+ carousel.addEventListener('pointerleave',()=>{hovering=false;schedule();});
+ document.addEventListener('visibilitychange',schedule);
+ reduced.addEventListener('change',()=>{if(reduced.matches){paused=true;animations.forEach(animation=>animation.cancel());}schedule();});
+ if('IntersectionObserver' in window){new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();},{threshold:0.15}).observe(wheel);}
+ else {visible=true;}
+ render();schedule();
 })();

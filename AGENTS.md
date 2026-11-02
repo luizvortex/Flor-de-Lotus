@@ -195,3 +195,7 @@ Em `admin-romance.js`, cada anexo oferece **Abrir foto** e **Baixar foto**. O do
 ## Controles dos detalhes da decoração
 
 Nos detalhes “Preparação especial do quarto”, não exibir os botões Pedidos e preparação, Produtos e variantes, Voltar aos pedidos e Registrar recebimento. Essa tela deve focar no pedido, anexos, atribuição/confirmação e situação operacional. A navegação geral permanece nas listagens/editor próprios e o catálogo continua acessível pelo menu administrativo; os recebimentos continuam na aba própria. Não remover os serviços nem registros correspondentes.
+
+## Roda de fotos dos pescadores
+
+O álbum de `/pescadores` agora usa dez posições em roda: nove fotos periféricas de tamanhos progressivos e uma central maior. `pescadores.js` avança a cada 3 segundos: centro → menor posição, nona → centro; animação de 800 ms preserva fotos na vertical. O CMS permite até 10 fotos; com menos, a roda repete somente as fotos cadastradas, sem criar imagens fictícias. A ampliação e a contagem usam os originais, sem contar as repetições. Pausar/reproduzir e anterior/próxima permanecem acessíveis; foco pausa até ação explícita, hover/fora da tela/aba oculta/lightbox suspendem o temporizador; reduced-motion inicia pausado. Verificar com `node scripts/test-fishing-page.mjs` e `python3 scripts/test-fishing-wheel-browser.py` (fixture isolada, nenhuma escrita no CMS).

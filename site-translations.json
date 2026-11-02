@@ -1,6 +1,11 @@
 {
   "version": 1,
   "phrases": {
+    "Carrossel de fotos das pescarias": ["Fishing photo carousel", "קרוסלת תמונות הדיג"],
+    "Controles do carrossel": ["Carousel controls", "פקדי הקרוסלה"],
+    "Pausar": ["Pause", "השהיה"],
+    "Reproduzir": ["Play", "הפעלה"],
+
     "SUA TURMA, SUA ESTADIA": ["YOUR GROUP, YOUR STAY", "הקבוצה שלכם, השהייה שלכם"],
     "ORGANIZE SUA VIAGEM DE PESCA": ["PLAN YOUR FISHING TRIP", "תכננו את טיול הדיג שלכם"],
     "Um quarto para cada parte da turma.": ["A room for everyone in your group.", "חדר לכל חלק מהקבוצה."],
