@@ -4,8 +4,12 @@
   event.preventDefault();
   const name=contact.querySelector('#fishing-name');
   if(!name.value.trim()){name.setCustomValidity('Informe seu nome.');name.reportValidity();return;}
+  if(!contact.reportValidity())return;
+  const people=contact.querySelector('#fishing-people').value;
+  const date=contact.querySelector('#fishing-date').value;
+  const formattedDate=date.split('-').reverse().join('/');
   const url=new URL(contact.action);
-  url.searchParams.set('text',`Oi, meu nome é ${name.value.trim()}. Estou entrando em contato referente a um grupo de pescadores e gostaria de consultar a disponibilidade. ${contact.dataset.message||''}`);
+  url.searchParams.set('text',`Oi, meu nome é ${name.value.trim()} e estou entrando em contato referente a um grupo de pescadores e gostaria de consultar a disponibilidade.\n\nQuantidade de pessoas: ${people}\nData da viagem: ${formattedDate}`);
   window.open(url.href,'_blank','noopener,noreferrer');
  });
  contact?.querySelector('#fishing-name').addEventListener('input',event=>event.target.setCustomValidity(''));

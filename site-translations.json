@@ -1,6 +1,8 @@
 {
   "version": 1,
   "phrases": {
+    "Quantidade de pessoas": ["Number of people", "מספר האנשים"],
+    "Data da viagem": ["Trip date", "תאריך הנסיעה"],
     "VAMOS CONVERSAR": ["LET’S TALK", "בואו נדבר"],
     "Converse com a pousada sobre a viagem do seu grupo de pescadores.": ["Talk to the inn about your fishing group’s trip.", "דברו עם בית ההארחה על הנסיעה של קבוצת הדייגים שלכם."],
     "Conversar pelo WhatsApp": ["Chat on WhatsApp", "שיחה בוואטסאפ"],
