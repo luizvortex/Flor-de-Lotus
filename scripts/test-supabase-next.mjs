@@ -10,6 +10,7 @@ let policyData = { policies: {checkin:'A partir das 14h.'}, revision:1 };
 
 let revoked = false;
 let adminSignIns = 0;
+let failUpperFloor = false;
 const received = [];
 const mock = createServer(async (req, res) => {
   let body = ''; for await (const chunk of req) body += chunk;
@@ -49,7 +50,11 @@ const mock = createServer(async (req, res) => {
   }
   if (req.url === '/rest/v1/rpc/lotus_rate_api') {
     if (data.p_operation === 'catalog') return json(200,{rooms:[],packages:[]});
-    if (data.p_operation === 'availability') return json(200,{rooms:[],nights:1});
+    if (data.p_operation === 'availability') {
+      const d=data.p_data;
+      if (failUpperFloor && d.floor==='superior') return json(503,{message:'Synthetic unavailable floor'});
+      return json(200,{rooms:[{category_slug:d.floor==='terreo'?'duplo':'triplo',floor:d.floor,total:d.floor==='terreo'?20000:24000}],nights:1,room_count:d.party?.length||1});
+    }
     if (token !== 'access-admin' || revoked) return json(401,{code:'PT401'});
     return json(200,{rates:[]});
   }
@@ -97,6 +102,20 @@ try {
   const home=await (await fetch(base)).text();assert(home.indexOf('id="grupos-excursoes"')>home.indexOf('id="quartos"'));
   assert.equal((await fetch(base+'/grupos')).status,200);
   let r = await request('catalog'); assert.equal(r.status, 200); assert.deepEqual(await r.json(), { rooms: [], packages: [] });
+  const party=[{adults:2,children_ages:[5]},{adults:1,children_ages:[]}];
+  const availabilityParams=new URLSearchParams({start:'2030-01-10',end:'2030-01-11',guests:'4',floor:'sem_preferencia',party:JSON.stringify(party),package_id:'9'});
+  const availabilityStart=received.length;
+  r=await request('availability?'+availabilityParams);assert.equal(r.status,200);
+  assert.deepEqual(await r.json(),{rooms:[{category_slug:'duplo',floor:'terreo',total:20000},{category_slug:'triplo',floor:'superior',total:24000}],nights:1,room_count:2});
+  const floorRequests=received.slice(availabilityStart).filter(x=>x.data.p_operation==='availability');
+  assert.deepEqual(floorRequests.map(x=>x.data.p_data.floor).sort(),['superior','terreo']);
+  for(const req of floorRequests)assert.deepEqual(req.data.p_data,{start:'2030-01-10',end:'2030-01-11',guests:4,floor:req.data.p_data.floor,party,package_id:9});
+  failUpperFloor=true;
+  r=await request('availability?'+availabilityParams);assert.equal(r.status,503);assert.equal((await r.json()).rooms,undefined);
+  failUpperFloor=false;
+  availabilityParams.set('floor','terreo');const singleFloorStart=received.length;
+  r=await request('availability?'+availabilityParams);assert.equal(r.status,200);assert.equal((await r.json()).rooms.length,1);
+  assert.equal(received.slice(singleFloorStart).filter(x=>x.data.p_operation==='availability').length,1);
   r = await request('admin'); assert.equal(r.status, 401);
   r = await request('rates'); assert.equal(r.status,401);
   r = await request('bookings/101/assignment',{room_id:5},{method:'PUT'});assert.equal(r.status,401);

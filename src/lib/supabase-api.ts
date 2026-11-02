@@ -266,6 +266,12 @@ export async function supabaseApi(request: NextRequest): Promise<Response> {
       data.floor = params.get('floor') || '';
       if (params.has('party')) { try { data.party = JSON.parse(params.get('party') || ''); } catch { throw new ApiError(400, 'Confira os adultos, crianças e quartos.'); } }
       data.package_id = params.get('package_id') ? Number(params.get('package_id')) : null;
+      if (data.floor === 'sem_preferencia') {
+        // Keep each floor's authoritative capacity, stock and occupancy pricing.
+        const results = await Promise.all(['terreo', 'superior'].map(floor => rpc('availability', { ...data, floor }, token)));
+        if (results.some(result => !Array.isArray(result.rooms))) throw new ApiError(503, 'Sistema de reservas indisponível. Tente novamente.');
+        return finish({ ...results[0], rooms: results.flatMap(result => result.rooms as Json[]) });
+      }
     }
     if (path === 'admin-menu' && ['GET','PUT'].includes(method)) {
       if (!token) throw new ApiError(401,'Entre no painel para organizar o menu.');

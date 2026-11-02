@@ -62,7 +62,7 @@
  const dateParts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Bahia',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
  const dp=k=>dateParts.find(p=>p.type===k).value,today=`${dp('year')}-${dp('month')}-${dp('day')}`;
  const nextDay=(value,days=1)=>{const d=new Date(value+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+days);return d.toISOString().slice(0,10);};
- const floorLabel=value=>({terreo:'Térreo',superior:'Piso superior'}[value]||'Andar a definir');
+ const floorLabel=value=>({sem_preferencia:'Sem preferência',terreo:'Térreo',superior:'Piso superior'}[value]||'Andar a definir');
  const configuration=value=>({solteiro:'Single',casal:'Duplo',casal_mais_um:'Triplo',quadruplo:'Quádruplo',familia:'Família'}[value]||'Acomodação');
  const {categoryRules,defaultSlug,categoryRooms}=window.lotusRoomCatalog;
  const categoryOrder=Object.keys(categoryRules);
@@ -152,7 +152,7 @@
  function unavailableReason(row){
   const rooms=inventoryFor(row),capacity=rooms.length?Math.max(...rooms.map(room=>room.capacity)):0;
   if(!rooms.length)return 'Esta categoria ainda não possui uma unidade ativa para reserva. Consulte a pousada.';
-  if(lastQuery?.floor&&!rooms.some(room=>room.floor===lastQuery.floor))return `Não há unidades desta categoria cadastradas no ${floorLabel(lastQuery.floor).toLowerCase()}. Consulte outro andar ou converse com a pousada.`;
+  if(lastQuery?.floor&&lastQuery.floor!=='sem_preferencia'&&!rooms.some(room=>room.floor===lastQuery.floor))return `Não há unidades desta categoria cadastradas no ${floorLabel(lastQuery.floor).toLowerCase()}. Consulte outro andar ou converse com a pousada.`;
   if(lastQuery&&JSON.parse(lastQuery.party).length>1)return 'Não há quartos suficientes nesta categoria para a composição escolhida. Ajuste os quartos ou consulte a pousada.';
   if(lastQuery&&Number(lastQuery.guests)>capacity)return `Esta categoria está cadastrada para até ${plural(capacity,'hóspede','hóspedes')}. Ajuste a quantidade de pessoas ou consulte a pousada.`;
   return 'Sem disponibilidade para estas datas e hóspedes. Consulte outro período ou converse com a pousada.';
@@ -173,7 +173,7 @@
 
   $('#rooms').innerHTML=showcases.length?visibleShowcases.map(s=>{
    const rows=rowsFor(s),best=rows[0],price=startingPrice(s);
-   const label=lastQuery?(best?`Disponível para ${JSON.parse(lastQuery.party).length} quarto(s) · ${floorLabel(lastQuery.floor)}`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
+   const label=lastQuery?(best?`Disponível para ${JSON.parse(lastQuery.party).length} quarto(s) · ${floorLabel(best.floor)}`:unavailableReason(s)):(s.eyebrow||'Acomodações Flor de Lótus');
    const cost=price!==null?money(price):(lastQuery&&best?'Valor sob consulta.':lastQuery?'Experimente outras datas.':'Consulte os valores com a pousada.');
    const index=(photoIndices.get(s.slug)||0)%s.photos.length;
    return `<article class="catalog-room" data-slug="${esc(s.slug)}"><div class="card-gallery"><button type="button" class="card-photo" data-details="${esc(s.slug)}" aria-label="Ver fotos de ${esc(s.title)}"><img src="${esc(s.photos[index].url)}" alt="${esc(s.photos[index].alt)}" width="700" height="460" loading="lazy"><span class="card-photo-label">Ver ${s.photos.length} fotos</span></button><button type="button" class="photo-arrow" data-photo-prev aria-label="Foto anterior de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></button><button type="button" class="photo-arrow" data-photo-next aria-label="Próxima foto de ${esc(s.title)}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10 5 7 7-7 7"/></svg></button></div><div class="room-body"><h3>${esc(s.title)}</h3><p class="room-meta">${esc(label)}</p><ul class="room-features">${s.features.slice(0,4).map(f=>`<li>${window.roomAmenities.icon(f.icon)}<span>${esc(f.label)}</span></li>`).join('')}</ul><p class="room-description">${esc(s.description?.length>145?s.description.slice(0,142)+'…':s.description)}</p><button type="button" class="text-button room-details-link" data-details="${esc(s.slug)}">Mais detalhes<svg viewBox="0 0 16 16" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></button><div class="room-cost"><small>${price!==null?'A partir de':'Planeje sua estadia'}</small><p class="room-price ${price===null?'unquoted':''}">${esc(cost)}</p><button type="button" class="gold-button" ${lastQuery&&best?`data-options="${esc(s.slug)}"`:'data-search-focus'}>${lastQuery&&best?'Ver opções e reservar':lastQuery?'Consultar outras datas':'Escolher datas'}</button>${whatsappButton(s.title)}</div></div></article>`;
@@ -206,7 +206,7 @@
   if(!detail)return;const rows=rowsFor(detail);
   const best=rows[0],canBook=best&&Number.isFinite(best.total)&&!best.quote_example;
   const fixed=startingPrice(detail),starting=fixed!==null?`<div class="starting-price"><small>A partir de</small><p>${money(fixed)}</p></div>`:'';
-  $('#details-options').innerHTML=starting+(lastQuery&&canBook?`<div class="room-option"><p><strong>${esc(detail.title)} · ${esc(floorLabel(lastQuery.floor))}</strong><br>${plural(lastQuery.guests,'hóspede','hóspedes')} · ${JSON.parse(lastQuery.party).length} quarto(s) · ${plural(nights,'noite','noites')}<br>${money(best.total)} no total</p><button type="button" class="gold-button" data-book-category="${esc(detail.slug)}">Solicitar reserva</button></div>`:lastQuery&&best?whatsappButton(detail.title):`<p class="room-meta">${lastQuery?esc(unavailableReason(detail)):''}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`);
+  $('#details-options').innerHTML=starting+(lastQuery&&canBook?`<div class="room-option"><p><strong>${esc(detail.title)} · ${esc(floorLabel(best.floor))}</strong><br>${plural(lastQuery.guests,'hóspede','hóspedes')} · ${JSON.parse(lastQuery.party).length} quarto(s) · ${plural(nights,'noite','noites')}<br>${money(best.total)} no total</p><button type="button" class="gold-button" data-book-category="${esc(detail.slug)}">Solicitar reserva</button></div>`:lastQuery&&best?whatsappButton(detail.title):`<p class="room-meta">${lastQuery?esc(unavailableReason(detail)):''}</p><button type="button" class="gold-button" data-search-focus>Escolher datas</button>${whatsappButton(detail.title)}`);
 
 
  }
@@ -236,8 +236,8 @@
   if(button.hasAttribute('data-search-focus')){$('#room-details').close();focusSearch();}
   if(button.hasAttribute('data-book-category')&&lastQuery){
    const room=rowsFor(detail)[0];if(!room)return;
-   selection={category:detail.slug,room:{...room,presentation:detail.title},query:{...lastQuery}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=false;
-   $('#booking-summary').textContent=`${detail.title} · ${floorLabel(lastQuery.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${JSON.parse(lastQuery.party).length} quarto(s) · ${money(room.total)} no total.`;$('#booking-dialog').showModal();if(!guestAuthenticated)openBookingLogin();else document.dispatchEvent(new Event('lotus:refresh-guest-session'));
+   selection={category:detail.slug,room:{...room,presentation:detail.title},query:{...lastQuery,floor:room.floor}};$('#room-details').close();$('#booking-error').textContent='';$('#booking-form [type="submit"]').disabled=false;
+   $('#booking-summary').textContent=`${detail.title} · ${floorLabel(room.floor)} · ${dateLabel(lastQuery.start)} a ${dateLabel(lastQuery.end)} · ${plural(lastQuery.guests,'hóspede','hóspedes')} · ${JSON.parse(lastQuery.party).length} quarto(s) · ${money(room.total)} no total.`;$('#booking-dialog').showModal();if(!guestAuthenticated)openBookingLogin();else document.dispatchEvent(new Event('lotus:refresh-guest-session'));
   }
  });
  $('#room-details').addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();paintDetails(detailIndex+(event.key==='ArrowRight'?1:-1));}});
