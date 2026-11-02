@@ -4,3 +4,95 @@
 @media(max-width:850px){.fp-hero{margin-inline:20px;min-height:560px}.fp-hero-copy{padding:36px 28px}.fp-section-heading{gap:28px}.fp-stay{gap:36px;padding:50px 5vw}.fp-header nav{gap:18px}.fp-header nav a:first-child{display:none}}
 @media(max-width:600px){.fp-header{padding:16px 20px;gap:12px}.fp-brand img{width:115px;height:48px}.fp-header nav{font-size:10px}.fp-header nav a:nth-child(2){display:none}.fp-hero{margin-inline:0;grid-template-columns:1fr}.fp-cover{grid-row:1;min-height:0;aspect-ratio:4/3}.fp-hero-copy{padding:38px 24px 42px}.fp-cover figcaption{left:18px;right:18px;bottom:18px}.fp-hero-note{margin-top:30px}.fp-eyebrow{font-size:9px;margin-bottom:18px}.fp-memories{padding:56px 20px}.fp-section-heading{display:block;margin-bottom:28px}.fp-section-heading>p{margin-top:22px;max-width:none}.fp-album{grid-template-columns:1fr;gap:28px}.fp-photo:nth-child(n){grid-column:auto}.fp-stay{grid-template-columns:1fr;gap:28px;padding:46px 24px}.fp-button-sand{padding-inline:18px;font-size:11px}footer{flex-direction:column;align-items:flex-start;padding:30px 24px;gap:14px}.fp-lightbox{padding:58px 10px 18px}.fp-lightbox-content{gap:6px}.fp-lightbox-content>button{width:30px;height:40px;font-size:20px}.fp-lightbox img{max-height:65dvh}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+/* Give the confirmed freezer benefit a prominent place in the opening. */
+.fp-hero h1{font-size:clamp(34px,3.5vw,56px)}
+.fp-hero-note{max-width:none;padding:18px 20px;margin-top:30px;background:var(--gold);color:var(--forest);border:1px solid #e9d6af;font-size:clamp(15px,1.2vw,18px);line-height:1.5;font-weight:500;border-radius:2px}
+.fp-hero-note>svg{color:var(--forest);width:32px;height:32px;flex:none}
+.fp-contact{max-width:1260px;margin:auto;padding:72px 24px;display:grid;grid-template-columns:1fr 1fr;gap:60px;border-bottom:1px solid #d4c7b5}
+.fp-contact h2+p{margin-top:24px;max-width:42ch}.fp-contact form{align-self:center;min-width:0}.fp-contact label{display:block;margin-bottom:8px}.fp-contact input{width:100%;border:1px solid #9b9f8e;background:#fffdf8;color:var(--forest);font:inherit;padding:14px;margin-bottom:16px}.fp-contact input:focus-visible{outline:3px solid #b78a43;outline-offset:3px}.fp-contact button{cursor:pointer}.fp-contact form>p{font-size:11px;margin-top:12px}@media(max-width:600px){.fp-contact{grid-template-columns:1fr;gap:28px;padding:46px 24px}.fp-hero-note{padding:16px;gap:14px}}
+
+.fp-contact .dates-control{margin-bottom:12px}.fp-contact .calendar-popover{left:auto;right:0}.fp-contact #fishing-stay-summary{margin:0 0 16px;font-size:12px}.fp-contact .calendar-nav p,.fp-contact .calendar-footer>span{color:#647269}
+
+/* One shared inquiry section, with a direct contact form beside the group flow. */
+.fp-inquiry{max-width:none;margin:0;border:0;padding:72px max(5vw,calc((100vw - 1260px)/2));grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:64px}
+.fp-inquiry-copy{padding-top:16px;min-width:0}.fp-inquiry .fp-freezer{margin:28px 0 24px;font-size:13px}.fp-inquiry .fp-stay-actions>.fp-button{width:100%;gap:16px}.fp-inquiry .fp-group-hint{font-size:11px;line-height:1.7;color:#d8e0d8;margin-top:12px;max-width:46ch}
+.fp-contact-card{background:var(--paper);color:var(--forest);padding:32px;min-width:0;border:1px solid #d4c7b5;scroll-margin-top:24px}.fp-contact-card h3{font:400 32px/1.2 'Playfair Display',Georgia,serif;margin:0 0 12px}.fp-contact-intro{font-size:12px;line-height:1.8;margin-bottom:24px}.fp-contact-card .fp-button{width:100%}.fp-contact-card .calendar-popover{max-width:calc(100vw - 48px)}
+@media(max-width:850px){.fp-inquiry{gap:32px;padding:48px 5vw}.fp-contact-card{padding:24px}.fp-inquiry .fp-stay-actions>.fp-button{padding-inline:16px;font-size:11px}}
+@media(max-width:700px){.fp-inquiry{grid-template-columns:minmax(0,1fr);padding:46px 24px;gap:32px}.fp-inquiry-copy{padding-top:0}.fp-contact-card{padding:22px}.fp-contact-card .calendar-popover{width:min(560px,calc(100vw - 48px));right:-22px}}
+@media(max-width:600px){.fp-contact-card .calendar-popover{width:100%;right:0;max-width:none}}
+
+.fp-hero-note.fp-early-note{margin-top:12px;align-items:flex-start;color:var(--forest)}.fp-early-note p{min-width:0;font-size:clamp(15px,1.2vw,18px);line-height:1.5;font-weight:400}.fp-early-note strong,.fp-early-note span{display:block}.fp-early-note strong{font-size:inherit;font-weight:500;margin-bottom:6px}.fp-hero-note.fp-early-note>svg{margin-top:2px}
+.fp-inquiry .fp-freezer{display:flex;align-items:center;gap:14px;margin:28px 0 0;padding:20px 0;color:var(--gold)}.fp-freezer>svg,.fp-early-breakfast h3>svg{width:28px;height:28px;flex:none;color:inherit}.fp-early-breakfast{padding:20px 0;margin-bottom:28px;border-bottom:1px solid #ffffff30;color:var(--gold)}.fp-early-breakfast h3{display:flex;align-items:center;gap:14px;font:500 13px/1.8 Poppins,sans-serif;color:inherit;margin:0 0 12px}.fp-early-breakfast p{font-size:12px;line-height:1.85;margin:0;color:inherit}
+
+/* Keep every part of both sand cards legible against their shared background. */
+.fp-hero .fp-hero-note p,.fp-hero .fp-hero-note strong,.fp-hero .fp-hero-note span,.fp-hero .fp-hero-note>svg{color:var(--forest)}
+.fp-hero .fp-hero-note>svg{display:block;flex:0 0 32px;width:32px;height:32px;stroke:currentColor;opacity:1;visibility:visible}
+
+/* Dedicated bridge from the fishing album to the shared group room planner. */
+.fp-plan{max-width:1260px;margin:0 auto 72px;padding:48px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;align-items:center;background:var(--sand);border:1px solid #cab990;color:var(--forest)}.fp-plan-art{display:flex;flex-direction:column;align-items:center;gap:20px;border-right:1px solid #c5b798;padding-right:40px}.fp-plan-art svg{display:block;max-width:100%;height:auto}.fp-plan-art>span{font-size:9px;letter-spacing:.18em;text-align:center}.fp-plan .fp-eyebrow{margin-bottom:16px}.fp-plan h2{font-size:clamp(30px,3vw,44px);max-width:20ch}.fp-plan-copy>p:not(.fp-eyebrow){font-size:13px;max-width:60ch;margin-top:20px}.fp-plan-steps{display:flex;flex-wrap:wrap;gap:12px 24px;list-style:none;counter-reset:plan;padding:0;margin:24px 0}.fp-plan-steps li{counter-increment:plan;font-size:11px;display:flex;align-items:center;gap:8px}.fp-plan-steps li::before{content:'0' counter(plan);color:#826037;font-size:10px}.fp-plan-button{background:var(--forest);color:var(--paper);border-color:var(--forest);max-width:100%;min-width:min(100%,320px)}.fp-plan-copy>.fp-plan-note{font-size:11px!important;color:#52645b;margin-top:14px!important}
+@media(max-width:1300px){.fp-plan{margin-inline:5vw}}@media(max-width:700px){.fp-plan{grid-template-columns:minmax(0,1fr);padding:28px;gap:24px;margin-bottom:46px}.fp-plan-art{flex-direction:row;justify-content:flex-start;padding:0 0 20px;border-right:0;border-bottom:1px solid #c5b798;gap:20px}.fp-plan-art svg{width:84px}.fp-plan-art>span{text-align:left}.fp-plan-button{width:100%;gap:16px}.fp-plan-steps{gap:12px 16px}}
+
+/* Ten upright photographs travel around a circular album, with the largest at its heart. */
+.fp-carousel{max-width:1100px;margin-inline:auto;direction:ltr}
+.fp-wheel{position:relative;width:100%;aspect-ratio:1;isolation:isolate}
+.fp-wheel::before{content:'';position:absolute;inset:13%;border:1px solid #cbb88f;border-radius:50%;opacity:.55;pointer-events:none}
+.fp-wheel::after{content:'';position:absolute;inset:7%;border:1px dashed #d4c7b5;border-radius:50%;opacity:.35;pointer-events:none}
+.fp-wheel-photo{position:absolute;transform:translate(-50%,-50%);aspect-ratio:4/3;margin:0;z-index:2}
+.fp-wheel-photo[data-wheel-slot="9"]{z-index:3}
+.fp-wheel-photo button{display:block;position:relative;width:100%;height:100%;min-height:24px;min-width:24px;padding:3px;border:1px solid #c8b387;background:var(--sand);box-shadow:0 7px 24px #25403916;cursor:zoom-in;color:var(--forest);border-radius:3px}
+.fp-wheel-photo[data-wheel-slot="9"] button{padding:6px;box-shadow:0 15px 45px #25403926}
+.fp-wheel-photo img{display:block;width:100%;height:100%;object-fit:contain}
+.fp-wheel-photo button:hover{border-color:var(--forest)}
+.fp-wheel-photo button:focus-visible{outline:3px solid var(--forest);outline-offset:4px}
+.fp-wheel-toolbar{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:8px;padding:20px 0;border-block:1px solid #d4c7b5}
+.fp-wheel-controls{display:flex;align-items:center;gap:8px;flex:none}
+.fp-wheel-controls button{min-width:44px;min-height:44px;padding:10px 14px;border:1px solid #c7b58f;background:transparent;color:var(--forest);cursor:pointer;font-size:15px}
+.fp-wheel-controls [data-wheel-toggle]{min-width:108px;font-size:12px}
+.fp-wheel-controls button:hover{background:var(--sand)}
+.fp-wheel-caption{font-size:11px;color:#52645b;max-width:55ch;text-align:right;overflow-wrap:anywhere}
+@media(max-width:600px){.fp-wheel-toolbar{flex-direction:column;gap:14px;padding-block:18px}.fp-wheel-caption{text-align:center}.fp-wheel-photo button{padding:2px}.fp-wheel-photo[data-wheel-slot="9"] button{padding:3px}.fp-wheel-photo button:focus-visible{outline-width:2px;outline-offset:2px}}
+
+/* Center the opening at 85% on desktop, with a more compact text column. */
+@media(min-width:1025px){.fp-hero{width:85%;margin-inline:auto}.fp-hero:not(.fp-no-photo){min-height:560px}.fp-hero-copy{padding:clamp(32px,4vw,64px)}.fp-hero h1{font-size:clamp(32px,3vw,48px)}}
+
+/* The expanded navigation belongs to the hero; scrolling reveals a slim fixed bar. */
+html{scroll-padding-top:84px}
+.fp-header{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:1500px;z-index:40;margin:0;padding:24px 4vw;background:transparent;color:var(--paper);transition:padding .25s,background .25s,box-shadow .25s}
+.fp-header nav a{color:inherit;text-shadow:0 1px 4px #0009}.fp-header nav a:last-child{border-color:var(--gold)}
+.fp-brand img{display:block;transition:width .25s,height .25s;filter:drop-shadow(0 1px 2px #ffffff60)}
+.fp-hero{position:relative}.fp-hero::before{content:'';position:absolute;inset:0 0 auto;height:125px;background:linear-gradient(#152e28b8,transparent);pointer-events:none;z-index:1}
+.fp-hero-copy{padding-top:150px}.fp-header.is-compact{width:100%;max-width:none;padding:8px 7.5vw;background:#254039f5;backdrop-filter:blur(12px);box-shadow:0 3px 18px #152e2826}
+.fp-header.is-compact .fp-brand img{width:112px;height:44px}.fp-header.is-compact nav{font-size:11px;gap:24px}
+@media(min-width:1025px){.fp-header{width:85%}.fp-hero-copy{padding-top:144px}}
+@media(min-width:601px) and (max-width:850px){.fp-header{width:calc(100% - 40px)}}
+@media(max-width:600px){.fp-header{padding:18px 24px}.fp-header.is-compact{padding:7px 20px}.fp-header.is-compact .fp-brand img{width:92px;height:38px}.fp-header.is-compact nav{font-size:10px;gap:12px}.fp-hero-copy{padding-top:38px}.fp-no-photo .fp-hero-copy{padding-top:130px}}
+
+/* Reduce the complete fishing album to 80% of its previous desktop footprint. */
+@media(min-width:1025px){.fp-memories{width:80%;max-width:1120px;padding:80px 4vw}.fp-memories .fp-section-heading{gap:35px;margin-bottom:38px}.fp-memories .fp-section-heading h2{font-size:clamp(28px,2.88vw,43.2px)}.fp-memories .fp-section-heading>p{font-size:12px}.fp-memories .fp-carousel{max-width:880px}}
+
+/* Keep only discreet navigation arrows below the circular album. */
+.fp-wheel-toolbar{justify-content:flex-end;flex-direction:row;border:0;padding:8px 0 0;margin-top:0;gap:0}.fp-wheel-controls{justify-content:flex-end;gap:8px}.fp-wheel-controls button{min-width:44px;min-height:44px}
+
+/* Touch/mouse opening should not draw an autofocus box around Close. */
+.fp-lightbox.photo-pointer-open .fp-close:focus{outline:none;box-shadow:none}
+
+/* A shorter desktop opening without removing any fishing benefits or actions. */
+@media(min-width:1025px){
+ .fp-hero:not(.fp-no-photo){min-height:520px}
+ .fp-hero-copy{padding:120px clamp(28px,3.4vw,52px) 28px}
+ .fp-hero .fp-eyebrow{margin-bottom:16px}
+ .fp-hero h1{font-size:clamp(32px,2.6vw,44px);line-height:1.1}
+ .fp-hero .fp-intro{margin-top:16px;max-width:44ch;line-height:1.7}
+ .fp-hero .fp-button{margin-top:18px;padding:12px 20px}
+ .fp-hero .fp-hero-note{margin-top:18px;padding:12px 16px;gap:12px;font-size:14px;line-height:1.5}
+ .fp-hero .fp-early-note{margin-top:10px}
+ .fp-hero .fp-early-note p{font-size:14px;line-height:1.5}
+ .fp-hero .fp-early-note strong{margin-bottom:3px}
+ .fp-hero .fp-hero-note>svg{width:26px;height:26px;flex:0 0 26px}
+}
+
+/* Give the opening some breathing room above, including its transparent header. */
+.fishing-page{--fp-top-space:24px}
+.fp-hero{margin-top:var(--fp-top-space)}
+.fp-header:not(.is-compact){top:var(--fp-top-space)}
+@media(max-width:600px){.fishing-page{--fp-top-space:16px}}

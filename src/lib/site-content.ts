@@ -79,7 +79,7 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  if(photos.length===1)$('.pousada-gallery-arrow').attr('hidden','');
  $('#area-de-lazer').after(renderInstagram(c));
  const fishing=renderFishing(c);
- if(fishing){$('head').append('<link rel="stylesheet" href="/fishing.css">');$('#quartos').after(fishing);}
+ if(fishing){$('head').append('<link rel="stylesheet" href="/fishing.css?v=group-badges-3">');$('#quartos').after(fishing);}
  text('.showcase-heading h2',c.rooms.title);text('.showcase-heading p',c.rooms.description);text('.showcase-copy > .showcase-rates',String(c.rooms.moreLabel??'').trim()||'Ver tarifas');
  const leisure=c.leisure;text('#leisure-title',leisure.title);text('.leisure-heading .leisure-eyebrow',leisure.eyebrow);text('.leisure-heading > p:last-child',leisure.description);text('.leisure-hint',leisure.hint);
  const close='<button type="button" data-leisure-close aria-label="Fechar detalhes"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button>';
@@ -106,6 +106,6 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('#quartos').after(groupExperience);
  groupExperience.append($('#grupos-excursoes').remove());
  groupExperience.append($('#pescadores').remove());
- $('head').append('<link rel="stylesheet" href="/fishing.css"><script src="/group-experiences.js" defer></script>');
+ $('head').append('<link rel="stylesheet" href="/fishing.css?v=group-badges-3"><script src="/group-experiences.js" defer></script>');
  return $.html();
 }

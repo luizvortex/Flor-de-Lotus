@@ -1,6 +1,39 @@
 {
   "version": 1,
   "phrases": {
+    "Grupo de excursão reunido no jardim da Pousada Flor de Lótus": ["Tour group gathered in the garden at Pousada Flor de Lótus", "קבוצת מטיילים בגינה של פוסאדה פלור דה לוטוס", "Grupo de excursión reunido en el jardín de Pousada Flor de Lótus"],
+    "A 3 minutos da praia a pé": ["A 3-minute walk from the beach", "שלוש דקות הליכה מהחוף", "A 3 minutos de la playa a pie"],
+    "Carrossel de fotos das pescarias": ["Fishing photo carousel", "קרוסלת תמונות הדיג"],
+    "Controles do carrossel": ["Carousel controls", "פקדי הקרוסלה"],
+    "Pausar": ["Pause", "השהיה"],
+    "Reproduzir": ["Play", "הפעלה"],
+
+    "SUA TURMA, SUA ESTADIA": ["YOUR GROUP, YOUR STAY", "הקבוצה שלכם, השהייה שלכם"],
+    "ORGANIZE SUA VIAGEM DE PESCA": ["PLAN YOUR FISHING TRIP", "תכננו את טיול הדיג שלכם"],
+    "Um quarto para cada parte da turma.": ["A room for everyone in your group.", "חדר לכל חלק מהקבוצה."],
+    "Escolha as datas, consulte os quartos disponíveis e organize os hóspedes do seu grupo no mesmo lugar.": ["Choose dates, check available rooms and arrange your group’s guests in one place.", "בחרו תאריכים, בדקו חדרים פנויים וארגנו את אורחי הקבוצה במקום אחד."],
+    "Selecione os quartos": ["Select rooms", "בחרו חדרים"],
+    "Distribua os hóspedes": ["Assign guests", "שבצו אורחים"],
+    "Escolher quartos para meu grupo": ["Choose rooms for my group", "בחירת חדרים לקבוצה שלי"],
+    "Prefere conversar com a pousada? Preencha o Fale Conosco logo abaixo.": ["Prefer to talk to the inn? Fill out the contact form below.", "מעדיפים לדבר עם בית ההארחה? מלאו את טופס יצירת הקשר למטה."],
+
+    "Cuidado com quem sai cedo para pescar:": ["A little care for early fishing departures:", "דואגים למי שיוצאים מוקדם לדוג:"],
+    "Itens do café da manhã antes do horário habitual, mediante solicitação com antecedência.": ["Selected breakfast items before the usual hours, by advance request.", "פריטים מארוחת הבוקר לפני השעה הרגילה, בתיאום מראש."],
+    "Café da manhã para quem sai mais cedo": ["Breakfast for early departures", "ארוחת בוקר ליוצאים מוקדם"],
+    "Vai sair de madrugada para pescar? Combinando com a pousada com antecedência, podemos deixar alguns itens do café da manhã preparados antes do horário habitual, para você sair alimentado.": ["Heading out before dawn to fish? Arrange it with the inn in advance and we can prepare some breakfast items before the usual hours, so you can eat before leaving.", "יוצאים לדוג לפנות בוקר? בתיאום מראש עם בית ההארחה נוכל להכין כמה פריטים מארוחת הבוקר לפני השעה הרגילה, כדי שתאכלו לפני היציאה."],
+    "Café, leite, misto quente, frutas e suco são algumas das opções que podem ser combinadas com a equipe.": ["Coffee, milk, toasted ham and cheese sandwiches, fruit and juice are some of the options you can arrange with the team.", "קפה, חלב, טוסט עם גבינה ונקניק, פירות ומיץ הם חלק מהאפשרויות שניתן לתאם עם הצוות."],
+    "Solicite com antecedência e combine o horário e os itens disponíveis. Esse atendimento antecipado inclui alguns itens, não o café da manhã completo.": ["Request in advance and agree on the time and available items. This early service includes selected items, rather than the full breakfast.", "בקשו מראש ותאמו את השעה ואת הפריטים הזמינים. השירות המוקדם כולל כמה פריטים ולא את ארוחת הבוקר המלאה."],
+
+    "Escolha os quartos e distribua os hóspedes no painel de grupos.": ["Choose rooms and assign guests in the group planner.", "בחרו חדרים ושבצו אורחים בלוח הקבוצות."],
+    "Prefere conversar com a pousada? Informe os dados da sua estadia.": ["Prefer to talk to the inn? Enter your stay details.", "מעדיפים לדבר עם בית ההארחה? מלאו את פרטי השהייה."],
+    "Check-in e check-out": ["Check-in and check-out", "צ׳ק-אין וצ׳ק-אאוט"],
+    "Escolha a data de entrada e a data de saída.": ["Choose your check-in and check-out dates.", "בחרו את תאריכי הכניסה והיציאה."],
+    "Quantidade de pessoas": ["Number of people", "מספר האנשים"],
+    "Data da viagem": ["Trip date", "תאריך הנסיעה"],
+    "VAMOS CONVERSAR": ["LET’S TALK", "בואו נדבר"],
+    "Converse com a pousada sobre a viagem do seu grupo de pescadores.": ["Talk to the inn about your fishing group’s trip.", "דברו עם בית ההארחה על הנסיעה של קבוצת הדייגים שלכם."],
+    "Conversar pelo WhatsApp": ["Chat on WhatsApp", "שיחה בוואטסאפ"],
+    "A conversa será aberta no WhatsApp em uma nova aba.": ["The conversation will open in WhatsApp in a new tab.", "השיחה תיפתח בוואטסאפ בלשונית חדשה."],
     "Selecione um quarto e preencha os hóspedes na janela de edição.": ["Select a room and enter its guests in the editor.", "בחרו חדר ומלאו את פרטי האורחים בחלון העריכה."],
     "DISTRIBUIÇÃO DOS HÓSPEDES": ["GUEST DISTRIBUTION", "חלוקת האורחים"],
     "Hóspedes do quarto": ["Room guests", "אורחי החדר"],
@@ -2319,9 +2352,9 @@
       "Free Wi-Fi is available for guests.",
       "אינטרנט אלחוטי זמין לאורחים ללא תשלום."
     ],
-    "Aceitamos somente cartão, dinheiro e Pix.": [
-      "We accept card, cash and Pix only.",
-      "אנו מקבלים כרטיס, מזומן ו־Pix בלבד."
+    "Aceitamos cartão, dinheiro e Pix.": [
+      "We accept card, cash and Pix.",
+      "אנו מקבלים כרטיס, מזומן ו־Pix."
     ],
     "As solicitações de reserva ficam pendentes até a confirmação pela equipe da pousada.": [
       "Booking requests remain pending until confirmed by the inn’s team.",
