@@ -90,7 +90,7 @@
  function schedule(){
   clearTimeout(timer);
   if(paused||hovering||!visible||document.hidden||dialog.open||carousel.matches(':focus-within'))return;
-  timer=setTimeout(()=>{advance(-1);schedule();},3000);
+  timer=setTimeout(()=>{advance(-1);schedule();},2000);
  }
  updateCarousel=schedule;
  carousel.querySelector('[data-wheel-prev]').addEventListener('click',()=>{advance(1);schedule();});

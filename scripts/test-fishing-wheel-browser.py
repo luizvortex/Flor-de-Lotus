@@ -40,12 +40,12 @@ with sync_playwright() as p:
     center=lambda:page.locator('[data-wheel-slot="9"] button')
     assert center().get_attribute('data-fishing-photo')=='9'
     page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
-    page.clock.fast_forward(2900)
+    page.clock.fast_forward(1900)
     assert center().get_attribute('data-fishing-photo')=='9'
     page.clock.fast_forward(250)
     assert center().get_attribute('data-fishing-photo')=='8'
     assert page.locator('[data-fishing-photo="9"]').locator('..').get_attribute('data-wheel-slot')=='0'
-    for _ in range(9):page.clock.fast_forward(3100)
+    for _ in range(9):page.clock.fast_forward(2100)
     assert center().get_attribute('data-fishing-photo')=='9'
     assert page.locator('[data-wheel-toggle],[data-wheel-caption]').count()==0
     assert page.locator('.fp-wheel-photo button>span').count()==0
@@ -103,4 +103,4 @@ with sync_playwright() as p:
     assert reduced.locator('[data-wheel-slot="9"] button').get_attribute('data-fishing-photo')=='8'
     assert not errors,errors
     browser.close()
-print('OK: 3s cycle and full loop, arrows-only controls, manual navigation, keyboard/lightbox, mobile sizes, contact/calendar, one/zero photos and reduced motion.')
+print('OK: 2s cycle and full loop, arrows-only controls, manual navigation, keyboard/lightbox, mobile sizes, contact/calendar, one/zero photos and reduced motion.')
