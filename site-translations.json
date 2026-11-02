@@ -1,6 +1,15 @@
 {
   "version": 1,
   "phrases": {
+    "SUA TURMA, SUA ESTADIA": ["YOUR GROUP, YOUR STAY", "הקבוצה שלכם, השהייה שלכם"],
+    "ORGANIZE SUA VIAGEM DE PESCA": ["PLAN YOUR FISHING TRIP", "תכננו את טיול הדיג שלכם"],
+    "Um quarto para cada parte da turma.": ["A room for everyone in your group.", "חדר לכל חלק מהקבוצה."],
+    "Escolha as datas, consulte os quartos disponíveis e organize os hóspedes do seu grupo no mesmo lugar.": ["Choose dates, check available rooms and arrange your group’s guests in one place.", "בחרו תאריכים, בדקו חדרים פנויים וארגנו את אורחי הקבוצה במקום אחד."],
+    "Selecione os quartos": ["Select rooms", "בחרו חדרים"],
+    "Distribua os hóspedes": ["Assign guests", "שבצו אורחים"],
+    "Escolher quartos para meu grupo": ["Choose rooms for my group", "בחירת חדרים לקבוצה שלי"],
+    "Prefere conversar com a pousada? Preencha o Fale Conosco logo abaixo.": ["Prefer to talk to the inn? Fill out the contact form below.", "מעדיפים לדבר עם בית ההארחה? מלאו את טופס יצירת הקשר למטה."],
+
     "Cuidado com quem sai cedo para pescar:": ["A little care for early fishing departures:", "דואגים למי שיוצאים מוקדם לדוג:"],
     "Itens do café da manhã antes do horário habitual, mediante solicitação com antecedência.": ["Selected breakfast items before the usual hours, by advance request.", "פריטים מארוחת הבוקר לפני השעה הרגילה, בתיאום מראש."],
     "Café da manhã para quem sai mais cedo": ["Breakfast for early departures", "ארוחת בוקר ליוצאים מוקדם"],
