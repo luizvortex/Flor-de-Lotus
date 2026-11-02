@@ -16,6 +16,9 @@ def serve(route):
  u=urlparse(route.request.url);path=unquote(u.path)
  assert route.request.method=='GET','No writes during local QA'
  requests.append(path)
+ if u.hostname=='cdn.jsdelivr.net' and 'bootstrap-icons' in u.path:
+  cached=root/('work/bootstrap-icons.woff2' if u.path.endswith('.woff2') else 'work/bootstrap-icons.min.css')
+  if cached.is_file():return route.fulfill(path=str(cached),content_type='font/woff2' if u.path.endswith('.woff2') else 'text/css')
  if u.hostname!='lotus.test':return route.abort() # remote fishing photo remains original; network policy blocks its host
  if path=='/pescadores':return route.fulfill(content_type='text/html',path=str(root/'work/preview-fishing.html'))
  if path=='/grupos':
@@ -54,6 +57,12 @@ with sync_playwright() as p:
  for width in [360,390,430,768,1024,1440]:
   page.set_viewport_size({'width':width,'height':1050})
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),width
+  assert page.locator('#policies-title').evaluate('(el)=>getComputedStyle(el).textAlign')=='center'
+  assert page.locator('#policy-grid').evaluate('(el)=>getComputedStyle(el).columnGap')=='0px'
+  if width>600:
+   first=page.locator('#policy-grid article').first.bounding_box();last=page.locator('#policy-grid article').last.bounding_box();assert last['width']>first['width']*1.9
+  assert page.locator('#policy-grid article i').first.evaluate('(el)=>getComputedStyle(el).display')!='none'
+  page.locator('#politicas').screenshot(path=str(root/f'work/policies-catalog-style-{width}.png'))
   page.locator('#dates-trigger').click();expect(page.locator('#dates-picker')).to_be_visible()
   box=page.locator('#dates-picker').bounding_box();assert box['x']>=0 and box['x']+box['width']<=width+1,(width,box)
   page.keyboard.press('Escape')
