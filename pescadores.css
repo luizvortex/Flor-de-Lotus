@@ -90,3 +90,9 @@ html{scroll-padding-top:84px}
  .fp-hero .fp-early-note strong{margin-bottom:3px}
  .fp-hero .fp-hero-note>svg{width:26px;height:26px;flex:0 0 26px}
 }
+
+/* Give the opening some breathing room above, including its transparent header. */
+.fishing-page{--fp-top-space:24px}
+.fp-hero{margin-top:var(--fp-top-space)}
+.fp-header:not(.is-compact){top:var(--fp-top-space)}
+@media(max-width:600px){.fishing-page{--fp-top-space:16px}}
