@@ -111,3 +111,14 @@
 .sidebar{overflow-y:auto}
 
 .sidebar .admin-menu-order-open{width:100%;padding:9px 12px;margin:0 0 14px;border:1px solid var(--line);border-radius:6px;text-align:center;font-size:12px;color:var(--green);background:#f9faf6}.sidebar .admin-menu-order-open[hidden]{display:none}.admin-menu-rank{display:inline-grid;place-items:center;min-width:21px;height:21px;border-radius:50%;margin-inline-end:7px;background:#eaf0e8;color:#47634f;font-size:10px;vertical-align:middle}.admin-menu-dialog{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto}.admin-menu-order-list{list-style:none;padding:0;margin:20px 0;display:grid;gap:10px}.admin-menu-order-list li{display:grid;grid-template-columns:minmax(0,1fr) 70px 40px 40px;align-items:center;gap:9px;padding:12px;border:1px solid var(--line);border-radius:6px}.admin-menu-order-list li>span{font-size:13px;overflow-wrap:anywhere}.admin-menu-order-list label{display:grid;font-size:10px;gap:5px;color:var(--muted)}.admin-menu-order-list input{margin:0;padding:8px;min-width:0;width:100%;min-height:38px}.admin-menu-order-list button{padding:8px;min-height:38px}.admin-menu-order-list button:disabled{opacity:.4;cursor:default}.admin-menu-actions{display:flex;flex-wrap:wrap;gap:10px}.admin-menu-dialog [data-menu-message]{font-size:13px}@media(max-width:500px){.admin-menu-dialog{padding:16px}.admin-menu-order-list li{grid-template-columns:minmax(0,1fr) 56px 34px 34px;gap:6px;padding:10px 7px}.admin-menu-actions .btn{width:100%}}
+
+/* Direct access to each destination's existing photo editor. */
+.cms-beach-picker{margin:0 0 28px;padding:20px;background:#f6f7f0;border:1px solid var(--line);border-radius:8px}
+.cms-beach-picker h3{font-size:17px;margin:0 0 8px;color:var(--ink)}
+.cms-beach-picker>.hint{margin:0 0 18px}
+.cms-beach-picker>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.cms-beach-picker button{display:flex;align-items:center;gap:12px;width:100%;padding:10px;background:white;border:1px solid #d7dfd3;border-radius:6px;color:var(--ink);text-align:left;font:inherit;cursor:pointer;min-width:0}
+.cms-beach-picker button:hover{border-color:var(--green);background:#f8faf5}
+.cms-beach-picker img{width:64px;height:52px;object-fit:cover;flex:none;border-radius:3px}
+.cms-beach-picker span{min-width:0;overflow-wrap:anywhere}.cms-beach-picker strong{display:block;font-size:13px;font-weight:500}.cms-beach-picker small{display:block;font-size:11px;margin-top:4px;color:var(--green)}
+@media(max-width:600px){.cms-beach-picker{padding:14px}.cms-beach-picker>div{grid-template-columns:minmax(0,1fr)}}

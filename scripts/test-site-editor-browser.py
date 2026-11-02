@@ -11,6 +11,7 @@ with sync_playwright() as p:
  page.route('**/admin-site.js',lambda r:(time.sleep(.5),r.continue_()))
  page.goto(base+'/admin#praias-passeios',wait_until='networkidle')
  assert page.locator('[data-tab="experiences"]').evaluate("b=>b.classList.contains('active')")
+ page.locator('[data-beach-group="overview"]').click()
  page.locator('[data-cms-field="beaches.pageTitle"]').fill('Itacaré editado pelo painel')
  page.locator('[data-whale-photos]').click()
  season=page.locator('[data-cms-field="beaches.tours.2.season"]')
