@@ -1,6 +1,8 @@
 {
   "version": 1,
   "phrases": {
+    "Escolha os quartos e distribua os hóspedes no painel de grupos.": ["Choose rooms and assign guests in the group planner.", "בחרו חדרים ושבצו אורחים בלוח הקבוצות."],
+    "Prefere conversar com a pousada? Informe os dados da sua estadia.": ["Prefer to talk to the inn? Enter your stay details.", "מעדיפים לדבר עם בית ההארחה? מלאו את פרטי השהייה."],
     "Check-in e check-out": ["Check-in and check-out", "צ׳ק-אין וצ׳ק-אאוט"],
     "Escolha a data de entrada e a data de saída.": ["Choose your check-in and check-out dates.", "בחרו את תאריכי הכניסה והיציאה."],
     "Quantidade de pessoas": ["Number of people", "מספר האנשים"],

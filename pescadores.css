@@ -12,3 +12,11 @@
 .fp-contact h2+p{margin-top:24px;max-width:42ch}.fp-contact form{align-self:center;min-width:0}.fp-contact label{display:block;margin-bottom:8px}.fp-contact input{width:100%;border:1px solid #9b9f8e;background:#fffdf8;color:var(--forest);font:inherit;padding:14px;margin-bottom:16px}.fp-contact input:focus-visible{outline:3px solid #b78a43;outline-offset:3px}.fp-contact button{cursor:pointer}.fp-contact form>p{font-size:11px;margin-top:12px}@media(max-width:600px){.fp-contact{grid-template-columns:1fr;gap:28px;padding:46px 24px}.fp-hero-note{padding:16px;gap:14px}}
 
 .fp-contact .dates-control{margin-bottom:12px}.fp-contact .calendar-popover{left:auto;right:0}.fp-contact #fishing-stay-summary{margin:0 0 16px;font-size:12px}.fp-contact .calendar-nav p,.fp-contact .calendar-footer>span{color:#647269}
+
+/* One shared inquiry section, with a direct contact form beside the group flow. */
+.fp-inquiry{max-width:none;margin:0;border:0;padding:72px max(5vw,calc((100vw - 1260px)/2));grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:64px}
+.fp-inquiry-copy{padding-top:16px;min-width:0}.fp-inquiry .fp-freezer{margin:28px 0 24px;font-size:13px}.fp-inquiry .fp-stay-actions>.fp-button{width:100%;gap:16px}.fp-inquiry .fp-group-hint{font-size:11px;line-height:1.7;color:#d8e0d8;margin-top:12px;max-width:46ch}
+.fp-contact-card{background:var(--paper);color:var(--forest);padding:32px;min-width:0;border:1px solid #d4c7b5;scroll-margin-top:24px}.fp-contact-card h3{font:400 32px/1.2 'Playfair Display',Georgia,serif;margin:0 0 12px}.fp-contact-intro{font-size:12px;line-height:1.8;margin-bottom:24px}.fp-contact-card .fp-button{width:100%}.fp-contact-card .calendar-popover{max-width:calc(100vw - 48px)}
+@media(max-width:850px){.fp-inquiry{gap:32px;padding:48px 5vw}.fp-contact-card{padding:24px}.fp-inquiry .fp-stay-actions>.fp-button{padding-inline:16px;font-size:11px}}
+@media(max-width:700px){.fp-inquiry{grid-template-columns:minmax(0,1fr);padding:46px 24px;gap:32px}.fp-inquiry-copy{padding-top:0}.fp-contact-card{padding:22px}.fp-contact-card .calendar-popover{width:min(560px,calc(100vw - 48px));right:-22px}}
+@media(max-width:600px){.fp-contact-card .calendar-popover{width:100%;right:0;max-width:none}}
