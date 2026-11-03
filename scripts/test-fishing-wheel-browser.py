@@ -75,6 +75,15 @@ with sync_playwright() as p:
             for b in boxes[i+1:]:
                 assert a['x']+a['width']<=b['x']+1 or b['x']+b['width']<=a['x']+1 or a['y']+a['height']<=b['y']+1 or b['y']+b['height']<=a['y']+1,(width,i)
         assert all(a<b for a,b in zip(sizes,sizes[1:])),(width,sizes)
+        expected_center=.52 if width<=600 else .44
+        assert abs(sizes[9]/bounds['width']-expected_center)<.01,(width,sizes)
+        if width<=600:
+            assert abs(sizes[8]/bounds['width']-.132)<.01
+            assert page.locator('#memories-title').evaluate('(el)=>getComputedStyle(el).fontSize')=='28px'
+            assert page.locator('#plan-title').evaluate('(el)=>getComputedStyle(el).fontSize')=='28px'
+            assert page.locator('[data-wheel-next]').bounding_box()['width']==36
+        else:
+            assert page.locator('[data-wheel-next]').bounding_box()['width']>=44
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),width
         assert page.locator('button[aria-current="true"]').count()==1
         (root/'work').mkdir(exist_ok=True);wheel.screenshot(path=str(root/f'work/fishing-wheel-{width}.png'))

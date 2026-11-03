@@ -215,3 +215,5 @@ As fotos de excursões e pescadores na home têm um recuo de 3 px nas bordas ext
 O seletor compartilhado `stay-party.js` permite no máximo 5 pessoas por quarto, contando todas as crianças. Os botões de adultos e crianças compartilham esse limite; múltiplos quartos continuam permitidos. Consultas antigas de seis hóspedes devem ser orientadas a corrigir a composição, sem cotar menos pessoas silenciosamente.
 
 A home exibe somente a primeira foto de `fishing.photos`, em `fishing-content.ts`. A rota `/pescadores` mantém o álbum completo para o carrossel em roda. Não apagar nem truncar a lista no CMS.
+
+Em `/pescadores`, somente até 600 px: centro da roda com largura de 52%, fotos periféricas de 8% a 13,2%, títulos de memórias/acomodações com 28 px e setas com 36 px. Preservar as medidas existentes do desktop. Cobertura em `scripts/test-fishing-wheel-browser.py`.
