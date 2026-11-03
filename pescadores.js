@@ -12,7 +12,7 @@
     const selected=['duplo','triplo','familia'].map(slug=>data.showcases.find(s=>s.slug===slug)).filter(Boolean).map(row=>({row,units:window.lotusRoomCatalog.categoryRooms(row,inventory)})).filter(({row,units})=>units.length&&safePhoto(row.photos?.[0]?.url)&&units.every(u=>Number.isInteger(u.capacity)&&u.capacity>0));
     if(!selected.length)throw Error();
     // Editorial category capacities confirmed by the owner for this introduction.
-    const categoryCapacity={duplo:3,triplo:3,familia:6};
+    const categoryCapacity={duplo:3,triplo:3,familia:5};
     roomsPanel.innerHTML=selected.map(({row})=>{
      const description=String(row.description||'');
      const short=description.length>160?description.slice(0,160).replace(/\s+\S*$/,'')+'…':description;
@@ -83,7 +83,7 @@
  const carousel=document.querySelector('.fp-carousel'),wheel=carousel?.querySelector('[data-fishing-wheel]');
  if(!wheel)return;
  const tiles=[...wheel.querySelectorAll('.fp-wheel-photo')];
- const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+ const reduced=matchMedia('(prefers-reduced-motion:reduce)'),desktopCarousel=matchMedia('(min-width:768px)');
  let selected=9,paused=reduced.matches,hovering=false,visible=false,timer,animations=[];
  const slotOf=index=>(index-selected+19)%10;
  function position(slot){
@@ -112,17 +112,18 @@
  function advance(direction){const previous=tiles.map((_,index)=>slotOf(index));selected=(selected+direction+10)%10;render(previous);}
  function schedule(){
   clearTimeout(timer);
-  if(paused||hovering||!visible||document.hidden||dialog.open||carousel.matches(':focus-within'))return;
+  if(paused||!visible||document.hidden||dialog.open||(!desktopCarousel.matches&&(hovering||carousel.matches(':focus-within'))))return;
   timer=setTimeout(()=>{advance(-1);schedule();},2000);
  }
  updateCarousel=schedule;
  carousel.querySelector('[data-wheel-prev]').addEventListener('click',()=>{advance(1);schedule();});
  carousel.querySelector('[data-wheel-next]').addEventListener('click',()=>{advance(-1);schedule();});
- // Suspend motion while the visitor interacts with photos or arrows.
- carousel.addEventListener('focusin',schedule);
- carousel.addEventListener('focusout',()=>requestAnimationFrame(schedule));
- carousel.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'){hovering=true;schedule();}});
- carousel.addEventListener('pointerleave',()=>{hovering=false;schedule();});
+ // Desktop keeps moving under the pointer; opening the lightbox pauses it.
+ carousel.addEventListener('focusin',()=>{if(!desktopCarousel.matches)schedule();});
+ carousel.addEventListener('focusout',()=>{if(!desktopCarousel.matches)requestAnimationFrame(schedule);});
+ carousel.addEventListener('pointerenter',event=>{if(!desktopCarousel.matches&&event.pointerType==='mouse'){hovering=true;schedule();}});
+ carousel.addEventListener('pointerleave',()=>{hovering=false;if(!desktopCarousel.matches)schedule();});
+ desktopCarousel.addEventListener('change',schedule);
  document.addEventListener('visibilitychange',schedule);
  reduced.addEventListener('change',()=>{if(reduced.matches){paused=true;animations.forEach(animation=>animation.cancel());}schedule();});
  if('IntersectionObserver' in window){new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();},{threshold:0.15}).observe(wheel);}

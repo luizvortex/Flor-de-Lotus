@@ -47,12 +47,18 @@ with sync_playwright() as p:
     assert page.locator('[data-fishing-photo="9"]').locator('..').get_attribute('data-wheel-slot')=='0'
     for _ in range(9):page.clock.fast_forward(2100)
     assert center().get_attribute('data-fishing-photo')=='9'
+    center().hover();page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+    page.clock.fast_forward(2100);assert center().get_attribute('data-fishing-photo')=='8'
+    page.clock.fast_forward(2100);assert center().get_attribute('data-fishing-photo')=='7'
+    page.locator('[data-wheel-prev]').click();page.locator('[data-wheel-prev]').click()
+    assert center().get_attribute('data-fishing-photo')=='9'
     assert page.locator('[data-wheel-toggle],[data-wheel-caption]').count()==0
     assert page.locator('.fp-wheel-photo button>span').count()==0
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
     page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='9'
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
-    center().focus();page.clock.fast_forward(5000);assert center().get_attribute('data-fishing-photo')=='8'
+    center().focus();page.clock.fast_forward(2100);assert center().get_attribute('data-fishing-photo')=='7'
+    page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='8'
     center().click();expect(page.locator('.fp-lightbox')).to_be_visible()
     assert page.locator('.fp-close').evaluate('(el)=>getComputedStyle(el).outlineStyle')=='none'
     expect(page.locator('[data-photo-large]')).to_have_attribute('alt','Foto de teste 9')
@@ -63,6 +69,8 @@ with sync_playwright() as p:
     page.keyboard.press('Enter');expect(page.locator('.fp-lightbox')).to_be_visible()
     assert page.locator('.fp-close').evaluate('(el)=>getComputedStyle(el).outlineStyle')!='none'
     page.keyboard.press('Escape');expect(page.locator('.fp-lightbox')).not_to_be_visible()
+    page.clock.fast_forward(2100);assert center().get_attribute('data-fishing-photo')!='8'
+    page.emulate_media(reduced_motion='reduce')
     # All ten slots stay distinct, increase in size and fit within the wheel on mobile and desktop.
     for width in [320,390,768,1440]:
         page.set_viewport_size({'width':width,'height':1100});wheel.scroll_into_view_if_needed();page.clock.fast_forward(1000)
