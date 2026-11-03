@@ -82,8 +82,13 @@ with sync_playwright() as p:
             assert page.locator('#memories-title').evaluate('(el)=>getComputedStyle(el).fontSize')=='28px'
             assert page.locator('#plan-title').evaluate('(el)=>getComputedStyle(el).fontSize')=='28px'
             assert page.locator('[data-wheel-next]').bounding_box()['width']==36
+            assert page.locator('.fp-header-arrow>svg').is_visible()
+            assert not page.locator('.fp-header-arrow-text').is_visible()
+            assert page.locator('.fp-header-arrow').evaluate('(el)=>getComputedStyle(el).marginLeft')=='6px'
         else:
             assert page.locator('[data-wheel-next]').bounding_box()['width']>=44
+            assert not page.locator('.fp-header-arrow>svg').is_visible()
+            assert page.locator('.fp-header-arrow-text').is_visible()
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),width
         assert page.locator('button[aria-current="true"]').count()==1
         (root/'work').mkdir(exist_ok=True);wheel.screenshot(path=str(root/f'work/fishing-wheel-{width}.png'))

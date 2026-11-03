@@ -134,3 +134,7 @@ html{scroll-padding-top:84px}
  .fp-wheel-photo[data-wheel-slot="8"]{width:13.2%!important}
  .fp-wheel-controls button{width:36px;height:36px;min-width:36px;min-height:36px;padding:4px;font-size:14px}
 }
+
+.fp-header-arrow>svg{display:none}
+.fp-header .fp-header-arrow-text{margin:0}
+@media(max-width:600px){.fp-header nav .fp-header-arrow{display:inline-flex;align-items:center;vertical-align:middle;margin-left:6px}.fp-header-arrow-text{display:none}.fp-header-arrow>svg{display:block}}
