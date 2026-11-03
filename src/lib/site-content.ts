@@ -106,6 +106,8 @@ export function renderSiteContent(html:string,content:SiteContent,page:string):s
  $('#quartos').after(groupExperience);
  groupExperience.append($('#grupos-excursoes').remove());
  groupExperience.append($('#pescadores').remove());
+ let groupTail=groupExperience;
+ for(const block of (c.layout.blocks as Item[]).filter(b=>b.after==='fishing'&&b.visible)){const extra=$('#extra-'+String(block.id)).remove();groupTail.after(extra);groupTail=extra;}
  $('head').append('<link rel="stylesheet" href="/fishing.css?v=group-badges-3"><script src="/group-experiences.js" defer></script>');
  return $.html();
 }

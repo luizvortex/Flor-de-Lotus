@@ -7,6 +7,7 @@ from PIL import Image
 source=Path(__file__).with_name('test-category-booking-browser.py').read_text().split('with sync_playwright() as p:')[0]
 ns={'__file__':str(Path(__file__).with_name('test-category-booking-browser.py'))};exec(source,ns)
 original=ns['route'];uploads=[];fail=False
+room_before=ns['json'].loads(ns['json'].dumps(next(row for row in ns['showcases'] if row['slug']=='triplo-standard')))
 new_url='/img casal/casal1.jpg'
 def route(r):
  if urlparse(r.request.url).path=='/api/showcase-upload':
@@ -21,6 +22,7 @@ with ns['sync_playwright']() as p:
  page=browser.new_page();page.route('**/*',route);errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto('http://qa.test/admin');page.locator('[data-tab="showcases"]').click()
  page.locator('[data-edit-showcase="triplo-standard"]').click()
+ assert page.locator('#detail-bathroom,#detail-views').count()==0
  photo=page.locator('.showcase-photo-edit').nth(2)
  old=photo.locator('img').get_attribute('src')
  fail=True
@@ -36,6 +38,9 @@ with ns['sync_playwright']() as p:
  page.locator('#showcase-save').click();page.wait_for_selector('#showcase-editor',state='hidden')
  saved=ns['payloads'][-1]
  assert saved['photos'][2]['url']==new_url
+ assert saved['details']['bathroom']==room_before['details']['bathroom']
+ assert saved['details'].get('views')==room_before['details'].get('views')
+ assert saved['amenities']==room_before['amenities']
  assert next(row for row in ns['showcases'] if row['slug']=='triplo-standard')['photos'][2]['url']==new_url
  page.locator('[data-edit-showcase="triplo-standard"]').click()
  assert photo.locator('img').get_attribute('src')==new_url

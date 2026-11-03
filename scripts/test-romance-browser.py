@@ -26,6 +26,8 @@ with sync_playwright() as p:
  assert context.request.get(base+'/api/site-content').json()['revision']==data['revision']
  page.goto(base+'/admin',wait_until='networkidle');page.locator('[data-tab="site"]').click();page.locator('[data-cms-section="romance"]').click()
  expect(page.locator('[data-cms-field="romance.visible"]')).not_to_be_checked()
+ for key in ['eyebrow','whatsappMessage']:
+  expect(page.locator(f'[data-cms-field="romance.{key}"]')).to_have_count(0)
  for n,color in enumerate(['#4b5c51','#b3a18a','#9b776c']):
   page.locator('[data-list-add="romance.photos"]').click()
   details=page.locator(f'[data-cms-item="romance.photos.{n}"]')
@@ -83,7 +85,10 @@ with sync_playwright() as p:
    assert abs(left['width']-right['width'])<1
   else:assert abs(left['y']+left['height']+28-right['y'])<1,(width,left,right,strip)
  for lang,title in [('en','Romantic room decoration'),('he','עיצוב רומנטי לחדר'),('pt','Decoração romântica')]:
+  page.goto(base+'/',wait_until='networkidle')
   page.locator('.site-language summary').first.click();page.locator(f'.site-language [data-language="{lang}"]').first.click()
+  page.goto(base+'/quartos',wait_until='networkidle')
+  expect(page.locator('.site-language summary')).to_have_count(0)
   expect(page.locator('#romance-title')).to_have_text(title)
   expected={'en':'Explore options','he':'גלו את האפשרויות','pt':'Conhecer opções'}[lang]
   expect(page.locator('.romance-cta')).to_contain_text(expected)

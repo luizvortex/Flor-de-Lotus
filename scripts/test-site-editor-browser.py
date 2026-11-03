@@ -61,6 +61,7 @@ with sync_playwright() as p:
  page.locator('.cms-list-item summary').first.click()
  page.locator('[data-list-move="gallery.photos"][data-direction="1"]').first.click()
  page.locator('[data-cms-section="layout"]').click()
+ assert page.locator('.cms-order-row').count()==8
  page.locator('[data-order-index="0"][data-direction="1"]').click()
  page.locator('[data-list-add="layout.blocks"]').click()
  if not page.locator('.cms-list-item').first.evaluate('(el)=>el.open'):page.locator('.cms-list-item summary').first.click()

@@ -21,6 +21,10 @@ with sync_playwright() as p:
  assert context.request.get(base+'/api/site-content').json()['revision']==data['revision']
  page.goto(base+'/admin',wait_until='networkidle');page.locator('[data-tab="site"]').click();page.locator('[data-cms-section="fishing"]').click()
  expect(page.locator('[data-cms-field="fishing.visible"]')).not_to_be_checked()
+ for key in ['eyebrow','description','notice','groupLabel','whatsappMessage']:
+  expect(page.locator(f'[data-cms-field="fishing.{key}"]')).to_have_count(0)
+ freezer_text='Freezer de teste: consulte as condições com a equipe.'
+ page.locator('[data-cms-field="fishing.highlight"]').fill(freezer_text)
  for n,color in enumerate(['#355749','#b39b75','#7a8d85']):
   page.locator('[data-list-add="fishing.photos"]').click();details=page.locator(f'[data-cms-item="fishing.photos.{n}"]')
   if details.get_attribute('open') is None:details.locator('summary').click()
@@ -45,6 +49,7 @@ with sync_playwright() as p:
  for key in original:
   if key!='fishing':assert saved['content'][key]==original[key],key
  page.goto(base+'/',wait_until='networkidle');expect(page.locator('#fishing-title')).to_have_text(original['fishing']['title'])
+ expect(page.locator('.fishing-highlight p')).to_have_text(freezer_text)
  expect(page.locator('.fishing-gallery img')).to_have_count(1)
  expect(page.locator('.fishing-gallery img').first).to_have_attribute('alt','Foto sintética para teste 3')
  assert page.locator('#pescadores').evaluate('el=>el.previousElementSibling.id')=='grupos-excursoes'
@@ -59,6 +64,7 @@ with sync_playwright() as p:
  preview=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'});assert preview.status==200
  html=preview.json()['html'];assert 'href="/pescadores"' in html
  album=context.request.get(base+'/pescadores');assert album.status==200 and 'NOSSO ÁLBUM DE PESCARIAS' in album.text()
+ assert freezer_text in album.text()
  assert len(saved['content']['fishing']['photos'])==3
  for photo in saved['content']['fishing']['photos']:assert photo['url'] in album.text()
  # Layout order is independently configurable; published surrounding content is preserved.
@@ -84,7 +90,7 @@ with sync_playwright() as p:
  page.emulate_media(reduced_motion='no-preference')
  page.goto(base+'/',wait_until='networkidle');page.locator('#pescadores').scroll_into_view_if_needed()
  expect(page.locator('#pescadores')).to_have_class(re.compile('is-revealed'))
- page.locator('.fishing-group-link').focus();page.keyboard.press('Enter');expect(page).to_have_url(re.compile('/grupos$'));page.wait_for_load_state('networkidle')
+ page.locator('#grupos-excursoes .group-home-link').focus();page.keyboard.press('Enter');expect(page).to_have_url(re.compile('/grupos$'));page.wait_for_load_state('networkidle')
  expect(page.locator('#group-form')).to_have_count(1)
  disabled=copy.deepcopy(saved['content']);disabled['fishing']['visible']=False
  assert context.request.put(base+'/api/site-content',data={'content':disabled,'revision':saved['revision']}).status==200
