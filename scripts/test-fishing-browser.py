@@ -45,6 +45,7 @@ with sync_playwright() as p:
  for key in original:
   if key!='fishing':assert saved['content'][key]==original[key],key
  page.goto(base+'/',wait_until='networkidle');expect(page.locator('#fishing-title')).to_have_text(original['fishing']['title'])
+ expect(page.locator('.fishing-gallery img')).to_have_count(1)
  expect(page.locator('.fishing-gallery img').first).to_have_attribute('alt','Foto sintética para teste 3')
  assert page.locator('#pescadores').evaluate('el=>el.previousElementSibling.id')=='grupos-excursoes'
  expect(page.locator('.fishing-cta')).to_have_attribute('href','/pescadores')
@@ -58,6 +59,8 @@ with sync_playwright() as p:
  preview=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'});assert preview.status==200
  html=preview.json()['html'];assert 'href="/pescadores"' in html
  album=context.request.get(base+'/pescadores');assert album.status==200 and 'NOSSO ÁLBUM DE PESCARIAS' in album.text()
+ assert len(saved['content']['fishing']['photos'])==3
+ for photo in saved['content']['fishing']['photos']:assert photo['url'] in album.text()
  # Layout order is independently configurable; published surrounding content is preserved.
  keys=changed['layout']['order'].split();keys.remove('fishing');keys.insert(keys.index('instagram')+1,'fishing');changed['layout']['order']='\n'.join(keys)
  html=context.request.post(base+'/api/site-preview',data={'content':changed,'page':'index'}).json()['html']

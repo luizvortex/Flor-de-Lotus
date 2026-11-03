@@ -213,3 +213,5 @@ Cards de praias têm anterior/próxima em `itacare-content.ts` e `itacare.js`. A
 As fotos de excursões e pescadores na home têm um recuo de 3 px nas bordas externas. O filtro público distingue 1–2 hóspedes (Standard/Superior), 3 (Triplo) e 4–5 (Família), por quarto e contando todas as crianças. As capacidades físicas e tarifas por ocupação do servidor permanecem autoritativas.
 
 O seletor compartilhado `stay-party.js` permite no máximo 5 pessoas por quarto, contando todas as crianças. Os botões de adultos e crianças compartilham esse limite; múltiplos quartos continuam permitidos. Consultas antigas de seis hóspedes devem ser orientadas a corrigir a composição, sem cotar menos pessoas silenciosamente.
+
+A home exibe somente a primeira foto de `fishing.photos`, em `fishing-content.ts`. A rota `/pescadores` mantém o álbum completo para o carrossel em roda. Não apagar nem truncar a lista no CMS.
