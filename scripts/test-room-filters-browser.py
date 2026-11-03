@@ -31,21 +31,23 @@ with ns['sync_playwright']() as p:
   page.goto('http://qa.test/quartos?'+urlencode(params))
   page.wait_for_function("document.querySelector('#result-count').textContent.startsWith('Opções para')")
   return page.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')
- assert search('terreo',[{'adults':2,'children_ages':[]}])==['duplo','triplo-standard']
- assert search('superior',[{'adults':2,'children_ages':[]}])==['triplo','triplo-superior']
+ assert search('terreo',[{'adults':2,'children_ages':[]}])==['duplo']
+ assert search('superior',[{'adults':2,'children_ages':[]}])==['triplo']
  page.locator('#rooms').screenshot(path=str(ns['ROOT']/'work/filtered-superior.png'))
  for floor in ['terreo','superior','sem_preferencia']:
   families=['familia','familia-superior'] if floor=='sem_preferencia' else ['familia' if floor=='terreo' else 'familia-superior']
-  standard=['duplo','triplo','triplo-standard','triplo-superior'] if floor=='sem_preferencia' else (['duplo','triplo-standard'] if floor=='terreo' else ['triplo','triplo-superior'])
-  for size in [1,2,3]:
+  standard=['duplo','triplo'] if floor=='sem_preferencia' else (['duplo'] if floor=='terreo' else ['triplo'])
+  triples=['triplo-standard','triplo-superior'] if floor=='sem_preferencia' else (['triplo-standard'] if floor=='terreo' else ['triplo-superior'])
+  for size in [1,2]:
    assert search(floor,[{'adults':size,'children_ages':[]}])==standard
+  assert search(floor,[{'adults':3,'children_ages':[]}])==triples
   for size in [4,5,6]:
    assert search(floor,[{'adults':size,'children_ages':[]}])==families,(floor,size)
-  assert search(floor,[{'adults':2,'children_ages':[5]}])==standard
+  assert search(floor,[{'adults':2,'children_ages':[5]}])==triples
   assert search(floor,[{'adults':3,'children_ages':[5]}])==families,'Free child is the fourth occupant'
   assert search(floor,[{'adults':1,'children_ages':[0,5,17]}])==families
   assert search(floor,[{'adults':4,'children_ages':[5]}])==families
- assert search('sem_preferencia',[{'adults':2,'children_ages':[]}])==['duplo','triplo','triplo-standard','triplo-superior']
+ assert search('sem_preferencia',[{'adults':2,'children_ages':[]}])==['duplo','triplo']
  assert 'Sem preferência' in page.locator('#result-count').inner_text()
  # Both a small party and a four-person family bind the selected offer's real floor.
  for size,options in [(2,[('duplo','terreo','Térreo'),('triplo','superior','Piso superior')]),(4,[('familia','terreo','Térreo'),('familia-superior','superior','Piso superior')])]:
@@ -68,7 +70,7 @@ with ns['sync_playwright']() as p:
    page.wait_for_function("!document.querySelector('#search [type=submit]').disabled")
    assert page.locator('#floor').input_value()=='sem_preferencia'
  # Total across rooms never changes the per-room category boundary.
- assert search('sem_preferencia',[{'adults':2,'children_ages':[]},{'adults':2,'children_ages':[]}])==['duplo','triplo','triplo-standard','triplo-superior']
+ assert search('sem_preferencia',[{'adults':2,'children_ages':[]},{'adults':2,'children_ages':[]}])==['duplo','triplo']
  assert search('sem_preferencia',[{'adults':4,'children_ages':[]},{'adults':2,'children_ages':[]}])==['familia','familia-superior']
  # Only return available families; never fall back to an incompatible Standard.
  unavailable_categories={'familia'}
@@ -77,7 +79,7 @@ with ns['sync_playwright']() as p:
  assert search('sem_preferencia',[{'adults':4,'children_ages':[]}])==[]
  assert page.locator('#no-availability').is_visible()
  unavailable_categories=set()
- assert search('sem_preferencia',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['duplo','triplo','triplo-standard','triplo-superior']
+ assert search('sem_preferencia',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['triplo-standard','triplo-superior']
  # Home popup keeps the no-preference option and party composition in its native GET/new tab.
  page.goto('http://qa.test/')
  page.locator('.showcase-copy > .showcase-rates').first.click()
@@ -98,7 +100,7 @@ with ns['sync_playwright']() as p:
  assert target.locator('#floor').input_value()=='sem_preferencia'
  target.close()
  # Six people in two rooms can use the normal categories: capacity is per room.
- assert search('terreo',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['duplo','triplo-standard']
+ assert search('terreo',[{'adults':3,'children_ages':[]},{'adults':3,'children_ages':[]}])==['triplo-standard']
  sold_out=True
  assert search('sem_preferencia',[{'adults':2,'children_ages':[]}])==[]
  assert page.locator('#no-availability').is_visible()
@@ -108,7 +110,7 @@ with ns['sync_playwright']() as p:
  assert page.locator('.catalog-room').count()==6,'Editing filters invalidates the previous results'
  page.locator('#search [type="submit"]').click()
  page.wait_for_function("document.querySelector('#result-count').textContent.startsWith('Opções para')")
- assert page.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo','triplo-superior']
+ assert page.locator('.catalog-room').evaluate_all('(els)=>els.map(el=>el.dataset.slug)')==['triplo']
  for width in [390,768,1440]:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
  assert errors==[],errors

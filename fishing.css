@@ -87,3 +87,8 @@
 
 /* Keep the excursion image in normal flow on mobile, including iOS grid layouts. */
 @media(max-width:767px){.group-experiences .group-home-photo{display:block;width:100%;min-width:0;height:auto;min-height:0;aspect-ratio:auto;align-self:start}.group-experiences .group-home-photo img{position:static;display:block;width:100%;max-width:100%;height:auto;object-fit:contain;transform:none}}
+
+/* Small matching insets around the two home experience photographs. */
+.group-experiences .group-home-photo{margin:3px}
+.group-experiences .fishing-gallery{padding:3px;background:transparent;box-sizing:border-box}
+@media(max-width:767px){.group-experiences .group-home-photo{width:calc(100% - 6px)}}

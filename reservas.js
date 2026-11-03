@@ -166,7 +166,7 @@
  function render(){
   // Four or more occupants need Família. Count every child and apply this per room.
   const largestParty=lastQuery?Math.max(...JSON.parse(lastQuery.party).map(room=>room.adults+room.children_ages.length)):0;
-  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(categoryRules[s.slug]?.capacity>=5?largestParty>=4:largestParty<=3)):showcases;
+  const visibleShowcases=lastQuery?showcases.filter(s=>rowsFor(s).length>0&&(categoryRules[s.slug]?.capacity>=5?largestParty>=4:categoryRules[s.slug]?.capacity===3?largestParty===3:largestParty<=2)):showcases;
   const noAvailability=Boolean(lastQuery&&showcases.length&&visibleShowcases.length===0);
   $('#no-availability').hidden=!noAvailability;
   $('.results-heading').hidden=noAvailability;
