@@ -45,8 +45,8 @@ with sync_playwright() as p:
  assert page.locator('.fp-room-capacity').all_text_contents()==['Até 3 pessoas por quarto','Até 3 pessoas por quarto','Até 6 pessoas por quarto']
  assert 'Disponível' not in page.locator('#fishing-rooms').inner_text()
  for image in page.locator('.fp-room-card img').all():image.scroll_into_view_if_needed();assert image.evaluate('(el)=>el.naturalWidth>0')
- assert page.locator('.fp-testimonial blockquote p').inner_text() in [r['description'] for r in live['content']['reviews']['items'] if r['published']]
- assert page.locator('.fp-testimonial cite').inner_text() in [r['name'] for r in live['content']['reviews']['items'] if r['published']]
+ assert page.locator('.fp-testimonial [data-review-slide][aria-hidden="false"] blockquote p').inner_text() in [r['description'] for r in live['content']['reviews']['items'] if r['published']]
+ assert page.locator('.fp-testimonial [data-review-slide][aria-hidden="false"] cite').inner_text() in [r['name'] for r in live['content']['reviews']['items'] if r['published']]
  assert page.locator('.site-language').count()==0
  assert page.locator('.fp-wheel-photo').count()==10
  assert set(page.locator('.fp-wheel img').evaluate_all('(els)=>els.map(el=>el.src)'))==photo_urls
@@ -85,7 +85,7 @@ with sync_playwright() as p:
  nights=(date.fromisoformat(end)-date.fromisoformat(start)).days
  assert f'Estadia: {nights} noites' in msg
  # Save these conditions for the report; no window.open call reaches WhatsApp.
- (root/'work/fishing-qa-result.json').write_text(json.dumps({'checks':'PASS','nights':nights,'room_cards':3,'review':page.locator('.fp-testimonial cite').inner_text(),'source':'Booking.com','remote_photo_blocked':True,'widths':[360,390,430,768,1024,1440]},ensure_ascii=False))
+ (root/'work/fishing-qa-result.json').write_text(json.dumps({'checks':'PASS','nights':nights,'room_cards':3,'review':page.locator('.fp-testimonial [data-review-slide][aria-hidden="false"] cite').inner_text(),'source':'Booking.com','remote_photo_blocked':True,'widths':[360,390,430,768,1024,1440]},ensure_ascii=False))
  page.locator('.fp-room-actions a[href^="/grupos"]').click();expect(page.locator('#group-title')).to_have_text('Sua viagem de pesca, com a turma organizada.')
  assert page.locator('#group-form').count()==1 and page.locator('#group-login-form').get_attribute('action')=='/auth/google'
  page.goto('http://lotus.test/grupos');expect(page.locator('#group-title')).to_have_text('Boas viagens começam com boas companhias.')

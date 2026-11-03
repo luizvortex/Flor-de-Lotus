@@ -223,3 +223,12 @@ No desktop (a partir de 768 px), o carrossel de pescadores continua a cada 2 s d
 Auditoria editorial em `docs/auditoria-editor-site.md`; verificação sintética com `node --experimental-vm-modules scripts/audit-site-editor.mjs`. Campos sem consumidor foram retirados dos formulários, preservando a estrutura legada. O freezer usa `fishing.highlight` na home e em `/pescadores`. Listas antigas de banheiro/vista do editor de quartos não devem ser reintroduzidas: usar a lista de comodidades com ícones. Pescadores acompanha Quartos na ordem da home; blocos extras após fishing acompanham o conjunto.
 
 A legenda sobre a foto de capa de `/pescadores` fica oculta até 600 px. No desktop usa 44% da largura da foto e padding compacto. Os quatro CTAs de grupo/WhatsApp usam SVG de seta fina, preservando URLs e formulários.
+
+
+## Rodapé global e entrada pública
+
+`src/lib/public-shell.ts` aplica o rodapé único de `site-footer.ts` a todas as rotas públicas, incluindo pescadores e experiência romântica. Contatos vêm exclusivamente de branding/operations no CMS; e-mail vazio não gera contato fictício. O marcador do embed cadastrado (CID `0x5549d0040f6757ff`) foi conferido com a ficha Google Pousada Flor de Lotus, Rua Hibisco 33, Itacaré. Há pendência de confirmação do telefone (CMS 557399728505; Google 5573999728505) e de informar o e-mail oficial. Não alterar esses dados por suposição. Layout em `site-footer.css`, mapa oficial lazy de 210 px com link externo de rota e fallback. Teste integrado: `node scripts/test-site-editor.mjs --public-shell-only` (contatos sintéticos apenas na fixture).
+
+`site-intro.js/css` mostram a abertura em entradas diretas/externas, inclusive hashes e outras rotas públicas. Links internos passam normalmente; um registro temporário de caminho/horário, sem dados de hóspedes, cobre links internos sem referrer e novas abas. Respeitar reduced-motion. Não voltar ao bloqueio de intro por sessão.
+
+Em `/pescadores`: etapas → acomodações → avaliações. Os cards surgem uma vez em sequência de 180 ms; até três avaliações reais publicadas alternam a cada 3 s apenas com seção visível, com controles e reduced-motion. Nome/source acima da citação, abaixo do título. Teste: `python scripts/test-fishing-reviews-browser.py`.

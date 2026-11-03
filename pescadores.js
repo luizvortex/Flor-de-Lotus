@@ -1,4 +1,14 @@
 (() => {
+ function revealRoomCards(){
+  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const cards=[...document.querySelectorAll('.fp-room-card')];
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+   if(!entry.isIntersecting)return;
+   observer.unobserve(entry.target);entry.target.dataset.roomRevealed='true';
+   entry.target.animate?.([{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'}],{duration:600,delay:cards.indexOf(entry.target)*180,easing:'ease-out',fill:'backwards'});
+  }),{threshold:.12});
+  cards.forEach(card=>observer.observe(card));
+ }
  const roomsPanel=document.querySelector('#fishing-rooms');
  if(roomsPanel){
   const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -18,6 +28,7 @@
      const short=description.length>160?description.slice(0,160).replace(/\s+\S*$/,'')+'…':description;
      return `<article class="fp-room-card"><img src="${esc(row.photos[0].url)}" alt="${esc(row.photos[0].alt||row.title)}" loading="lazy" width="600" height="450"><div><h3>${esc(row.title)}</h3><p class="fp-room-capacity">Até ${categoryCapacity[row.slug]} pessoas por quarto</p><p>${esc(short)}</p></div></article>`;
     }).join('');
+    revealRoomCards();
    }catch{roomsPanel.innerHTML='<p class="fp-room-status">Não foi possível carregar as acomodações. <button type="button" data-rooms-retry>Tentar novamente</button></p>';roomsPanel.querySelector('[data-rooms-retry]').addEventListener('click',loadRooms);}
   }
   loadRooms();
@@ -129,4 +140,33 @@
  if('IntersectionObserver' in window){new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule();},{threshold:0.15}).observe(wheel);}
  else {visible=true;}
  render();schedule();
+})();
+
+// Reviews use their own visible-on-scroll clock, independent of the photo wheel.
+(() => {
+ const section=document.querySelector('[data-testimonials]');if(!section)return;
+ const slides=[...section.querySelectorAll('[data-review-slide]')],track=section.querySelector('.fp-testimonial-track');
+ const toggle=section.querySelector('[data-review-toggle]'),reduced=matchMedia('(prefers-reduced-motion:reduce)');
+ let index=0,visible=false,paused=false,entered=false,timer,animation;
+ function show(next){
+  index=(next+slides.length)%slides.length;animation?.cancel();
+  slides.forEach((slide,n)=>{slide.hidden=n!==index;slide.setAttribute('aria-hidden',String(n!==index));});
+  section.querySelectorAll('[data-review-index]').forEach(button=>button.setAttribute('aria-current',String(Number(button.dataset.reviewIndex)===index)));
+  if(!reduced.matches)animation=slides[index].animate?.([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:450,easing:'ease-out'});
+ }
+ function schedule(){
+  clearTimeout(timer);
+  if(slides.length<2||!visible||paused||reduced.matches||document.hidden)return;
+  timer=setTimeout(()=>{show(index+1);schedule();},3000);
+ }
+ section.querySelectorAll('[data-review-index]').forEach(button=>button.addEventListener('click',()=>{show(Number(button.dataset.reviewIndex));schedule();}));
+ toggle?.addEventListener('click',()=>{paused=!paused;toggle.textContent=paused?'Continuar':'Pausar';schedule();});
+ document.addEventListener('visibilitychange',schedule);
+ reduced.addEventListener('change',()=>{animation?.cancel();schedule();});
+ if('IntersectionObserver' in window)new IntersectionObserver(entries=>{
+  visible=entries[0].isIntersecting;
+  if(visible&&!entered){entered=true;if(!reduced.matches)track.animate?.([{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'translateY(0)'}],{duration:600,easing:'ease-out'});}
+  schedule();
+ },{threshold:.25}).observe(section);
+ else{visible=true;schedule();}
 })();

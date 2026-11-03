@@ -1,3 +1,4 @@
+import {applyPublicShell} from './public-shell';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import {getSiteContent,renderSiteContent} from './site-content';
@@ -21,11 +22,13 @@ export async function legacyPage(name: string, preview?:SiteContent): Promise<Re
     const content = renderShowcases((await getShowcases()).filter(row => ['duplo', 'triplo-standard'].includes(row.slug)).map(row => row.slug === 'triplo-standard' ? { ...row, title: 'Quarto Triplo Superior' } : row));
     html = html.replace(/<!--ROOM_SHOWCASES_START-->[\s\S]*?<!--ROOM_SHOWCASES_END-->/, () => `<!--ROOM_SHOWCASES_START-->${content}<!--ROOM_SHOWCASES_END-->`);
   }
-  if(contentPromise)html=renderSiteContent(html,await contentPromise,name);
+  const publicContent=contentPromise?await contentPromise:undefined;
+  if(publicContent)html=renderSiteContent(html,publicContent,name);
   if (!['admin','minha-conta'].includes(name) && !html.includes('src="/site-language.js"')) {
     html = html.replace('</head>', '<link rel="stylesheet" href="/site-language.css"><script src="/site-language.js" defer></script></head>');
   }
   if(!['admin','index'].includes(name))html=html.replace('</head>', '<link rel="stylesheet" href="/public-header.css"></head>');
+  if(publicContent&&!['admin','minha-conta'].includes(name))html=applyPublicShell(html,publicContent);
   return new Response(html, { headers: {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'no-store',

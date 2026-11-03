@@ -134,3 +134,16 @@ html{scroll-padding-top:84px}
 .fp-cover figcaption span{font-size:11px;line-height:1.45;margin-top:2px}
 .fp-action-arrow{display:inline-block;vertical-align:middle;flex-shrink:0}
 @media(max-width:600px){.fp-cover figcaption{display:none}}
+
+/* Three genuine guest reviews, with the author above the quote. */
+.fp-testimonial-track{display:grid}
+.fp-testimonial-slide{grid-area:1/1;margin:0;min-width:0}
+.fp-testimonial-slide[hidden]{display:block;visibility:hidden;pointer-events:none}
+.fp-review-author{display:flex;flex-direction:column;align-items:center;gap:4px;margin:0 0 18px}
+.fp-testimonial .fp-review-author cite{font:500 14px/1.5 Poppins,sans-serif}
+.fp-review-author>span{font-size:10px;color:#647269}
+.fp-review-controls{display:flex;justify-content:center;align-items:center;gap:8px}
+.fp-review-controls button{min-width:26px;min-height:26px;padding:3px 7px;border:1px solid #c8b387;background:transparent;color:var(--forest);font:10px/1.5 Poppins,sans-serif;cursor:pointer}
+.fp-review-controls [aria-current="true"]{background:var(--forest);color:var(--paper)}
+.fp-review-controls [data-review-toggle]{margin-left:6px}
+@media(max-width:600px){.fp-testimonial footer{align-items:center}.fp-review-author{margin-bottom:14px}}
