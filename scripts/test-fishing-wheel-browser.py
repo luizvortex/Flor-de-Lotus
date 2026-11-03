@@ -57,7 +57,9 @@ with sync_playwright() as p:
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
     page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='9'
     page.locator('[data-wheel-next]').click();assert center().get_attribute('data-fishing-photo')=='8'
-    center().focus();page.clock.fast_forward(2100);assert center().get_attribute('data-fishing-photo')=='7'
+    center().focus();wheel.scroll_into_view_if_needed();page.wait_for_timeout(100)
+    page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
+    page.clock.fast_forward(2100);assert center().get_attribute('data-fishing-photo')=='7'
     page.locator('[data-wheel-prev]').click();assert center().get_attribute('data-fishing-photo')=='8'
     center().click();expect(page.locator('.fp-lightbox')).to_be_visible()
     assert page.locator('.fp-close').evaluate('(el)=>getComputedStyle(el).outlineStyle')=='none'
@@ -83,13 +85,14 @@ with sync_playwright() as p:
             for b in boxes[i+1:]:
                 assert a['x']+a['width']<=b['x']+1 or b['x']+b['width']<=a['x']+1 or a['y']+a['height']<=b['y']+1 or b['y']+b['height']<=a['y']+1,(width,i)
         assert all(a<b for a,b in zip(sizes,sizes[1:])),(width,sizes)
-        expected_center=.52 if width<=600 else .44
+        expected_center=.44
         assert abs(sizes[9]/bounds['width']-expected_center)<.01,(width,sizes)
         if width<=600:
-            assert abs(sizes[8]/bounds['width']-.132)<.01
+            assert abs(sizes[8]/bounds['width']-.22)<.01
+            assert not page.locator('.fp-cover figcaption').is_visible()
             assert page.locator('#memories-title').evaluate('(el)=>getComputedStyle(el).fontSize')=='28px'
             assert page.locator('#plan-title').evaluate('(el)=>getComputedStyle(el).fontSize')=='28px'
-            assert page.locator('[data-wheel-next]').bounding_box()['width']==36
+            assert page.locator('[data-wheel-next]').bounding_box()['width']==32
             assert page.locator('.fp-header-arrow>svg').is_visible()
             assert not page.locator('.fp-header-arrow-text').is_visible()
             assert page.locator('.fp-header-arrow').evaluate('(el)=>getComputedStyle(el).marginLeft')=='6px'
@@ -97,6 +100,11 @@ with sync_playwright() as p:
             assert page.locator('[data-wheel-next]').bounding_box()['width']>=44
             assert not page.locator('.fp-header-arrow>svg').is_visible()
             assert page.locator('.fp-header-arrow-text').is_visible()
+            caption=page.locator('.fp-cover figcaption').bounding_box();cover=page.locator('.fp-cover').bounding_box()
+            assert caption['width']<cover['width']*.5
+            assert caption['height']<100
+        assert page.locator('.fp-action-arrow').count()==4
+        assert page.locator('.fp-action-arrow').first.get_attribute('stroke-width')=='1.2'
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),width
         assert page.locator('button[aria-current="true"]').count()==1
         (root/'work').mkdir(exist_ok=True);wheel.screenshot(path=str(root/f'work/fishing-wheel-{width}.png'))

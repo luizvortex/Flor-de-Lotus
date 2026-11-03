@@ -119,22 +119,18 @@ html{scroll-padding-top:84px}
 @media(max-width:1000px){.fp-room-cards{gap:14px}.fp-room-card>div{padding:16px}.fp-room-card h3{font-size:21px}.fp-room-card>img{height:170px}.fp-how{padding:24px}.fp-how ol{gap:16px}.fp-how li{gap:10px}}
 @media(max-width:700px){.fp-accommodations,.fp-how,.fp-testimonial{width:calc(100% - 40px);margin-bottom:36px}.fp-accommodations .fp-section-heading{display:block}.fp-accommodations .fp-section-heading>p{margin-top:18px;max-width:none}.fp-room-cards{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:12px}.fp-room-card{flex:0 0 85%;scroll-snap-align:start}.fp-room-card>img{height:180px}.fp-room-card h3{font-size:24px}.fp-room-card>div{padding:20px}.fp-room-actions{display:block;margin-top:20px}.fp-room-actions .fp-button{display:flex;justify-content:space-between;width:100%;font-size:11px;padding-inline:18px;gap:12px}.fp-room-actions .fp-text-link{display:inline-flex;margin-top:18px;font-size:10px}.fp-how ol{grid-template-columns:1fr;gap:18px}.fp-how>.fp-eyebrow{font-size:8px;line-height:1.8}.fp-how{padding:24px}.fp-testimonial{padding:4px 16px}.fp-testimonial footer{display:flex;align-items:center;font-size:10px;gap:8px 14px}.fp-testimonial footer a{flex-basis:100%}.fp-inquiry .fp-inquiry-lead{font-size:12px}.fp-contact-card h3{font-size:26px}}
 
-/* Mobile only: emphasize the central memory and keep headings and controls compact. */
+/* Mobile headings and carousel controls; photo proportions match the original wheel. */
 @media(max-width:600px){
  .fp-memories .fp-section-heading h2,.fp-accommodations .fp-section-heading h2{font-size:28px;line-height:1.2}
- .fp-wheel-photo[data-wheel-slot="9"]{width:52%!important}
- .fp-wheel-photo[data-wheel-slot="0"]{width:8%!important}
- .fp-wheel-photo[data-wheel-slot="1"]{width:8.65%!important}
- .fp-wheel-photo[data-wheel-slot="2"]{width:9.3%!important}
- .fp-wheel-photo[data-wheel-slot="3"]{width:9.95%!important}
- .fp-wheel-photo[data-wheel-slot="4"]{width:10.6%!important}
- .fp-wheel-photo[data-wheel-slot="5"]{width:11.25%!important}
- .fp-wheel-photo[data-wheel-slot="6"]{width:11.9%!important}
- .fp-wheel-photo[data-wheel-slot="7"]{width:12.55%!important}
- .fp-wheel-photo[data-wheel-slot="8"]{width:13.2%!important}
- .fp-wheel-controls button{width:36px;height:36px;min-width:36px;min-height:36px;padding:4px;font-size:14px}
+ .fp-wheel-controls button{width:32px;height:32px;min-width:32px;min-height:32px;padding:3px;font-size:13px}
 }
 
 .fp-header-arrow>svg{display:none}
 .fp-header .fp-header-arrow-text{margin:0}
 @media(max-width:600px){.fp-header nav .fp-header-arrow{display:inline-flex;align-items:center;vertical-align:middle;margin-left:6px}.fp-header-arrow-text{display:none}.fp-header-arrow>svg{display:block}}
+
+/* A small desktop caption, with the mobile cover left unobstructed. */
+.fp-cover figcaption{right:auto;width:44%;padding:8px 12px;font-size:8px;letter-spacing:.12em}
+.fp-cover figcaption span{font-size:11px;line-height:1.45;margin-top:2px}
+.fp-action-arrow{display:inline-block;vertical-align:middle;flex-shrink:0}
+@media(max-width:600px){.fp-cover figcaption{display:none}}

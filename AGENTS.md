@@ -216,8 +216,10 @@ O seletor compartilhado `stay-party.js` permite no máximo 5 pessoas por quarto,
 
 A home exibe somente a primeira foto de `fishing.photos`, em `fishing-content.ts`. A rota `/pescadores` mantém o álbum completo para o carrossel em roda. Não apagar nem truncar a lista no CMS.
 
-Em `/pescadores`, somente até 600 px: centro da roda com largura de 52%, fotos periféricas de 8% a 13,2%, títulos de memórias/acomodações com 28 px e setas com 36 px. Preservar as medidas existentes do desktop. Cobertura em `scripts/test-fishing-wheel-browser.py`.
+Em `/pescadores`, somente até 600 px: roda com proporções originais (centro 44%, periferia 10% a 22%), títulos de memórias/acomodações com 28 px e setas com 32 px. Preservar as medidas existentes do desktop. Cobertura em `scripts/test-fishing-wheel-browser.py`.
 
 No desktop (a partir de 768 px), o carrossel de pescadores continua a cada 2 s durante hover/foco; abrir a foto pausa e fechar retoma. Preservar reduced-motion, aba oculta e fora da tela, assim como o comportamento mobile. O card Família em `/pescadores` informa Até 5 pessoas por quarto.
 
 Auditoria editorial em `docs/auditoria-editor-site.md`; verificação sintética com `node --experimental-vm-modules scripts/audit-site-editor.mjs`. Campos sem consumidor foram retirados dos formulários, preservando a estrutura legada. O freezer usa `fishing.highlight` na home e em `/pescadores`. Listas antigas de banheiro/vista do editor de quartos não devem ser reintroduzidas: usar a lista de comodidades com ícones. Pescadores acompanha Quartos na ordem da home; blocos extras após fishing acompanham o conjunto.
+
+A legenda sobre a foto de capa de `/pescadores` fica oculta até 600 px. No desktop usa 44% da largura da foto e padding compacto. Os quatro CTAs de grupo/WhatsApp usam SVG de seta fina, preservando URLs e formulários.
