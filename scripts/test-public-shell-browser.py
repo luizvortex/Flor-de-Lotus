@@ -14,6 +14,8 @@ with sync_playwright() as p:
   assert 'intro-enabled' in page.locator('html').get_attribute('class')
   footer=page.locator('.lotus-footer');assert footer.locator('.lotus-footer-columns>section').count()==3
   assert footer.locator('a[href="mailto:contato@example.invalid"]').count()==1
+  assert footer.locator('.lotus-footer-reserve,address').count()==0
+  assert footer.locator('.lotus-footer-brand>a').count()==1
   iframe=footer.locator('iframe');assert iframe.get_attribute('loading')=='lazy';assert iframe.get_attribute('title');assert iframe.get_attribute('referrerpolicy')=='strict-origin-when-cross-origin'
   assert '0x5549d0040f6757ff' in iframe.get_attribute('src')
  # Deep incoming links keep their destination and still get the intro.
@@ -29,12 +31,15 @@ with sync_playwright() as p:
  for width in [320,390,768,1024,1440]:
   page.set_viewport_size(dict(width=width,height=1100));footer=page.locator('.lotus-footer');footer.scroll_into_view_if_needed();assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
   cols=footer.locator('.lotus-footer-columns>section').all();boxes=[col.bounding_box() for col in cols]
-  if width>1050:assert max(b['y'] for b in boxes)-min(b['y'] for b in boxes)<1
+  if width>1050:
+   assert max(b['y'] for b in boxes)-min(b['y'] for b in boxes)<1
+   centers=[el.bounding_box()['y']+el.bounding_box()['height']/2 for el in footer.locator('.lotus-footer-column-content,.lotus-footer-map').all()]
+   assert max(centers)-min(centers)<1
   if width<=700:assert boxes[0]['y']<boxes[1]['y']<boxes[2]['y']
   frame=footer.locator('iframe').bounding_box();assert frame['width']>=200 and 200<=frame['height']<=220
   footer.screenshot(path=str(root/f'work/footer-{width}.png'))
  page.locator('.lotus-footer iframe').dispatch_event('error');expect(page.locator('[data-map-error]')).to_be_visible()
- assert parse_qs(urlparse(page.locator('.lotus-footer-directions').get_attribute('href')).query)['destination'][0].lower().find('itacare')>=0
+ assert parse_qs(urlparse(page.locator('[data-map-error] a').get_attribute('href')).query)['destination'][0].lower().find('itacare')>=0
  page.goto(base+'/',wait_until='networkidle');page.locator('.home-language summary').click();page.locator('.home-language [data-language="en"]').click();expect(page.locator('#footer-contact-title')).to_have_text('GET IN TOUCH')
  reduced=browser.new_context(reduced_motion='reduce');reduced.route('https://**',lambda r:r.abort());rpage=reduced.new_page();rpage.goto(base+'/quartos',wait_until='domcontentloaded');assert 'intro-enabled' not in (rpage.locator('html').get_attribute('class') or '')
  assert not errors,errors
