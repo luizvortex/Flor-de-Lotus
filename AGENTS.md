@@ -62,7 +62,7 @@ A aba Reservas tem seleção múltipla em `admin-bulk-bookings.js`, carregado an
 
 ## Filtro do catálogo público
 
-Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Família aparece nas buscas a partir de quatro pessoas no mesmo quarto; quatro, cinco ou seis pessoas exibem apenas Família; com uma ou duas pessoas, mostrar somente Standard (`duplo`) e Superior (`triplo`); com três pessoas, mostrar somente Triplo Standard e Triplo Superior; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
+Antes de buscar, mostrar todas as apresentações. Após uma consulta válida, `reservas.js` mostra somente categorias com oferta retornada para datas/andar/composição. Família aparece nas buscas a partir de quatro pessoas no mesmo quarto; quatro ou cinco pessoas exibem apenas Família; com uma ou duas pessoas, mostrar somente Standard (`duplo`) e Superior (`triplo`); com três pessoas, mostrar somente Triplo Standard e Triplo Superior; a lotação usa adultos + todas as crianças, por quarto (não a soma da solicitação). Sem correspondências, mostrar somente o aviso de indisponibilidade, sem cartões incompatíveis. Testes: `scripts/test-room-filters-browser.py` e `scripts/test-category-booking-browser.py`.
 
 ## Conta Google nas reservas
 
@@ -210,4 +210,6 @@ Na home, o seletor de idioma mostra bandeira, nome e seta no topo; com `.home-he
 
 Cards de praias têm anterior/próxima em `itacare-content.ts` e `itacare.js`. A prévia na home troca fotos por `discovery-photos.js`, preservando os links para o destino. Manter controles fora dos links e esconder ambos em álbuns com uma foto. Teste: `node scripts/test-site-editor.mjs --guide-only`.
 
-As fotos de excursões e pescadores na home têm um recuo de 3 px nas bordas externas. O filtro público distingue 1–2 hóspedes (Standard/Superior), 3 (Triplo) e 4–6 (Família), por quarto e contando todas as crianças. As capacidades físicas e tarifas por ocupação do servidor permanecem autoritativas.
+As fotos de excursões e pescadores na home têm um recuo de 3 px nas bordas externas. O filtro público distingue 1–2 hóspedes (Standard/Superior), 3 (Triplo) e 4–5 (Família), por quarto e contando todas as crianças. As capacidades físicas e tarifas por ocupação do servidor permanecem autoritativas.
+
+O seletor compartilhado `stay-party.js` permite no máximo 5 pessoas por quarto, contando todas as crianças. Os botões de adultos e crianças compartilham esse limite; múltiplos quartos continuam permitidos. Consultas antigas de seis hóspedes devem ser orientadas a corrigir a composição, sem cotar menos pessoas silenciosamente.

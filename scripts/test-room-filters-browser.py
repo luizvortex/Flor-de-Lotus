@@ -41,7 +41,7 @@ with ns['sync_playwright']() as p:
   for size in [1,2]:
    assert search(floor,[{'adults':size,'children_ages':[]}])==standard
   assert search(floor,[{'adults':3,'children_ages':[]}])==triples
-  for size in [4,5,6]:
+  for size in [4,5]:
    assert search(floor,[{'adults':size,'children_ages':[]}])==families,(floor,size)
   assert search(floor,[{'adults':2,'children_ages':[5]}])==triples
   assert search(floor,[{'adults':3,'children_ages':[5]}])==families,'Free child is the fourth occupant'
@@ -115,4 +115,4 @@ with ns['sync_playwright']() as p:
   page.set_viewport_size({'width':width,'height':1000});assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
  assert errors==[],errors
  browser.close()
- print('PASS: no-preference redirect and both-floor booking payloads; initial catalogue; both floors; four/five/six occupants; children count toward capacity; multiple rooms; empty result; refilter; responsive layout.')
+ print('PASS: no-preference redirect and both-floor booking payloads; initial catalogue; both floors; four/five occupants; children count toward capacity; multiple rooms; empty result; refilter; responsive layout.')

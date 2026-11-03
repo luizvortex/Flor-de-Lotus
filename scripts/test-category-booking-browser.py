@@ -123,12 +123,12 @@ with sync_playwright() as p:
   rect=page.locator('#dates-picker').bounding_box()
   assert rect['x']>=0 and rect['x']+rect['width']<=width+1,f'calendar overflow at {width}'
   page.keyboard.press('Escape')
- page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(4)];page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
+ page.locator('#floor').select_option('superior');page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(3)];page.locator('#apply-guests').click();page.locator('#search [type="submit"]').click()
  page.wait_for_selector('[data-options="familia-superior"]');assert page.locator('.catalog-room').count()==1;page.locator('[data-options="familia-superior"]').click();page.locator('[data-book-category="familia-superior"]').click()
  assert 'Unidade' not in page.locator('#booking-summary').inner_text()
  page.locator('#guest').fill('Teste de fluxo');page.locator('#phone').fill('65999999999');page.locator('#booking-form [type="submit"]').click();page.wait_for_selector('#booking-success[open]')
  assert payloads[0]['category_slug']=='familia-superior' and 'room_id' not in payloads[0]
- assert payloads[0]['party']==[{'adults':6,'children_ages':[]}]
+ assert payloads[0]['party']==[{'adults':5,'children_ages':[]}]
  assert 'unidade' not in page.locator('#booking-receipt-summary').inner_text().lower()
  # Empty inventory uses the centered notification, with a working calendar CTA.
  page.locator('#booking-success [data-close-success]').first.click()
@@ -137,7 +137,7 @@ with sync_playwright() as p:
  page.wait_for_selector('[data-options="familia-superior"]')
  page.locator('[data-options="familia-superior"]').click()
  assert page.locator('#details-options .starting-price small').inner_text()=='A partir de'
- assert '600,00' in page.locator('#details-options .starting-price p').inner_text()
+ assert '500,00' in page.locator('#details-options .starting-price p').inner_text()
  assert 'Preço ainda não cadastrado' not in page.locator('#details-options').inner_text()
  page.locator('#room-details [data-close-details]').click()
  missing_price=False
@@ -188,11 +188,11 @@ with sync_playwright() as p:
   page.keyboard.press('Escape')
   assert page.locator('#availability-dialog').is_visible()
  page.locator('#floor').select_option('superior')
- page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(4)];page.locator('#apply-guests').click()
- # At six adults there is no capacity for an additional child.
+ page.locator('#guests-trigger').click();[page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="1"]').click() for _ in range(3)];page.locator('#apply-guests').click()
+ # At five adults there is no capacity for an additional child.
  page.locator('#guests-trigger').click()
  assert page.locator('[data-party-field="children"][data-party-step="1"]').is_disabled()
- for _ in range(5):page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="-1"]').click()
+ for _ in range(4):page.locator('[data-party-room="0"][data-party-field="adults"][data-party-step="-1"]').click()
  page.locator('[data-party-field="children"][data-party-step="1"]').click()
  page.locator('[data-child-room="0"]').select_option('6')
  page.locator('#apply-guests').click()
