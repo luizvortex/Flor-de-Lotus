@@ -94,6 +94,9 @@ with sync_playwright() as p:
    heading=guide.locator('#guia h2').bounding_box();filters=guide.locator('#guia .explore-filters').bounding_box()
    assert filters['x']>heading['x']+heading['width']
    cards=guide.locator('.explore-destination').all()
+   for row in [cards[i:i+3] for i in range(0,len(cards),3)]:
+    labels=[card.locator('.explore-topics').bounding_box() for card in row]
+    assert max(label['y'] for label in labels)-min(label['y'] for label in labels)<2
    for card in cards:
     thumbs=card.locator('.explore-small-photos')
     if thumbs.count():
