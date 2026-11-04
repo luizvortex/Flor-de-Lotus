@@ -64,8 +64,6 @@
 .group-page .group-section-heading .group-step-heading{margin-bottom:0}
 .group-page .group-counter{margin:0;padding:10px 16px;border:1px solid #e6d6b8;border-radius:30px;background:#fbf5e9;color:#69512d!important;font-size:12px!important;font-weight:500}
 .group-page .group-note{border-inline-start:2px solid var(--gold);border-radius:0 5px 5px 0;background:#f8f6ef;margin:22px 0 12px;padding:14px 18px}
-.group-page .capacity-note{color:#53655b!important;line-height:1.7!important;margin-bottom:24px!important}
-.group-page .capacity-note a{color:#28584b;font-weight:500;text-underline-offset:3px}
 .group-page .group-floor{margin-top:30px}
 .group-page .group-floor>h3{display:flex;align-items:center;gap:16px;margin:0 0 18px;font:500 22px 'Playfair Display',Georgia,serif}
 .group-page .group-floor>h3::after{content:'';height:1px;flex:1;background:var(--line)}
