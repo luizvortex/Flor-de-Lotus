@@ -1,12 +1,27 @@
 (() => {
  function revealRoomCards(){
-  if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  const cards=[...document.querySelectorAll('.fp-room-card')];
+  const reduced=matchMedia('(prefers-reduced-motion:reduce)');
+  if(!('IntersectionObserver' in window)||!Element.prototype.animate||reduced.matches)return;
+  const cards=[...document.querySelectorAll('.fp-room-card')],animations=new Set();
+  // Prepare every card in the same task that inserts it, before the browser paints.
+  cards.forEach(card=>card.setAttribute('data-room-pending',''));
+  const showWithoutMotion=()=>{
+   if(!reduced.matches)return;
+   observer.disconnect();cards.forEach(card=>card.removeAttribute('data-room-pending'));
+   animations.forEach(animation=>animation.cancel());animations.clear();
+   reduced.removeEventListener('change',showWithoutMotion);
+  };
   const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
    if(!entry.isIntersecting)return;
-   observer.unobserve(entry.target);entry.target.dataset.roomRevealed='true';
-   entry.target.animate?.([{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'}],{duration:600,delay:cards.indexOf(entry.target)*180,easing:'ease-out',fill:'backwards'});
+   const card=entry.target;observer.unobserve(card);card.dataset.roomRevealed='true';
+   const animation=card.animate([{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'}],{duration:600,delay:cards.indexOf(card)*180,easing:'ease-out',fill:'both'});
+   animations.add(animation);
+   animation.onfinish=()=>{
+    card.removeAttribute('data-room-pending');animations.delete(animation);animation.cancel();
+    if(cards.every(item=>!item.hasAttribute('data-room-pending')))reduced.removeEventListener('change',showWithoutMotion);
+   };
   }),{threshold:.12});
+  reduced.addEventListener('change',showWithoutMotion);
   cards.forEach(card=>observer.observe(card));
  }
  const roomsPanel=document.querySelector('#fishing-rooms');

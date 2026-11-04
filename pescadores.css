@@ -103,6 +103,7 @@ html{scroll-padding-top:84px}
 .fp-accommodations .fp-section-heading>p{max-width:40ch;font-size:12px}
 .fp-room-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;outline-offset:5px}
 .fp-room-card{min-width:0;background:#fffdf8;border:1px solid #d7cdbb;overflow:hidden;border-radius:5px}
+.fp-room-card[data-room-pending]{opacity:0;transform:translateY(24px)}
 .fp-room-card>img{display:block;width:100%;height:200px;object-fit:cover;object-position:center}
 .fp-room-card>div{padding:20px}.fp-room-card h3{font:400 24px/1.2 'Playfair Display',Georgia,serif;margin:0 0 10px}
 .fp-room-card p{font-size:11px;line-height:1.8;color:#586b60;margin:0}.fp-room-card .fp-room-capacity{font-size:11px;color:#775529;margin-bottom:12px;font-weight:500}
@@ -147,3 +148,5 @@ html{scroll-padding-top:84px}
 .fp-review-controls [aria-current="true"]{background:var(--forest);color:var(--paper)}
 .fp-review-controls [data-review-toggle]{margin-left:6px}
 @media(max-width:600px){.fp-testimonial footer{align-items:center}.fp-review-author{margin-bottom:14px}}
+
+@media(prefers-reduced-motion:reduce){.fp-room-card[data-room-pending]{opacity:1;transform:none}}

@@ -18,8 +18,10 @@ def serve(r):
 with ns['sync_playwright']() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox']);page=browser.new_page(viewport=dict(width=1440,height=1100));page.route('**/*',serve);errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
  page.add_init_script("window.roomMotions=[];const original=Element.prototype.animate;Element.prototype.animate=function(frames,options){if(this.matches('.fp-room-card'))window.roomMotions.push(options.delay);return original.call(this,frames,options);};")
- page.clock.install();page.goto('http://lotus.test/ten',wait_until='networkidle');page.wait_for_selector('.fp-room-card')
+ page.clock.install();page.goto('http://lotus.test/ten',wait_until='networkidle');page.wait_for_selector('.fp-room-card',state='attached')
  assert page.locator('.fp-room-card').count()==3
+ assert page.locator('.fp-room-card[data-room-pending]').count()==3
+ assert page.locator('.fp-room-card').evaluate_all('(cards)=>cards.every(card=>getComputedStyle(card).opacity==="0")')
  assert page.evaluate("document.querySelector('.fp-how').nextElementSibling.id")=='planejar-grupo'
  assert page.evaluate("document.querySelector('.fp-accommodations').nextElementSibling.matches('.fp-testimonial')")
  assert page.locator('[data-review-slide]').count()==3
@@ -28,6 +30,8 @@ with ns['sync_playwright']() as p:
  page.clock.fast_forward(6000);assert selected().locator('cite').inner_text()==first
  assert page.evaluate('window.roomMotions')==[]
  page.locator('#planejar-grupo').scroll_into_view_if_needed();page.wait_for_function('window.roomMotions.length===3');assert page.evaluate('window.roomMotions')==[0,180,360]
+ page.wait_for_function("document.querySelectorAll('.fp-room-card[data-room-pending]').length===0")
+ assert page.locator('.fp-room-card').evaluate_all('(cards)=>cards.every(card=>getComputedStyle(card).opacity==="1")')
  section=page.locator('[data-testimonials]');section.scroll_into_view_if_needed();page.wait_for_timeout(100)
  assert section.locator('.fp-eyebrow').bounding_box()['y']<selected().locator('cite').bounding_box()['y']<selected().locator('blockquote').bounding_box()['y']
  page.evaluate("document.dispatchEvent(new Event('visibilitychange'))");page.clock.fast_forward(2900);assert selected().locator('cite').inner_text()==first
@@ -40,6 +44,7 @@ with ns['sync_playwright']() as p:
   page.set_viewport_size(dict(width=width,height=1100));section.scroll_into_view_if_needed();assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1');section.screenshot(path=str(root/f'work/fishing-reviews-{width}.png'));assert len(page.evaluate('window.roomMotions'))==3
  page.emulate_media(reduced_motion='reduce');page.goto('http://lotus.test/ten',wait_until='networkidle');section.scroll_into_view_if_needed();page.clock.fast_forward(6500);assert selected().locator('cite').inner_text()==first
  page.locator('#planejar-grupo').scroll_into_view_if_needed();assert page.evaluate('window.roomMotions')==[]
+ assert page.locator('.fp-room-card[data-room-pending]').count()==0
  page.locator('[data-review-index="1"]').click();assert selected().locator('cite').inner_text()!=first
  page.goto('http://lotus.test/oneReview');assert page.locator('[data-review-slide]').count()==1;assert page.locator('[data-review-toggle]').count()==0
  page.goto('http://lotus.test/noReviews');assert section.count()==0
