@@ -31,11 +31,13 @@
    const first=shiftMonth(view,offset),d=date(first),last=date(shiftMonth(first,1));last.setUTCDate(0);
    const heading=new Intl.DateTimeFormat('pt-BR',{month:'long',year:'numeric',timeZone:'UTC'}).format(d).replace(' de ', ', ');
    const dayStart=add(first,-d.getUTCDay());
-   return `<section class="calendar-month" aria-label="${heading}"><h3>${heading}</h3><div class="calendar-weekdays" aria-hidden="true">${['dom.','seg.','ter.','qua.','qui.','sex.','sáb.'].map(x=>`<span>${x}</span>`).join('')}</div><div class="calendar-days">${Array.from({length:42},(_,i)=>{
-    const value=add(dayStart,i),outside=value.slice(0,7)!==first.slice(0,7),disabled=outside||value<today;
+   return `<section class="calendar-month" aria-label="${heading}"><h3>${heading}</h3><div class="calendar-weekdays" aria-hidden="true">${['dom.','seg.','ter.','qua.','qui.','sex.','sáb.'].map(x=>`<span>${x}</span>`).join('')}</div><div class="calendar-days">${Array.from({length:d.getUTCDay()+last.getUTCDate()},(_,i)=>{
+    const value=add(dayStart,i);
+    if(value<first)return '<span aria-hidden="true"></span>';
+    const disabled=value<today;
     const rangeEnd=end,inRange=start&&rangeEnd&&value>start&&value<rangeEnd;
     const chosen=value===start||value===end;
-    return `<button type="button" data-day="${value}" class="${outside?'outside ':''}${chosen?'selected ':''}${inRange?'in-range ':''}" ${disabled?'disabled':''} aria-label="${full(value)}${value===start?', entrada':''}${value===end?', saída':''}" aria-pressed="${Boolean(chosen)}" ${value===today?'aria-current="date"':''}>${date(value).getUTCDate()}</button>`;
+    return `<button type="button" data-day="${value}" class="${chosen?'selected ':''}${inRange?'in-range ':''}" ${disabled?'disabled':''} aria-label="${full(value)}${value===start?', entrada':''}${value===end?', saída':''}" aria-pressed="${Boolean(chosen)}" ${value===today?'aria-current="date"':''}>${date(value).getUTCDate()}</button>`;
    }).join('')}</div></section>`;
   }).join('');
   $('#apply-dates').disabled=!start||!end||nights()<1;
