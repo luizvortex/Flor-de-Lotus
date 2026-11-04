@@ -102,6 +102,8 @@
 .group-page .calendar-popover{width:590px;max-width:calc(100vw - 100px);border-radius:8px;padding:20px;border-color:#d7dfd3;box-shadow:0 12px 36px #263d3826}
 .group-page .calendar-nav>button{width:44px;height:44px;flex:none}
 .group-page .calendar-days>button{height:44px;font-size:12px}
+.group-page .calendar-days>button.selected{background:radial-gradient(circle closest-side,#b0966b 97%,transparent 100%)}
+.group-page .calendar-days>button.selected:hover{box-shadow:none}
 .group-page .calendar-nav p{color:#53655b}
 .group-page .calendar-footer .gold-button{min-height:48px;background:var(--green);border-radius:5px;font-family:inherit}
 .group-page .calendar-footer .gold-button:hover{background:var(--green-hover)}
