@@ -56,8 +56,8 @@ with sync_playwright() as p:
  page.goto(base+'/',wait_until='domcontentloaded')
  metadata=json.loads(page.locator('script[type="application/ld+json"]').inner_text())
  assert metadata['@type']=='LodgingBusiness'
- assert page.locator('.site-legal a[href="/privacidade"]').count()==1
- assert page.locator('.site-legal a[href="/condicoes"]').count()==1
+ assert page.locator('.lotus-footer a[href="/privacidade"]').count()==1
+ assert page.locator('.lotus-footer a[href="/condicoes"]').count()==1
  assert context.request.get(base+'/admin').headers.get('x-robots-tag')=='noindex, nofollow'
  robots=context.request.get(base+'/robots.txt');assert robots.status==200 and 'Disallow: /admin' in robots.text()
  sitemap=context.request.get(base+'/sitemap.xml');assert sitemap.status==200 and '/itacare</loc>' in sitemap.text()

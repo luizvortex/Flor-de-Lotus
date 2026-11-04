@@ -9,6 +9,5 @@ export function applyInformation($:CheerioAPI,c:SiteContent,page:string){
   $('.information-main').html('<p class="eyebrow">ANTES DE PLANEJAR SUA ESTADIA</p><h1>Condições da estadia</h1><p class="information-note">A solicitação pelo site fica pendente até a confirmação da equipe. Nenhum pagamento é cobrado nesta página. Antes de concluir a combinação com a pousada, confirme as condições de pagamento, cancelamento e as necessidades da sua estadia.</p><div id="policy-grid" class="policy-grid" aria-live="polite"></div><p>Uma informação não publicada não deve ser interpretada como gratuidade ou ausência de restrições. <a href="/#fale-conosco">Converse com a pousada</a> para confirmar.</p><p><a href="/quartos">Consultar acomodações e datas →</a></p>');
   $('body').append('<script src="/politicas.js" defer></script>');
  }
- if(!$('.site-legal').length)$('body').append('<nav class="site-legal" aria-label="Informações da pousada"><a href="/privacidade">Privacidade</a><a href="/condicoes">Condições da estadia</a><a href="/#fale-conosco">Fale conosco</a></nav>');
  $('head').append('<link rel="stylesheet" href="/informacoes.css">');
 }
