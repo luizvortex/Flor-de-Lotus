@@ -102,7 +102,7 @@ dialog::backdrop { background: #14201d80; }
 .location-copy > p:not(.eyebrow) { color:var(--muted); line-height:1.8; margin-bottom:26px; }
 .location-copy .gold-button { display:inline-flex; align-items:center; gap:18px; text-decoration:none; }
 .catalog-location iframe { display:block; border:0; width:100%; height:100%; min-height:380px; }
-.catalog-policies { padding-top:72px; scroll-margin-top:80px; }
+.catalog-policies { padding-block:72px; scroll-margin-top:80px; }
 .catalog-policies > h2,.catalog-policies > .eyebrow { text-align:center; }
 .policy-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-top:1px solid var(--line); border-left:1px solid var(--line); margin-top:32px; }
 .policy-item { padding:26px 28px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); min-width:0; }
@@ -111,7 +111,7 @@ dialog::backdrop { background: #14201d80; }
 .policy-item h3 i { font-size:16px; color:#89714f; }
 .policy-item p { margin:0; font-size:14px; line-height:1.8; color:var(--muted); white-space:pre-line; overflow-wrap:anywhere; }
 .policy-status { grid-column:1/-1; margin:0; padding:28px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); }
-@media(max-width:600px) { .catalog-location { grid-template-columns:1fr; margin-top:48px; }.location-copy { padding:32px 24px; }.catalog-location iframe { min-height:300px; height:300px; }.catalog-location h2,.catalog-policies h2 { font-size:30px; }.catalog-policies { padding-top:48px; }.policy-grid { grid-template-columns:1fr; }.policy-item { padding:22px; } }
+@media(max-width:600px) { .catalog-location { grid-template-columns:1fr; margin-top:48px; }.location-copy { padding:32px 24px; }.catalog-location iframe { min-height:300px; height:300px; }.catalog-location h2,.catalog-policies h2 { font-size:30px; }.catalog-policies { padding-block:48px; }.policy-grid { grid-template-columns:1fr; }.policy-item { padding:22px; } }
 
 .catalog-share { grid-column:3; grid-row:1; justify-self:end; display:inline-flex; align-items:center; justify-content:center; gap:9px; padding:10px 16px; border:1px solid #b39b79; color:#89714f; background:transparent; font-size:12px; white-space:nowrap; min-height:42px; }
 .catalog-share:hover { background:#f3eee7; }
