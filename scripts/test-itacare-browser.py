@@ -24,6 +24,8 @@ with sync_playwright() as p:
   guide=popup.value
   guide.wait_for_load_state('domcontentloaded')
   assert guide.url==base+'/itacare'
+  assert guide.locator('#explore-contact').get_attribute('href')=='/quartos'
+  assert guide.locator('#explore-contact').inner_text().strip()=='Fazer minha reserva'
   assert guide.locator('.explore-destination').count()==9
   assert guide.locator('.explore-tour').count()==3
   assert 'Agosto e setembro' in guide.locator('#passeio-observacao-baleias').text_content()
@@ -35,10 +37,9 @@ with sync_playwright() as p:
   assert guide.locator('.explore-destination:visible').count()==2
   guide.locator('[data-explore-filter="praia"]').click()
   assert guide.locator('.explore-destination:visible').count()==7
-  guide.locator('#explore-search').fill('Jeribucacu')
-  assert guide.locator('.explore-destination:visible').count()==1
+  assert guide.locator('#explore-search,[data-explore-result]').count()==0
   # The card advances manually without opening its album, and never auto-advances.
-  shown=guide.locator('.explore-destination:visible')
+  shown=guide.locator('#destino-praia-de-jeribucaçu')
   cover=shown.locator('.explore-photo-button');advance=shown.locator('[data-explore-card-next]')
   advance.scroll_into_view_if_needed()
   all_photos=json.loads(cover.get_attribute('data-explore-photos'))
@@ -49,18 +50,18 @@ with sync_playwright() as p:
   started=time.monotonic()
   advance.click()
   assert not advance.is_disabled()
-  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
+  guide.wait_for_function("() => document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
   assert time.monotonic()-started<.5
   assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
   advance.click()
-  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
+  guide.wait_for_function("() => document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
   assert cover.locator('img').evaluate('(i)=>i.complete && i.naturalWidth>0')
   shown.locator('[data-explore-card-prev]').click()
-  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
+  guide.wait_for_function("() => document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').dataset.exploreStart==='1'",timeout=500)
   advance.click()
-  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
+  guide.wait_for_function("() => document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').dataset.exploreStart==='2'",timeout=500)
   guide.context.set_offline(False)
-  guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').dataset.exploreStart==='2'")
+  guide.wait_for_function("() => document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').dataset.exploreStart==='2'")
   assert not guide.locator('#explore-album').evaluate('(d)=>d.open')
   selected=cover.locator('img').get_attribute('src')
   guide.wait_for_timeout(2200)
@@ -73,31 +74,37 @@ with sync_playwright() as p:
   guide.wait_for_timeout(100)
   guide.mouse.move(box['x']+box['width']*.7,box['y']+box['height']*.6)
   if width>=768:
-   guide.wait_for_function("() => document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
+   guide.wait_for_function("() => document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').classList.contains('is-pointer-follow')")
    assert float(cover.evaluate("e=>e.style.getPropertyValue('--photo-pan-x')").replace('px',''))>0
   else:
    assert not cover.evaluate("e=>e.classList.contains('is-pointer-follow')")
   guide.emulate_media(reduced_motion='reduce')
-  guide.wait_for_function("() => !document.querySelector('.explore-destination:not([hidden]) .explore-photo-button').classList.contains('is-pointer-follow')")
-  guide.locator('.explore-destination:visible .explore-photo-button').click()
+  guide.wait_for_function("() => !document.querySelector('#destino-praia-de-jeribucaçu .explore-photo-button').classList.contains('is-pointer-follow')")
+  shown.locator('.explore-photo-button').click()
   assert guide.locator('#explore-album').evaluate('(d)=>d.open')
   first=guide.locator('#explore-album-image').get_attribute('src')
   guide.keyboard.press('ArrowRight')
   assert guide.locator('#explore-album-image').get_attribute('src')!=first
   guide.keyboard.press('Escape')
   assert not guide.locator('#explore-album').evaluate('(d)=>d.open')
-  assert guide.locator('.explore-destination:visible .explore-photo-button').evaluate('(b)=>b===document.activeElement')
-  guide.locator('#explore-search').fill('nenhum-local-teste')
-  assert guide.locator('.explore-empty').is_visible()
-  guide.locator('#explore-search').fill('')
+  assert shown.locator('.explore-photo-button').evaluate('(b)=>b===document.activeElement')
   guide.locator('[data-explore-filter="todos"]').click()
   assert guide.locator('.explore-destination:visible').count()==9
+  if width==1440:
+   heading=guide.locator('#guia h2').bounding_box();filters=guide.locator('#guia .explore-filters').bounding_box()
+   assert filters['x']>heading['x']+heading['width']
+   cards=guide.locator('.explore-destination').all()
+   for card in cards:
+    thumbs=card.locator('.explore-small-photos')
+    if thumbs.count():
+     box=card.bounding_box();t=thumbs.bounding_box();assert abs(box['y']+box['height']-t['y']-t['height']-27)<2
   for a in guide.locator('.explore-tour-contact').all():assert a.get_attribute('href').startswith('https://wa.me/') and 'text=' in a.get_attribute('href')
   assert guide.evaluate('document.documentElement.scrollWidth<=innerWidth')
   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
+  guide.locator('#guia').screenshot(path=f'/tmp/itacare-guide-{width}.png')
   guide.evaluate('window.scrollTo(0,0)');guide.screenshot(path=f'/tmp/itacare-{width}.png')
   page.locator('#praias').scroll_into_view_if_needed();page.screenshot(path=f'/tmp/itacare-home-{width}.png')
   guide.close();page.close()
   assert not errors,errors
-  print(json.dumps({'width':width,'guide':'new tab, filters, search, albums, contact links and layout passed'}),flush=True)
+  print(json.dumps({'width':width,'guide':'new tab, filters, aligned thumbnails, albums, contact links and layout passed'}),flush=True)
  browser.close()

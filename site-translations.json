@@ -880,9 +880,10 @@
       "Main navigation",
       "ניווט ראשי"
     ],
-    "Nenhum lugar encontrado. Tente outro nome ou escolha “Todos”.": [
-      "No places found. Try another name or select “All”.",
-      "לא נמצאו מקומות. נסו שם אחר או בחרו ״הכול״."
+    "Nenhum lugar nesta categoria. Escolha “Todos”.": [
+      "No places in this category. Select “All”.",
+      "אין מקומות בקטגוריה זו. בחרו ״הכול״.",
+      "No hay lugares en esta categoría. Elige «Todos»."
     ],
     "Nenhum pagamento foi cobrado no site. Acompanhe o andamento em Minha conta.": [
       "No payment has been taken on the website. Track the request in My account.",
@@ -3816,6 +3817,11 @@
       "Show review 3",
       "הצגת חוות דעת 3",
       "Mostrar reseña 3"
+    ],
+    "Fazer minha reserva": [
+      "Make my reservation",
+      "לביצוע ההזמנה שלי",
+      "Hacer mi reserva"
     ]
   }
 }

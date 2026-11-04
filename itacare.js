@@ -32,11 +32,10 @@
  });
  desktopMotion.addEventListener('change',resetMotion);reducedMotion.addEventListener('change',resetMotion);
  window.addEventListener('blur',resetMotion);window.addEventListener('resize',resetMotion);window.addEventListener('scroll',resetMotion,{passive:true});
- const cards=[...page.querySelectorAll('[data-explore-category]')],filters=[...page.querySelectorAll('[data-explore-filter]')],search=page.querySelector('#explore-search'),result=page.querySelector('[data-explore-result]');
+ const cards=[...page.querySelectorAll('[data-explore-category]')],filters=[...page.querySelectorAll('[data-explore-filter]')];
  let category='todos';
- const normalize=value=>value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim();
- function filter(){const query=normalize(search.value);let count=0;cards.forEach(card=>{const visible=(category==='todos'||card.dataset.exploreCategory===category)&&normalize(card.dataset.exploreSearch).includes(query);card.hidden=!visible;if(visible)count++;});filters.forEach(b=>{const active=b.dataset.exploreFilter===category;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active));});result.textContent=`${count} ${count===1?'lugar encontrado':'lugares para descobrir'}`;page.querySelector('.explore-empty').hidden=count>0;}
- filters.forEach(button=>button.addEventListener('click',()=>{category=button.dataset.exploreFilter;filter();}));search.addEventListener('input',filter);
+ function filter(){let count=0;cards.forEach(card=>{const visible=category==='todos'||card.dataset.exploreCategory===category;card.hidden=!visible;if(visible)count++;});filters.forEach(b=>{const active=b.dataset.exploreFilter===category;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active));});page.querySelector('.explore-empty').hidden=count>0;}
+ filters.forEach(button=>button.addEventListener('click',()=>{category=button.dataset.exploreFilter;filter();}));
  // Decode upcoming images before the click. A shared, bounded worker queue keeps
  // background work from competing with the cover or the image being requested.
  const photoCache=new Map(),photoQueue=[];let photoWorkers=0,photoClock=0;
@@ -110,6 +109,6 @@
  album.addEventListener('close',()=>{document.body.classList.remove('explore-album-open');albumSequence++;image.removeAttribute('src');opener?.focus({preventScroll:true});});
  album.addEventListener('click',event=>{if(event.target===album){const rect=album.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)album.close();}});
  // Deep links from the homepage stay visible even if a filter was selected earlier.
- function showLinkedDestination(){let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}const linked=cards.find(c=>c.id===id);if(linked){category='todos';search.value='';filter();linked.scrollIntoView({block:'start'});}}
+ function showLinkedDestination(){let id;try{id=decodeURIComponent(location.hash.slice(1));}catch{return;}const linked=cards.find(c=>c.id===id);if(linked){category='todos';filter();linked.scrollIntoView({block:'start'});}}
  window.addEventListener('hashchange',showLinkedDestination);if(location.hash)showLinkedDestination();
 })();

@@ -26,13 +26,12 @@ export function applyExplorePage($:CheerioAPI,content:SiteContent):void {
  $('meta[name="description"]').attr('content',String(b.pageDescription));
  $('#explore-tours-title').text(String(b.toursTitle));$('#explore-tours-intro').text(String(b.toursDescription));
  const contact=(title:string)=>`https://wa.me/${content.branding.whatsapp}?text=${encodeURIComponent(`Olá! Vou visitar Itacaré e gostaria de saber mais sobre ${title}. Podem me ajudar a planejar?`)}`;
- $('#explore-contact').attr('href',contact('os passeios e as praias da região'));
+ $('#explore-contact').attr('href','/quartos').removeAttr('target rel');
  const items=b.items as Item[];
  $('#explore-destinations').html(items.map(item=>{
   const photos=item.photos as Photo[];
-  return `<article class="explore-destination" id="destino-${esc(item.id)}" data-explore-category="${esc(item.category)}" data-explore-search="${esc(`${item.title} ${item.description} ${item.highlights}`)}">${galleryButton(item,photos)}<div class="explore-destination-copy"><p class="explore-eyebrow">${item.category==='cachoeira'?'CACHOEIRA':'PRAIA'}</p><h3>${esc(item.title)}</h3>${item.subtitle?`<p class="explore-subtitle">${esc(item.subtitle)}</p>`:''}<p class="explore-description">${esc(item.description)}</p><ul class="explore-topics">${topics(item.highlights)}</ul>${photos.length>1?`<div class="explore-small-photos" aria-label="Mais fotos de ${esc(item.title)}">${photos.slice(1,4).map((p,n)=>`<button type="button" data-explore-photos="${esc(JSON.stringify(photos))}" data-explore-title="${esc(item.title)}" data-explore-start="${n+1}" aria-label="Ampliar ${esc(p.alt)}"><img src="${esc(image(p.url,256))}" alt="${esc(p.alt)}" width="256" height="180" loading="lazy" decoding="async"></button>`).join('')}</div>`:''}</div></article>`;
+  return `<article class="explore-destination" id="destino-${esc(item.id)}" data-explore-category="${esc(item.category)}">${galleryButton(item,photos)}<div class="explore-destination-copy"><p class="explore-eyebrow">${item.category==='cachoeira'?'CACHOEIRA':'PRAIA'}</p><h3>${esc(item.title)}</h3>${item.subtitle?`<p class="explore-subtitle">${esc(item.subtitle)}</p>`:''}<p class="explore-description">${esc(item.description)}</p><ul class="explore-topics">${topics(item.highlights)}</ul>${photos.length>1?`<div class="explore-small-photos" aria-label="Mais fotos de ${esc(item.title)}">${photos.slice(1,4).map((p,n)=>`<button type="button" data-explore-photos="${esc(JSON.stringify(photos))}" data-explore-title="${esc(item.title)}" data-explore-start="${n+1}" aria-label="Ampliar ${esc(p.alt)}"><img src="${esc(image(p.url,256))}" alt="${esc(p.alt)}" width="256" height="180" loading="lazy" decoding="async"></button>`).join('')}</div>`:''}</div></article>`;
  }).join(''));
- $('[data-explore-result]').text(`${items.length} lugares para descobrir`);
  const tours=b.tours as Item[];
  if(!tours.length){$('#passeios,.explore-shortcuts a[href="#passeios"]').attr('hidden','');}
  $('#explore-tour-list').html(tours.map((tour,index)=>{
